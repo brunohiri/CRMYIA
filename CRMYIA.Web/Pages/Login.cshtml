@@ -1,0 +1,65 @@
+﻿@page
+@model CRMYIA.Web.Pages.LoginModel
+@{
+    Layout = "~/Pages/Shared/_LayoutOut.cshtml";
+    ViewData["Title"] = "Login";
+}
+
+<!-- /.login-logo -->
+<div class="card">
+    <div class="card-body login-card-body">
+        <p class="login-box-msg">Faça login para iniciar sua sessão</p>
+
+        <form method="post">
+            <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="Email" asp-for="LoginEmail" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="Senha" asp-for="LoginSenha" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+            @if ((Model != null) && (Model.Mensagem != null))
+            {
+                <div class="input-group mb-3">
+                    <div class="@Model.Mensagem.CssClass alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <i class="icon fas fa-ban"></i>
+                        @Model.Mensagem.Mensagem
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-8">
+                    <div class="icheck-primary">
+                        <input type="checkbox" id="Rememberme">
+                        <label for="remember">
+                            Lembrar meus dados
+                        </label>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+
+        <p class="mb-1">
+            <a href="forgot-password.html">Esqueci Minha Senha</a>
+        </p>
+        <p class="mb-0">
+            <a href="register.html" class="text-center">Cadastrar Novo Usuário</a>
+        </p>
+    </div>
+    <!-- /.login-card-body -->
+</div>
