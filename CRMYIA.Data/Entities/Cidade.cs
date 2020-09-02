@@ -11,7 +11,7 @@ namespace CRMYIA.Data.Entities
             Corretora = new HashSet<Corretora>();
         }
 
-        public byte IdCidade { get; set; }
+        public int IdCidade { get; set; }
         public byte? IdEstado { get; set; }
         public string Descricao { get; set; }
         public string CodigoIBGE { get; set; }

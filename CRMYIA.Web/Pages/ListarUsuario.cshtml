@@ -2,7 +2,7 @@
 @model CRMYIA.Web.Pages.ListarCorretorModel
 @{
     ViewData["Title"] = "Listar";
-    ViewData["Pagina"] = "Corretores";
+    ViewData["Pagina"] = "Usuários";
 }
 @using CRMYIA.Business.Util;
 
@@ -17,11 +17,10 @@
                 <table id="tableListagem" class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
-                            <th width="20%">Nome</th>
+                            <th width="15%">Perfil</th>
+                            <th width="25%">Nome</th>
                             <th width="10%">Email</th>
                             <th width="10%">Telefone</th>
-                            <th width="25%">Corretora</th>
-                            <th width="10%">Perfil</th>
                             <th width="15%">Cadastro</th>
                             <th width="5%">Status</th>
                             <th width="5%"></th>
@@ -33,15 +32,14 @@
                             foreach (var Item in Model.ListEntity)
                             {
                                 <tr>
+                                    <td>@Item.UsuarioPerfil.First().IdPerfilNavigation.Descricao</td>
                                     <td>@Item.Nome</td>
                                     <td>@Item.Email</td>
                                     <td>@Item.Telefone</td>
-                                    <td>@(Item.IdCorretoraNavigation == null ? "Sem Corretora" : Item.IdCorretoraNavigation.RazaoSocial)</td>
-                                    <td>@Item.UsuarioPerfil.First().IdPerfilNavigation.Descricao</td>
                                     <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                     <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
                                     <td>
-                                        <a asp-page="/NovoCorretor" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                        <a asp-page="/NovoUsuario" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
                                     </td>
                                 </tr>
                             }

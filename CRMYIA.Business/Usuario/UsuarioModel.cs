@@ -21,9 +21,9 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Task<Usuario> Get(long IdUsuario)
+        public static Usuario Get(long IdUsuario)
         {
-            Task<Usuario> Entity = null;
+            Usuario Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -31,7 +31,7 @@ namespace CRMYIA.Business
                     Entity = context.Usuario
                         .Where(x => x.IdUsuario == IdUsuario)
                         .AsNoTracking()
-                        .FirstOrDefaultAsync();
+                        .FirstOrDefault();
                 }
             }
             catch (Exception)
@@ -41,16 +41,99 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static Task<List<Usuario>> GetList()
+        public static Usuario GetByCPF(string Cpf = null)
         {
-            Task<List<Usuario>> ListEntity = null;
+            Usuario Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Usuario
+                        .Where(x => x.CPF == Cpf)
+                        //?.AsNoTracking()
+                        ?.FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static Usuario GetByEmail(string Email = null)
+        {
+            Usuario Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Usuario
+                        .Where(x => x.Email.ToLower() == Email.ToLower())
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static Usuario GetByLogin(string Login = null)
+        {
+            Usuario Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Usuario
+                        .Where(x => x.Login.ToLower() == Login.ToLower())
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static List<Usuario> GetList()
+        {
+            List<Usuario> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Usuario
                         .AsNoTracking()
-                        .ToListAsync(); 
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<Usuario> GetList(byte IdPerfil)
+        {
+            List<Usuario> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                        .ThenInclude(p => p.IdPerfilNavigation)
+                        .Include(c => c.IdCorretoraNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
+                        .ToList();
                 }
             }
             catch (Exception)
@@ -66,8 +149,9 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Usuario.AddAsync(Entity);
-                    context.SaveChangesAsync();
+                    Entity.Senha = Criptography.Encrypt(Entity.Senha);
+                    context.Usuario.Add(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)
@@ -83,7 +167,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     context.Usuario.Update(Entity);
-                    context.SaveChangesAsync();
+                    context.SaveChanges();
                 }
             }
             catch (Exception)

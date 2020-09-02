@@ -14,7 +14,7 @@ using Microsoft.Extensions.Configuration;
 namespace CRMYIA.Web.Pages
 {
     [Authorize]
-    public class ListarCorretorModel : PageModel
+    public class ListarUsuarioModel : PageModel
     {
         #region Propriedades
         readonly IConfiguration _configuration;
@@ -25,7 +25,7 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Construtores
-        public ListarCorretorModel(IConfiguration configuration)
+        public ListarUsuarioModel(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -34,7 +34,7 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet()
         {
-            ListEntity = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Corretor);
+            ListEntity = UsuarioModel.GetList();
             return Page();
         }
 

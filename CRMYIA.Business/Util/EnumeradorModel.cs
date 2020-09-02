@@ -6,6 +6,7 @@ namespace CRMYIA.Business.Util
 {
     public class EnumeradorModel
     {
+        #region Configurações
         public enum TipoMensagem
         {
             Erro = 0,
@@ -20,5 +21,25 @@ namespace CRMYIA.Business.Util
             Telefone = 2,
             Mensagem = 3
         }
+
+        public enum PasswordStrength
+        {
+            Inaceitavel,
+            Fraca,
+            Aceitavel,
+            Forte,
+            Segura
+        }
+        #endregion
+
+        #region Perfil
+        public enum Perfil
+        {
+            Administrador = 1,
+            Gerente = 2,
+            Supervisor = 3,
+            Corretor = 4
+        }
+        #endregion
     }
 }

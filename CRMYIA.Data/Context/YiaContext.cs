@@ -65,7 +65,8 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdCidade);
 
-                entity.Property(e => e.IdCidade).ValueGeneratedOnAdd();
+                entity.HasIndex(e => new { e.IdCidade, e.CodigoIBGE })
+                    .HasName("IX_CODIGOIBGE");
 
                 entity.Property(e => e.CodigoIBGE)
                     .HasMaxLength(20)
@@ -108,6 +109,10 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.DataNascimento).HasColumnType("datetime");
+
+                entity.Property(e => e.Endereco)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
@@ -178,6 +183,10 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Endereco)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NomeFantasia)
                     .HasMaxLength(200)
@@ -366,8 +375,6 @@ namespace CRMYIA.Data.Context
             modelBuilder.Entity<Modulo>(entity =>
             {
                 entity.HasKey(e => e.IdModulo);
-
-                entity.Property(e => e.IdModulo).ValueGeneratedNever();
 
                 entity.Property(e => e.CssClass)
                     .HasMaxLength(200)

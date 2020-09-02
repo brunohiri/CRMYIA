@@ -12,6 +12,7 @@ namespace CRMYIA.Data.Model
         public string Titulo { get; set; }
         public string Mensagem { get; set; }
         public string CssClass { get; set; }
+        public string IconClass { get; set; }
         #endregion
 
         #region Construtores
@@ -20,6 +21,7 @@ namespace CRMYIA.Data.Model
             TipoMensagem = _TipoMensagem;
             Mensagem = _Mensagem;
             CssClass = ExtractCssClass(_TipoMensagem);
+            IconClass = ExtractIconClass(_TipoMensagem);
             Titulo = _Titulo.IsNullOrEmpty() ? ExtractTitulo(_TipoMensagem) : _Titulo;
         }
         #endregion
@@ -46,6 +48,29 @@ namespace CRMYIA.Data.Model
                     break;
             }
             return CssClass;
+        }
+
+        public static string ExtractIconClass(EnumeradorModel.TipoMensagem TipoMensagem)
+        {
+            string IconClass = string.Empty;
+            switch (TipoMensagem)
+            {
+                case EnumeradorModel.TipoMensagem.Erro:
+                    IconClass = "icon fas fa-ban";
+                    break;
+                case EnumeradorModel.TipoMensagem.Sucesso:
+                    IconClass = "icon fas fa-check";
+                    break;
+                case EnumeradorModel.TipoMensagem.Aviso:
+                    IconClass = "icon fas fa-info";
+                    break;
+                case EnumeradorModel.TipoMensagem.Info:
+                    IconClass = "icon fas fa-exclamation-triangle";
+                    break;
+                default:
+                    break;
+            }
+            return IconClass;
         }
 
         public static string ExtractTitulo(EnumeradorModel.TipoMensagem TipoMensagem)

@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.NovoCorretorModel
+@model CRMYIA.Web.Pages.NovoUsuarioModel
 @{
-    ViewData["Title"] = "Novo Corretor";
-    ViewData["Pagina"] = "Corretor";
+    ViewData["Title"] = "Novo Usuário";
+    ViewData["Pagina"] = "Usuário";
 }
 
 <div class="card card-default">
@@ -42,12 +42,12 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Corretora</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCorretora">
+                        <label>Perfil</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdPerfil">
                             <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListCorretora)
+                            @foreach (var Item in Model.ListPerfil)
                             {
-                                <option value="@Item.IdCorretora">@(Item.RazaoSocial.Length > 40 ? Item.RazaoSocial.Substring(0,40) + "..." : Item.RazaoSocial)</option>
+                                <option value="@Item.IdPerfil">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>

@@ -1,0 +1,52 @@
+﻿@page
+@model CRMYIA.Web.Pages.ListarCorretoraModel
+@{
+    ViewData["Title"] = "Listar";
+    ViewData["Pagina"] = "Corretoras";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="tableListagem" class="table table-bordered table-striped datatable">
+                    <thead>
+                        <tr>
+                            <th>Razao Social</th>
+                            <th>Nome Fantasia</th>
+                            <th>CNPJ</th>
+                            <th>Cidade/UF</th>
+                            <th>Cadastro</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListEntity)
+                            {
+                            <tr>
+                                <td>@Item.RazaoSocial</td>
+                                <td>@Item.NomeFantasia</td>
+                                <td>@Item.CNPJ?.FormatarCNPJ()</td>
+                                <td>@(string.Format("{0}-{1}", Item.IdCidadeNavigation.Descricao, Item.IdCidadeNavigation.IdEstadoNavigation.Sigla))</td>
+                                <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
+                                <td>
+                                    <a asp-page="/NovoCorretora" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCorretora.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

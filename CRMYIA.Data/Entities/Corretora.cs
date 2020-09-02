@@ -11,11 +11,12 @@ namespace CRMYIA.Data.Entities
         }
 
         public long IdCorretora { get; set; }
-        public byte? IdCidade { get; set; }
+        public int? IdCidade { get; set; }
         public string CNPJ { get; set; }
         public string RazaoSocial { get; set; }
         public string NomeFantasia { get; set; }
         public string CEP { get; set; }
+        public string Endereco { get; set; }
         public string Numero { get; set; }
         public string Bairro { get; set; }
         public string Complemento { get; set; }

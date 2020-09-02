@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CRMYIA.Web.Pages
 {
-    public class NovoCorretorModel : PageModel
+    public class NovoUsuarioModel : PageModel
     {
         #region Propriedades
         readonly IConfiguration _configuration;
@@ -27,12 +27,15 @@ namespace CRMYIA.Web.Pages
         public string ConfirmarSenha { get; set; }
 
         [BindProperty]
-        public List<Corretora> ListCorretora { get; set; }
+        public byte? IdPerfil { get; set; }
+
+        [BindProperty]
+        public List<Perfil> ListPerfil { get; set; }
 
         #endregion
 
         #region Construtores
-        public NovoCorretorModel(IConfiguration configuration)
+        public NovoUsuarioModel(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -47,10 +50,11 @@ namespace CRMYIA.Web.Pages
             {
                 Entity = UsuarioModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ConfirmarSenha = Entity.Senha;
+                IdPerfil = Entity.UsuarioPerfil.FirstOrDefault().IdPerfil;
             }
 
             Entity.DataCadastro = DateTime.Now;
-            ListCorretora = CorretoraModel.GetListIdDescricao();
+            ListPerfil = PerfilModel.GetListIdDescricao();
             return Page();
         }
 
@@ -58,7 +62,7 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
-                ListCorretora = CorretoraModel.GetListIdDescricao();
+                ListPerfil = PerfilModel.GetListIdDescricao();
 
                 if (!Util.IsCpf(Entity.CPF))
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF Inválido!");
@@ -94,11 +98,19 @@ namespace CRMYIA.Web.Pages
                             else
                             {
                                 UsuarioModel.Add(Entity);
-                                UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
+                                UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = IdPerfil, Ativo = true });
                             }
                         }
                         else
+                        {
                             UsuarioModel.Update(Entity);
+                            if (IdPerfil.HasValue)
+                            {
+                                UsuarioPerfil usuarioPerfil = UsuarioPerfilModel.Get(Entity.IdUsuario);
+                                usuarioPerfil.IdPerfil = IdPerfil;
+                                UsuarioPerfilModel.Update(usuarioPerfil);
+                            }
+                        }
 
                         Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }

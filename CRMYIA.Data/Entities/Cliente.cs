@@ -12,7 +12,7 @@ namespace CRMYIA.Data.Entities
         }
 
         public long IdCliente { get; set; }
-        public byte? IdCidade { get; set; }
+        public int? IdCidade { get; set; }
         public long? IdTelefone { get; set; }
         public long? IdEmail { get; set; }
         public byte? IdEstadoCivil { get; set; }
@@ -25,6 +25,7 @@ namespace CRMYIA.Data.Entities
         public string CartaoSus { get; set; }
         public DateTime? DataNascimento { get; set; }
         public string CEP { get; set; }
+        public string Endereco { get; set; }
         public string Numero { get; set; }
         public string Bairro { get; set; }
         public string Complemento { get; set; }
