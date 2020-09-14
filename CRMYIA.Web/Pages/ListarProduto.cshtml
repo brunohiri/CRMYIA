@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.ListarUsuarioModel
+@model CRMYIA.Web.Pages.ListarProdutoModel
 @{
     ViewData["Title"] = "Listar";
-    ViewData["Pagina"] = "Usuários";
+    ViewData["Pagina"] = "Convênios";
 }
 @using CRMYIA.Business.Util;
 
@@ -17,13 +17,13 @@
                 <table id="tableListagem" class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
-                            <th width="10%">Perfil</th>
-                            <th width="23%">Nome</th>
-                            <th width="10%">Email</th>
-                            <th width="15%">Telefone</th>
-                            <th width="15%">Cadastro</th>
-                            <th width="5%">Status</th>
-                            <th width="7%"></th>
+                            <th>Convênio</th>
+                            <th>Operadora</th>
+                            <th>Registro ANS</th>
+                            <th>Registro Plano</th>
+                            <th>Cadastro</th>
+                            <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,15 +32,14 @@
                             foreach (var Item in Model.ListEntity)
                             {
                                 <tr>
-                                    <td>@(Item.UsuarioPerfil != null ? Item.UsuarioPerfil?.First().IdPerfilNavigation?.Descricao : "")</td>
-                                    <td>@Item.Nome</td>
-                                    <td>@Item.Email</td>
-                                    <td>@Item.Telefone</td>
+                                    <td>@Item.Descricao</td>
+                                    <td>@(Item.IdOperadoraNavigation == null ? string.Empty : Item.IdOperadoraNavigation.Descricao)</td>
+                                    <td>@Item.RegistroANS</td>
+                                    <td>@Item.RegistroPlano</td>
                                     <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                     <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
                                     <td>
-                                        <a asp-page="/NovoUsuario" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                        <a asp-page="/VincularUsuario" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Vincular Usuários" class="text-info"><i class="icon fas fa-link"></i></a>
+                                        <a asp-page="/NovoProduto" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdProduto.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
                                     </td>
                                 </tr>
                             }

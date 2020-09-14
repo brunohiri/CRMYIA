@@ -77,6 +77,7 @@ namespace CRMYIA.Business
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
+                        .OrderBy(o => o.Descricao)
                         .ToList();
                 }
             }
@@ -101,7 +102,7 @@ namespace CRMYIA.Business
                             IdCidade = y.IdCidade,
                             Descricao = y.Descricao,
                             CodigoIBGE = y.CodigoIBGE
-                        }).ToList();
+                        }).OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)

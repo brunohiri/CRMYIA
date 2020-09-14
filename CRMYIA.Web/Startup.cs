@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Newtonsoft.Json.Serialization;
 
 namespace CRMYIA.Web
@@ -53,7 +54,12 @@ namespace CRMYIA.Web
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddMvc()
-             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+           .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             services.AddSession(opt =>
@@ -77,6 +83,9 @@ namespace CRMYIA.Web
                     ResponseCompressionDefaults.MimeTypes.Concat(
                         new[] { "image/svg+xml" });
             });
+
+            //Habilitando CORS
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,6 +116,9 @@ namespace CRMYIA.Web
             app.UseForwardedHeaders();
             app.UseSession();
             app.UseResponseCompression();
+
+            //Habilitando CORS
+            app.UseCors(option => option.AllowAnyOrigin());
 
             app.UseEndpoints(endpoints =>
             {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class EstadoModel
+    public class TipoLeadModel
     {
         #region Propriedades
         #endregion
@@ -21,15 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Estado Get(long IdEstado)
+        public static TipoLead Get(long IdTipoLead)
         {
-            Estado Entity = null;
+            TipoLead Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Estado
-                        .Where(x => x.Ativo)
+                    Entity = context.TipoLead
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.IdTipoLead == IdTipoLead)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -41,14 +42,14 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Estado> GetList()
+        public static List<TipoLead> GetList()
         {
-            List<Estado> ListEntity = null;
+            List<TipoLead> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.TipoLead
                         .Where(x => x.Ativo)
                         .AsNoTracking()
                         .OrderBy(o => o.Descricao).ToList();
@@ -61,22 +62,22 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Estado> GetListIdSigla()
+        public static List<TipoLead> GetListIdDescricao()
         {
-            List<Estado> ListEntity = null;
+            List<TipoLead> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.TipoLead
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .Select(y => new Estado()
+                        .Select(y => new TipoLead()
                         {
-                            IdEstado = y.IdEstado,
-                            Sigla = y.Sigla
-                        }).OrderBy(o => o.Sigla).ToList();
+                            IdTipoLead = y.IdTipoLead,
+                            Descricao = y.Descricao
+                        }).OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)
@@ -86,14 +87,14 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(Estado Entity)
+        public static void Add(TipoLead Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.AddAsync(Entity);
-                    context.SaveChangesAsync();
+                    context.TipoLead.Add(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)
@@ -102,14 +103,14 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Estado Entity)
+        public static void Update(TipoLead Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.Update(Entity);
-                    context.SaveChangesAsync();
+                    context.TipoLead.Update(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class EstadoModel
+    public class EmailModel
     {
         #region Propriedades
         #endregion
@@ -21,15 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Estado Get(long IdEstado)
+        public static Email Get(long IdEmail)
         {
-            Estado Entity = null;
+            Email Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Estado
-                        .Where(x => x.Ativo)
+                    Entity = context.Email
+                        .AsNoTracking()
+                        .Where(x => x.IdEmail == IdEmail)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -41,17 +42,18 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Estado> GetList()
+
+        public static List<Email> GetList()
         {
-            List<Estado> ListEntity = null;
+            List<Email> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.Email
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .OrderBy(o => o.Descricao).ToList();
+                        .OrderBy(o => o.EmailConta).ToList();
                 }
             }
             catch (Exception)
@@ -61,22 +63,17 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Estado> GetListIdSigla()
+        public static List<Email> GetList(long IdCliente)
         {
-            List<Estado> ListEntity = null;
+            List<Email> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.Email
+                        .Where(x => x.IdCliente == IdCliente)
                         .AsNoTracking()
-                        .Where(x => x.Ativo)
-                        .AsNoTracking()
-                        .Select(y => new Estado()
-                        {
-                            IdEstado = y.IdEstado,
-                            Sigla = y.Sigla
-                        }).OrderBy(o => o.Sigla).ToList();
+                        .OrderBy(o => o.EmailConta).ToList();
                 }
             }
             catch (Exception)
@@ -86,14 +83,14 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(Estado Entity)
+        public static void Add(Email Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.AddAsync(Entity);
-                    context.SaveChangesAsync();
+                    context.Email.Add(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)
@@ -102,14 +99,14 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Estado Entity)
+        public static void Update(Email Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.Update(Entity);
-                    context.SaveChangesAsync();
+                    context.Email.Update(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)

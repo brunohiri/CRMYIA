@@ -52,7 +52,7 @@ namespace CRMYIA.Business
                     ListEntity = context.Perfil
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .ToList();
+                        .OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)
@@ -77,7 +77,7 @@ namespace CRMYIA.Business
                         {
                             IdPerfil = y.IdPerfil,
                             Descricao = y.Descricao
-                        }).ToList();
+                        }).OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)

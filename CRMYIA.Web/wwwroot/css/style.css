@@ -1,0 +1,27 @@
+﻿/*Adicionado por Hiri*/
+.pull-right{
+    float:right;
+}
+
+.pull-right-button {
+    float: right;
+    margin-top: -30px;
+    margin-bottom: 10px;
+}
+
+.clear-both{
+    clear:both;
+}
+
+.font-12{
+    font-size:12px !important;
+}
+
+.font-13 {
+    font-size: 12px !important;
+}
+
+.div-blocked {
+    pointer-events: none;
+    opacity: 0.4;
+}

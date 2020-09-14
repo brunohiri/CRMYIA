@@ -131,11 +131,6 @@ namespace CRMYIA.Data.Context
                     .HasForeignKey(d => d.IdCidade)
                     .HasConstraintName("Cidade_Cliente");
 
-                entity.HasOne(d => d.IdEmailNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdEmail)
-                    .HasConstraintName("Email_Cliente");
-
                 entity.HasOne(d => d.IdEstadoCivilNavigation)
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdEstadoCivil)
@@ -150,11 +145,6 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdOrigem)
                     .HasConstraintName("Origem_Cliente");
-
-                entity.HasOne(d => d.IdTelefoneNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdTelefone)
-                    .HasConstraintName("Telefone_Cliente");
 
                 entity.HasOne(d => d.IdTipoLeadNavigation)
                     .WithMany(p => p.Cliente)
@@ -248,6 +238,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.EmailConta)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdClienteNavigation)
+                    .WithMany(p => p.Email)
+                    .HasForeignKey(d => d.IdCliente)
+                    .HasConstraintName("Cliente_Email");
             });
 
             modelBuilder.Entity<Estado>(entity =>
@@ -611,6 +606,11 @@ namespace CRMYIA.Data.Context
                     .HasColumnName("Telefone")
                     .HasMaxLength(10)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdClienteNavigation)
+                    .WithMany(p => p.Telefone)
+                    .HasForeignKey(d => d.IdCliente)
+                    .HasConstraintName("Cliente_Telefone");
 
                 entity.HasOne(d => d.IdOperadoraTelefoneNavigation)
                     .WithMany(p => p.Telefone)

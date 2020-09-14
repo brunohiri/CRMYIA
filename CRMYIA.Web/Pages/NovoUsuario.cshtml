@@ -40,15 +40,23 @@
                         <input type="text" class="form-control" placeholder="Nome" required asp-for="@Model.Entity.Nome">
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label>Perfil</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdPerfil">
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.UsuarioIdPerfil" id="UsuarioIdPerfil">
                             <option selected="selected">Selecione...</option>
                             @foreach (var Item in Model.ListPerfil)
                             {
                                 <option value="@Item.IdPerfil">@(Item.Descricao)</option>
                             }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Vincular</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdUsuarioHierarquia" id="IdUsuarioHierarquia">
+                            <option selected="selected">Selecione...</option>
                         </select>
                     </div>
                 </div>
@@ -76,8 +84,8 @@
                     <div class="form-group">
                         <label>Logar com </label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch3" checked asp-for="@Model.Entity.Ativo">
-                            <label class="custom-control-label" for="customSwitch3">Email</label>
+                            <input type="checkbox" class="custom-control-input" id="LogarComEmail" checked asp-for="@Model.Entity.Ativo">
+                            <label class="custom-control-label" for="LogarComEmail">Email</label>
                         </div>
                     </div>
                 </div>
@@ -92,13 +100,13 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Senha</label>
-                        <input type="password" class="form-control" placeholder="Senha" required asp-for="@Model.Entity.Senha">
+                        <input type="password" class="form-control" placeholder="Senha" asp-for="@Model.Entity.Senha">
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Confirmar Senha</label>
-                        <input type="password" class="form-control" placeholder="Confirmar Senha" required asp-for="@Model.ConfirmarSenha">
+                        <input type="password" class="form-control" placeholder="Confirmar Senha" asp-for="@Model.ConfirmarSenha">
                     </div>
                 </div>
 
@@ -112,8 +120,8 @@
                     <div class="form-group">
                         <label>Status</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch3" checked asp-for="@Model.Entity.Ativo">
-                            <label class="custom-control-label" for="customSwitch3">Ativo</label>
+                            <input type="checkbox" class="custom-control-input" id="Ativo" checked asp-for="@Model.Entity.Ativo">
+                            <label class="custom-control-label" for="Ativo">Ativo</label>
                         </div>
                     </div>
                 </div>

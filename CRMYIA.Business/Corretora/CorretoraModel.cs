@@ -57,7 +57,7 @@ namespace CRMYIA.Business
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .ToList();
+                        .OrderBy(o => o.RazaoSocial).ToList();
                 }
             }
             catch (Exception)
@@ -83,7 +83,7 @@ namespace CRMYIA.Business
                             IdCorretora = y.IdCorretora,
                             RazaoSocial = y.RazaoSocial,
                             NomeFantasia = y.NomeFantasia
-                        }).ToList();
+                        }).OrderBy(o => o.RazaoSocial).ToList();
                 }
             }
             catch (Exception)

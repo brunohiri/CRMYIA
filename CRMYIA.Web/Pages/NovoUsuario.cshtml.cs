@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
@@ -27,7 +28,11 @@ namespace CRMYIA.Web.Pages
         public string ConfirmarSenha { get; set; }
 
         [BindProperty]
-        public byte? IdPerfil { get; set; }
+        public byte? UsuarioIdPerfil { get; set; }
+
+        [BindProperty]
+        public long? IdUsuarioHierarquia { get; set; }
+
 
         [BindProperty]
         public List<Perfil> ListPerfil { get; set; }
@@ -50,12 +55,33 @@ namespace CRMYIA.Web.Pages
             {
                 Entity = UsuarioModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ConfirmarSenha = Entity.Senha;
-                IdPerfil = Entity.UsuarioPerfil.FirstOrDefault().IdPerfil;
+                UsuarioIdPerfil = Entity.UsuarioPerfil != null && Entity.UsuarioPerfil.Count() > 0 ? Entity.UsuarioPerfil.FirstOrDefault().IdPerfil : null;
             }
 
             Entity.DataCadastro = DateTime.Now;
             ListPerfil = PerfilModel.GetListIdDescricao();
             return Page();
+        }
+
+        public IActionResult OnGetPerfil(byte idPerfil)
+        {
+            List<Usuario> ListUsuario = null;
+            try
+            {
+                if (idPerfil == (byte)EnumeradorModel.Perfil.Corretor)
+                    idPerfil = (byte)EnumeradorModel.Perfil.Supervisor;
+                else
+                if (idPerfil == (byte)EnumeradorModel.Perfil.Supervisor)
+                    idPerfil = (byte)EnumeradorModel.Perfil.Gerente;
+
+                ListUsuario = UsuarioModel.GetList(idPerfil);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return new JsonResult(new { status = true, List = ListUsuario.Select(x => new { IdUsuario = x.IdUsuario, Nome = x.Nome }).ToList() });
         }
 
         public IActionResult OnPost()
@@ -98,19 +124,47 @@ namespace CRMYIA.Web.Pages
                             else
                             {
                                 UsuarioModel.Add(Entity);
-                                UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = IdPerfil, Ativo = true });
+                                UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = UsuarioIdPerfil, Ativo = true });
+                                if (IdUsuarioHierarquia.HasValue)
+                                {
+                                    UsuarioHierarquiaModel.Add(new UsuarioHierarquia() { IdUsuarioSlave = Entity.IdUsuario, IdUsuarioMaster = IdUsuarioHierarquia, DataCadastro = DateTime.Now, Ativo = true });
+                                }
                             }
                         }
                         else
                         {
                             UsuarioModel.Update(Entity);
-                            if (IdPerfil.HasValue)
+                            #region Verifica UsuarioPerfil
+                            if (UsuarioIdPerfil.HasValue)
                             {
                                 UsuarioPerfil usuarioPerfil = UsuarioPerfilModel.Get(Entity.IdUsuario);
-                                usuarioPerfil.IdPerfil = IdPerfil;
-                                UsuarioPerfilModel.Update(usuarioPerfil);
+                                if (usuarioPerfil == null)
+                                    UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = UsuarioIdPerfil, Ativo = true });
+                                else
+                                {
+                                    usuarioPerfil.IdPerfil = UsuarioIdPerfil;
+                                    UsuarioPerfilModel.Update(usuarioPerfil);
+                                }
                             }
+                            #endregion
+
+                            #region Verifica UsuarioHierarquia
+                            if (IdUsuarioHierarquia.HasValue)
+                            {
+                                UsuarioHierarquia usuarioHierarquia = UsuarioHierarquiaModel.Get(Entity.IdUsuario);
+                                if (usuarioHierarquia == null)
+                                    UsuarioHierarquiaModel.Add(new UsuarioHierarquia() { IdUsuarioSlave = Entity.IdUsuario, IdUsuarioMaster = IdUsuarioHierarquia, DataCadastro = DateTime.Now, Ativo = true });
+                                else
+                                {
+                                    usuarioHierarquia.IdUsuarioSlave = Entity.IdUsuario;
+                                    usuarioHierarquia.IdUsuarioMaster = IdUsuarioHierarquia;
+                                    usuarioHierarquia.DataCadastro = DateTime.Now;
+                                    UsuarioHierarquiaModel.Update(usuarioHierarquia);
+                                }
+                            }
+                            #endregion
                         }
+
 
                         Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }

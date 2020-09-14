@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class EstadoModel
+    public class TelefoneModel
     {
         #region Propriedades
         #endregion
@@ -21,15 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Estado Get(long IdEstado)
+        public static Telefone Get(long IdTelefone)
         {
-            Estado Entity = null;
+            Telefone Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Estado
-                        .Where(x => x.Ativo)
+                    Entity = context.Telefone
+                        .AsNoTracking()
+                        .Where(x => x.IdTelefone == IdTelefone)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -41,17 +42,18 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Estado> GetList()
+
+        public static List<Telefone> GetList()
         {
-            List<Estado> ListEntity = null;
+            List<Telefone> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.Telefone
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .OrderBy(o => o.Descricao).ToList();
+                        .OrderBy(o => o.DataCadastro).ToList();
                 }
             }
             catch (Exception)
@@ -61,22 +63,18 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Estado> GetListIdSigla()
+        public static List<Telefone> GetList(long IdCliente)
         {
-            List<Estado> ListEntity = null;
+            List<Telefone> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.Telefone
+                        .Include(y => y.IdOperadoraTelefoneNavigation)
+                        .Where(x => x.IdCliente == IdCliente)
                         .AsNoTracking()
-                        .Where(x => x.Ativo)
-                        .AsNoTracking()
-                        .Select(y => new Estado()
-                        {
-                            IdEstado = y.IdEstado,
-                            Sigla = y.Sigla
-                        }).OrderBy(o => o.Sigla).ToList();
+                        .OrderBy(o => o.DataCadastro).ToList();
                 }
             }
             catch (Exception)
@@ -86,14 +84,14 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(Estado Entity)
+        public static void Add(Telefone Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.AddAsync(Entity);
-                    context.SaveChangesAsync();
+                    context.Telefone.Add(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)
@@ -102,14 +100,14 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Estado Entity)
+        public static void Update(Telefone Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.Update(Entity);
-                    context.SaveChangesAsync();
+                    context.Telefone.Update(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)

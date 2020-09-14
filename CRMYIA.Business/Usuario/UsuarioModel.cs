@@ -101,6 +101,48 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Usuario GetUsuariosMaster(long IdUsuario)
+        {
+            Usuario Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Usuario
+                        .Include(y=>y.UsuarioHierarquiaIdUsuarioMasterNavigation)
+                        .Where(x => x.IdUsuario == IdUsuario)
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static Usuario GetUsuariosSlave(long IdUsuario)
+        {
+            Usuario Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Usuario
+                        .Include(y => y.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                        .Where(x => x.IdUsuario == IdUsuario)
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<Usuario> GetList()
         {
             List<Usuario> ListEntity = null;
@@ -109,6 +151,9 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                        .ThenInclude(p => p.IdPerfilNavigation)
+                        .Include(c => c.IdCorretoraNavigation)
                         .AsNoTracking()
                         .ToList();
                 }
@@ -129,8 +174,10 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.Usuario
                         .Include(y => y.UsuarioPerfil)
-                        .ThenInclude(p => p.IdPerfilNavigation)
+                            .ThenInclude(p => p.IdPerfilNavigation)
                         .Include(c => c.IdCorretoraNavigation)
+                        .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                            .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
                         .AsNoTracking()
                         .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
                         .ToList();

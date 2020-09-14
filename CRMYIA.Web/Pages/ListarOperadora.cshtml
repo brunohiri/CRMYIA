@@ -1,0 +1,48 @@
+﻿@page
+@model CRMYIA.Web.Pages.ListarOperadoraModel
+@{
+    ViewData["Title"] = "Listar";
+    ViewData["Pagina"] = "Operadoras";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="tableListagem" class="table table-bordered table-striped datatable">
+                    <thead>
+                        <tr>
+                            <th>Operadora</th>
+                            <th>Convênios</th>
+                            <th>Cadastro</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListEntity)
+                            {
+                            <tr>
+                                <td>@Item.Descricao</td>
+                                <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.Produto == null ? 0 : Item.Produto.Count())))</td>
+                                <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
+                                <td>
+                                    <a asp-page="/NovoOperadora" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdOperadora.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+﻿@page
+@model CRMYIA.Web.Pages.ListarOrigemLeadModel
+@{
+    ViewData["Title"] = "Listar";
+    ViewData["Pagina"] = "Origem de Lead";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="tableListagem" class="table table-bordered table-striped datatable">
+                    <thead>
+                        <tr>
+                            <th>Descricao</th>
+                            <th>Leads</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListEntity)
+                            {
+                                <tr>
+                                    <td>@Item.Descricao</td>
+                                    <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.Cliente == null ? 0 : Item.Cliente.Count())))</td>
+                                    <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
+                                    <td>
+                                        <a asp-page="/NovoOrigemLead" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdOrigem.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

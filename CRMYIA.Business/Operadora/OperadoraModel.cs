@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class EstadoModel
+    public class OperadoraModel
     {
         #region Propriedades
         #endregion
@@ -21,15 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Estado Get(long IdEstado)
+        public static Operadora Get(long IdOperadora)
         {
-            Estado Entity = null;
+            Operadora Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Estado
-                        .Where(x => x.Ativo)
+                    Entity = context.Operadora
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.IdOperadora == IdOperadora)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -41,14 +42,16 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Estado> GetList()
+        public static List<Operadora> GetList()
         {
-            List<Estado> ListEntity = null;
+            List<Operadora> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.Operadora
+                        .Include(y => y.Produto)
+                        .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
                         .OrderBy(o => o.Descricao).ToList();
@@ -61,22 +64,22 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Estado> GetListIdSigla()
+        public static List<Operadora> GetListIdDescricao()
         {
-            List<Estado> ListEntity = null;
+            List<Operadora> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Estado
+                    ListEntity = context.Operadora
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .Select(y => new Estado()
+                        .Select(y => new Operadora()
                         {
-                            IdEstado = y.IdEstado,
-                            Sigla = y.Sigla
-                        }).OrderBy(o => o.Sigla).ToList();
+                            IdOperadora = y.IdOperadora,
+                            Descricao = y.Descricao
+                        }).OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)
@@ -86,14 +89,14 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(Estado Entity)
+        public static void Add(Operadora Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.AddAsync(Entity);
-                    context.SaveChangesAsync();
+                    context.Operadora.Add(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)
@@ -102,14 +105,14 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Estado Entity)
+        public static void Update(Operadora Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Estado.Update(Entity);
-                    context.SaveChangesAsync();
+                    context.Operadora.Update(Entity);
+                    context.SaveChanges();
                 }
             }
             catch (Exception)
