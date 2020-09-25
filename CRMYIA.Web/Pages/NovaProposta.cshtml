@@ -1,0 +1,357 @@
+﻿@page
+@model CRMYIA.Web.Pages.NovaPropostaModel
+@{
+    ViewData["Title"] = "Nova";
+    ViewData["Pagina"] = "Proposta";
+}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+    </div>
+    <!-- /.card-header -->
+    <form method="post">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @if ((Model != null) && (Model.Mensagem != null))
+                        {
+                            <div class="@Model.Mensagem.CssClass alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i class="@Model.Mensagem.IconClass"></i>
+                                @Model.Mensagem.Mensagem
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdProposta">
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuario">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Data de Cadastro</label>
+                        <input type="text" class="form-control" placeholder="" asp-for="@Model.Entity.DataCadastro" readonly>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Data de Solicitação</label>
+                        <div class="input-group date" id="PropostaDataSolicitacao" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#PropostaDataSolicitacao" asp-for="@Model.Entity.DataSolicitacao" />
+                            <div class="input-group-append" data-target="#PropostaDataSolicitacao" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label>Corretor</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
+                            <option selected="selected">Selecione...</option>
+                            @foreach (var Item in Model.ListCorretor)
+                            {
+                                <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Próximo contato com o Cliente</label>
+                        <div class="input-group date" id="PropostaProximoContatoComCliente" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#ProximoContatoComCliente" asp-for="@Model.Entity.ProximoContatoComCliente" />
+                            <div class="input-group-append" data-target="#ProximoContatoComCliente" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCliente" id="PropostaIdClienteHidden">
+                        <label>Nome Completo</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCliente" id="PropostaIdCliente">
+                            <option selected="selected">Nome Completo</option>
+                            @foreach (var Item in Model.ListCliente)
+                            {
+                                <option value="@Item.IdCliente">@(Item.Nome)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" placeholder="Email" id="PropostaClienteEmail">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Celular/WhatsApp</label>
+                        <input type="text" class="form-control telefone" placeholder="Celular/WhatsApp" id="PropostaClienteCelular">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="text" class="form-control telefone" placeholder="Telefone" id="PropostaClienteTelefone">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Horário para ligar</label>
+                        <div class="input-group date" id="timepicker" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker" asp-for="@Model.Entity.HorarioParaLigar" placeholder="Horário para ligar" />
+                            <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Fase da Proposta</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdFaseProposta" id="PropostaIdFaseProposta">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListFaseProposta)
+                            {
+                                <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Modalidade</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdModalidade" id="PropostaIdModalidade">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListModalidade)
+                            {
+                                <option value="@Item.IdModalidade">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Produto</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdProduto" id="PropostaIdProduto">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListProduto)
+                            {
+                                <option value="@Item.IdProduto">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Valor da Proposta</label>
+                        <input type="text" class="form-control money" style="text-align:right;" placeholder="Valor da Proposta" asp-for="@Model.Entity.ValorPrevisto">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Qtd Vidas</label>
+                        <input type="text" class="form-control" style="text-align:right;" placeholder="Qtd Vidas" asp-for="@Model.Entity.QuantidadeVidas">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label>Possui Plano?</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="PropostaPossuiPlano" asp-for="@Model.Entity.PossuiPlano">
+                            <label class="custom-control-label" for="PropostaPossuiPlano">Sim</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Qual plano?</label>
+                        <input type="text" class="form-control" placeholder="Ex: Plano A" asp-for="@Model.Entity.PlanoJaUtilizado" id="PropostaPlanoJaUtilizado">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Há quanto tempo?</label>
+                        <input type="text" class="form-control" placeholder="Ex: 2 anos" asp-for="@Model.Entity.TempoPlano" id="PropostaTempoPlano">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Preferência Hospitalar</label>
+                        <input type="text" class="form-control" placeholder="Ex: Hospital X" asp-for="@Model.Entity.PreferenciaHospitalar" id="PropostaPreferenciaHospitalar">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Status da Proposta</label>
+                        <select class="form-control" style="width: 100%;" asp-for="@Model.Entity.IdStatusProposta" id="PropostaIdStatusProposta">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListStatusProposta)
+                            {
+                                <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Motivo do Declínio</label>
+                        <select class="form-control" style="width: 100%;" asp-for="@Model.Entity.IdMotivoDeclinio" id="PropostaIdMotivoDeclinio">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListMotivoDeclinio)
+                            {
+                                <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="PropostaAtivo" checked asp-for="@Model.Entity.Ativo">
+                            <label class="custom-control-label" for="PropostaAtivo">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Observações</label>
+                        <textarea rows="3" class="form-control" placeholder="Observações Gerais" asp-for="@Model.Entity.Observacoes"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    <br />
+                    <div class="row">
+                        <h5>Informe a quantidade de pessoas por faixa etária:</h5>
+                    </div>
+                    <br />
+                    @if (Model.ListFaixaEtaria != null && Model.ListFaixaEtaria.Count() > 0)
+                    {
+                        for (int i = 0; i < Model.ListFaixaEtaria.Count(); i++)
+                        {
+                            if ((i == 0) || (i % 5 == 0))
+                            {
+                                @Html.Raw("<div class=\"row\">")
+                            }
+
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>@Model.ListFaixaEtaria[i].Descricao</label>
+                                    <input type="text" class="form-control" placeholder="0" name="PropostaFaixaEtariaQuantidade"
+                                           value="@(Model.ListEntityPropostaFaixaEtaria == null || Model.ListEntityPropostaFaixaEtaria.Count() == 0 ? 0 : Model.ListEntityPropostaFaixaEtaria[i].Quantidade)" />
+                                </div>
+                            </div>
+
+                            if ((i + 1) % 5 == 0)
+                            {
+                                @Html.Raw("</div>")
+                            }
+                        }
+                        if (Model.ListFaixaEtaria.Count() % 5 > 0)
+                        {
+                            @Html.Raw("</div>")
+                        }
+                    }
+                </div>
+                <div class="col-sm-7">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card card-primary card-outline card-tabs">
+                                <div class="card-header p-0 pt-1 border-bottom-0">
+                                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Histórico</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Estudo</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">Produções</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                                        <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                                            <div class="timeline">
+                                                @if (Model.ListEntityHistoricoProposta != null && Model.ListEntityHistoricoProposta.Count() > 0)
+                                                {
+                                                    foreach (var Item in Model.ListEntityHistoricoProposta)
+                                                    {
+                                                        <!-- timeline time label -->
+                                                        <div class="time-label">
+                                                            <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                        </div>
+                                                        <!-- /.timeline-label -->
+                                                        <!-- timeline item -->
+                                                        <div>
+                                                            <i class="fas fa-user bg-green"></i>
+                                                            <div class="timeline-item">
+                                                                <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
+                                                                <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
+                                                                <div class="timeline-body">
+                                                                    @Item.Observacao
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- END timeline item -->
+                                                    }
+                                                    <div>
+                                                        <i class="fas fa-clock bg-gray"></i>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div>
+                                                        <i class="fas fa-clock bg-gray"></i>
+                                                         <div class="timeline-item">
+                                                                <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
+                                                                <div class="timeline-body">
+                                                                    Nenhum histórico registrado
+                                                                </div>
+                                                            </div>
+                                                       
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                                            Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
+                                            Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
+        </div>
+    </form>
+</div>

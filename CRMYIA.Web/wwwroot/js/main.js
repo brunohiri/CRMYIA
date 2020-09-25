@@ -3,6 +3,20 @@
     //Carregar DataTable
     InitDatatables();
 
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Timepicker
+    $('#timepicker').datetimepicker({
+        format: 'H:m',
+    })
+
+    //Date time picker
+    $('#PropostaDataSolicitacao,#PropostaProximoContatoComCliente').datetimepicker({
+        format: 'DD/MM/YYYY HH:mm:ss',
+        language: 'pt-br'
+    });
+
     //Masks
     $('.cep').blur(function () {
         $.ajax({
@@ -122,6 +136,9 @@
     SalvarCadastroTelefone();
     CarregarListaEmail();
     SalvarCadastroEmail();
+
+    //Cadastro de Propostas
+    CadastroPropostas();
 });
 
 function InitDatatables() {
@@ -391,7 +408,7 @@ function LimparCadastroEmail() {
     $('#EmailAtivo').attr('checked', true);
 }
 
-function SalvarCadastroEmail() { 
+function SalvarCadastroEmail() {
     $('#ButtonAdicionarModalEmail').click(function () {
         LimparCadastroEmail();
     });
@@ -414,4 +431,58 @@ function SalvarCadastroEmail() {
             CarregarListaEmail();
         });
     });
+}
+
+/* ========================== Cadastro de Propostas =================================== */
+function CadastroPropostas() {
+    $('#PropostaIdCliente').change(function () {
+        var IdCliente = $(this).val();
+        $.ajax({
+            type: "GET",
+            url: "/NovaProposta?handler=Cliente&Id=" + IdCliente,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $('#PropostaIdClienteHidden').val(data.entityCliente.idCliente);
+                $('#PropostaClienteCelular').val(data.entityCliente.celular);
+                $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
+                $('#PropostaClienteEmail').val(data.entityCliente.email);
+            }
+        });
+    });
+
+    $('#PropostaIdMotivoDeclinio').attr('disabled', 'disabled');
+    $('#PropostaIdStatusProposta').change(function () {
+        if ($(this).val() == 3) //Declinar
+        {
+            $('#PropostaIdMotivoDeclinio').removeAttr('disabled');
+            $('#PropostaIdMotivoDeclinio').val('0');
+        }
+        else {
+            $('#PropostaIdMotivoDeclinio').val('0');
+            $('#PropostaIdMotivoDeclinio').attr('disabled', 'disabled');
+        }
+    });
+
+    $('#PropostaPossuiPlano').removeAttr('checked');
+    CarregarPossuiPlano();
+    $('#PropostaPossuiPlano').click(function () {
+        CarregarPossuiPlano();
+        console.log($(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $('#PropostaPlanoJaUtilizado').removeAttr('disabled');
+            $('#PropostaTempoPlano').removeAttr('disabled');
+            $('#PropostaPreferenciaHospitalar').removeAttr('disabled');
+        }
+    });
+}
+
+function CarregarPossuiPlano() {
+    $('#PropostaPlanoJaUtilizado').attr('disabled', 'disabled');
+    $('#PropostaTempoPlano').attr('disabled', 'disabled');
+    $('#PropostaPreferenciaHospitalar').attr('disabled', 'disabled');
+    $('#PropostaPlanoJaUtilizado').val('');
+    $('#PropostaTempoPlano').val('');
+    $('#PropostaPreferenciaHospitalar').val('');
 }

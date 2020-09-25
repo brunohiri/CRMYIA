@@ -64,7 +64,8 @@ namespace CRMYIA.Web.Pages
                     {
                         //define o cookie
                         new Claim(ClaimTypes.Name, EntityUsuario.Nome),
-                        new Claim(ClaimTypes.Email, EntityUsuario.Email)
+                        new Claim(ClaimTypes.Email, EntityUsuario.Email),
+                        new Claim(ClaimTypes.PrimarySid, EntityUsuario.IdUsuario.ToString())
                     };
                     var minhaIdentity = new ClaimsIdentity(userClaims, "Usuario");
                     var userPrincipal = new ClaimsPrincipal(new[] { minhaIdentity });

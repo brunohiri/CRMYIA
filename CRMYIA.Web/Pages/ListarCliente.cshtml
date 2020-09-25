@@ -17,10 +17,11 @@
                 <table id="tableListagem" class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
-                            <th width="20%">Nome</th>
+                            <th width="15%">Nome</th>
                             <th width="10%">Origem</th>
                             <th width="10%">Tipo</th>
-                            <th width="20%">Cidade/UF</th>
+                            <th width="10%">Corretor</th>
+                            <th width="15%">Cidade/UF</th>
                             <th width="15%">Cadastro</th>
                             <th width="10%">Status</th>
                             <th width="5%"></th>
@@ -31,17 +32,18 @@
                         {
                             foreach (var Item in Model.ListEntity)
                             {
-                            <tr>
-                                <td>@(Item.Nome.Length > 30 ? Item.Nome.Substring(0,30) + "..." : Item.Nome)</td>
-                                <td>@Item.IdOrigemNavigation?.Descricao</td>
-                                <td>@Item.IdTipoLeadNavigation?.Descricao</td>
-                                <td>@(string.Format("{0}-{1}", Item.IdCidadeNavigation.Descricao, Item.IdCidadeNavigation.IdEstadoNavigation.Sigla))</td>
-                                <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
-                                <td>
-                                    <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCliente.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>@(Item.Nome.Length > 30 ? Item.Nome.Substring(0,30) + "..." : Item.Nome)</td>
+                            <td>@Item.IdOrigemNavigation?.Descricao</td>
+                            <td>@Item.IdTipoLeadNavigation?.Descricao</td>
+                            <td>@(Item.UsuarioCliente == null || Item.UsuarioCliente.Count == 0 ? "Sem Corretor" : Item.UsuarioCliente?.FirstOrDefault().IdUsuarioNavigation?.Nome)</td>
+                            <td>@(string.Format("{0}-{1}", Item.IdCidadeNavigation.Descricao, Item.IdCidadeNavigation.IdEstadoNavigation.Sigla))</td>
+                            <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
+                            <td>
+                                <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCliente.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                            </td>
+                        </tr>
                             }
                         }
                     </tbody>

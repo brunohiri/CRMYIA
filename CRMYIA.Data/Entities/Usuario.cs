@@ -10,7 +10,8 @@ namespace CRMYIA.Data.Entities
             HistoricoAcesso = new HashSet<HistoricoAcesso>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
             Meta = new HashSet<Meta>();
-            Proposta = new HashSet<Proposta>();
+            PropostaIdUsuarioCorretorNavigation = new HashSet<Proposta>();
+            PropostaIdUsuarioNavigation = new HashSet<Proposta>();
             UsuarioCliente = new HashSet<UsuarioCliente>();
             UsuarioHierarquiaIdUsuarioMasterNavigation = new HashSet<UsuarioHierarquia>();
             UsuarioHierarquiaIdUsuarioSlaveNavigation = new HashSet<UsuarioHierarquia>();
@@ -34,7 +35,8 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual ICollection<Meta> Meta { get; set; }
-        public virtual ICollection<Proposta> Proposta { get; set; }
+        public virtual ICollection<Proposta> PropostaIdUsuarioCorretorNavigation { get; set; }
+        public virtual ICollection<Proposta> PropostaIdUsuarioNavigation { get; set; }
         public virtual ICollection<UsuarioCliente> UsuarioCliente { get; set; }
         public virtual ICollection<UsuarioHierarquia> UsuarioHierarquiaIdUsuarioMasterNavigation { get; set; }
         public virtual ICollection<UsuarioHierarquia> UsuarioHierarquiaIdUsuarioSlaveNavigation { get; set; }

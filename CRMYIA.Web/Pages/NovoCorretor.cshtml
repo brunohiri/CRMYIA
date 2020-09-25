@@ -1,13 +1,13 @@
 ﻿@page
 @model CRMYIA.Web.Pages.NovoCorretorModel
 @{
-    ViewData["Title"] = "Novo Corretor";
+    ViewData["Title"] = "Novo";
     ViewData["Pagina"] = "Corretor";
 }
 
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">@ViewData["Title"]</h3>
+        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
     <form method="post">

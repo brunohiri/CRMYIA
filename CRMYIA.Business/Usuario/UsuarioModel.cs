@@ -109,7 +109,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     Entity = context.Usuario
-                        .Include(y=>y.UsuarioHierarquiaIdUsuarioMasterNavigation)
+                        .Include(y => y.UsuarioHierarquiaIdUsuarioMasterNavigation)
                         .Where(x => x.IdUsuario == IdUsuario)
                         .AsNoTracking()
                         .FirstOrDefault();
@@ -238,6 +238,28 @@ namespace CRMYIA.Business
 
             return EntityUsuario;
 
+        }
+
+        public static byte? GetPerfil(long IdUsuario)
+        {
+            byte? IdPerfil = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    IdPerfil = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                            .ThenInclude(p => p.IdPerfilNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.IdUsuario == IdUsuario)
+                        ?.FirstOrDefault()?.UsuarioPerfil.Select(x => new { IdPerfil = x.IdPerfil })?.FirstOrDefault()?.IdPerfil;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return IdPerfil;
         }
         #endregion
     }

@@ -100,6 +100,11 @@ namespace CRMYIA.Web.Pages
             Entity.DataCadastro = DateTime.Now;
             CarregarLists();
 
+            #region Telefone
+            EntityTelefone = new Telefone();
+            EntityTelefone.DataCadastro = DateTime.Now;
+            #endregion
+
             #region Email
             EntityEmail = new Email();
             EntityEmail.DataCadastro = DateTime.Now;

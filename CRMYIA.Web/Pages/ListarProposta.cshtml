@@ -1,0 +1,56 @@
+﻿@page
+@model CRMYIA.Web.Pages.ListarPropostaModel
+@{
+    ViewData["Title"] = "Listar";
+    ViewData["Pagina"] = "Propostas";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="tableListagem" class="table table-bordered table-striped datatable">
+                    <thead>
+                        <tr>
+                            <th width="15%">Modalidade</th>
+                            <th width="15%">Cliente</th>
+                            <th width="10%">Corretor</th>
+                            <th width="10%">Fase</th>
+                            <th width="10%">Valor</th>
+                            <th width="10%">Usuário</th>
+                            <th width="15%">Cadastro</th>
+                            <th width="10%">Status</th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListEntity)
+                            {
+                        <tr>
+                            <td>@(Item.IdModalidadeNavigation.Descricao.Length > 30 ? Item.IdModalidadeNavigation.Descricao.Substring(0,30) + "..." : Item.IdModalidadeNavigation.Descricao)</td>
+                            <td>@(Item.IdClienteNavigation.Nome.Length > 30 ? Item.IdClienteNavigation.Nome.Substring(0,30) + "..." : Item.IdClienteNavigation.Nome)</td>
+                            <td>@(Item.IdUsuarioCorretorNavigation.Nome.Length > 30 ? Item.IdUsuarioCorretorNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioCorretorNavigation.Nome)</td>
+                            <td>@(Item.IdFasePropostaNavigation.Descricao.Length > 30 ? Item.IdFasePropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdFasePropostaNavigation.Descricao)</td>
+                            <td style="text-align:right;">@(string.Format("{0:c2}", Convert.ToDecimal(Item.ValorPrevisto)))</td>
+                            <td>@(Item.IdUsuarioNavigation.Nome.Length > 30 ? Item.IdUsuarioNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioNavigation.Nome)</td>
+                            <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@(Item.IdStatusPropostaNavigation.Descricao.Length > 30 ? Item.IdStatusPropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdStatusPropostaNavigation.Descricao)</td>
+                            <td>
+                                <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdProposta.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,6 +23,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Email> Email { get; set; }
         public virtual DbSet<Estado> Estado { get; set; }
         public virtual DbSet<EstadoCivil> EstadoCivil { get; set; }
+        public virtual DbSet<FaixaEtaria> FaixaEtaria { get; set; }
         public virtual DbSet<FaseProposta> FaseProposta { get; set; }
         public virtual DbSet<Genero> Genero { get; set; }
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
@@ -39,6 +40,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<PerfilModulo> PerfilModulo { get; set; }
         public virtual DbSet<Produto> Produto { get; set; }
         public virtual DbSet<Proposta> Proposta { get; set; }
+        public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
         public virtual DbSet<StatusVisita> StatusVisita { get; set; }
         public virtual DbSet<Telefone> Telefone { get; set; }
@@ -265,6 +267,17 @@ namespace CRMYIA.Data.Context
                 entity.HasKey(e => e.IdEstadoCivil);
 
                 entity.Property(e => e.IdEstadoCivil).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<FaixaEtaria>(entity =>
+            {
+                entity.HasKey(e => e.IdFaixaEtaria);
+
+                entity.Property(e => e.IdFaixaEtaria).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
@@ -522,6 +535,10 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(2000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.PlanoJaUtilizado)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.PreferenciaHospitalar)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -565,9 +582,29 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("StatusProposta_Proposta");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany(p => p.Proposta)
+                    .WithMany(p => p.PropostaIdUsuarioNavigation)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_Proposta");
+
+                entity.HasOne(d => d.IdUsuarioCorretorNavigation)
+                    .WithMany(p => p.PropostaIdUsuarioCorretorNavigation)
+                    .HasForeignKey(d => d.IdUsuarioCorretor)
+                    .HasConstraintName("UsuarioCorretor_Proposta");
+            });
+
+            modelBuilder.Entity<PropostaFaixaEtaria>(entity =>
+            {
+                entity.HasKey(e => e.IdPropostaFaixaEtaria);
+
+                entity.HasOne(d => d.IdFaixaEtariaNavigation)
+                    .WithMany(p => p.PropostaFaixaEtaria)
+                    .HasForeignKey(d => d.IdFaixaEtaria)
+                    .HasConstraintName("FaixaEtaria_PropostaFaixaEtaria");
+
+                entity.HasOne(d => d.IdPropostaNavigation)
+                    .WithMany(p => p.PropostaFaixaEtaria)
+                    .HasForeignKey(d => d.IdProposta)
+                    .HasConstraintName("Proposta_PropostaFaixaEtaria");
             });
 
             modelBuilder.Entity<StatusProposta>(entity =>

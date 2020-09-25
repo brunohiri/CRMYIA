@@ -14,49 +14,21 @@
         <div class="card-body">
             <div class="row">
                 <div class="task-board">
-                    <div class="status-card">
-                        <div class="card-header">
-                            <span class="card-header-text">Oportunidade (lead)</span>
-                        </div>
-                        <ul class="sortable ui-sortable">
-                            <li class="text-row ui-sortable-handle">Tarefa 1</li>
-                            <li class="text-row ui-sortable-handle">Tarefa 2</li>
-                        </ul>
-                    </div>
-                    <div class="status-card">
-                        <div class="card-header">
-                            <span class="card-header-text">Cotação + Filtros</span>
-                        </div>
-                        <ul class="sortable ui-sortable">
-                            <li class="text-row ui-sortable-handle">Tarefa 3</li>
-                            <li class="text-row ui-sortable-handle">Tarefa 4</li>
-                        </ul>
-                    </div>
-                    <div class="status-card">
-                        <div class="card-header">
-                            <span class="card-header-text">Visita/Apresentação/Reunião</span>
-                        </div>
-                        <ul class="sortable ui-sortable">
-                            <li class="text-row ui-sortable-handle">Tarefa 5</li>
-                        </ul>
-                    </div>
-                    <div class="status-card">
-                        <div class="card-header">
-                            <span class="card-header-text">Implantação / Documentação</span>
-                        </div>
-                        <ul class="sortable ui-sortable">
-                            <li class="text-row ui-sortable-handle">Tarefa 6</li>
-                            <li class="text-row ui-sortable-handle">Tarefa 7</li>
-                        </ul>
-                    </div>
-                    <div class="status-card">
-                        <div class="card-header">
-                            <span class="card-header-text">Fechamento</span>
-                        </div>
-                        <ul class="sortable ui-sortable">
-                            <li class="text-row ui-sortable-handle">Tarefa 8</li>
-                        </ul>
-                    </div>
+                    @if (Model.ListFaseProposta != null)
+                    {
+                        foreach (var Item in Model.ListFaseProposta)
+                        {
+                            <div class="status-card">
+                                <div class="card-header">
+                                    <span class="card-header-text">@Item.Descricao</span>
+                                </div>
+                                <ul class="sortable ui-sortable">
+                                    <li class="text-row ui-sortable-handle">Proposta 1</li>
+                                    <li class="text-row ui-sortable-handle">Proposta 2</li>
+                                </ul>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </div>
