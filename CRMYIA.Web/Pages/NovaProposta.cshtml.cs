@@ -102,7 +102,8 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGetCliente(string Id)
         {
             ClienteViewModel EntityCliente = null;
-            EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmail(Id.ExtractLong());
+            if (Id != "undefined")
+                EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmail(Id.ExtractLong());
 
             return new JsonResult(new { entityCliente = EntityCliente });
         }
@@ -127,7 +128,7 @@ namespace CRMYIA.Web.Pages
                     PropostaModel.Add(Entity);
 
                     #region Salvar PropostaFaixaEtaria
-                    ListEntityPropostaFaixaEtaria = new List<PropostaFaixaEtaria>();
+                    ListPropostaFaixaEtaria = new List<PropostaFaixaEtaria>();
 
                     ListFaixaEtaria.ForEach(delegate (FaixaEtaria Item)
                         {
@@ -138,7 +139,7 @@ namespace CRMYIA.Web.Pages
                                 Quantidade = PropostaFaixaEtariaQuantidade[Item.IdFaixaEtaria - 1].ExtractInt32OrNull(),
                                 Ativo = true
                             });
-                    });
+                        });
 
                     PropostaFaixaEtariaModel.AddRange(ListPropostaFaixaEtaria);
                     #endregion

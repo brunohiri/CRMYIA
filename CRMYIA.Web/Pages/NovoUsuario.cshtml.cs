@@ -133,6 +133,8 @@ namespace CRMYIA.Web.Pages
                         }
                         else
                         {
+                            if (!Entity.Senha.IsNullOrEmpty())
+                                Entity.Senha = Criptography.Encrypt(Entity.Senha);
                             UsuarioModel.Update(Entity);
                             #region Verifica UsuarioPerfil
                             if (UsuarioIdPerfil.HasValue)

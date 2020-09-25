@@ -435,21 +435,15 @@ function SalvarCadastroEmail() {
 
 /* ========================== Cadastro de Propostas =================================== */
 function CadastroPropostas() {
+
+    if ($('#Entity_IdProposta').val() != 0) {
+        var IdCliente = $('#PropostaIdCliente').val();
+        CarregarClienteProposta(IdCliente);
+    }
+
     $('#PropostaIdCliente').change(function () {
         var IdCliente = $(this).val();
-        $.ajax({
-            type: "GET",
-            url: "/NovaProposta?handler=Cliente&Id=" + IdCliente,
-            contentType: "application/json",
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                $('#PropostaIdClienteHidden').val(data.entityCliente.idCliente);
-                $('#PropostaClienteCelular').val(data.entityCliente.celular);
-                $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
-                $('#PropostaClienteEmail').val(data.entityCliente.email);
-            }
-        });
+        CarregarClienteProposta(IdCliente);
     });
 
     $('#PropostaIdMotivoDeclinio').attr('disabled', 'disabled');
@@ -485,4 +479,21 @@ function CarregarPossuiPlano() {
     $('#PropostaPlanoJaUtilizado').val('');
     $('#PropostaTempoPlano').val('');
     $('#PropostaPreferenciaHospitalar').val('');
+}
+
+function CarregarClienteProposta(IdCliente) {
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Cliente&Id=" + IdCliente,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            if (data.entityCliente != null) {
+                $('#PropostaIdClienteHidden').val(data.entityCliente.idCliente);
+                $('#PropostaClienteCelular').val(data.entityCliente.celular);
+                $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
+                $('#PropostaClienteEmail').val(data.entityCliente.email);
+            }
+        }
+    });
 }

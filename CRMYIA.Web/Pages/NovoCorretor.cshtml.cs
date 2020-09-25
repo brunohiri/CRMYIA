@@ -98,7 +98,11 @@ namespace CRMYIA.Web.Pages
                             }
                         }
                         else
+                        {
+                            if (!Entity.Senha.IsNullOrEmpty())
+                                Entity.Senha = Criptography.Encrypt(Entity.Senha);
                             UsuarioModel.Update(Entity);
+                        }
 
                         Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }
