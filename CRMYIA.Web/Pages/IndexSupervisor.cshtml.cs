@@ -13,11 +13,11 @@ using Microsoft.Extensions.Logging;
 namespace CRMYIA.Web.Pages
 {
     [Authorize]
-    public class IndexCorretorModel : PageModel
+    public class IndexSupervisorModel : PageModel
     {
-        private readonly ILogger<IndexCorretorModel> _logger;
+        private readonly ILogger<IndexSupervisorModel> _logger;
 
-        public IndexCorretorModel(ILogger<IndexCorretorModel> logger)
+        public IndexSupervisorModel(ILogger<IndexSupervisorModel> logger)
         {
             _logger = logger;
         }

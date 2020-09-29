@@ -1,8 +1,8 @@
 ﻿@page
-@model IndexCorretorModel
+@model IndexGerenteModel
 @{
     ViewData["Title"] = "Dashboard";
-    ViewData["Pagina"] = "Corretor";
+    ViewData["Pagina"] = "Gerente";
 }
 
 <!-- Info boxes -->
@@ -12,9 +12,9 @@
             <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Propostas e <br/> Seguros Implantados</span>
+                <span class="info-box-text">Propostas e <br /> Seguros Implantados</span>
                 <span class="info-box-number">
-                    R$ 12.390,90
+                    R$ 956.390,90
                 </span>
             </div>
             <!-- /.info-box-content -->
@@ -28,7 +28,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Orçamentos <br />em Negociação</span>
-                <span class="info-box-number">2</span>
+                <span class="info-box-number">32</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -43,7 +43,7 @@
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Seguros à Renovar</span>
+                <span class="info-box-text">Nº de Corretores<br />Produzindo</span>
                 <span class="info-box-number">760</span>
             </div>
             <!-- /.info-box-content -->
@@ -56,7 +56,7 @@
             <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Apólices Vigentes</span>
+                <span class="info-box-text">Nº de Corretores<br />Inativos</span>
                 <span class="info-box-number">20</span>
             </div>
             <!-- /.info-box-content -->
@@ -115,7 +115,7 @@
                         </p>
 
                         <div class="progress-group">
-                           Amil
+                            Amil
                             <span class="float-right"><b>160</b>/200</span>
                             <div class="progress progress-sm">
                                 <div class="progress-bar bg-primary" style="width: 80%"></div>
@@ -233,7 +233,7 @@
                             <!-- Message. Default to the left -->
                             <div class="direct-chat-msg">
                                 <div class="direct-chat-infos clearfix">
-                                    <span class="direct-chat-name float-left">Corretor 1</span>
+                                    <span class="direct-chat-name float-left">Supervisor 1</span>
                                     <span class="direct-chat-timestamp float-right">@DateTime.Now.AddDays(-1).ToString("dd \"de\" MMM - HH:mm:ss")</span>
                                 </div>
                                 <!-- /.direct-chat-infos -->
@@ -248,7 +248,7 @@
                             <!-- Message to the right -->
                             <div class="direct-chat-msg right">
                                 <div class="direct-chat-infos clearfix">
-                                    <span class="direct-chat-name float-right">Supervisor 1</span>
+                                    <span class="direct-chat-name float-right">Gerente 1</span>
                                     <span class="direct-chat-timestamp float-left">@DateTime.Now.AddDays(-1).AddMinutes(34).ToString("dd \"de\" MMM - HH:mm:ss")</span>
                                 </div>
                                 <!-- /.direct-chat-infos -->
@@ -263,7 +263,7 @@
                             <!-- Message. Default to the left -->
                             <div class="direct-chat-msg">
                                 <div class="direct-chat-infos clearfix">
-                                    <span class="direct-chat-name float-left">Corretor 1</span>
+                                    <span class="direct-chat-name float-left">Supervisor 1</span>
                                     <span class="direct-chat-timestamp float-right">@DateTime.Now.AddDays(-1).AddMinutes(62).ToString("dd \"de\" MMM - HH:mm:ss")</span>
                                 </div>
                                 <!-- /.direct-chat-infos -->
@@ -278,7 +278,7 @@
                             <!-- Message to the right -->
                             <div class="direct-chat-msg right">
                                 <div class="direct-chat-infos clearfix">
-                                    <span class="direct-chat-name float-right">Supervisor 1</span>
+                                    <span class="direct-chat-name float-right">Gerente 1</span>
                                     <span class="direct-chat-timestamp float-left">@DateTime.Now.AddDays(-1).AddMinutes(86).ToString("dd \"de\" MMM - HH:mm:ss")</span>
                                 </div>
                                 <!-- /.direct-chat-infos -->
@@ -484,7 +484,7 @@
         <!-- TABLE: LATEST ORDERS -->
         <div class="card">
             <div class="card-header border-transparent">
-                <h3 class="card-title">Propostas Pendentes</h3>
+                <h3 class="card-title">Ranking de Supervisores (Produção e nº de vidas)</h3>
 
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -501,31 +501,22 @@
                     <table class="table m-0">
                         <thead>
                             <tr>
-                                <th>Nº da Proposta</th>
-                                <th>Operadora/Seguradora</th>
-                                <th>Adm</th>
-                                <th>Status</th>
-                                <th>Considerações</th>
-                                <th>Data Pendência</th>
+                                <th>Posição</th>
+                                <th>Nome</th>
+                                <th>Valor</th>
+                                <th>Nº de Vidas</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><a href="pages/examples/invoice.html">9842</a></td>
-                                <td>Amil</td>
-                                <td>Horrana</td>
-                                <td><span class="badge badge-warning">Pendente</span></td>
-                                <td>Pendente de Contrato Social</td>
-                                <td>20/09/2020</td>
-                            </tr>
-                            <tr>
-                                <td><a href="pages/examples/invoice.html">1848</a></td>
-                                <td>Azul Seguros</td>
-                                <td>Mayara</td>
-                                <td><span class="badge badge-warning">Pendente</span></td>
-                                <td>Pendente de Vistoria do Veículo</td>
-                                <td>19/09/2020</td>
-                            </tr>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <tr>
+                                    <td>@(i)º</td>
+                                    <td>Supervisor @i</td>
+                                    <td>@(Convert.ToDecimal(40000.12 / i).ToString("c2"))</td>
+                                    <td>@(string.Format("{0:#,0}", Convert.ToInt64(800 / i)))</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -533,7 +524,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer clearfix">
-                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver todas as pendências</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver o Ranking Completo</a>
             </div>
             <!-- /.card-footer -->
         </div>
@@ -542,33 +533,50 @@
     <!-- /.col -->
 
     <div class="col-md-4">
-        <!-- Info Boxes Style 2 -->
-        <div class="info-box mb-3 bg-warning">
-            <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+        <div class="card">
+            <div class="card-header border-transparent">
+                <h3 class="card-title">Ranking do Corretores</h3>
 
-            <div class="info-box-content">
-                <span class="info-box-text">Corretores Cadastrados</span>
-                <span class="info-box-number">200</span>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
-            <!-- /.info-box-content -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Nome</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <tr>
+                                    <td>@(i)º</td>
+                                    <td>Corretor @i</td>
+                                    <td>@(Convert.ToDecimal(40000.12 / i).ToString("c2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
         </div>
-        <!-- /.info-box -->
         <div class="info-box mb-3 bg-success">
             <span class="info-box-icon"><i class="far fa-heart"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Posição no ranking de Corretores</span>
+                <span class="info-box-text">Posição no ranking de Supervisores</span>
                 <span class="info-box-number">7º</span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-        <div class="info-box mb-3 bg-danger">
-            <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
-
-            <div class="info-box-content">
-                <span class="info-box-text">Inadimplência</span>
-                <span class="info-box-number">R$ 12.212,23</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -577,7 +585,7 @@
             <span class="info-box-icon"><i class="far fa-comment"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Aniversariantes do mês</span>
+                <span class="info-box-text">Corretores Aniversariantes do mês</span>
                 <span class="info-box-number">12</span>
             </div>
             <!-- /.info-box-content -->
