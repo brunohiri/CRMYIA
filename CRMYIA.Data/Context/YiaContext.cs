@@ -535,6 +535,10 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(2000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.PeriodoParaLigar)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.PlanoJaUtilizado)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -681,13 +685,17 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdUsuario);
 
-                entity.Property(e => e.CPF)
-                    .HasMaxLength(20)
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
-                entity.Property(e => e.DataNascimento).HasColumnType("datetime");
+                entity.Property(e => e.DataNascimentoAbertura).HasColumnType("datetime");
+
+                entity.Property(e => e.Documento)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(200)

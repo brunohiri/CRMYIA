@@ -325,13 +325,17 @@
     <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
     <!-- fullCalendar 2.2.5 -->
     <script src="../plugins/moment/moment.min.js"></script>
+
     <script src="../plugins/fullcalendar/main.min.js"></script>
     <script src="../plugins/fullcalendar-daygrid/main.min.js"></script>
     <script src="../plugins/fullcalendar-timegrid/main.min.js"></script>
     <script src="../plugins/fullcalendar-interaction/main.min.js"></script>
     <script src="../plugins/fullcalendar-bootstrap/main.min.js"></script>
     <script src='../plugins/fullcalendar/locales/pt-br.js'></script>
-    <script src="../js/CalendarVisit.js"></script>
+    @if (ViewData["Pagina"].ToString().ToUpper().Equals("VISITAS"))
+    {
+        <script src="../js/CalendarVisit.js"></script>
+    }
     <!-- Page specific script -->
     <!-- AdminLTE App   -->
     <script src="../js/adminlte.min.js"></script>
@@ -348,7 +352,10 @@
     <script src="../plugins/chart.js/Chart.min.js"></script>
 
     <!-- PAGE SCRIPTS -->
-    <script src="../js/pages/dashboard2.js"></script>
+    @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
+    {
+        <script src="../js/pages/dashboard2.js"></script>
+    }
 
     <script src="../js/main.js"></script>
 

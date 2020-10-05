@@ -41,7 +41,7 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static Usuario GetByCPF(string Cpf = null)
+        public static Usuario GetByDocumento(string Documento = null)
         {
             Usuario Entity = null;
             try
@@ -49,7 +49,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     Entity = context.Usuario
-                        .Where(x => x.CPF == Cpf)
+                        .Where(x => x.Documento == Documento)
                         //?.AsNoTracking()
                         ?.FirstOrDefault();
                 }
@@ -180,6 +180,7 @@ namespace CRMYIA.Business
                             .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
                         .AsNoTracking()
                         .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
+                        .OrderBy(o=>o.Nome)
                         .ToList();
                 }
             }

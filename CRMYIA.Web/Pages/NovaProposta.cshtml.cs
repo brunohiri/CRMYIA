@@ -35,6 +35,8 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public string[] PropostaFaixaEtariaId { get; set; }
 
+        public long? IdOperadora { get; set; }
+
         #region Lists
         [BindProperty]
         public List<Usuario> ListCorretor { get; set; }
@@ -52,7 +54,7 @@ namespace CRMYIA.Web.Pages
         public List<Modalidade> ListModalidade { get; set; }
 
         [BindProperty]
-        public List<Produto> ListProduto { get; set; }
+        public List<Operadora> ListOperadora { get; set; }
 
         [BindProperty]
         public List<MotivoDeclinio> ListMotivoDeclinio { get; set; }
@@ -78,12 +80,15 @@ namespace CRMYIA.Web.Pages
                 Entity = new Proposta();
                 Entity.DataSolicitacao = DateTime.Now;
                 Entity.ProximoContatoComCliente = DateTime.Now.AddDays(2);
+                IdOperadora = 0;
             }
             else
             {
                 Entity = PropostaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityHistoricoProposta = HistoricoPropostaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+
+                IdOperadora = Entity.IdProdutoNavigation?.IdOperadora;
             }
 
             #region Verificar se o usuário que está cadastrando a proposta é corretor
@@ -99,13 +104,32 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public IActionResult OnGetCliente(string Id)
+        public IActionResult OnGetCliente(string Id = null, string Documento = null)
         {
             ClienteViewModel EntityCliente = null;
-            if (Id != "undefined")
-                EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmail(Id.ExtractLong());
+            if ((Id != "undefined") && (Documento != "undefined"))
+            {
+                if (!Id.IsNullOrEmpty())
+                    EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmail(Id.ExtractLong());
+                else
+                if (!Documento.IsNullOrEmpty())
+                    EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(Documento);
+            }
 
             return new JsonResult(new { entityCliente = EntityCliente });
+        }
+
+        public IActionResult OnGetProduto(string Id)
+        {
+            List<Produto> ListProduto = null;
+            if (Id != "undefined")
+            {
+                if (!Id.IsNullOrEmpty())
+                    ListProduto = ProdutoModel.GetListIdDescricaoByOperadora(Id.ExtractLong());
+
+            }
+
+            return new JsonResult(new { status=true, listProduto = ListProduto });
         }
 
         public IActionResult OnPost()
@@ -167,7 +191,7 @@ namespace CRMYIA.Web.Pages
                 {
                     IdProposta = Entity.IdProposta,
                     IdUsuario = Entity.IdUsuario,
-                    Observacao = Observacao + (Entity.Observacoes.IsNullOrEmpty() ? string.Empty : " " + Observacao),
+                    Observacao = Observacao + (Entity.Observacoes.IsNullOrEmpty() || Entity.Observacoes.Equals(Observacao) ? string.Empty : " " + Observacao),
                     DataCadastro = DateTime.Now,
                     Ativo = true
                 });
@@ -197,7 +221,7 @@ namespace CRMYIA.Web.Pages
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             ListStatusProposta = StatusPropostaModel.GetListIdDescricao();
             ListModalidade = ModalidadeModel.GetListIdDescricao();
-            ListProduto = ProdutoModel.GetListIdDescricao();
+            ListOperadora = OperadoraModel.GetListIdDescricao();
             ListMotivoDeclinio = MotivoDeclinioModel.GetListIdDescricao();
             ListFaixaEtaria = FaixaEtariaModel.GetListIdDescricao();
         }

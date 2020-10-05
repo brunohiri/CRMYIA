@@ -81,6 +81,42 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static ClienteViewModel GetWithCidadeEstadoTelefoneEmailEndereco(string Documento)
+        {
+            ClienteViewModel Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Cliente
+                        .Include(y => y.IdCidadeNavigation)
+                            .ThenInclude(z => z.IdEstadoNavigation)
+                        .Include(t => t.Telefone)
+                        .Include(e => e.Email)
+                        .Include(cid => cid.IdCidadeNavigation)
+                            .ThenInclude(uf => uf.IdEstadoNavigation)
+                        .Where(x => x.CPF == Documento)
+                        .AsNoTracking()
+                        .Select(c => new ClienteViewModel()
+                        {
+                            IdCliente = c.IdCliente,
+                            Nome = c.Nome,
+                            DataNascAbertura = c.DataNascimento.HasValue ? c.DataNascimento.Value.ToString("dd/MM/yyyy") : string.Empty,
+                            Situacao = "Regular",
+                            Celular = (c.Telefone.Where(ct => ct.Ativo && ct.WhatsApp).Count() > 0 ? c.Telefone.Where(ct => ct.Ativo && ct.WhatsApp).OrderByDescending(o => o.DataCadastro).Select(ct => new { Celular = ct.DDD + ct.Telefone1 }).FirstOrDefault().Celular : string.Empty),
+                            Telefone = (c.Telefone.Where(ct => ct.Ativo && !ct.WhatsApp).Count() > 0 ? c.Telefone.Where(ct => ct.Ativo && !ct.WhatsApp).OrderByDescending(o => o.DataCadastro).Select(ct => new { Telefone = ct.DDD + ct.Telefone1 }).FirstOrDefault().Telefone : string.Empty),
+                            Email = (c.Email.Where(ct => ct.Ativo).Count() > 0 ? c.Email.Where(et => et.Ativo).OrderByDescending(o => o.DataCadastro).Select(et => new { Email = et.EmailConta }).FirstOrDefault().Email : string.Empty),
+                            Endereco = Util.Util.RetornarEnderecoCompleto(c.Endereco, c.Numero, c.Complemento, c.Bairro, c.IdCidadeNavigation.Descricao, c.IdCidadeNavigation.IdEstadoNavigation.Sigla, c.CEP)
+                        }).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static Cliente GetByCPF(string Cpf = null)
         {
             Cliente Entity = null;

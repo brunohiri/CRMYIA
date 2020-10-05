@@ -60,8 +60,8 @@ namespace CRMYIA.Web.Pages
             {
                 ListCorretora = CorretoraModel.GetListIdDescricao();
 
-                if (!Util.IsCpf(Entity.CPF))
-                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF Inválido!");
+                if ((!Util.IsCpf(Entity.Documento)) && (!Util.IsCnpj(Entity.Documento)))
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");
                 else
                 {
                     if (!Entity.Senha.IsNullOrEmpty())
@@ -86,8 +86,8 @@ namespace CRMYIA.Web.Pages
 
                         if (Entity.IdUsuario == 0)
                         {
-                            if (UsuarioModel.GetByCPF(Entity.CPF) != null)
-                                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF!");
+                            if (UsuarioModel.GetByDocumento(Entity.Documento) != null)
+                                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF ou CNPJ!");
                             else
                             if (UsuarioModel.GetByLogin(Entity.Login) != null)
                                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");

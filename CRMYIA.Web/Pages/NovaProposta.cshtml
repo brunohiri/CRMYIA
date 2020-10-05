@@ -4,6 +4,9 @@
     ViewData["Title"] = "Nova";
     ViewData["Pagina"] = "Proposta";
 }
+@using CRMYIA.Business;
+@using CRMYIA.Business.Util;
+@using System.Security.Claims;
 
 <div class="card card-default">
     <div class="card-header">
@@ -29,13 +32,13 @@
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdProposta">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuario">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Data de Cadastro</label>
                         <input type="text" class="form-control" placeholder="" asp-for="@Model.Entity.DataCadastro" readonly>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Data de Solicitação</label>
                         <div class="input-group date" id="PropostaDataSolicitacao" data-target-input="nearest">
@@ -46,88 +49,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Corretor</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListCorretor)
-                            {
-                                <option value="@Item.IdUsuario">@(Item.Nome)</option>
-                            }
-                        </select>
+                        @if (UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) == (byte?)EnumeradorModel.Perfil.Corretor)
+                        {
+                            <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
+                            <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />
+                        }
+                        else
+                        {
+                            <select class="form-control select2" style="width: 100%;"
+                                    asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
+                                <option selected="selected">Selecione...</option>
+                                @foreach (var Item in Model.ListCorretor)
+                                {
+                                    <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                }
+                            </select>
+                        }
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Próximo contato com o Cliente</label>
-                        <div class="input-group date" id="PropostaProximoContatoComCliente" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#ProximoContatoComCliente" asp-for="@Model.Entity.ProximoContatoComCliente" />
-                            <div class="input-group-append" data-target="#ProximoContatoComCliente" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <div class="form-group">
-                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCliente" id="PropostaIdClienteHidden">
-                        <label>Nome Completo</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCliente" id="PropostaIdCliente">
-                            <option selected="selected">Nome Completo</option>
-                            @foreach (var Item in Model.ListCliente)
-                            {
-                                <option value="@Item.IdCliente">@(Item.Nome)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" placeholder="Email" id="PropostaClienteEmail">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Celular/WhatsApp</label>
-                        <input type="text" class="form-control telefone" placeholder="Celular/WhatsApp" id="PropostaClienteCelular">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Telefone</label>
-                        <input type="text" class="form-control telefone" placeholder="Telefone" id="PropostaClienteTelefone">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Horário para ligar</label>
-                        <div class="input-group date" id="timepicker" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker" asp-for="@Model.Entity.HorarioParaLigar" placeholder="Horário para ligar" />
-                            <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="far fa-clock"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Fase da Proposta</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdFaseProposta" id="PropostaIdFaseProposta">
-                            <option selected="selected" value="0">Selecione...</option>
-                            @foreach (var Item in Model.ListFaseProposta)
-                            {
-                                <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
                     <div class="form-group">
                         <label>Modalidade</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdModalidade" id="PropostaIdModalidade">
@@ -141,26 +87,133 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Produto</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdProduto" id="PropostaIdProduto">
+                        <label>Operadora</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdOperadora" id="PropostaIdOperadora">
                             <option selected="selected" value="0">Selecione...</option>
-                            @foreach (var Item in Model.ListProduto)
+                            @foreach (var Item in Model.ListOperadora)
                             {
-                                <option value="@Item.IdProduto">@(Item.Descricao)</option>
+                                <option value="@Item.IdOperadora">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
                 </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Produto</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdProduto" id="PropostaIdProduto">
+                            <option selected="selected" value="0">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label>Valor da Proposta</label>
-                        <input type="text" class="form-control money" style="text-align:right;" placeholder="Valor da Proposta" asp-for="@Model.Entity.ValorPrevisto">
+                        <label>CPF/CNPJ</label>
+                        <input type="text" class="form-control cpf-cnpj" placeholder="CPF/CNPJ" required id="PropostaDocumentoCliente" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCliente" id="PropostaIdClienteHidden" />
+                        <label>Nome/Razão Social</label>
+                        <input type="text" class="form-control" placeholder="Nome/Razão Social" readonly id="PropostaClienteNome" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        <label>Data Nasc./Abertura</label>
+                        <input type="text" class="form-control" placeholder="Data de Nascimento ou Abertura" readonly id="PropostaClienteDataNascAbertura" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Situação</label>
+                        <input type="text" class="form-control" placeholder="Situação" readonly id="PropostaClienteSituacao" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Endereço</label>
+                        <input type="text" class="form-control" placeholder="Endereço" id="PropostaClienteEndereco" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" placeholder="Email" id="PropostaClienteEmail" readonly />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Celular/WhatsApp</label>
+                        <input type="text" class="form-control telefone" placeholder="Celular/WhatsApp" id="PropostaClienteCelular" readonly />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="text" class="form-control telefone" placeholder="Telefone" id="PropostaClienteTelefone" readonly />
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Próximo contato com o Cliente</label>
+                        <div class="input-group date" id="PropostaProximoContatoComCliente" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#ProximoContatoComCliente" asp-for="@Model.Entity.ProximoContatoComCliente" />
+                            <div class="input-group-append" data-target="#ProximoContatoComCliente" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Horário para ligar</label>
+                        @*<div class="input-group date" id="timepicker" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker" asp-for="@Model.Entity.HorarioParaLigar" placeholder="Horário para ligar" />
+                            <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                        </div>*@
+                        <select class="form-control" style="width: 100%;" asp-for="@Model.Entity.PeriodoParaLigar" id="PeriodoParaLigar">
+                            <option selected="selected" value="0">Selecione...</option>
+                            <option value="Manhã">Manhã</option>
+                            <option value="Tarde">Tarde</option>
+                            <option value="Noite">Noite</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Fase da Proposta</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdFaseProposta" id="PropostaIdFaseProposta">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListFaseProposta)
+                            {
+                                <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Valor da Proposta</label>
+                        <input type="text" class="form-control money" style="text-align:right;" placeholder="R$" asp-for="@Model.Entity.ValorPrevisto">
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
                         <label>Qtd Vidas</label>
-                        <input type="text" class="form-control" style="text-align:right;" placeholder="Qtd Vidas" asp-for="@Model.Entity.QuantidadeVidas">
+                        <input type="text" class="form-control" style="text-align:right;" placeholder="0" asp-for="@Model.Entity.QuantidadeVidas" id="PropostaQuantidadeVidas">
                     </div>
                 </div>
             </div>
@@ -255,7 +308,7 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label>@Model.ListFaixaEtaria[i].Descricao</label>
-                                    <input type="text" class="form-control" placeholder="0" name="PropostaFaixaEtariaQuantidade"
+                                    <input type="text" class="form-control faixaetaria" placeholder="0" name="PropostaFaixaEtariaQuantidade"
                                            value="@(Model.ListEntityPropostaFaixaEtaria == null || Model.ListEntityPropostaFaixaEtaria.Count() == 0 ? 0 : Model.ListEntityPropostaFaixaEtaria[i].Quantidade)" />
                                 </div>
                             </div>
@@ -322,13 +375,13 @@
                                                 {
                                                     <div>
                                                         <i class="fas fa-clock bg-gray"></i>
-                                                         <div class="timeline-item">
-                                                                <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
-                                                                <div class="timeline-body">
-                                                                    Nenhum histórico registrado
-                                                                </div>
+                                                        <div class="timeline-item">
+                                                            <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
+                                                            <div class="timeline-body">
+                                                                Nenhum histórico registrado
                                                             </div>
-                                                       
+                                                        </div>
+
                                                     </div>
                                                 }
 

@@ -439,11 +439,17 @@ function CadastroPropostas() {
     if ($('#Entity_IdProposta').val() != 0) {
         var IdCliente = $('#PropostaIdCliente').val();
         CarregarClienteProposta(IdCliente);
+        CarregarPropostaOperadoraProduto($('#PropostaIdProduto').val());
     }
 
     $('#PropostaIdCliente').change(function () {
         var IdCliente = $(this).val();
         CarregarClienteProposta(IdCliente);
+    });
+
+    $('#PropostaDocumentoCliente').blur(function () {
+        var Documento = $(this).val();
+        CarregarClientePropostaDocumento(Documento);
     });
 
     $('#PropostaIdMotivoDeclinio').attr('disabled', 'disabled');
@@ -470,6 +476,13 @@ function CadastroPropostas() {
             $('#PropostaPreferenciaHospitalar').removeAttr('disabled');
         }
     });
+
+    $('#PropostaIdOperadora').change(function () {
+        var IdOperadora = $(this).val();
+        CarregarPropostaOperadoraProduto(IdOperadora);
+    });
+
+    CalcularQuantidadeVidas();
 }
 
 function CarregarPossuiPlano() {
@@ -495,5 +508,56 @@ function CarregarClienteProposta(IdCliente) {
                 $('#PropostaClienteEmail').val(data.entityCliente.email);
             }
         }
+    });
+}
+
+function CarregarClientePropostaDocumento(Documento) {
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Cliente&Documento=" + Documento,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            if (data.entityCliente != null) {
+                $('#PropostaIdClienteHidden').val(data.entityCliente.idCliente);
+                $('#PropostaClienteNome').val(data.entityCliente.nome);
+                $('#PropostaClienteDataNascAbertura').val(data.entityCliente.dataNascAbertura);
+                $('#PropostaClienteSituacao').val(data.entityCliente.situacao);
+                $('#PropostaClienteEndereco').val(data.entityCliente.endereco);
+                $('#PropostaClienteCelular').val(data.entityCliente.celular);
+                $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
+                $('#PropostaClienteEmail').val(data.entityCliente.email);
+            }
+        }
+    });
+}
+
+function CarregarPropostaOperadoraProduto(IdOperadora) {
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Produto&Id=" + IdOperadora,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            var result = '';
+            if (data.status) {
+                result += '<option value="0" selected>Selecione...</option>';
+                for (var i = 0; i < data.listProduto.length; i++) {
+                    result += '<option value="' + data.listProduto[i].idProduto + '">' + data.listProduto[i].descricao + '</option>';
+                }
+                $('#PropostaIdProduto').html(result);
+            }
+        }
+    });
+}
+
+function CalcularQuantidadeVidas() {
+    $('.faixaetaria').change(function () {
+        var qtdSoma = 0;
+        for (var i = 0; i < $('.faixaetaria').length; i++) {
+            if ($('.faixaetaria')[i].value != '')
+                qtdSoma += parseInt($('.faixaetaria')[i].value);
+        }
+        $('#PropostaQuantidadeVidas').val(qtdSoma);
     });
 }

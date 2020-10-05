@@ -25,6 +25,7 @@ namespace CRMYIA.Data.Entities
         public DateTime? DataSolicitacao { get; set; }
         public DateTime? ProximoContatoComCliente { get; set; }
         public TimeSpan? HorarioParaLigar { get; set; }
+        public string PeriodoParaLigar { get; set; }
         public decimal? ValorPrevisto { get; set; }
         public int? QuantidadeVidas { get; set; }
         public bool PossuiPlano { get; set; }

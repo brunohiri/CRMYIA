@@ -221,6 +221,27 @@ namespace CRMYIA.Business.Util
                 return EnumeradorModel.PasswordStrength.Segura;
         }
         #endregion
+
+        #region TratarEndereco
+        public static string RetornarEnderecoCompleto(string Endereco = null, string Numero = null, string Complemento = null, string Bairro = null, string Cidade = null, string UF = null, string CEP = null)
+        {
+            string completo = string.Empty;
+
+            completo = Endereco;
+            completo += ", nº " + Numero;
+            if (!Complemento.IsNullOrEmpty())
+                completo += " - " + Complemento;
+            if (!Bairro.IsNullOrEmpty())
+                completo += ", " + Bairro;
+            if (!Cidade.IsNullOrEmpty())
+                completo += " - " + Cidade;
+            if (!UF.IsNullOrEmpty())
+                completo += "-" + UF;
+            if (!CEP.IsNullOrEmpty())
+                completo += " - CEP: " + CEP;
+            return completo;
+        }
+        #endregion
         #endregion
     }
 }

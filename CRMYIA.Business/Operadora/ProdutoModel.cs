@@ -89,6 +89,31 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Produto> GetListIdDescricaoByOperadora(long IdOperadora)
+        {
+            List<Produto> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Produto
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.IdOperadora == IdOperadora)
+                        .AsNoTracking()
+                        .Select(y => new Produto()
+                        {
+                            IdProduto = y.IdProduto,
+                            Descricao = y.Descricao
+                        }).OrderBy(o => o.Descricao).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static void Add(Produto Entity)
         {
             try

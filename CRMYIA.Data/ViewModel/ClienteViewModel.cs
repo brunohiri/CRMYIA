@@ -15,5 +15,11 @@ namespace CRMYIA.Data.ViewModel
         public string Telefone { get; set; }
 
         public string Email { get; set; }
+
+        public string Endereco { get; set; }
+
+        public string Situacao { get; set; }
+
+        public string DataNascAbertura { get; set; }
     }
 }

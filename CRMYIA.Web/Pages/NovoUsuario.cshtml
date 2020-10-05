@@ -10,7 +10,7 @@
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
-    <form method="post">
+    <form method="post" autocomplete="off">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -30,8 +30,8 @@
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuario">
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label>CPF</label>
-                        <input type="text" class="form-control cpf" placeholder="CPF" required asp-for="@Model.Entity.CPF">
+                        <label>CPF/CNPJ</label>
+                        <input type="text" class="form-control cpf-cnpj" placeholder="CPF/CNPJ" required asp-for="@Model.Entity.Documento">
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -64,8 +64,8 @@
             <div class="row">
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label>Data de Nascimento</label>
-                        <input type="date" class="form-control" placeholder="Data de Nascimento" asp-for="@Model.Entity.DataNascimento">
+                        <label>Data Nasc./Abertura</label>
+                        <input type="date" class="form-control" placeholder="Data de Nascimento ou Abertura" asp-for="@Model.Entity.DataNascimentoAbertura">
                     </div>
                 </div>
                 <div class="col-sm-2">

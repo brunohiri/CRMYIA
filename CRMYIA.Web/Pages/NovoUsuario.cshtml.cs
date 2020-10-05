@@ -90,18 +90,18 @@ namespace CRMYIA.Web.Pages
             {
                 ListPerfil = PerfilModel.GetListIdDescricao();
 
-                if (!Util.IsCpf(Entity.CPF))
-                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF Inválido!");
+                if ((!Util.IsCpf(Entity.Documento)) && (!Util.IsCnpj(Entity.Documento)))
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");
                 else
                 {
                     if (!Entity.Senha.IsNullOrEmpty())
                     {
                         EnumeradorModel.PasswordStrength classicacaoSenha = Util.GetPasswordStrength(Entity.Senha);
-                        if ((classicacaoSenha == EnumeradorModel.PasswordStrength.Aceitavel)
-                            || (classicacaoSenha == EnumeradorModel.PasswordStrength.Forte)
-                            || (classicacaoSenha == EnumeradorModel.PasswordStrength.Segura))
+                        if ((classicacaoSenha != EnumeradorModel.PasswordStrength.Aceitavel)
+                            && (classicacaoSenha != EnumeradorModel.PasswordStrength.Forte)
+                            && (classicacaoSenha != EnumeradorModel.PasswordStrength.Segura))
                         {
-                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, string.Format("Senha {0}! Utilize números, caracteres especiais e letras maiúsculas e minúsculas!", classicacaoSenha.ToString()));
+                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, string.Format("Sua senha foi considerada {0}! Melhore sua senha! Utilize números, caracteres especiais e letras maiúsculas e minúsculas!", classicacaoSenha.ToString()));
                         }
                         else
                         if (Entity.Senha != ConfirmarSenha)
@@ -116,8 +116,8 @@ namespace CRMYIA.Web.Pages
 
                         if (Entity.IdUsuario == 0)
                         {
-                            if (UsuarioModel.GetByCPF(Entity.CPF) != null)
-                                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF!");
+                            if (UsuarioModel.GetByDocumento(Entity.Documento) != null)
+                                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF/CNPJ!");
                             else
                             if (UsuarioModel.GetByLogin(Entity.Login) != null)
                                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");

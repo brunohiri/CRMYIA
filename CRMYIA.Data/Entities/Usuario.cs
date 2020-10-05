@@ -21,8 +21,9 @@ namespace CRMYIA.Data.Entities
         public long IdUsuario { get; set; }
         public long? IdCorretora { get; set; }
         public string Nome { get; set; }
-        public string CPF { get; set; }
-        public DateTime? DataNascimento { get; set; }
+        public string Documento { get; set; }
+        public DateTime? DataNascimentoAbertura { get; set; }
+        public string Codigo { get; set; }
         public string Telefone { get; set; }
         public string Email { get; set; }
         public string Login { get; set; }
