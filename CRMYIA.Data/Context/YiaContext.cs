@@ -17,8 +17,11 @@ namespace CRMYIA.Data.Context
         }
 
         public virtual DbSet<Cidade> Cidade { get; set; }
+        public virtual DbSet<Classificacao> Classificacao { get; set; }
         public virtual DbSet<Cliente> Cliente { get; set; }
         public virtual DbSet<Corretora> Corretora { get; set; }
+        public virtual DbSet<CorretoresCampinas> CorretoresCampinas { get; set; }
+        public virtual DbSet<CorretoresSP> CorretoresSP { get; set; }
         public virtual DbSet<Documento> Documento { get; set; }
         public virtual DbSet<Email> Email { get; set; }
         public virtual DbSet<Estado> Estado { get; set; }
@@ -38,6 +41,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Origem> Origem { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
         public virtual DbSet<PerfilModulo> PerfilModulo { get; set; }
+        public virtual DbSet<Producao> Producao { get; set; }
         public virtual DbSet<Produto> Produto { get; set; }
         public virtual DbSet<Proposta> Proposta { get; set; }
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
@@ -82,6 +86,17 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Cidade)
                     .HasForeignKey(d => d.IdEstado)
                     .HasConstraintName("Estado_Cidade");
+            });
+
+            modelBuilder.Entity<Classificacao>(entity =>
+            {
+                entity.HasKey(e => e.IdClassificacao);
+
+                entity.Property(e => e.IdClassificacao).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Cliente>(entity =>
@@ -196,6 +211,288 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Corretora)
                     .HasForeignKey(d => d.IdCidade)
                     .HasConstraintName("Cidade_Corretora");
+            });
+
+            modelBuilder.Entity<CorretoresCampinas>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.AcessoLimite)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Acordo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Apelido)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Assistente)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Ativo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Bairro)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BloqueiaComissaoSemNota)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BloqueiaPagtoComissao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BloqueiaProducao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CEP)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CNAE)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CPFResponsavel)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Cidade)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Complemento)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Coordenador)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CorretorClassificacao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CorretorTipo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Desbloqueios)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DescontaTaxa)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Documento)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DtNascimento)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EmailResponsavel)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Endereco)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.HashId)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IncluidoPor)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Inclusao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Loja)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MultiNotas)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MultiNotasDescricao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NaoGeraRemessa)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NascimentoResponsavel)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeResponsavel)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PermiteAntecipacao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PermiteDebitoCaixinha)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Pessoa)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Producao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Referencia)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Regiao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SUSEP)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Scanner)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SimplesNacional)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UltimaProducao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<CorretoresSP>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Assistente)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Bairro)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CEP)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CNAE)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CPFResponsavel)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Cidade)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Complemento)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CorretorClassificacao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Documento)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DtNascimento)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EmailResponsavel)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Endereco)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.HashId)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Inclusão)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Producao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Regiao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SUSEP)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UltimaProducao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Documento>(entity =>
@@ -495,6 +792,17 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Perfil_PerfilModulo");
             });
 
+            modelBuilder.Entity<Producao>(entity =>
+            {
+                entity.HasKey(e => e.IdProducao);
+
+                entity.Property(e => e.IdProducao).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Produto>(entity =>
             {
                 entity.HasKey(e => e.IdProduto);
@@ -721,10 +1029,20 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.IdClassificacaoNavigation)
+                    .WithMany(p => p.Usuario)
+                    .HasForeignKey(d => d.IdClassificacao)
+                    .HasConstraintName("Classificacao_Usuario");
+
                 entity.HasOne(d => d.IdCorretoraNavigation)
                     .WithMany(p => p.Usuario)
                     .HasForeignKey(d => d.IdCorretora)
                     .HasConstraintName("Corretora_Usuario");
+
+                entity.HasOne(d => d.IdProducaoNavigation)
+                    .WithMany(p => p.Usuario)
+                    .HasForeignKey(d => d.IdProducao)
+                    .HasConstraintName("Producao_Usuario");
             });
 
             modelBuilder.Entity<UsuarioCliente>(entity =>

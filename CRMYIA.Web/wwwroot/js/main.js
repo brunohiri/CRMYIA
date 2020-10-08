@@ -137,8 +137,14 @@
     CarregarListaEmail();
     SalvarCadastroEmail();
 
-    //Cadastro de Propostas
-    CadastroPropostas();
+    if (window.location.href.indexOf('NovaProposta') > 0) {
+        //Cadastro de Propostas
+        CadastroPropostas();
+    }
+    if (window.location.href.indexOf('Tarefa') > 0) {
+        //Cadastro de Tarefas
+        CadastroTarefas();
+    }
 });
 
 function InitDatatables() {
@@ -437,19 +443,19 @@ function SalvarCadastroEmail() {
 function CadastroPropostas() {
 
     if ($('#Entity_IdProposta').val() != 0) {
-        var IdCliente = $('#PropostaIdCliente').val();
-        CarregarClienteProposta(IdCliente);
+        var IdCliente = $('#PropostaIdClienteHidden').val();
+        CarregarClientePropostaDocumento(IdCliente, null);
         CarregarPropostaOperadoraProduto($('#PropostaIdProduto').val());
     }
 
     $('#PropostaIdCliente').change(function () {
         var IdCliente = $(this).val();
-        CarregarClienteProposta(IdCliente);
+        CarregarClientePropostaDocumento(IdCliente, null);
     });
 
     $('#PropostaDocumentoCliente').blur(function () {
         var Documento = $(this).val();
-        CarregarClientePropostaDocumento(Documento);
+        CarregarClientePropostaDocumento(null, Documento);
     });
 
     $('#PropostaIdMotivoDeclinio').attr('disabled', 'disabled');
@@ -469,7 +475,6 @@ function CadastroPropostas() {
     CarregarPossuiPlano();
     $('#PropostaPossuiPlano').click(function () {
         CarregarPossuiPlano();
-        console.log($(this).is(':checked'));
         if ($(this).is(':checked')) {
             $('#PropostaPlanoJaUtilizado').removeAttr('disabled');
             $('#PropostaTempoPlano').removeAttr('disabled');
@@ -494,32 +499,17 @@ function CarregarPossuiPlano() {
     $('#PropostaPreferenciaHospitalar').val('');
 }
 
-function CarregarClienteProposta(IdCliente) {
-    $.ajax({
-        type: "GET",
-        url: "/NovaProposta?handler=Cliente&Id=" + IdCliente,
-        contentType: "application/json",
-        dataType: "json",
-        success: function (data) {
-            if (data.entityCliente != null) {
-                $('#PropostaIdClienteHidden').val(data.entityCliente.idCliente);
-                $('#PropostaClienteCelular').val(data.entityCliente.celular);
-                $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
-                $('#PropostaClienteEmail').val(data.entityCliente.email);
-            }
-        }
-    });
-}
 
-function CarregarClientePropostaDocumento(Documento) {
+function CarregarClientePropostaDocumento(IdCliente, Documento) {
     $.ajax({
         type: "GET",
-        url: "/NovaProposta?handler=Cliente&Documento=" + Documento,
+        url: "/NovaProposta?handler=Cliente&Id=" + IdCliente + "&Documento=" + Documento,
         contentType: "application/json",
         dataType: "json",
         success: function (data) {
             if (data.entityCliente != null) {
                 $('#PropostaIdClienteHidden').val(data.entityCliente.idCliente);
+                $('#PropostaDocumentoCliente').val(data.entityCliente.documento);
                 $('#PropostaClienteNome').val(data.entityCliente.nome);
                 $('#PropostaClienteDataNascAbertura').val(data.entityCliente.dataNascAbertura);
                 $('#PropostaClienteSituacao').val(data.entityCliente.situacao);
@@ -533,9 +523,14 @@ function CarregarClientePropostaDocumento(Documento) {
 }
 
 function CarregarPropostaOperadoraProduto(IdOperadora) {
+    var IdProduto = 0;
+    if (IdOperadora == "0") {
+        IdProduto = $('#PropostaIdProdutoHidden').val();
+    }
+
     $.ajax({
         type: "GET",
-        url: "/NovaProposta?handler=Produto&Id=" + IdOperadora,
+        url: "/NovaProposta?handler=Produto&IdOperadora=" + IdOperadora + "&IdProduto=" + IdProduto,
         contentType: "application/json",
         dataType: "json",
         success: function (data) {
@@ -546,6 +541,12 @@ function CarregarPropostaOperadoraProduto(IdOperadora) {
                     result += '<option value="' + data.listProduto[i].idProduto + '">' + data.listProduto[i].descricao + '</option>';
                 }
                 $('#PropostaIdProduto').html(result);
+                if (IdOperadora == "0") {
+                    console.log(data.idOperadora);
+                    $('#PropostaIdProduto').val(IdProduto);
+                    $('#PropostaIdOperadora').val(data.idOperadora);
+                    $('.select2').select2();
+                }
             }
         }
     });
@@ -560,4 +561,38 @@ function CalcularQuantidadeVidas() {
         }
         $('#PropostaQuantidadeVidas').val(qtdSoma);
     });
+}
+
+function CadastroTarefas() {
+    $('ul[id^="sort"]').sortable(
+        {
+            connectWith: ".sortable",
+            receive: function (e, ui) {
+                var status_id = $(ui.item).parent(".sortable").data(
+                    "status-id");
+                var task_id = $(ui.item).data("task-id");
+                $.ajax({
+                    url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
+                    success: function (data) {
+                        if (data.status) {
+                            for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                    $('#sort' + status_id + ' li').eq(i).remove();
+                                }
+                            }
+                            AtualizarCardsPropostas();
+                        }
+                    }
+                });
+            }
+
+        }).disableSelection();
+
+    function AtualizarCardsPropostas() {
+        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
+            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
+                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
+            }
+        }
+    }
 }

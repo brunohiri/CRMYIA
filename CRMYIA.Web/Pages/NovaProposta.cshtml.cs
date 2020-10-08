@@ -107,29 +107,34 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGetCliente(string Id = null, string Documento = null)
         {
             ClienteViewModel EntityCliente = null;
-            if ((Id != "undefined") && (Documento != "undefined"))
-            {
-                if (!Id.IsNullOrEmpty())
-                    EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmail(Id.ExtractLong());
-                else
-                if (!Documento.IsNullOrEmpty())
-                    EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(Documento);
-            }
+            if ((!Id.IsNullOrEmpty()) && (Id.Replace("null", "undefined") != "undefined"))
+                EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(Id.ExtractLong(), null);
+            else
+            if ((!Documento.IsNullOrEmpty()) && (Documento.Replace("null", "undefined") != "undefined"))
+                    EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
 
             return new JsonResult(new { entityCliente = EntityCliente });
         }
 
-        public IActionResult OnGetProduto(string Id)
+        public IActionResult OnGetProduto(string IdOperadora = null, string IdProduto = null)
         {
             List<Produto> ListProduto = null;
-            if (Id != "undefined")
+            long? IdOperadoraProduto = 0;
+            if ((IdOperadora != "undefined") && (IdProduto != "undenfined"))
             {
-                if (!Id.IsNullOrEmpty())
-                    ListProduto = ProdutoModel.GetListIdDescricaoByOperadora(Id.ExtractLong());
+                if ((!IdOperadora.IsNullOrEmpty()) && (IdOperadora != "0"))
+                    ListProduto = ProdutoModel.GetListIdDescricaoByOperadora(IdOperadora.ExtractLong());
+                else
+                    if ((!IdProduto.IsNullOrEmpty()) && (IdProduto != "0"))
+                {
+                    Produto EntityProduto = ProdutoModel.Get(IdProduto.ExtractLong());
+                    IdOperadoraProduto = EntityProduto.IdOperadora;
+                    ListProduto = ProdutoModel.GetListIdDescricaoByOperadora(IdOperadoraProduto.Value);
+                }
 
             }
 
-            return new JsonResult(new { status=true, listProduto = ListProduto });
+            return new JsonResult(new { status = true, listProduto = ListProduto, idOperadora = IdOperadoraProduto });
         }
 
         public IActionResult OnPost()

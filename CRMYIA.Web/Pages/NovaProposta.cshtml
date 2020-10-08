@@ -100,6 +100,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Produto</label>
+                        <input type="hidden" id="PropostaIdProdutoHidden" value="@Model.Entity.IdProduto"/>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdProduto" id="PropostaIdProduto">
                             <option selected="selected" value="0">Selecione...</option>
                         </select>
@@ -213,7 +214,7 @@
                 <div class="col-sm-1">
                     <div class="form-group">
                         <label>Qtd Vidas</label>
-                        <input type="text" class="form-control" style="text-align:right;" placeholder="0" asp-for="@Model.Entity.QuantidadeVidas" id="PropostaQuantidadeVidas">
+                        <input type="text" class="form-control" style="text-align:right;" placeholder="0" asp-for="@Model.Entity.QuantidadeVidas" id="PropostaQuantidadeVidas" readonly>
                     </div>
                 </div>
             </div>

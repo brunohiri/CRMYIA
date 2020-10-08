@@ -53,7 +53,7 @@ namespace CRMYIA.Business
                     Entity = context.Cidade
                         .Include(p => p.IdEstadoNavigation)
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.CodigoIBGE == CodigoIBGE)
+                        .Where(x => x.Ativo && x.IdCidade == CodigoIBGE.ExtractInt32OrNull())
                         .AsNoTracking()
                         .FirstOrDefault();
                 }

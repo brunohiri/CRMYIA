@@ -6,7 +6,7 @@
     width: 100%;
     white-space: nowrap;
     overflow-x: scroll;
-    min-height: 400px;
+    min-height: 600px;
 }
 
 .status-card {
@@ -40,6 +40,10 @@ ul.sortable {
     padding-bottom: 10px;
 }
 
+    ul.sortable li a {
+        color: #000;
+    }
+
     ul.sortable li:last-child {
         margin-bottom: 0px;
     }
@@ -60,7 +64,20 @@ ul {
     cursor: pointer;
     font-size: 0.8em;
     white-space: normal;
-    line-height: 20px;
+    line-height: 5px;
+}
+
+.text-row-empty {
+    padding: 8px 10px;
+    margin: 10px;
+    background: #fff;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 0.8em;
+    white-space: normal;
+    line-height: 20px !important;
 }
 
 .ui-sortable-placeholder {

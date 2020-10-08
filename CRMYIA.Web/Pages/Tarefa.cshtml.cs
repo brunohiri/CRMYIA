@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CRMYIA.Business;
+using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
 using Microsoft.AspNetCore.Authorization;
@@ -37,9 +39,21 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet()
         {
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            ListEntityProposta = PropostaModel.GetList();
+            ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
 
             return Page();
+        }
+
+        public IActionResult OnGetEdit(string statusId = null, string taskId = null)
+        {
+            if ((!statusId.IsNullOrEmpty()) && (!taskId.IsNullOrEmpty()))
+            {
+                Proposta EntityProposta = PropostaModel.Get(taskId.ExtractLong());
+                EntityProposta.IdFaseProposta = statusId.ExtractByteOrNull();
+
+                PropostaModel.Update(EntityProposta);
+            }
+            return new JsonResult(new { status = true });
         }
         #endregion
     }

@@ -20,6 +20,8 @@ namespace CRMYIA.Data.Entities
 
         public long IdUsuario { get; set; }
         public long? IdCorretora { get; set; }
+        public byte? IdClassificacao { get; set; }
+        public byte? IdProducao { get; set; }
         public string Nome { get; set; }
         public string Documento { get; set; }
         public DateTime? DataNascimentoAbertura { get; set; }
@@ -32,7 +34,9 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
+        public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }
+        public virtual Producao IdProducaoNavigation { get; set; }
         public virtual ICollection<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual ICollection<Meta> Meta { get; set; }

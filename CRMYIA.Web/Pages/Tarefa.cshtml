@@ -1,13 +1,14 @@
 ﻿@page
 @model CRMYIA.Web.Pages.TarefaModel
 @{
-    ViewData["Title"] = "Lista de Tarefas";
+    ViewData["Title"] = "Lista de ";
     ViewData["Pagina"] = "Tarefas";
 }
+@using CRMYIA.Business.Util;
 
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">@ViewData["Title"]</h3>
+        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
     <form method="post">
@@ -22,9 +23,33 @@
                                 <div class="card-header">
                                     <span class="card-header-text">@Item.Descricao</span>
                                 </div>
-                                <ul class="sortable ui-sortable">
-                                    <li class="text-row ui-sortable-handle">Proposta 1</li>
-                                    <li class="text-row ui-sortable-handle">Proposta 2</li>
+                                <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta">
+                                    @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
+                                    {
+                                        if (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0)
+                                        {
+                                            foreach (var ItemProposta in Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList())
+                                            {
+                                                <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta">
+                                                    <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
+                                                        <p style="margin-top:10px;"><strong>Proposta:</strong> @ItemProposta.IdProposta</p>
+                                                        <p title="@ItemProposta.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdProdutoNavigation?.Descricao.Substring(0,22) + "..." : ItemProposta.IdProdutoNavigation?.Descricao)</strong></p>
+                                                        <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 20) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
+                                                        <p title="@ItemProposta.IdUsuarioCorretorNavigation.Nome"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 25 ? ItemProposta.IdUsuarioCorretorNavigation.Nome.Substring(0, 22) + "..." : ItemProposta.IdUsuarioCorretorNavigation.Nome)</p>
+                                                        <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
+                                    }
                                 </ul>
                             </div>
                         }

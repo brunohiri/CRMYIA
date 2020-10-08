@@ -81,7 +81,7 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static ClienteViewModel GetWithCidadeEstadoTelefoneEmailEndereco(string Documento)
+        public static ClienteViewModel GetWithCidadeEstadoTelefoneEmailEndereco(long? IdCliente = null, string Documento = null)
         {
             ClienteViewModel Entity = null;
             try
@@ -95,11 +95,12 @@ namespace CRMYIA.Business
                         .Include(e => e.Email)
                         .Include(cid => cid.IdCidadeNavigation)
                             .ThenInclude(uf => uf.IdEstadoNavigation)
-                        .Where(x => x.CPF == Documento)
+                        .Where(x => (!Documento.IsNullOrEmpty() ? x.CPF == Documento : x.IdCliente == IdCliente))
                         .AsNoTracking()
                         .Select(c => new ClienteViewModel()
                         {
                             IdCliente = c.IdCliente,
+                            Documento = c.CPF,
                             Nome = c.Nome,
                             DataNascAbertura = c.DataNascimento.HasValue ? c.DataNascimento.Value.ToString("dd/MM/yyyy") : string.Empty,
                             Situacao = "Regular",

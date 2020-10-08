@@ -69,6 +69,109 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Proposta> GetListCardProposta(long IdUsuario)
+        {
+            List<Proposta> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
+                    
+                    if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
+                    {
+                        ListEntity = context.Proposta
+                         .Include(y => y.IdModalidadeNavigation)
+                         .Include(y => y.IdFasePropostaNavigation)
+                         .Include(y => y.IdStatusPropostaNavigation)
+                         .Include(y => y.IdUsuarioCorretorNavigation)
+                         .Include(y => y.IdUsuarioNavigation)
+                         .Include(y => y.IdProdutoNavigation)
+                         .Include(y => y.IdClienteNavigation)
+                         .AsNoTracking()
+                         .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario)
+                         .AsNoTracking()
+                         .OrderBy(o => o.DataCadastro)
+                         .ToList()
+                         .Select(s => new Proposta()
+                         {
+                             IdProposta = s.IdProposta,
+                             IdClienteNavigation = s.IdClienteNavigation,
+                             IdFaseProposta = s.IdFaseProposta,
+                             IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                             IdUsuarioCorretor = s.IdUsuarioCorretor,
+                             IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                             IdProdutoNavigation = s.IdProdutoNavigation,
+                             DataCadastro = s.DataCadastro
+                         }).ToList();
+                    }
+                    else
+                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
+                    {
+                        ListEntity = context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                            .ThenInclude(t => t.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdProdutoNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario))
+                        .AsNoTracking()
+                        .OrderBy(o => o.DataCadastro)
+                        .ToList()
+                        .Select(s => new Proposta()
+                        {
+                            IdProposta = s.IdProposta,
+                            IdClienteNavigation = s.IdClienteNavigation,
+                            IdFaseProposta = s.IdFaseProposta,
+                            IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                            IdUsuarioCorretor = s.IdUsuarioCorretor,
+                            IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                            IdProdutoNavigation = s.IdProdutoNavigation,
+                            DataCadastro = s.DataCadastro
+                        }).ToList();
+                    }
+                    else
+                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
+                    {
+                        ListEntity = context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdProdutoNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.Ativo)
+                        .AsNoTracking()
+                        .OrderBy(o => o.DataCadastro)
+                        .ToList()
+                        .Select(s => new Proposta()
+                        {
+                            IdProposta = s.IdProposta,
+                            IdClienteNavigation = s.IdClienteNavigation,
+                            IdFaseProposta = s.IdFaseProposta,
+                            IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                            IdUsuarioCorretor = s.IdUsuarioCorretor,
+                            IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                            IdProdutoNavigation = s.IdProdutoNavigation,
+                            DataCadastro = s.DataCadastro
+                        }).ToList();
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static void Add(Proposta Entity)
         {
             try
