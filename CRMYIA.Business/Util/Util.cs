@@ -242,6 +242,17 @@ namespace CRMYIA.Business.Util
             return completo;
         }
         #endregion
+
+        #region Tratar Datas
+        public static DateTime GetFirstDayOfMonth(int month)
+        {
+            return new DateTime(DateTime.Now.Year, month, 1);
+        }
+        public static DateTime GetLastDayOfMonth(int month)
+        {
+            return new DateTime(DateTime.Now.Year, month, DateTime.DaysInMonth(DateTime.Now.Year, month));
+        }
+        #endregion
         #endregion
     }
 }

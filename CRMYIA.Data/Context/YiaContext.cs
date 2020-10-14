@@ -31,6 +31,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Genero> Genero { get; set; }
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
+        public virtual DbSet<KPIMeta> KPIMeta { get; set; }
         public virtual DbSet<Meta> Meta { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
@@ -648,6 +649,18 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_HistoricoProposta");
             });
 
+            modelBuilder.Entity<KPIMeta>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIMeta);
+
+                entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.IdTipoLeadNavigation)
+                    .WithMany(p => p.KPIMeta)
+                    .HasForeignKey(d => d.IdTipoLead)
+                    .HasConstraintName("TipoLead_KPIMeta");
+            });
+
             modelBuilder.Entity<Meta>(entity =>
             {
                 entity.HasKey(e => e.IdMeta);
@@ -936,6 +949,14 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdStatusVisita).ValueGeneratedOnAdd();
 
+                entity.Property(e => e.CorHexa)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CssClass)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -1103,6 +1124,10 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.DataVisitaRealizada).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Observacao)
                     .HasMaxLength(500)

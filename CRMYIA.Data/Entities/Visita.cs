@@ -8,6 +8,7 @@ namespace CRMYIA.Data.Entities
         public long IdVisita { get; set; }
         public long? IdProposta { get; set; }
         public byte? IdStatusVisita { get; set; }
+        public string Descricao { get; set; }
         public DateTime? DataAgendamento { get; set; }
         public DateTime DataCadastro { get; set; }
         public DateTime? DataVisitaRealizada { get; set; }

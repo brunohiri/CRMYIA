@@ -36,7 +36,7 @@ namespace CRMYIA.Web
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
             });
 
 
@@ -65,7 +65,7 @@ namespace CRMYIA.Web
             services.AddSession(opt =>
             {
                 opt.Cookie.IsEssential = true;
-                opt.IdleTimeout = TimeSpan.FromMinutes(30);
+                opt.IdleTimeout = TimeSpan.FromHours(6);
             });
 
             //Carregar IP corretamente

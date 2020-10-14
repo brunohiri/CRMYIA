@@ -102,7 +102,10 @@ namespace CRMYIA.Business
                              IdUsuarioCorretor = s.IdUsuarioCorretor,
                              IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
                              IdProdutoNavigation = s.IdProdutoNavigation,
-                             DataCadastro = s.DataCadastro
+                             DataCadastro = s.DataCadastro,
+                             ValorPrevisto = s.ValorPrevisto,
+                             QuantidadeVidas = s.QuantidadeVidas,
+                             ProximoContatoComCliente = s.ProximoContatoComCliente
                          }).ToList();
                     }
                     else
@@ -131,7 +134,10 @@ namespace CRMYIA.Business
                             IdUsuarioCorretor = s.IdUsuarioCorretor,
                             IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
                             IdProdutoNavigation = s.IdProdutoNavigation,
-                            DataCadastro = s.DataCadastro
+                            DataCadastro = s.DataCadastro,
+                            ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas,
+                            ProximoContatoComCliente = s.ProximoContatoComCliente
                         }).ToList();
                     }
                     else
@@ -159,7 +165,10 @@ namespace CRMYIA.Business
                             IdUsuarioCorretor = s.IdUsuarioCorretor,
                             IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
                             IdProdutoNavigation = s.IdProdutoNavigation,
-                            DataCadastro = s.DataCadastro
+                            DataCadastro = s.DataCadastro,
+                            ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas,
+                            ProximoContatoComCliente = s.ProximoContatoComCliente
                         }).ToList();
                     }
 

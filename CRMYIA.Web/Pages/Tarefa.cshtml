@@ -1,8 +1,8 @@
 ﻿@page
 @model CRMYIA.Web.Pages.TarefaModel
 @{
-    ViewData["Title"] = "Lista de ";
-    ViewData["Pagina"] = "Tarefas";
+    ViewData["Title"] = "";
+    ViewData["Pagina"] = "Funil de Vendas";
 }
 @using CRMYIA.Business.Util;
 
@@ -21,7 +21,18 @@
                         {
                             <div class="status-card">
                                 <div class="card-header">
-                                    <span class="card-header-text">@Item.Descricao</span>
+                                    <span class="card-header-text">
+                                        @Item.Descricao
+                                        <br />
+                                        @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0) && (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0))
+                                        {
+                                            @Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2");
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("R$ 0,00");
+                                        }
+                                        </span>
                                 </div>
                                 <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta">
                                     @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
@@ -32,11 +43,12 @@
                                             {
                                                 <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta">
                                                     <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
-                                                        <p style="margin-top:10px;"><strong>Proposta:</strong> @ItemProposta.IdProposta</p>
-                                                        <p title="@ItemProposta.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdProdutoNavigation?.Descricao.Substring(0,22) + "..." : ItemProposta.IdProdutoNavigation?.Descricao)</strong></p>
+                                                        <p style="margin-top:10px;" title="@ItemProposta.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdProdutoNavigation?.Descricao.Substring(0,22) + "..." : ItemProposta.IdProdutoNavigation?.Descricao)</strong></p>
                                                         <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 20) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
                                                         <p title="@ItemProposta.IdUsuarioCorretorNavigation.Nome"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 25 ? ItemProposta.IdUsuarioCorretorNavigation.Nome.Substring(0, 22) + "..." : ItemProposta.IdUsuarioCorretorNavigation.Nome)</p>
+                                                        <p><strong>Valor Previsto:</strong> @(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</p>
                                                         <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                                        <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
                                                     </a>
                                                 </li>
                                             }

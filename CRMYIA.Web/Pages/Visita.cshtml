@@ -1,6 +1,6 @@
 ﻿@page
 @model CRMYIA.Web.Pages.VisitaModel
-@{    
+@{
     ViewData["Title"] = "Lista de ";
     ViewData["Pagina"] = "Visitas";
 }
@@ -9,16 +9,13 @@
         <div class="sticky-top mb-3">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">@ViewData["Title"]</h4>
+                    <h4 class="card-title">Eventos não agendados </h4>
                 </div>
                 <div class="card-body">
                     <!-- the events -->
                     <div id="external-events">
-                        <div class="external-event bg-success">Almoço</div>
-                        <div class="external-event bg-warning">Ir para Casa</div>
-                        <div class="external-event bg-info">Fazer trabalho</div>
-                        <div class="external-event bg-primary">Visita</div>
-                        <div class="external-event bg-danger">Dormir</div>
+
+                        <div class="external-event bg-info">Nenhum evento</div>
                         <div class="checkbox">
                             <label for="drop-remove">
                                 <input type="checkbox" id="drop-remove">
@@ -35,20 +32,38 @@
                     <h3 class="card-title">Criar Evento</h3>
                 </div>
                 <div class="card-body">
+                    <span>Escolha um tipo de evento:</span>
                     <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
                         <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
                         <ul class="fc-color-picker" id="color-chooser">
-                            <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
-                            <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
-                            <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
-                            <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
-                            <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
+                            @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
+                            {
+                                foreach (var Item in Model.ListStatusVisita)
+                                {
+                                    <li><a class="@Item.CssClass" href="#" title="@Item.Descricao"><i class="fas fa-square"></i></a></li>
+                                }
+                            }
                         </ul>
                     </div>
                     <!-- /btn-group -->
-                    <div class="input-group">
+                    <div style="padding-bottom:10px;">
+                        <span>Título:</span>
                         <input id="new-event" type="text" class="form-control" placeholder="Título">
-
+                    </div>
+                    <div>
+                        <span>Data:</span>
+                        <div class="input-group date" id="new-event-datahora" data-target-input="nearest" style="padding-bottom:10px;">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#new-event-datahora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00:00")" id="new-event-datahoravalor" />
+                            <div class="input-group-append" data-target="#new-event-datahora" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding-bottom:10px;">
+                        <span>Observação:</span>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="input-group">
                         <div class="input-group-append">
                             <button id="add-new-event" type="button" class="btn btn-primary">Adicionar</button>
                         </div>

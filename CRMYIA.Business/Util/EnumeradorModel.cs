@@ -41,5 +41,17 @@ namespace CRMYIA.Business.Util
             Corretor = 4
         }
         #endregion
+
+
+        #region StatusVisita
+        public enum StatusVisita
+        {
+            Pendente = 1,
+            Agendada = 2,
+            Realizada = 3,
+            Adiada = 4,
+            Cancelada = 5
+        }
+        #endregion
     }
 }

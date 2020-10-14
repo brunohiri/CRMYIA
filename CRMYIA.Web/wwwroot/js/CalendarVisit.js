@@ -67,53 +67,28 @@
         },
         'themeSystem': 'bootstrap',
         //Random default events
-        events: [
-            {
-                title: 'Evento o dia todo',
-                start: new Date(y, m, 1),
-                backgroundColor: '#f56954', //red
-                borderColor: '#f56954', //red
-                allDay: true
-            },
-            {
-                title: 'Evento Longo',
-                start: new Date(y, m, d - 5),
-                end: new Date(y, m, d - 2),
-                backgroundColor: '#f39c12', //yellow
-                borderColor: '#f39c12' //yellow
-            },
-            {
-                title: 'Reunião',
-                start: new Date(y, m, d, 10, 30),
-                allDay: false,
-                backgroundColor: '#0073b7', //Blue
-                borderColor: '#0073b7' //Blue
-            },
-            {
-                title: 'Almoço',
-                start: new Date(y, m, d, 12, 0),
-                end: new Date(y, m, d, 14, 0),
-                allDay: false,
-                backgroundColor: '#00c0ef', //Info (aqua)
-                borderColor: '#00c0ef' //Info (aqua)
-            },
-            {
-                title: 'Festa de Aniversário',
-                start: new Date(y, m, d + 1, 19, 0),
-                end: new Date(y, m, d + 1, 22, 30),
-                allDay: false,
-                backgroundColor: '#00a65a', //Success (green)
-                borderColor: '#00a65a' //Success (green)
-            },
-            {
-                title: 'Click for Google',
-                start: new Date(y, m, 28),
-                end: new Date(y, m, 29),
-                url: 'http://google.com/',
-                backgroundColor: '#3c8dbc', //Primary (light-blue)
-                borderColor: '#3c8dbc' //Primary (light-blue)
-            }
-        ],
+        events: function (info, successCallback, failureCallback) {
+            $.ajax({
+                url: '/Visita?handler=Visitas',
+                //data: { idPerfil: $(this).val() },
+                cache: false,
+                async: false,
+                type: "GET",
+                success: function (data) {
+                    var events = [];
+                    $.map(data.listVisita, function (r) {
+                        events.push({
+                            title: r.title,
+                            backgroundColor: r.backgroundColor,
+                            borderColor: r.borderColor,
+                            start: r.start,
+                            allDay: r.allDay
+                        });
+                    });   
+                    successCallback(events);
+                }
+            });
+        },
         editable: true,
         droppable: true, // this allows things to be dropped onto the calendar !!!
         drop: function (info) {
@@ -145,7 +120,7 @@
     $('#add-new-event').click(function (e) {
         e.preventDefault()
         //Get value and make sure it is not null
-        var val = $('#new-event').val()
+        var val = $('#new-event-datahoravalor').val().split(' ')[1] + ' ' + $('#new-event').val();
         if (val.length == 0) {
             return
         }
@@ -159,6 +134,8 @@
         }).addClass('external-event')
         event.html(val)
         $('#external-events').prepend(event)
+
+        alert($('#new-event').val() + ' ' + $('#new-event-datahoravalor').val());
 
         //Add draggable funtionality
         ini_events(event)
