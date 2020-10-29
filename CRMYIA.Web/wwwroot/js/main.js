@@ -1,20 +1,22 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
 
     //Carregar DataTable
     InitDatatables();
 
     //Initialize Select2 Elements
-    $('.select2').select2()
+    $('.select2').select2();
 
     //Timepicker
     $('#timepicker').datetimepicker({
         format: 'H:m',
-    })
+    });
 
-    //Date time picker
-    $('#PropostaDataSolicitacao,#PropostaProximoContatoComCliente').datetimepicker({
-        format: 'DD/MM/YYYY HH:mm:ss',
-        language: 'pt-br'
+
+    $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+        format: 'DD/MM/YYYY HH:mm',
+        locale: moment.locale('pt-br'),
+        date: moment()
     });
 
     //Masks
@@ -445,7 +447,7 @@ function CadastroPropostas() {
     if ($('#Entity_IdProposta').val() != 0) {
         var IdCliente = $('#PropostaIdClienteHidden').val();
         CarregarClientePropostaDocumento(IdCliente, null);
-        CarregarPropostaOperadoraProduto($('#PropostaIdProduto').val());
+        CarregarPropostaLinhaCategoria($('#PropostaIdCategoria').val());
     }
 
     $('#PropostaIdCliente').change(function () {
@@ -485,6 +487,16 @@ function CadastroPropostas() {
     $('#PropostaIdOperadora').change(function () {
         var IdOperadora = $(this).val();
         CarregarPropostaOperadoraProduto(IdOperadora);
+    });
+
+    $('#PropostaIdProduto').change(function () {
+        var IdProduto = $(this).val();
+        CarregarPropostaProdutoLinha(IdProduto);
+    });
+
+    $('#PropostaIdLinha').change(function () {
+        var IdLinha = $(this).val();
+        CarregarPropostaLinhaCategoria(IdLinha);
     });
 
     CalcularQuantidadeVidas();
@@ -536,11 +548,14 @@ function CarregarPropostaOperadoraProduto(IdOperadora) {
         success: function (data) {
             var result = '';
             if (data.status) {
-                result += '<option value="0" selected>Selecione...</option>';
-                for (var i = 0; i < data.listProduto.length; i++) {
-                    result += '<option value="' + data.listProduto[i].idProduto + '">' + data.listProduto[i].descricao + '</option>';
+                if (data.listProduto.length > 0) {
+                    result = '<option value="0" selected>Selecione...</option>';
+                    for (var i = 0; i < data.listProduto.length; i++) {
+                        result += '<option value="' + data.listProduto[i].idProduto + '">' + data.listProduto[i].descricao + '</option>';
+                    }
+                    $('#PropostaIdProduto').html(result);
                 }
-                $('#PropostaIdProduto').html(result);
+
                 if (IdOperadora == "0") {
                     console.log(data.idOperadora);
                     $('#PropostaIdProduto').val(IdProduto);
@@ -551,6 +566,77 @@ function CarregarPropostaOperadoraProduto(IdOperadora) {
         }
     });
 }
+
+function CarregarPropostaProdutoLinha(IdProduto) {
+    var IdLinha = 0;
+    if (IdProduto == "0") {
+        IdLinha = $('#PropostaIdLinhaHidden').val();
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Linha&IdProduto=" + IdProduto + "&IdLinha=" + IdLinha,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            var result = '';
+            if (data.status) {
+                if (data.listLinha.length > 0) {
+                    result = '<option value="0" selected>Selecione...</option>';
+                    for (var i = 0; i < data.listLinha.length; i++) {
+                        result += '<option value="' + data.listLinha[i].idLinha + '">' + data.listLinha[i].descricao + '</option>';
+                    }
+                    $('#PropostaIdLinha').html(result);
+                }
+                if (IdProduto == "0") {
+                    $('#PropostaIdLinha').val(IdLinha);
+                    $('#PropostaIdProduto').val(data.idProduto);
+                    $('#PropostaIdProdutoHidden').val(data.idProduto);
+
+                    CarregarPropostaOperadoraProduto(0);
+
+                    $('.select2').select2();
+                }
+            }
+        }
+    });
+}
+
+function CarregarPropostaLinhaCategoria(IdLinha) {
+    var IdCategoria = 0;
+    if (IdLinha == "0") {
+        IdCategoria = $('#PropostaIdCategoriaHidden').val();
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Categoria&IdLinha=" + IdLinha + "&IdCategoria=" + IdCategoria,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            var result = '';
+            if (data.status) {
+                if (data.listCategoria.length > 0) {
+                    result = '<option value="0" selected>Selecione...</option>';
+                    for (var i = 0; i < data.listCategoria.length; i++) {
+                        result += '<option value="' + data.listCategoria[i].idCategoria + '">' + data.listCategoria[i].descricao + '</option>';
+                    }
+                    $('#PropostaIdCategoria').html(result);
+                }
+                if (IdLinha == "0") {
+                    $('#PropostaIdCategoria').val(IdCategoria);
+                    $('#PropostaIdLinha').val(data.idLinha);
+                    $('#PropostaIdLinhaHidden').val(data.idLinha);
+
+                    CarregarPropostaProdutoLinha(0);
+
+                    $('.select2').select2();
+                }
+            }
+        }
+    });
+}
+
 
 function CalcularQuantidadeVidas() {
     $('.faixaetaria').change(function () {

@@ -78,7 +78,7 @@ namespace CRMYIA.Business
                         .Include(y => y.IdStatusVisitaNavigation)
                         .Include(y => y.IdPropostaNavigation)
                         .AsNoTracking()
-                        .Where(x => x.IdPropostaNavigation.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true))
+                        .Where(x => x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true))
                         .AsNoTracking()
                         .OrderBy(o => o.DataAgendamento).ToList();
                 }
@@ -100,7 +100,7 @@ namespace CRMYIA.Business
                 if (ListEntity != null && ListEntity.Count() > 0)
                     ListEntityViewModel = ListEntity.Select(x => new VisitaViewModel()
                     {
-                        //id = x.IdVisita,
+                        sourceId = x.IdVisita,
                         backgroundColor = x.IdStatusVisitaNavigation.CorHexa,
                         borderColor = x.IdStatusVisitaNavigation.CorHexa,
                         start = x.DataAgendamento.Value,

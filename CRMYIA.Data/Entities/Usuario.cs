@@ -16,6 +16,7 @@ namespace CRMYIA.Data.Entities
             UsuarioHierarquiaIdUsuarioMasterNavigation = new HashSet<UsuarioHierarquia>();
             UsuarioHierarquiaIdUsuarioSlaveNavigation = new HashSet<UsuarioHierarquia>();
             UsuarioPerfil = new HashSet<UsuarioPerfil>();
+            Visita = new HashSet<Visita>();
         }
 
         public long IdUsuario { get; set; }
@@ -46,5 +47,6 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<UsuarioHierarquia> UsuarioHierarquiaIdUsuarioMasterNavigation { get; set; }
         public virtual ICollection<UsuarioHierarquia> UsuarioHierarquiaIdUsuarioSlaveNavigation { get; set; }
         public virtual ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual ICollection<Visita> Visita { get; set; }
     }
 }

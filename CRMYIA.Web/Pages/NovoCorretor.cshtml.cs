@@ -29,6 +29,12 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<Corretora> ListCorretora { get; set; }
 
+        [BindProperty]
+        public List<Classificacao> ListClassificacao { get; set; }
+
+        [BindProperty]
+        public List<Producao> ListProducao { get; set; }
+
         #endregion
 
         #region Construtores
@@ -51,6 +57,8 @@ namespace CRMYIA.Web.Pages
 
             Entity.DataCadastro = DateTime.Now;
             ListCorretora = CorretoraModel.GetListIdDescricao();
+            ListClassificacao = ClassificacaoModel.GetListIdDescricao();
+            ListProducao = ProducaoModel.GetListIdDescricao();
             return Page();
         }
 
@@ -59,6 +67,8 @@ namespace CRMYIA.Web.Pages
             try
             {
                 ListCorretora = CorretoraModel.GetListIdDescricao();
+                ListClassificacao = ClassificacaoModel.GetListIdDescricao();
+                ListProducao = ProducaoModel.GetListIdDescricao();
 
                 if ((!Util.IsCpf(Entity.Documento)) && (!Util.IsCnpj(Entity.Documento)))
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");

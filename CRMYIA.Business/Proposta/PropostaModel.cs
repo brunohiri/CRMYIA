@@ -86,7 +86,9 @@ namespace CRMYIA.Business
                          .Include(y => y.IdStatusPropostaNavigation)
                          .Include(y => y.IdUsuarioCorretorNavigation)
                          .Include(y => y.IdUsuarioNavigation)
-                         .Include(y => y.IdProdutoNavigation)
+                         .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
                          .Include(y => y.IdClienteNavigation)
                          .AsNoTracking()
                          .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario)
@@ -101,7 +103,7 @@ namespace CRMYIA.Business
                              IdFasePropostaNavigation = s.IdFasePropostaNavigation,
                              IdUsuarioCorretor = s.IdUsuarioCorretor,
                              IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
-                             IdProdutoNavigation = s.IdProdutoNavigation,
+                             IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
                              DataCadastro = s.DataCadastro,
                              ValorPrevisto = s.ValorPrevisto,
                              QuantidadeVidas = s.QuantidadeVidas,
@@ -118,7 +120,9 @@ namespace CRMYIA.Business
                         .Include(y => y.IdUsuarioCorretorNavigation)
                             .ThenInclude(t => t.UsuarioHierarquiaIdUsuarioSlaveNavigation)
                         .Include(y => y.IdUsuarioNavigation)
-                        .Include(y => y.IdProdutoNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
                         .Include(y => y.IdClienteNavigation)
                         .AsNoTracking()
                         .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario))
@@ -133,7 +137,7 @@ namespace CRMYIA.Business
                             IdFasePropostaNavigation = s.IdFasePropostaNavigation,
                             IdUsuarioCorretor = s.IdUsuarioCorretor,
                             IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
-                            IdProdutoNavigation = s.IdProdutoNavigation,
+                            IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
                             DataCadastro = s.DataCadastro,
                             ValorPrevisto = s.ValorPrevisto,
                             QuantidadeVidas = s.QuantidadeVidas,
@@ -149,7 +153,9 @@ namespace CRMYIA.Business
                         .Include(y => y.IdStatusPropostaNavigation)
                         .Include(y => y.IdUsuarioCorretorNavigation)
                         .Include(y => y.IdUsuarioNavigation)
-                        .Include(y => y.IdProdutoNavigation)
+                         .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
                         .Include(y => y.IdClienteNavigation)
                         .AsNoTracking()
                         .Where(x => x.Ativo)
@@ -164,7 +170,7 @@ namespace CRMYIA.Business
                             IdFasePropostaNavigation = s.IdFasePropostaNavigation,
                             IdUsuarioCorretor = s.IdUsuarioCorretor,
                             IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
-                            IdProdutoNavigation = s.IdProdutoNavigation,
+                            IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
                             DataCadastro = s.DataCadastro,
                             ValorPrevisto = s.ValorPrevisto,
                             QuantidadeVidas = s.QuantidadeVidas,

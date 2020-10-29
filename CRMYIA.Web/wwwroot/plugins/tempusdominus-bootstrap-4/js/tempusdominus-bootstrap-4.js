@@ -3,6 +3,7 @@
  * Copyright 2016-2018 Jonathan Peterson
  * Licensed under MIT (https://github.com/tempusdominus/bootstrap-3/blob/master/LICENSE)
  */
+import moment from 'moment';
 
 if (typeof jQuery === 'undefined') {
   throw new Error('Tempus Dominus Bootstrap4\'s requires jQuery. jQuery must be included before Tempus Dominus Bootstrap4\'s JavaScript.');
@@ -116,15 +117,15 @@ var DateTimePicker = function ($, moment) {
 
     var Default = {
         timeZone: '',
-        format: false,
-        dayViewHeaderFormat: 'MMMM YYYY',
+        format: "DD/MM/YYYY",
+        dayViewHeaderFormat: moment.format('DD/MM/YYYY HH:mm'),
         extraFormats: false,
         stepping: 1,
         minDate: false,
         maxDate: false,
         useCurrent: true,
         collapse: true,
-        locale: moment.locale(),
+        locale: moment.locale('pt-br'),
         defaultDate: false,
         disabledDates: false,
         enabledDates: false,

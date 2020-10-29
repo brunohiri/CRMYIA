@@ -34,12 +34,20 @@
                         <input type="text" class="form-control cpf-cnpj" placeholder="CPF/CNPJ" required asp-for="@Model.Entity.Documento">
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <div class="form-group">
                         <label>Nome</label>
                         <input type="text" class="form-control" placeholder="Nome" required asp-for="@Model.Entity.Nome">
                     </div>
                 </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" class="form-control" placeholder="Código" required asp-for="@Model.Entity.Codigo">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Corretora</label>
@@ -48,6 +56,30 @@
                             @foreach (var Item in Model.ListCorretora)
                             {
                                 <option value="@Item.IdCorretora">@(Item.RazaoSocial.Length > 40 ? Item.RazaoSocial.Substring(0,40) + "..." : Item.RazaoSocial)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Classificação</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdClassificacao">
+                            <option selected="selected">Selecione...</option>
+                            @foreach (var Item in Model.ListClassificacao)
+                            {
+                                <option value="@Item.IdClassificacao">@(Item.Descricao)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Produção</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdProducao">
+                            <option selected="selected">Selecione...</option>
+                            @foreach (var Item in Model.ListProducao)
+                            {
+                                <option value="@Item.IdProducao">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>

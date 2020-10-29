@@ -61,6 +61,9 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<FaixaEtaria> ListFaixaEtaria { get; set; }
+
+        [BindProperty]
+        public List<Porte> ListPorte { get; set; }
         #endregion
 
         #endregion
@@ -88,7 +91,7 @@ namespace CRMYIA.Web.Pages
                 ListEntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityHistoricoProposta = HistoricoPropostaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
-                IdOperadora = Entity.IdProdutoNavigation?.IdOperadora;
+                IdOperadora = Entity.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadora;
             }
 
             #region Verificar se o usuário que está cadastrando a proposta é corretor
@@ -111,7 +114,7 @@ namespace CRMYIA.Web.Pages
                 EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(Id.ExtractLong(), null);
             else
             if ((!Documento.IsNullOrEmpty()) && (Documento.Replace("null", "undefined") != "undefined"))
-                    EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
+                EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
 
             return new JsonResult(new { entityCliente = EntityCliente });
         }
@@ -123,7 +126,9 @@ namespace CRMYIA.Web.Pages
             if ((IdOperadora != "undefined") && (IdProduto != "undenfined"))
             {
                 if ((!IdOperadora.IsNullOrEmpty()) && (IdOperadora != "0"))
+                {
                     ListProduto = ProdutoModel.GetListIdDescricaoByOperadora(IdOperadora.ExtractLong());
+                }
                 else
                     if ((!IdProduto.IsNullOrEmpty()) && (IdProduto != "0"))
                 {
@@ -135,6 +140,52 @@ namespace CRMYIA.Web.Pages
             }
 
             return new JsonResult(new { status = true, listProduto = ListProduto, idOperadora = IdOperadoraProduto });
+        }
+
+        public IActionResult OnGetLinha(string IdProduto = null, string IdLinha = null)
+        {
+            List<Linha> ListLinha = null;
+            long? IdProdutoLinha = 0;
+            if ((IdProduto != "undefined") && (IdLinha != "undenfined"))
+            {
+                if ((!IdProduto.IsNullOrEmpty()) && (IdProduto != "0"))
+                {
+                    ListLinha = LinhaModel.GetListIdDescricaoByProduto(IdProduto.ExtractLong());
+                }
+                else
+                    if ((!IdLinha.IsNullOrEmpty()) && (IdLinha != "0"))
+                {
+                    Linha EntityLinha = LinhaModel.Get(IdLinha.ExtractLong());
+                    IdProdutoLinha = EntityLinha.IdProduto;
+                    ListLinha = LinhaModel.GetListIdDescricaoByProduto(IdProdutoLinha.Value);
+                }
+
+            }
+
+            return new JsonResult(new { status = true, listLinha = ListLinha, idProduto = IdProdutoLinha });
+        }
+
+        public IActionResult OnGetCategoria(string IdLinha = null, string IdCategoria = null)
+        {
+            List<Categoria> ListCategoria = null;
+            long? IdLinhaCategoria = 0;
+            if ((IdLinha != "undefined") && (IdCategoria != "undenfined"))
+            {
+                if ((!IdLinha.IsNullOrEmpty()) && (IdLinha != "0"))
+                {
+                    ListCategoria = CategoriaModel.GetListIdDescricaoByLinha(IdLinha.ExtractLong());
+                }
+                else
+                    if ((!IdCategoria.IsNullOrEmpty()) && (IdCategoria != "0"))
+                {
+                    Categoria EntityCategoria = CategoriaModel.Get(IdCategoria.ExtractLong());
+                    IdLinhaCategoria = EntityCategoria.IdLinha;
+                    ListCategoria = CategoriaModel.GetListIdDescricaoByLinha(IdLinhaCategoria.Value);
+                }
+
+            }
+
+            return new JsonResult(new { status = true, listCategoria = ListCategoria, idLinha = IdLinhaCategoria });
         }
 
         public IActionResult OnPost()
@@ -229,6 +280,7 @@ namespace CRMYIA.Web.Pages
             ListOperadora = OperadoraModel.GetListIdDescricao();
             ListMotivoDeclinio = MotivoDeclinioModel.GetListIdDescricao();
             ListFaixaEtaria = FaixaEtariaModel.GetListIdDescricao();
+            ListPorte = PorteModel.GetListIdDescricao();
         }
         #endregion
     }

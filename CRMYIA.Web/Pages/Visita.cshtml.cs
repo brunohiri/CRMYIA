@@ -18,6 +18,9 @@ namespace CRMYIA.Web.Pages
     {
         #region Propriedades
 
+        [BindProperty]
+        public Visita Entity { get; set; }
+
         #region Lists
         public List<StatusVisita> ListStatusVisita { get; set; }
         #endregion
@@ -28,9 +31,21 @@ namespace CRMYIA.Web.Pages
 
         #region Métodos
         public IActionResult OnGet()
+        { 
+                Entity = new Visita();
+                ListStatusVisita = StatusVisitaModel.GetList();
+                return Page();
+        }
+
+        public IActionResult OnGetByIdVisita(string IdVisita = null)
         {
-            ListStatusVisita = StatusVisitaModel.GetList();
-            return Page();
+            if (!IdVisita.IsNullOrEmpty())
+            {
+                Visita EntityVisita = Business.VisitaModel.Get(IdVisita.ExtractLong());
+                return new JsonResult(new { status = true, entityVisita = EntityVisita });
+            }
+            else
+                return new JsonResult(new { status = false });
         }
 
         public IActionResult OnGetVisitas()
@@ -42,6 +57,48 @@ namespace CRMYIA.Web.Pages
             ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month), Util.GetLastDayOfMonth(DateTime.Now.Month));
 
             return new JsonResult(new { status = true, listVisita = ListVisita });
+        }
+
+
+        public IActionResult OnPostVisitas()
+        {
+            List<VisitaViewModel> ListVisita = null;
+
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            if (Entity.Descricao.IsNullOrEmpty())
+                return new JsonResult(new { status = false, mensagem = "Campo Título obrigatório em branco!" });
+            else
+                 if (Entity.DataAgendamento == null)
+                return new JsonResult(new { status = false, mensagem = "Campo Data Hora obrigatório em branco!" });
+            else
+            {
+                if (Entity.IdVisita == 0)
+                {
+                    Business.VisitaModel.Add(new Visita()
+                    {
+                        Descricao = Entity.Descricao,
+                        DataAgendamento = Entity.DataAgendamento,
+                        DataCadastro = DateTime.Now,
+                        Observacao = Entity.Observacao,
+                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                        IdUsuario = IdUsuario
+                    });
+                }
+                else
+                {
+                    Visita EntityVisita = Business.VisitaModel.Get(Entity.IdVisita);
+                    EntityVisita.Descricao = Entity.Descricao;
+                    EntityVisita.DataAgendamento = Entity.DataAgendamento;
+                    EntityVisita.DataCadastro = DateTime.Now;
+                    EntityVisita.Observacao = Entity.Observacao;
+                    Business.VisitaModel.Update(EntityVisita);
+                }
+
+                ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month), Util.GetLastDayOfMonth(DateTime.Now.Month));
+
+                return new JsonResult(new { status = true, listVisita = ListVisita });
+            }
         }
 
         #endregion

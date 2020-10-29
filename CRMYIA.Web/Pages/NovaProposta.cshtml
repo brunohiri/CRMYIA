@@ -100,9 +100,41 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Produto</label>
-                        <input type="hidden" id="PropostaIdProdutoHidden" value="@Model.Entity.IdProduto"/>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdProduto" id="PropostaIdProduto">
+                        <input type="hidden" id="PropostaIdProdutoHidden" value="" />
+                        <select class="form-control select2" style="width: 100%;" id="PropostaIdProduto">
                             <option selected="selected" value="0">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Linha</label>
+                        <input type="hidden" id="PropostaIdLinhaHidden" value="" />
+                        <select class="form-control select2" style="width: 100%;" id="PropostaIdLinha">
+                            <option selected="selected" value="0">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <input type="hidden" id="PropostaIdCategoriaHidden" value="@Model.Entity.IdCategoria" />
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCategoria" id="PropostaIdCategoria">
+                            <option selected="selected" value="0">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Porte</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdPorte" id="PropostaIdPorte">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListPorte)
+                            {
+                                <option value="@Item.IdPorte">@(Item.Descricao)</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -178,12 +210,6 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label>Horário para ligar</label>
-                        @*<div class="input-group date" id="timepicker" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker" asp-for="@Model.Entity.HorarioParaLigar" placeholder="Horário para ligar" />
-                            <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="far fa-clock"></i></div>
-                            </div>
-                        </div>*@
                         <select class="form-control" style="width: 100%;" asp-for="@Model.Entity.PeriodoParaLigar" id="PeriodoParaLigar">
                             <option selected="selected" value="0">Selecione...</option>
                             <option value="Manhã">Manhã</option>

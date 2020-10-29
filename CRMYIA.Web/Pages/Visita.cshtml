@@ -1,13 +1,13 @@
 ﻿@page
 @model CRMYIA.Web.Pages.VisitaModel
 @{
-    ViewData["Title"] = "Lista de ";
+    ViewData["Title"] = "Agenda ";
     ViewData["Pagina"] = "Visitas";
 }
 <div class="row">
     <div class="col-md-3">
         <div class="sticky-top mb-3">
-            <div class="card">
+            <div class="card" style="display:none;">
                 <div class="card-header">
                     <h4 class="card-title">Eventos não agendados </h4>
                 </div>
@@ -18,7 +18,7 @@
                         <div class="external-event bg-info">Nenhum evento</div>
                         <div class="checkbox">
                             <label for="drop-remove">
-                                <input type="checkbox" id="drop-remove">
+                                <input type="checkbox" id="drop-remove" checked>
                                 remover depois de arrastar
                             </label>
                         </div>
@@ -32,43 +32,47 @@
                     <h3 class="card-title">Criar Evento</h3>
                 </div>
                 <div class="card-body">
-                    <span>Escolha um tipo de evento:</span>
-                    <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                        <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                        <ul class="fc-color-picker" id="color-chooser">
-                            @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
-                            {
-                                foreach (var Item in Model.ListStatusVisita)
+                    <form method="post" asp-page="/Visita" asp-page-handler="Visitas" id="formVisita">
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdVisita" id="VisitaIdVisita" />
+                        @Html.AntiForgeryToken()
+                        <span>Escolha um tipo de evento:</span>
+                        <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                            <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                            <ul class="fc-color-picker" id="color-chooser">
+                                @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
                                 {
-                                    <li><a class="@Item.CssClass" href="#" title="@Item.Descricao"><i class="fas fa-square"></i></a></li>
+                                    foreach (var Item in Model.ListStatusVisita)
+                                    {
+                                        <li><a class="@Item.CssClass" href="#" title="@Item.Descricao"><i class="fas fa-square"></i></a></li>
+                                    }
                                 }
-                            }
-                        </ul>
-                    </div>
-                    <!-- /btn-group -->
-                    <div style="padding-bottom:10px;">
-                        <span>Título:</span>
-                        <input id="new-event" type="text" class="form-control" placeholder="Título">
-                    </div>
-                    <div>
-                        <span>Data:</span>
-                        <div class="input-group date" id="new-event-datahora" data-target-input="nearest" style="padding-bottom:10px;">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#new-event-datahora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00:00")" id="new-event-datahoravalor" />
-                            <div class="input-group-append" data-target="#new-event-datahora" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="padding-bottom:10px;">
-                        <span>Observação:</span>
-                        <textarea class="form-control" rows="3"></textarea>
-                    </div>
-                    <div class="input-group">
-                        <div class="input-group-append">
-                            <button id="add-new-event" type="button" class="btn btn-primary">Adicionar</button>
+                            </ul>
                         </div>
                         <!-- /btn-group -->
-                    </div>
+                        <div style="padding-bottom:10px;">
+                            <span>Título:</span>
+                            <input id="VisitaTitulo" type="text" class="form-control" placeholder="Título" asp-for="@Model.Entity.Descricao">
+                        </div>
+                        <div>
+                            <span>Data:</span>
+                            <div class="input-group date" id="VisitaDataHora" data-target-input="nearest" style="padding-bottom:10px;">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#VisitaDataHora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00")" id="VisitaEventoDataHora" asp-for="@Model.Entity.DataAgendamento" />
+                                <div class="input-group-append" data-target="#VisitaDataHora" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding-bottom:10px;">
+                            <span>Observação:</span>
+                            <textarea class="form-control" rows="3" id="VisitaObservacao" asp-for="@Model.Entity.Observacao"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-append">
+                                <button id="add-new-event" type="button" class="btn btn-primary">Salvar</button>
+                            </div>
+                            <!-- /btn-group -->
+                        </div>
+                    </form>
                     <!-- /input-group -->
                 </div>
             </div>

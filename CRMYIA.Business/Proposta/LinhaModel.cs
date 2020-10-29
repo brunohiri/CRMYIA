@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class ProdutoModel
+    public class LinhaModel
     {
         #region Propriedades
         #endregion
@@ -21,16 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Produto Get(long IdProduto)
+        public static Linha Get(long IdLinha)
         {
-            Produto Entity = null;
+            Linha Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Produto
+                    Entity = context.Linha
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdProduto == IdProduto)
+                        .Where(x => x.Ativo && x.IdLinha == IdLinha)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -42,20 +42,18 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Produto> GetList()
+        public static List<Linha> GetList()
         {
-            List<Produto> ListEntity = null;
+            List<Linha> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Produto
-                        .Include(y => y.IdOperadoraNavigation)
-                        .Include(y => y.Linha)
+                    ListEntity = context.Linha
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .OrderBy(o => o.Descricao).ToList();
+                        .OrderBy(o => o.IdLinha).ToList();
                 }
             }
             catch (Exception)
@@ -65,20 +63,46 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Produto> GetListIdDescricao()
+        public static List<Linha> GetListIdDescricao()
         {
-            List<Produto> ListEntity = null;
+            List<Linha> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Produto
+                    ListEntity = context.Linha
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .Select(y => new Produto()
+                        .Select(y => new Linha()
                         {
-                            IdProduto = y.IdProduto,
+                            IdLinha = y.IdLinha,
+                            Descricao = y.Descricao
+                        }).OrderBy(o => o.IdLinha).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<Linha> GetListIdDescricaoByOperadora(long IdOperadora)
+        {
+            List<Linha> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Linha
+                        .AsNoTracking()
+                        .Include(y=>y.IdProdutoNavigation)
+                        .Where(x => x.Ativo && x.IdProdutoNavigation.IdOperadora == IdOperadora)
+                        .AsNoTracking()
+                        .Select(y => new Linha()
+                        {
+                            IdLinha = y.IdLinha,
                             Descricao = y.Descricao
                         }).OrderBy(o => o.Descricao).ToList();
                 }
@@ -90,20 +114,20 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Produto> GetListIdDescricaoByOperadora(long IdOperadora)
+        public static List<Linha> GetListIdDescricaoByProduto(long IdProduto)
         {
-            List<Produto> ListEntity = null;
+            List<Linha> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Produto
+                    ListEntity = context.Linha
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdOperadora == IdOperadora)
+                        .Where(x => x.Ativo && x.IdProduto == IdProduto)
                         .AsNoTracking()
-                        .Select(y => new Produto()
+                        .Select(y => new Linha()
                         {
-                            IdProduto = y.IdProduto,
+                            IdLinha = y.IdLinha,
                             Descricao = y.Descricao
                         }).OrderBy(o => o.Descricao).ToList();
                 }
@@ -115,13 +139,13 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(Produto Entity)
+        public static void Add(Linha Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Produto.Add(Entity);
+                    context.Linha.Add(Entity);
                     context.SaveChanges();
                 }
             }
@@ -131,13 +155,13 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Produto Entity)
+        public static void Update(Linha Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Produto.Update(Entity);
+                    context.Linha.Update(Entity);
                     context.SaveChanges();
                 }
             }

@@ -7,7 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public Produto()
         {
-            Proposta = new HashSet<Proposta>();
+            Linha = new HashSet<Linha>();
         }
 
         public long IdProduto { get; set; }
@@ -20,6 +20,6 @@ namespace CRMYIA.Data.Entities
         public bool Ativo { get; set; }
 
         public virtual Operadora IdOperadoraNavigation { get; set; }
-        public virtual ICollection<Proposta> Proposta { get; set; }
+        public virtual ICollection<Linha> Linha { get; set; }
     }
 }

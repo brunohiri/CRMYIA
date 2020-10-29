@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="../plugins/fullcalendar-daygrid/main.min.css">
     <link rel="stylesheet" href="../plugins/fullcalendar-timegrid/main.min.css">
     <link rel="stylesheet" href="../plugins/fullcalendar-bootstrap/main.min.css">
+    <!-- datetimepicker -->
+    <link rel="stylesheet" href="../plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
@@ -320,18 +322,20 @@
     <!-- bootstrap color picker -->
     <script src="../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
     <!-- date-range-picker -->
-    <script src="../plugins/daterangepicker/daterangepicker.js"></script>
+    @*<script src="../plugins/daterangepicker/daterangepicker.js"></script>*@
+    <!-- tempus dominus datetimepicker -->
+    <script src="../plugins/moment/moment-with-locales.js"></script>
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
     <!-- fullCalendar 2.2.5 -->
-    <script src="../plugins/moment/moment.min.js"></script>
-
     <script src="../plugins/fullcalendar/main.min.js"></script>
     <script src="../plugins/fullcalendar-daygrid/main.min.js"></script>
     <script src="../plugins/fullcalendar-timegrid/main.min.js"></script>
     <script src="../plugins/fullcalendar-interaction/main.min.js"></script>
     <script src="../plugins/fullcalendar-bootstrap/main.min.js"></script>
     <script src='../plugins/fullcalendar/locales/pt-br.js'></script>
+
+
     @if (ViewData["Pagina"].ToString().ToUpper().Equals("VISITAS"))
     {
         <script src="../js/CalendarVisit.js"></script>

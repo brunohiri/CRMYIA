@@ -57,51 +57,7 @@
         }
     });
 
-    var calendar = new Calendar(calendarEl, {
-        plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
-        locale: 'pt-br',
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        'themeSystem': 'bootstrap',
-        //Random default events
-        events: function (info, successCallback, failureCallback) {
-            $.ajax({
-                url: '/Visita?handler=Visitas',
-                //data: { idPerfil: $(this).val() },
-                cache: false,
-                async: false,
-                type: "GET",
-                success: function (data) {
-                    var events = [];
-                    $.map(data.listVisita, function (r) {
-                        events.push({
-                            title: r.title,
-                            backgroundColor: r.backgroundColor,
-                            borderColor: r.borderColor,
-                            start: r.start,
-                            allDay: r.allDay
-                        });
-                    });   
-                    successCallback(events);
-                }
-            });
-        },
-        editable: true,
-        droppable: true, // this allows things to be dropped onto the calendar !!!
-        drop: function (info) {
-            // is the "remove after drop" checkbox checked?
-            if (checkbox.checked) {
-                // if so, remove the element from the "Draggable Events" list
-                info.draggedEl.parentNode.removeChild(info.draggedEl);
-            }
-        }
-    });
-
-    calendar.render();
-    // $('#calendar').fullCalendar()
+    CarregarCalendar(Calendar, calendarEl);
 
     /* ADDING EVENTS */
     var currColor = '#3c8dbc' //Red by default
@@ -120,7 +76,7 @@
     $('#add-new-event').click(function (e) {
         e.preventDefault()
         //Get value and make sure it is not null
-        var val = $('#new-event-datahoravalor').val().split(' ')[1] + ' ' + $('#new-event').val();
+        var val = $('#VisitaEventoDataHora').val().split(' ')[1] + ' - ' + $('#VisitaTitulo').val();
         if (val.length == 0) {
             return
         }
@@ -135,12 +91,90 @@
         event.html(val)
         $('#external-events').prepend(event)
 
-        alert($('#new-event').val() + ' ' + $('#new-event-datahoravalor').val());
+        $.post('/Visita?handler=Visitas', $('#formVisita').serialize(), function (data) {
+            if (data.status) {
+                CarregarCalendar(Calendar, calendarEl);
+            }
+            else {
+                alert(data.mensagem);
+            }
+        });
 
         //Add draggable funtionality
         ini_events(event)
 
         //Remove event from text input
-        $('#new-event').val('')
+        $('#VisitaTitulo').val('');
+        $('#VisitaObservacao').val('')
     })
 })
+
+
+function CarregarCalendar(Calendar, calendarEl) {
+    $('#calendar').html('');
+    var calendar = new Calendar(calendarEl, {
+        plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+        locale: 'pt-br',
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        'themeSystem': 'bootstrap',
+        //Random default events
+        events: function (info, successCallback, failureCallback) {
+            $.ajax({
+                url: '/Visita?handler=Visitas',
+                cache: false,
+                async: false,
+                type: "GET",
+                success: function (data) {
+                    var events = [];
+                    $.map(data.listVisita, function (r) {
+                        events.push({
+                            sourceId: r.sourceId,
+                            title: r.title,
+                            backgroundColor: r.backgroundColor,
+                            borderColor: r.borderColor,
+                            start: r.start,
+                            allDay: r.allDay
+                        });
+                    });
+                    successCallback(events);
+                }
+            });
+        },
+        editable: true,
+        droppable: true, // this allows things to be dropped onto the calendar !!!
+        drop: function (info) {
+            // is the "remove after drop" checkbox checked?
+            if (checkbox.checked) {
+                // if so, remove the element from the "Draggable Events" list
+                info.draggedEl.parentNode.removeChild(info.draggedEl);
+            }
+        },
+        eventClick: function (info) {
+            var eventObj = info.event;
+            console.log(eventObj.extendedProps.sourceId);
+            $.ajax({
+                url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
+                cache: false,
+                async: false,
+                contentType: "application/json",
+                dataType: "json",
+                type: "GET",
+                success: function (data) {
+                    if (data.status) {
+                        $('#VisitaTitulo').val(data.entityVisita.descricao);
+                        $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
+                        $('#VisitaObservacao').text(data.entityVisita.observacao);
+                        $('#VisitaIdVisita').val(data.entityVisita.idVisita);
+                    }
+                }
+            });
+        }
+    });
+
+    calendar.render();
+    // $('#calendar').fullCalendar()
+}

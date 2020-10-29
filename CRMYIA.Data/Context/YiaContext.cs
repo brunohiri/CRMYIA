@@ -16,6 +16,7 @@ namespace CRMYIA.Data.Context
         {
         }
 
+        public virtual DbSet<Categoria> Categoria { get; set; }
         public virtual DbSet<Cidade> Cidade { get; set; }
         public virtual DbSet<Classificacao> Classificacao { get; set; }
         public virtual DbSet<Cliente> Cliente { get; set; }
@@ -32,6 +33,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual DbSet<KPIMeta> KPIMeta { get; set; }
+        public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Meta> Meta { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
@@ -42,6 +44,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Origem> Origem { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
         public virtual DbSet<PerfilModulo> PerfilModulo { get; set; }
+        public virtual DbSet<Porte> Porte { get; set; }
         public virtual DbSet<Producao> Producao { get; set; }
         public virtual DbSet<Produto> Produto { get; set; }
         public virtual DbSet<Proposta> Proposta { get; set; }
@@ -68,6 +71,22 @@ namespace CRMYIA.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Categoria>(entity =>
+            {
+                entity.HasKey(e => e.IdCategoria);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdLinhaNavigation)
+                    .WithMany(p => p.Categoria)
+                    .HasForeignKey(d => d.IdLinha)
+                    .HasConstraintName("Linha_Categoria");
+            });
+
             modelBuilder.Entity<Cidade>(entity =>
             {
                 entity.HasKey(e => e.IdCidade);
@@ -653,12 +672,32 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdKPIMeta);
 
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
 
                 entity.HasOne(d => d.IdTipoLeadNavigation)
                     .WithMany(p => p.KPIMeta)
                     .HasForeignKey(d => d.IdTipoLead)
                     .HasConstraintName("TipoLead_KPIMeta");
+            });
+
+            modelBuilder.Entity<Linha>(entity =>
+            {
+                entity.HasKey(e => e.IdLinha);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdProdutoNavigation)
+                    .WithMany(p => p.Linha)
+                    .HasForeignKey(d => d.IdProduto)
+                    .HasConstraintName("Produto_Linha");
             });
 
             modelBuilder.Entity<Meta>(entity =>
@@ -805,6 +844,17 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Perfil_PerfilModulo");
             });
 
+            modelBuilder.Entity<Porte>(entity =>
+            {
+                entity.HasKey(e => e.IdPorte);
+
+                entity.Property(e => e.IdPorte).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Producao>(entity =>
             {
                 entity.HasKey(e => e.IdProducao);
@@ -876,6 +926,11 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.ValorPrevisto).HasColumnType("decimal(18, 2)");
 
+                entity.HasOne(d => d.IdCategoriaNavigation)
+                    .WithMany(p => p.Proposta)
+                    .HasForeignKey(d => d.IdCategoria)
+                    .HasConstraintName("Categoria_Proposta");
+
                 entity.HasOne(d => d.IdClienteNavigation)
                     .WithMany(p => p.Proposta)
                     .HasForeignKey(d => d.IdCliente)
@@ -896,10 +951,10 @@ namespace CRMYIA.Data.Context
                     .HasForeignKey(d => d.IdMotivoDeclinio)
                     .HasConstraintName("MotivoDeclinio_Proposta");
 
-                entity.HasOne(d => d.IdProdutoNavigation)
+                entity.HasOne(d => d.IdPorteNavigation)
                     .WithMany(p => p.Proposta)
-                    .HasForeignKey(d => d.IdProduto)
-                    .HasConstraintName("Produto_Proposta");
+                    .HasForeignKey(d => d.IdPorte)
+                    .HasConstraintName("Porte_Proposta");
 
                 entity.HasOne(d => d.IdStatusPropostaNavigation)
                     .WithMany(p => p.Proposta)
@@ -1142,6 +1197,11 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Visita)
                     .HasForeignKey(d => d.IdStatusVisita)
                     .HasConstraintName("StatusVisita_Visita");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Visita)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_Visita");
             });
 
             OnModelCreatingPartial(modelBuilder);

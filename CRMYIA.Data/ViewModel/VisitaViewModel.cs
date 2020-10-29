@@ -6,7 +6,7 @@ namespace CRMYIA.Data.ViewModel
 {
     public class VisitaViewModel
     {
-        //public long id { get; set; }
+        public long sourceId { get; set; }
         public string title { get; set; }
         public DateTime start { get; set; }
         public string backgroundColor { get; set; }

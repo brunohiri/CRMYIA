@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class ProdutoModel
+    public class PorteModel
     {
         #region Propriedades
         #endregion
@@ -21,16 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Produto Get(long IdProduto)
+        public static Porte Get(long IdPorte)
         {
-            Produto Entity = null;
+            Porte Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Produto
+                    Entity = context.Porte
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdProduto == IdProduto)
+                        .Where(x => x.Ativo && x.IdPorte == IdPorte)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -42,20 +42,18 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Produto> GetList()
+        public static List<Porte> GetList()
         {
-            List<Produto> ListEntity = null;
+            List<Porte> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Produto
-                        .Include(y => y.IdOperadoraNavigation)
-                        .Include(y => y.Linha)
+                    ListEntity = context.Porte
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .OrderBy(o => o.Descricao).ToList();
+                        .OrderBy(o => o.IdPorte).ToList();
                 }
             }
             catch (Exception)
@@ -65,22 +63,22 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Produto> GetListIdDescricao()
+        public static List<Porte> GetListIdDescricao()
         {
-            List<Produto> ListEntity = null;
+            List<Porte> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Produto
+                    ListEntity = context.Porte
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .Select(y => new Produto()
+                        .Select(y => new Porte()
                         {
-                            IdProduto = y.IdProduto,
+                            IdPorte = y.IdPorte,
                             Descricao = y.Descricao
-                        }).OrderBy(o => o.Descricao).ToList();
+                        }).OrderBy(o => o.IdPorte).ToList();
                 }
             }
             catch (Exception)
@@ -90,38 +88,13 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Produto> GetListIdDescricaoByOperadora(long IdOperadora)
-        {
-            List<Produto> ListEntity = null;
-            try
-            {
-                using (YiaContext context = new YiaContext())
-                {
-                    ListEntity = context.Produto
-                        .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdOperadora == IdOperadora)
-                        .AsNoTracking()
-                        .Select(y => new Produto()
-                        {
-                            IdProduto = y.IdProduto,
-                            Descricao = y.Descricao
-                        }).OrderBy(o => o.Descricao).ToList();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return ListEntity;
-        }
-
-        public static void Add(Produto Entity)
+        public static void Add(Porte Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Produto.Add(Entity);
+                    context.Porte.Add(Entity);
                     context.SaveChanges();
                 }
             }
@@ -131,13 +104,13 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Produto Entity)
+        public static void Update(Porte Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Produto.Update(Entity);
+                    context.Porte.Update(Entity);
                     context.SaveChanges();
                 }
             }
