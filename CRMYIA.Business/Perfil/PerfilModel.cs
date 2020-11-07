@@ -50,6 +50,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Perfil
+                        .Include(y => y.UsuarioPerfil)
                         .Where(x => x.Ativo)
                         .AsNoTracking()
                         .OrderBy(o => o.Descricao).ToList();

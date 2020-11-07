@@ -206,6 +206,12 @@ namespace CRMYIA.Business.Util
 
         public static string GZipDecompressString(this string data) => ByteExtensions.GZipDecompressToString(Encoding.UTF8.GetBytes(data));
 
+        public static string ExtractLongMilharFormat(this long l) => (string.Format("{0:#,0}", Convert.ToInt64(l)));
+
+        public static string ExtractIntMilharFormat(this int i) => (string.Format("{0:#,0}", Convert.ToInt32(i)));
+
+        public static string ExtractByteMilharFormat(this byte b) => (string.Format("{0:#,0}", Convert.ToInt16(b)));
+
         /// <summary>
         /// Remove todos os caracteres que não sejam números.
         /// Caso a string seja null, retorna string.Empty.

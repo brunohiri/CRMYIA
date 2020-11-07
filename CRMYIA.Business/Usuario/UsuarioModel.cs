@@ -29,6 +29,8 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     Entity = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                        .Include(y => y.UsuarioHierarquiaIdUsuarioSlaveNavigation)
                         .Where(x => x.IdUsuario == IdUsuario)
                         .AsNoTracking()
                         .FirstOrDefault();
@@ -180,7 +182,7 @@ namespace CRMYIA.Business
                             .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
                         .AsNoTracking()
                         .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
-                        .OrderBy(o=>o.Nome)
+                        .OrderBy(o => o.Nome)
                         .ToList();
                 }
             }

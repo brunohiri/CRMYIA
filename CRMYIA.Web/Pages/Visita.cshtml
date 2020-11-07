@@ -34,7 +34,8 @@
                 <div class="card-body">
                     <form method="post" asp-page="/Visita" asp-page-handler="Visitas" id="formVisita">
                         <input type="hidden" class="form-control" asp-for="@Model.Entity.IdVisita" id="VisitaIdVisita" />
-                        @Html.AntiForgeryToken()
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdStatusVisita" id="VisitaIdStatusVisita"/>
+                               @Html.AntiForgeryToken()
                         <span>Escolha um tipo de evento:</span>
                         <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
                             <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
@@ -43,7 +44,7 @@
                                 {
                                     foreach (var Item in Model.ListStatusVisita)
                                     {
-                                        <li><a class="@Item.CssClass" href="#" title="@Item.Descricao"><i class="fas fa-square"></i></a></li>
+                                        <li><a class="@Item.CssClass" href="#" title="@Item.Descricao" data-id="@Item.IdStatusVisita"><i class="fas fa-square"></i></a></li>
                                     }
                                 }
                             </ul>

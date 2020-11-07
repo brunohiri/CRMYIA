@@ -26,6 +26,9 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public Proposta Entity { get; set; }
 
+        [BindProperty]
+        public Visita EntityVisita { get; set; }
+
         public List<PropostaFaixaEtaria> ListEntityPropostaFaixaEtaria { get; set; }
 
         public List<HistoricoProposta> ListEntityHistoricoProposta { get; set; }
@@ -83,6 +86,9 @@ namespace CRMYIA.Web.Pages
                 Entity = new Proposta();
                 Entity.DataSolicitacao = DateTime.Now;
                 Entity.ProximoContatoComCliente = DateTime.Now.AddDays(2);
+                EntityVisita = new Visita();
+                EntityVisita.DataAgendamento = DateTime.Now.AddDays(2);
+                EntityVisita.DataCadastro = DateTime.Now;
                 IdOperadora = 0;
             }
             else
@@ -90,6 +96,14 @@ namespace CRMYIA.Web.Pages
                 Entity = PropostaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityHistoricoProposta = HistoricoPropostaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+
+                EntityVisita = Business.VisitaModel.GetByIdProposta(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                if (EntityVisita == null)
+                {
+                    EntityVisita = new Visita();
+                    EntityVisita.DataAgendamento = DateTime.Now.AddDays(2);
+                    EntityVisita.DataCadastro = DateTime.Now;
+                }
 
                 IdOperadora = Entity.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadora;
             }
@@ -224,6 +238,20 @@ namespace CRMYIA.Web.Pages
                     PropostaFaixaEtariaModel.AddRange(ListPropostaFaixaEtaria);
                     #endregion
 
+                    #region Salvar Visita/Agenda
+                    Cliente EntityCliente = ClienteModel.Get(Entity.IdCliente.Value);
+                    Business.VisitaModel.Add(new Visita()
+                    {
+                        DataAgendamento = EntityVisita.DataAgendamento,
+                        DataCadastro = DateTime.Now,
+                        Descricao = "Próximo contato com " + (EntityCliente.Nome.Split(' ').Count() > 0 ? EntityCliente.Nome.Split(' ')[0] : EntityCliente.Nome),
+                        IdProposta = Entity.IdProposta,
+                        IdStatusVisita = (byte)(EnumeradorModel.StatusVisita.Agendada),
+                        IdUsuario = Entity.IdUsuario,
+                        Observacao = "Reunião agendada pela proposta: " + Entity.IdProposta
+                    });
+                    #endregion
+
                     Observacao = "Proposta Criada!";
                 }
                 else
@@ -237,6 +265,35 @@ namespace CRMYIA.Web.Pages
                         EntityPropostaFaixaEtaria.Quantidade = PropostaFaixaEtariaQuantidade[Item.IdFaixaEtaria - 1].ExtractInt32OrNull();
                         PropostaFaixaEtariaModel.Update(EntityPropostaFaixaEtaria);
                     });
+                    #endregion
+
+                    #region Salvar Visita/Agenda
+                    Visita EntityVisitaUpdate = Business.VisitaModel.Get(EntityVisita.IdVisita);
+                    Cliente EntityCliente = ClienteModel.Get(Entity.IdCliente.Value);
+                    if (EntityVisitaUpdate == null)
+                    {
+                        Business.VisitaModel.Add(new Visita()
+                        {
+                            DataAgendamento = EntityVisita.DataAgendamento,
+                            DataCadastro = DateTime.Now,
+                            Descricao = "Próximo contato com " + (EntityCliente.Nome.Split(' ').Count() > 0 ? EntityCliente.Nome.Split(' ')[0] : EntityCliente.Nome),
+                            IdProposta = Entity.IdProposta,
+                            IdStatusVisita = (byte)(EnumeradorModel.StatusVisita.Agendada),
+                            IdUsuario = Entity.IdUsuario,
+                            Observacao = "Reunião agendada pela proposta: " + Entity.IdProposta
+                        });
+                    }
+                    else
+                    {
+                        EntityVisitaUpdate.DataAgendamento = EntityVisita.DataAgendamento;
+                        EntityVisitaUpdate.DataCadastro = DateTime.Now;
+                        EntityVisitaUpdate.Descricao = "Próximo contato com " + (EntityCliente.Nome.Split(' ').Count() > 0 ? EntityCliente.Nome.Split(' ')[0] : EntityCliente.Nome);
+                        EntityVisitaUpdate.IdProposta = Entity.IdProposta;
+                        EntityVisitaUpdate.IdStatusVisita = (byte)(EnumeradorModel.StatusVisita.Agendada);
+                        EntityVisitaUpdate.IdUsuario = Entity.IdUsuario;
+                        EntityVisitaUpdate.Observacao = "Reunião agendada pela proposta: " + Entity.IdProposta;
+                        Business.VisitaModel.Update(EntityVisitaUpdate);
+                    }
                     #endregion
 
                     Observacao = "Proposta Alterada!";

@@ -105,32 +105,8 @@ $(document).ready(function () {
 
     $('.cnpj').mask(CnpjMaskBehavior, CnpjOptions);
 
-
-    $('#UsuarioIdPerfil').change(function () {
-        if ($(this).val() == 3 || $(this).val() == 4) //Perfil: Supervisor ou Corretor
-        {
-            $('#IdUsuarioHierarquia').removeAttr('disabled');
-            $.ajax({
-                url: '/NovoUsuario?handler=Perfil',
-                data: { idPerfil: $(this).val() },
-                cache: false,
-                async: true,
-                type: "GET",
-                success: function (data) {
-                    var result = '';
-                    if (data.status) {
-                        result += '<option value="0" selected>Selecione...</option>';
-                        for (var i = 0; i < data.list.length; i++) {
-                            result += '<option value="' + data.list[i].idUsuario + '">' + data.list[i].nome + '</option>';
-                        }
-                        $('#IdUsuarioHierarquia').html(result);
-                    }
-                }
-            });
-        }
-        else
-            $('#IdUsuarioHierarquia').attr('disabled', 'disabled');
-    });
+    //Cadastro de Usuários
+    CadastroUsuario();
 
 
     // Cadastro de Leads
@@ -265,6 +241,49 @@ function InitDatatables() {
     }//END Datatable
 
     uiDatatable();
+}
+
+/* ========================== Usuário =================================== */
+function CadastroUsuario() {
+    $('#UsuarioIdPerfil').change(function () {
+        CarregarUsuarioHierarquia($(this).val());
+    });
+
+    if ($('#Entity_IdUsuario').val() != 0) {
+        var IdPerfil = $('#UsuarioIdPerfil').val();
+        CarregarUsuarioHierarquia(IdPerfil);
+    }
+}
+
+function CarregarUsuarioHierarquia(IdPerfil) {
+    if (IdPerfil == 3 || IdPerfil == 4) //Perfil: Supervisor ou Corretor
+    {
+        var IdUsuarioHierarquia = $('#IdUsuarioHierarquiaHidden').val();
+        console.log('id ' + IdUsuarioHierarquia);
+        $('#IdUsuarioHierarquia').removeAttr('disabled');
+        $.ajax({
+            url: '/NovoUsuario?handler=Perfil',
+            data: { idPerfil: IdPerfil },
+            cache: false,
+            async: true,
+            type: "GET",
+            success: function (data) {
+                var result = '';
+                if (data.status) {
+                    result += '<option value="0" selected>Selecione...</option>';
+                    for (var i = 0; i < data.list.length; i++) {
+                        if (IdUsuarioHierarquia == data.list[i].idUsuario)
+                            result += '<option selected value="' + data.list[i].idUsuario + '">' + data.list[i].nome + '</option>';
+                        else
+                            result += '<option value="' + data.list[i].idUsuario + '">' + data.list[i].nome + '</option>';
+                    }
+                    $('#IdUsuarioHierarquia').html(result);
+                }
+            }
+        });
+    }
+    else
+        $('#IdUsuarioHierarquia').attr('disabled', 'disabled');
 }
 
 /* ========================== Telefone =================================== */
@@ -511,7 +530,6 @@ function CarregarPossuiPlano() {
     $('#PropostaPreferenciaHospitalar').val('');
 }
 
-
 function CarregarClientePropostaDocumento(IdCliente, Documento) {
     $.ajax({
         type: "GET",
@@ -636,7 +654,6 @@ function CarregarPropostaLinhaCategoria(IdLinha) {
         }
     });
 }
-
 
 function CalcularQuantidadeVidas() {
     $('.faixaetaria').change(function () {

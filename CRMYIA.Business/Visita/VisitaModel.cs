@@ -31,9 +31,31 @@ namespace CRMYIA.Business
                 {
                     Entity = context.Visita
                         .Include(y => y.IdStatusVisitaNavigation)
-                        .AsNoTracking()
                         .Where(x => x.IdVisita == IdVisita)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static Visita GetByIdProposta(long IdProposta)
+        {
+            Visita Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Visita
+                        .Include(y => y.IdStatusVisitaNavigation)
+                        .Include(y => y.IdPropostaNavigation)
                         .AsNoTracking()
+                        .Where(x => x.IdProposta == IdProposta)
+                        .AsNoTracking()
+                        .OrderByDescending(z=>z.DataCadastro)
                         .FirstOrDefault();
                 }
             }

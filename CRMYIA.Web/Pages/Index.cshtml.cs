@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using CRMYIA.Business;
+using CRMYIA.Business.Dashboard;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using Microsoft.AspNetCore.Authentication;
@@ -30,6 +33,52 @@ namespace CRMYIA.Web.Pages
                 return RedirectToPage("Login");
             }
             return Page();
+        }
+
+
+        public IActionResult OnGetQuantificadores()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            DashboardViewModel EntityDashboard = DashboardViewModel.GetQuantificadores((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
+
+            return new JsonResult(new { status=true, entityDashboard = EntityDashboard });
+        }
+
+        public IActionResult OnGetProducao()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            DashboardViewModel EntityDashboard = DashboardViewModel.GetProducao((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
+
+            return new JsonResult(new { status = true, entityDashboard = EntityDashboard });
+        }
+
+        public IActionResult OnGetRankings()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            DashboardViewModel EntityDashboard = DashboardViewModel.GetRankings((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
+
+            return new JsonResult(new { status = true, entityDashboard = EntityDashboard });
+        }
+
+        public IActionResult OnGetRankingUsuarioCorretoresAniversariantes()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            DashboardViewModel EntityDashboard = DashboardViewModel.GetRankingUsuarioCorretoresAniversariantes((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
+
+            return new JsonResult(new { status = true, entityDashboard = EntityDashboard });
+        }
+
+        public IActionResult OnGetPropostasPendentes()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            DashboardViewModel EntityDashboard = DashboardViewModel.GetPropostasPendentes((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
+
+            return new JsonResult(new { status = true, entityDashboard = EntityDashboard });
         }
     }
 }

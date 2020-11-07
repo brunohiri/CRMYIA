@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.ListarUsuarioModel
+@model CRMYIA.Web.Pages.ListarModuloModel
 @{
     ViewData["Title"] = "Listar";
-    ViewData["Pagina"] = "Usuários";
+    ViewData["Pagina"] = "Módulo";
 }
 @using CRMYIA.Business.Util;
 
@@ -17,13 +17,15 @@
                 <table id="tableListagem" class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
-                            <th width="10%">Perfil</th>
-                            <th width="23%">Nome</th>
-                            <th width="10%">Email</th>
-                            <th width="15%">Telefone</th>
-                            <th width="15%">Cadastro</th>
-                            <th width="5%">Status</th>
-                            <th width="7%"></th>
+                            <th>Ordem</th>
+                            <th>Módulo</th>
+                            <th>Mód.Referência</th>
+                            <th>Url</th>
+                            <th>Estilo</th>
+                            <th>ToolTip</th>
+                            <th>Cadastro</th>
+                            <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,15 +34,16 @@
                             foreach (var Item in Model.ListEntity)
                             {
                                 <tr>
-                                    <td>@(Item.UsuarioPerfil != null ? Item.UsuarioPerfil?.First().IdPerfilNavigation?.Descricao : "")</td>
-                                    <td>@Item.Nome</td>
-                                    <td>@Item.Email</td>
-                                    <td>@Item.Telefone</td>
+                                    <td>@Item.Ordem</td>
+                                    <td>@Item.Descricao</td>
+                                    <td>@(Item.IdModuloReferenciaNavigation == null ? "" : Item.IdModuloReferenciaNavigation.Descricao)</td>
+                                    <td>@Item.Url</td>
+                                    <td>@Item.CssClass</td>
+                                    <td>@Item.ToolTip</td>
                                     <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                     <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
                                     <td>
-                                        <a asp-page="/NovoUsuario" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                        <a asp-page="/NovoUsuario" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Vincular Usuários" class="text-info"><i class="icon fas fa-link"></i></a>
+                                        <a asp-page="/NovoModulo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdModulo.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
                                     </td>
                                 </tr>
                             }

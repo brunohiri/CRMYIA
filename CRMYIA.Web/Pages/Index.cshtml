@@ -13,7 +13,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Propostas e <br /> Seguros Implantados</span>
-                <span class="info-box-number">
+                <span class="info-box-number" id="ValorPropostasImplantadas">
                     R$ 0,00
                 </span>
             </div>
@@ -28,7 +28,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Orçamentos <br />em Negociação</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-number" id="QtdOrcamentosEmNegociacao">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -44,7 +44,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Nº de Corretores<br />Produzindo</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-number" id="QtdCorretoresProduzindo">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -57,7 +57,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Nº de Corretores<br />Inativos</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-number" id="QtdCorretoresInativos">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -77,7 +77,7 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <div class="btn-group">
+                    <div class="btn-group" hidden>
                         <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
                             <i class="fas fa-wrench"></i>
                         </button>
@@ -113,41 +113,9 @@
                         <p class="text-center">
                             <strong>Produção no Mês</strong>
                         </p>
+                        <div id="DivProducaoMes">
 
-                        <div class="progress-group">
-                            Amil
-                            <span class="float-right"><b>0</b>/0</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-primary" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <!-- /.progress-group -->
-
-                        <div class="progress-group">
-                            Bradesco
-                            <span class="float-right"><b>0</b>/0</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-danger" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">CNU</span>
-                            <span class="float-right"><b>0</b>/0</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-success" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <!-- /.progress-group -->
-                        <div class="progress-group">
-                            Qualicorp
-                            <span class="float-right"><b>0</b>/0</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-warning" style="width: 0%"></div>
-                            </div>
-                        </div>
+                        </div> 
                         <!-- /.progress-group -->
                     </div>
                     <!-- /.col -->
@@ -159,8 +127,8 @@
                 <div class="row">
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 0%</span>
-                            <h5 class="description-header">R$ 0,00</h5>
+                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> </span>
+                            <h5 class="description-header" id="ValorSegurosFechados">R$ 0,00</h5>
                             <span class="description-text">Seguros Fechados</span>
                         </div>
                         <!-- /.description-block -->
@@ -168,8 +136,8 @@
                     <!-- /.col -->
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                            <h5 class="description-header">R$ 0,00</h5>
+                            <span class="description-percentage text-warning"><i class="fas fa-caret-up"></i> </span>
+                            <h5 class="description-header" id="ValorPlanoSaude">R$ 0,00</h5>
                             <span class="description-text">Plano de Saúde</span>
                         </div>
                         <!-- /.description-block -->
@@ -177,8 +145,8 @@
                     <!-- /.col -->
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 0%</span>
-                            <h5 class="description-header">R$ 0,00</h5>
+                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> </span>
+                            <h5 class="description-header" id="ValorMetaEstipulada">R$ 0,00</h5>
                             <span class="description-text">Meta Estipulada</span>
                         </div>
                         <!-- /.description-block -->
@@ -186,8 +154,8 @@
                     <!-- /.col -->
                     <div class="col-sm-3 col-6">
                         <div class="description-block">
-                            <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 0%</span>
-                            <h5 class="description-header">0</h5>
+                            <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> </span>
+                            <h5 class="description-header" id="QtdNegociosPerdidos">0</h5>
                             <span class="description-text">Negócios Perdidos</span>
                         </div>
                         <!-- /.description-block -->
@@ -223,17 +191,17 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="font-size:12px !important;">
                             <table class="table m-0">
                                 <thead>
                                     <tr>
-                                        <th>Posição</th>
-                                        <th>Nome</th>
-                                        <th>Valor</th>
-                                        <th>Nº de Vidas</th>
+                                        <th width="10%">Posição</th>
+                                        <th width="40%">Nome</th>
+                                        <th width="30%">Valor</th>
+                                        <th width="20%">Nº Vidas</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="TBodyRankingSupervisores">
                                 </tbody>
                             </table>
                         </div>
@@ -267,42 +235,42 @@
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                         <ul class="users-list clearfix">
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-midias.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Banners</a>
                                 <span class="users-list-date"> de Operadoras</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-dicas-de-saude.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Dicas</a>
                                 <span class="users-list-date"> de Saúde</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-datas-comemorativas.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Banners</a>
                                 <span class="users-list-date">Comemorativos</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-capas-de-facebook.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Capas</a>
                                 <span class="users-list-date">de Facebook</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-banners-gerais.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Banners</a>
                                 <span class="users-list-date">Gerais</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-videos.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Vídeos</a>
                                 <span class="users-list-date">de Anúncios</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-sendingblue.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Modelos de</a>
                                 <span class="users-list-date">Email Marketing</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-midias.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Outros</a>
                                 <span class="users-list-date">Banners</span>
@@ -341,13 +309,13 @@
                     <table class="table m-0">
                         <thead>
                             <tr>
-                                <th>Posição</th>
-                                <th>Nome</th>
-                                <th>Valor</th>
-                                <th>Nº de Vidas</th>
+                                <th width="10%">Posição</th>
+                                <th width="45%">Nome</th>
+                                <th width="15%">Valor</th>
+                                <th width="10%">Nº Vidas</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="TBodyRankingGerentes">
                         </tbody>
                     </table>
                 </div>
@@ -378,16 +346,17 @@
                 </div>
             </div>
             <div class="card-body p-0">
-                <div class="table-responsive">
+                <div class="table-responsive" style="font-size:12px !important;">
                     <table class="table m-0">
                         <thead>
                             <tr>
-                                <th>Posição</th>
-                                <th>Nome</th>
-                                <th>Valor</th>
+                                <th width="10%">Posição</th>
+                                <th width="40%">Nome</th>
+                                <th width="30%">Valor</th>
+                                <th width="20%">Nº Vidas</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody  id="TBodyRankingCorretores">
                         </tbody>
                     </table>
                 </div>
@@ -398,8 +367,8 @@
             <span class="info-box-icon"><i class="far fa-heart"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Posição no ranking de Supervisores</span>
-                <span class="info-box-number">0º</span>
+                <span class="info-box-text">Posição no ranking</span>
+                <span class="info-box-number" id="PosicaoRanking">0º</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -408,8 +377,8 @@
             <span class="info-box-icon"><i class="far fa-comment"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Corretores Aniversariantes do mês</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-text">Aniversariantes do mês</span>
+                <span class="info-box-number" id="CorretoresAniversariantesMes">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -439,13 +408,8 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-md-4">
-                        <ul class="chart-legend clearfix">
-                            <li><i class="far fa-circle text-danger"></i> Bradesco</li>
-                            <li><i class="far fa-circle text-success"></i> Amil</li>
-                            <li><i class="far fa-circle text-warning"></i> CNU</li>
-                            <li><i class="far fa-circle text-info"></i> Qualicorp</li>
-                            <li><i class="far fa-circle text-primary"></i> SulAmerica</li>
-                            <li><i class="far fa-circle text-secondary"></i> Porto Seguro</li>
+                        <ul class="chart-legend clearfix" id="ulOperadorasMaisVendidas">
+                            
                         </ul>
                     </div>
                     <!-- /.col -->
@@ -454,32 +418,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer bg-white p-0">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            Bradesco
-                            <span class="float-right text-danger">
-                                <i class="fas fa-arrow-down text-sm"></i>
-                                0%
-                            </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            Amil
-                            <span class="float-right text-success">
-                                <i class="fas fa-arrow-up text-sm"></i> 0%
-                            </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            CNU
-                            <span class="float-right text-warning">
-                                <i class="fas fa-arrow-left text-sm"></i> 0%
-                            </span>
-                        </a>
-                    </li>
+                <ul class="nav nav-pills flex-column" id="ulOperadoraMaisVendidasValor">
                 </ul>
             </div>
             <!-- /.footer -->

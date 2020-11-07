@@ -54,7 +54,7 @@ namespace CRMYIA.Web.Pages
 
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month), Util.GetLastDayOfMonth(DateTime.Now.Month));
+            ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month).AddMonths(-3), Util.GetLastDayOfMonth(DateTime.Now.Month).AddMonths(3));
 
             return new JsonResult(new { status = true, listVisita = ListVisita });
         }
@@ -92,10 +92,12 @@ namespace CRMYIA.Web.Pages
                     EntityVisita.DataAgendamento = Entity.DataAgendamento;
                     EntityVisita.DataCadastro = DateTime.Now;
                     EntityVisita.Observacao = Entity.Observacao;
+                    EntityVisita.IdStatusVisitaNavigation = null;
+                    EntityVisita.IdStatusVisita = (Entity.IdStatusVisita == null ? (byte)EnumeradorModel.StatusVisita.Agendada : Entity.IdStatusVisita);
                     Business.VisitaModel.Update(EntityVisita);
                 }
 
-                ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month), Util.GetLastDayOfMonth(DateTime.Now.Month));
+                ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month).AddMonths(-3), Util.GetLastDayOfMonth(DateTime.Now.Month).AddMonths(3));
 
                 return new JsonResult(new { status = true, listVisita = ListVisita });
             }

@@ -824,6 +824,8 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdPerfil).ValueGeneratedOnAdd();
 
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);

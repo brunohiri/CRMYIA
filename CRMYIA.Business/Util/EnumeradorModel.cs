@@ -38,7 +38,8 @@ namespace CRMYIA.Business.Util
             Administrador = 1,
             Gerente = 2,
             Supervisor = 3,
-            Corretor = 4
+            Corretor = 4,
+            Vendedor = 5
         }
         #endregion
 
@@ -51,6 +52,24 @@ namespace CRMYIA.Business.Util
             Realizada = 3,
             Adiada = 4,
             Cancelada = 5
+        }
+        #endregion
+
+        #region Proposta
+        public enum StatusProposta
+        {
+            EmAnalise = 1,
+            Aceito = 2,
+            Declinado = 3
+        }
+
+        public enum FaseProposta
+        {
+            Oportunidade = 1,
+            CotacaoFiltros = 2,
+            VisitaApresentacaoReuniao = 3,
+            ImplantacaoDocumentacao = 4,
+            Fechamento = 5
         }
         #endregion
     }

@@ -72,6 +72,7 @@
             'background-color': currColor,
             'border-color': currColor
         })
+        $('#VisitaIdStatusVisita').val($(this).data('id'));
     })
     $('#add-new-event').click(function (e) {
         e.preventDefault()
@@ -167,7 +168,7 @@ function CarregarCalendar(Calendar, calendarEl) {
                     if (data.status) {
                         $('#VisitaTitulo').val(data.entityVisita.descricao);
                         $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
-                        $('#VisitaObservacao').text(data.entityVisita.observacao);
+                        $('#VisitaObservacao').val(data.entityVisita.observacao);
                         $('#VisitaIdVisita').val(data.entityVisita.idVisita);
                     }
                 }

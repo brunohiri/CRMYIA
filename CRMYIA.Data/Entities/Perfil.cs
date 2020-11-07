@@ -13,6 +13,7 @@ namespace CRMYIA.Data.Entities
 
         public byte IdPerfil { get; set; }
         public string Descricao { get; set; }
+        public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
         public virtual ICollection<PerfilModulo> PerfilModulo { get; set; }

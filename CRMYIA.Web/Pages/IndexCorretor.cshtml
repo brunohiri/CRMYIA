@@ -12,9 +12,9 @@
             <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">Propostas e <br/> Seguros Implantados</span>
-                <span class="info-box-number">
-                    R$ 12.390,90
+                <span class="info-box-text">Propostas e <br /> Seguros Implantados</span>
+                <span class="info-box-number" id="ValorPropostasImplantadas">
+                    R$ 0,00
                 </span>
             </div>
             <!-- /.info-box-content -->
@@ -28,7 +28,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Orçamentos <br />em Negociação</span>
-                <span class="info-box-number">2</span>
+                <span class="info-box-number" id="QtdOrcamentosEmNegociacao">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -44,7 +44,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Seguros à Renovar</span>
-                <span class="info-box-number">760</span>
+                <span class="info-box-number" id="QtdSegurosARenovar">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -57,7 +57,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Apólices Vigentes</span>
-                <span class="info-box-number">20</span>
+                <span class="info-box-number" id="QtdApolicesVigentes">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -77,7 +77,7 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <div class="btn-group">
+                    <div class="btn-group" hidden>
                         <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
                             <i class="fas fa-wrench"></i>
                         </button>
@@ -114,39 +114,8 @@
                             <strong>Produção no Mês</strong>
                         </p>
 
-                        <div class="progress-group">
-                           Amil
-                            <span class="float-right"><b>160</b>/200</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-primary" style="width: 80%"></div>
-                            </div>
-                        </div>
-                        <!-- /.progress-group -->
+                        <div id="DivProducaoMes">
 
-                        <div class="progress-group">
-                            Bradesco
-                            <span class="float-right"><b>310</b>/400</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-danger" style="width: 75%"></div>
-                            </div>
-                        </div>
-
-                        <!-- /.progress-group -->
-                        <div class="progress-group">
-                            <span class="progress-text">CNU</span>
-                            <span class="float-right"><b>480</b>/800</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-success" style="width: 60%"></div>
-                            </div>
-                        </div>
-
-                        <!-- /.progress-group -->
-                        <div class="progress-group">
-                            Qualicorp
-                            <span class="float-right"><b>250</b>/500</span>
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-warning" style="width: 50%"></div>
-                            </div>
                         </div>
                         <!-- /.progress-group -->
                     </div>
@@ -159,8 +128,8 @@
                 <div class="row">
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
-                            <h5 class="description-header">R$ 12.340,12</h5>
+                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> </span>
+                            <h5 class="description-header" id="ValorSegurosFechados">R$ 0,00</h5>
                             <span class="description-text">Seguros Fechados</span>
                         </div>
                         <!-- /.description-block -->
@@ -168,8 +137,8 @@
                     <!-- /.col -->
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                            <h5 class="description-header">R$ 5.530,23</h5>
+                            <span class="description-percentage text-warning"><i class="fas fa-caret-up"></i></span>
+                            <h5 class="description-header" id="ValorPlanoSaude">R$ 0,00</h5>
                             <span class="description-text">Plano de Saúde</span>
                         </div>
                         <!-- /.description-block -->
@@ -177,8 +146,8 @@
                     <!-- /.col -->
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
-                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
-                            <h5 class="description-header">R$ 15.000,00</h5>
+                            <span class="description-percentage text-success"><i class="fas fa-caret-up"></i></span>
+                            <h5 class="description-header" id="ValorMetaEstipulada">R$ 0,00</h5>
                             <span class="description-text">Meta Estipulada</span>
                         </div>
                         <!-- /.description-block -->
@@ -186,8 +155,8 @@
                     <!-- /.col -->
                     <div class="col-sm-3 col-6">
                         <div class="description-block">
-                            <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 2%</span>
-                            <h5 class="description-header">12</h5>
+                            <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> </span>
+                            <h5 class="description-header" id="QtdNegociosPerdidos">0</h5>
                             <span class="description-text">Negócios Perdidos</span>
                         </div>
                         <!-- /.description-block -->
@@ -213,7 +182,7 @@
                     <div class="card-header">
                         <h3 class="card-title">Chamados Abertos</h3>
                         <div class="card-tools">
-                            <span data-toggle="tooltip" title="3 novas mensagens" class="badge badge-warning">3</span>
+                            <span data-toggle="tooltip" title="3 novas mensagens" class="badge badge-warning" hidden>3</span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -231,64 +200,64 @@
                         <!-- Conversations are loaded here -->
                         <div class="direct-chat-messages">
                             <!-- Message. Default to the left -->
-                            <div class="direct-chat-msg">
+                            <!--<div class="direct-chat-msg">
                                 <div class="direct-chat-infos clearfix">
                                     <span class="direct-chat-name float-left">Corretor 1</span>
                                     <span class="direct-chat-timestamp float-right">@DateTime.Now.AddDays(-1).ToString("dd \"de\" MMM - HH:mm:ss")</span>
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-infos -->
-                                <img class="direct-chat-img" src="../img/user1-128x128.jpg" alt="message user image">
+                                <!--<img class="direct-chat-img" src="../img/user1-128x128.jpg" alt="message user image">-->
                                 <!-- /.direct-chat-img -->
-                                <div class="direct-chat-text">
+                                <!--<div class="direct-chat-text">
                                     Is this template really for free? That's unbelievable!
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-text -->
-                            </div>
+                            <!--</div>-->
                             <!-- /.direct-chat-msg -->
                             <!-- Message to the right -->
-                            <div class="direct-chat-msg right">
+                            <!--<div class="direct-chat-msg right">
                                 <div class="direct-chat-infos clearfix">
                                     <span class="direct-chat-name float-right">Supervisor 1</span>
                                     <span class="direct-chat-timestamp float-left">@DateTime.Now.AddDays(-1).AddMinutes(34).ToString("dd \"de\" MMM - HH:mm:ss")</span>
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-infos -->
-                                <img class="direct-chat-img" src="../img/user3-128x128.jpg" alt="message user image">
+                                <!--<img class="direct-chat-img" src="../img/user3-128x128.jpg" alt="message user image">-->
                                 <!-- /.direct-chat-img -->
-                                <div class="direct-chat-text">
+                                <!--<div class="direct-chat-text">
                                     You better believe it!
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-text -->
-                            </div>
+                            <!--</div>-->
                             <!-- /.direct-chat-msg -->
                             <!-- Message. Default to the left -->
-                            <div class="direct-chat-msg">
+                            <!--<div class="direct-chat-msg">
                                 <div class="direct-chat-infos clearfix">
                                     <span class="direct-chat-name float-left">Corretor 1</span>
                                     <span class="direct-chat-timestamp float-right">@DateTime.Now.AddDays(-1).AddMinutes(62).ToString("dd \"de\" MMM - HH:mm:ss")</span>
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-infos -->
-                                <img class="direct-chat-img" src="../img/user1-128x128.jpg" alt="message user image">
+                                <!--<img class="direct-chat-img" src="../img/user1-128x128.jpg" alt="message user image">-->
                                 <!-- /.direct-chat-img -->
-                                <div class="direct-chat-text">
+                                <!--<div class="direct-chat-text">
                                     Working with AdminLTE on a great new app! Wanna join?
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-text -->
-                            </div>
+                            <!--</div>-->
                             <!-- /.direct-chat-msg -->
                             <!-- Message to the right -->
-                            <div class="direct-chat-msg right">
+                            <!--<div class="direct-chat-msg right">
                                 <div class="direct-chat-infos clearfix">
                                     <span class="direct-chat-name float-right">Supervisor 1</span>
                                     <span class="direct-chat-timestamp float-left">@DateTime.Now.AddDays(-1).AddMinutes(86).ToString("dd \"de\" MMM - HH:mm:ss")</span>
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-infos -->
-                                <img class="direct-chat-img" src="../img/user3-128x128.jpg" alt="message user image">
+                                <!--<img class="direct-chat-img" src="../img/user3-128x128.jpg" alt="message user image">-->
                                 <!-- /.direct-chat-img -->
-                                <div class="direct-chat-text">
+                                <!--<div class="direct-chat-text">
                                     I would love to.
-                                </div>
+                                </div>-->
                                 <!-- /.direct-chat-text -->
-                            </div>
+                            <!--</div>-->
                             <!-- /.direct-chat-msg -->
 
                         </div>
@@ -427,42 +396,42 @@
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                         <ul class="users-list clearfix">
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-midias.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Banners</a>
                                 <span class="users-list-date"> de Operadoras</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-dicas-de-saude.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Dicas</a>
                                 <span class="users-list-date"> de Saúde</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-datas-comemorativas.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Banners</a>
                                 <span class="users-list-date">Comemorativos</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-capas-de-facebook.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Capas</a>
                                 <span class="users-list-date">de Facebook</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-banners-gerais.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Banners</a>
                                 <span class="users-list-date">Gerais</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-videos.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Vídeos</a>
                                 <span class="users-list-date">de Anúncios</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-sendingblue.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Modelos de</a>
                                 <span class="users-list-date">Email Marketing</span>
                             </li>
-                            <li>
+                            <li style="width:24% !important;">
                                 <img src="../img/marketing/icone-midias.svg" alt="User Image" style="border-radius:0 !important;">
                                 <a class="users-list-name" href="#">Outros</a>
                                 <span class="users-list-date">Banners</span>
@@ -505,27 +474,10 @@
                                 <th>Operadora/Seguradora</th>
                                 <th>Adm</th>
                                 <th>Status</th>
-                                <th>Considerações</th>
                                 <th>Data Pendência</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><a href="pages/examples/invoice.html">9842</a></td>
-                                <td>Amil</td>
-                                <td>Horrana</td>
-                                <td><span class="badge badge-warning">Pendente</span></td>
-                                <td>Pendente de Contrato Social</td>
-                                <td>20/09/2020</td>
-                            </tr>
-                            <tr>
-                                <td><a href="pages/examples/invoice.html">1848</a></td>
-                                <td>Azul Seguros</td>
-                                <td>Mayara</td>
-                                <td><span class="badge badge-warning">Pendente</span></td>
-                                <td>Pendente de Vistoria do Veículo</td>
-                                <td>19/09/2020</td>
-                            </tr>
+                        <tbody id="tbodyPropostasPendentes">
                         </tbody>
                     </table>
                 </div>
@@ -548,7 +500,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Corretores Cadastrados</span>
-                <span class="info-box-number">200</span>
+                <span class="info-box-number" id="QuantidadeCorretoresCadastrados"></span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -558,7 +510,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Posição no ranking de Corretores</span>
-                <span class="info-box-number">7º</span>
+                <span class="info-box-number" id="PosicaoRanking">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -568,7 +520,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Inadimplência</span>
-                <span class="info-box-number">R$ 12.212,23</span>
+                <span class="info-box-number" id="ValorInadimplencia">R$ 0,00</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -578,7 +530,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">Aniversariantes do mês</span>
-                <span class="info-box-number">12</span>
+                <span class="info-box-number" id="CorretoresAniversariantesMes">0</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -608,13 +560,7 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-md-4">
-                        <ul class="chart-legend clearfix">
-                            <li><i class="far fa-circle text-danger"></i> Bradesco</li>
-                            <li><i class="far fa-circle text-success"></i> Amil</li>
-                            <li><i class="far fa-circle text-warning"></i> CNU</li>
-                            <li><i class="far fa-circle text-info"></i> Qualicorp</li>
-                            <li><i class="far fa-circle text-primary"></i> SulAmerica</li>
-                            <li><i class="far fa-circle text-secondary"></i> Porto Seguro</li>
+                        <ul class="chart-legend clearfix" id="ulOperadorasMaisVendidas">
                         </ul>
                     </div>
                     <!-- /.col -->
@@ -623,32 +569,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer bg-white p-0">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            Bradesco
-                            <span class="float-right text-danger">
-                                <i class="fas fa-arrow-down text-sm"></i>
-                                12%
-                            </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            Amil
-                            <span class="float-right text-success">
-                                <i class="fas fa-arrow-up text-sm"></i> 4%
-                            </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            CNU
-                            <span class="float-right text-warning">
-                                <i class="fas fa-arrow-left text-sm"></i> 0%
-                            </span>
-                        </a>
-                    </li>
+                <ul class="nav nav-pills flex-column" id="ulOperadoraMaisVendidasValor">
                 </ul>
             </div>
             <!-- /.footer -->

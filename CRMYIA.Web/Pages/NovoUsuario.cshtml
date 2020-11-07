@@ -55,6 +55,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>Vincular</label>
+                        <input type="hidden" class="form-control" asp-for="@Model.IdUsuarioHierarquia" id="IdUsuarioHierarquiaHidden">
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdUsuarioHierarquia" id="IdUsuarioHierarquia">
                             <option selected="selected">Selecione...</option>
                         </select>

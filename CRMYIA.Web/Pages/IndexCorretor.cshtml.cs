@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using CRMYIA.Business;
+using CRMYIA.Business.Dashboard;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using Microsoft.AspNetCore.Authentication;
@@ -20,16 +23,6 @@ namespace CRMYIA.Web.Pages
         public IndexCorretorModel(ILogger<IndexCorretorModel> logger)
         {
             _logger = logger;
-        }
-
-        public async Task<IActionResult> OnGet()
-        {
-            if (HttpContext.Session.GetObjectFromJson<List<Modulo>>("MODULO") == null)
-            {
-                await HttpContext.SignOutAsync();
-                return RedirectToPage("Login");
-            }
-            return Page();
         }
     }
 }
