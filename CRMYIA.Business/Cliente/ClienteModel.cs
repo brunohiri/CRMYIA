@@ -50,6 +50,25 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Cliente GetLastId()
+        {
+            Cliente Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Cliente
+                        .ToList()
+                        .LastOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static ClienteViewModel GetWithCidadeEstadoTelefoneEmail(long IdCliente)
         {
             ClienteViewModel Entity = null;

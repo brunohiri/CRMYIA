@@ -42,6 +42,28 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Origem GetByCode(long code)
+        {
+            Origem Entity = null;
+            try
+            {
+                long IdOrigem = code == 1023 ? 2 : 0;
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Origem
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.IdOrigem == IdOrigem)
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<Origem> GetList()
         {
             List<Origem> ListEntity = null;

@@ -36,7 +36,7 @@
                         <tr>
                             <td>@(Item.IdModalidadeNavigation.Descricao.Length > 30 ? Item.IdModalidadeNavigation.Descricao.Substring(0,30) + "..." : Item.IdModalidadeNavigation.Descricao)</td>
                             <td>@(Item.IdClienteNavigation.Nome.Length > 30 ? Item.IdClienteNavigation.Nome.Substring(0,30) + "..." : Item.IdClienteNavigation.Nome)</td>
-                            <td>@(Item.IdUsuarioCorretorNavigation.Nome.Length > 30 ? Item.IdUsuarioCorretorNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioCorretorNavigation.Nome)</td>
+                            <td>@(Item.IdUsuarioCorretorNavigation == null ? "":Item.IdUsuarioCorretorNavigation.Nome.Length > 30 ? Item.IdUsuarioCorretorNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioCorretorNavigation.Nome)</td>
                             <td>@(Item.IdFasePropostaNavigation.Descricao.Length > 30 ? Item.IdFasePropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdFasePropostaNavigation.Descricao)</td>
                             <td style="text-align:right;">@(string.Format("{0:c2}", Convert.ToDecimal(Item.ValorPrevisto)))</td>
                             <td>@(Item.IdUsuarioNavigation.Nome.Length > 30 ? Item.IdUsuarioNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioNavigation.Nome)</td>

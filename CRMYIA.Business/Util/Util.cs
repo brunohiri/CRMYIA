@@ -130,7 +130,7 @@ namespace CRMYIA.Business.Util
         private const string CaracteresInvalidos = @"[\s\.\,\@\\\+\*\?\[\^\]\$\(\)\{\}\=\!\""\'\#\&\/\;\<\>\|\:-]";
         public static string TratarNomeArquivo(string FileName, int i)
         {
-            return "SD_" + Regex.Replace(Path.GetFileNameWithoutExtension(FileName).Replace(".", string.Empty),
+            return "YIA_" + Regex.Replace(Path.GetFileNameWithoutExtension(FileName).Replace(".", string.Empty),
                     CaracteresInvalidos,
                     string.Empty, RegexOptions.Singleline) + "_"
                     + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + i.ToString()

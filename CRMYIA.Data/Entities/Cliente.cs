@@ -19,11 +19,13 @@ namespace CRMYIA.Data.Entities
         public byte? IdGenero { get; set; }
         public byte? IdOrigem { get; set; }
         public byte? IdTipoLead { get; set; }
+        public long? IdArquivoLead { get; set; }
         public string Nome { get; set; }
         public string CPF { get; set; }
         public string RG { get; set; }
         public string CartaoSus { get; set; }
         public DateTime? DataNascimento { get; set; }
+        public int? Idade { get; set; }
         public string CEP { get; set; }
         public string Endereco { get; set; }
         public string Numero { get; set; }
@@ -31,7 +33,9 @@ namespace CRMYIA.Data.Entities
         public string Complemento { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public string Observacao { get; set; }
 
+        public virtual ArquivoLead IdArquivoLeadNavigation { get; set; }
         public virtual Cidade IdCidadeNavigation { get; set; }
         public virtual EstadoCivil IdEstadoCivilNavigation { get; set; }
         public virtual Genero IdGeneroNavigation { get; set; }

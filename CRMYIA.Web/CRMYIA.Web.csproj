@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>7cfa7238-cb99-4365-b998-54cbd5679e77</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +36,10 @@
     <Compile Update="Pages\NovoTipoLead - Copy.cshtml.cs">
       <DependentUpon>NovoTipoLead.cshtml.cs</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\ArquivoLead\" />
   </ItemGroup>
 
 </Project>

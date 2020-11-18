@@ -1,0 +1,75 @@
+﻿@page
+@model CRMYIA.Web.Pages.UploadClienteModel
+@{
+    ViewData["Title"] = "Upload";
+    ViewData["Pagina"] = "Clientes (Leads)";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <form role="form" method="post" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                @if ((Model != null) && (Model.Mensagem != null))
+                                {
+                                    <div class="@Model.Mensagem.CssClass alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <i class="@Model.Mensagem.IconClass"></i>
+                                        @Model.Mensagem.Mensagem
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="NomeArquivoLead">Selecione um arquivo:</label>
+                                <div class="input-group">
+                                    <input type="file" id="NomeArquivoLead" asp-for="@Model.NomeArquivoLead" name="NomeArquivoLead" accept=".csv">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+            <div class="card-body">
+                <table id="tableListagem" class="table table-bordered table-striped datatable">
+                    <thead>
+                        <tr>
+                            <th width="35%">Arquivo Original</th>
+                            <th width="35%">Arquivo Tratado</th>
+                            <th width="15%">Registros</th>
+                            <th width="15%">Cadastro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListEntity)
+                            {
+                                <tr>
+                                    <td>@(Item.NomeArquivoOriginal)</td>
+                                    <td>@(Item.NomeArquivoTratado)</td>
+                                    <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdRegistros == null ? 0 : Item.QtdRegistros)))</td>
+                                    <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

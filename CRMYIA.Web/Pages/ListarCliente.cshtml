@@ -37,7 +37,7 @@
                             <td>@Item.IdOrigemNavigation?.Descricao</td>
                             <td>@Item.IdTipoLeadNavigation?.Descricao</td>
                             <td>@(Item.UsuarioCliente == null || Item.UsuarioCliente.Count == 0 ? "Sem Corretor" : Item.UsuarioCliente?.FirstOrDefault().IdUsuarioNavigation?.Nome)</td>
-                            <td>@(string.Format("{0}-{1}", Item.IdCidadeNavigation.Descricao, Item.IdCidadeNavigation.IdEstadoNavigation.Sigla))</td>
+                            <td>@(Item.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", Item.IdCidadeNavigation.Descricao, Item.IdCidadeNavigation.IdEstadoNavigation.Sigla))</td>
                             <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                             <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
                             <td>

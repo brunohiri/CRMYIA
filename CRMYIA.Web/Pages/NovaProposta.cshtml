@@ -20,11 +20,11 @@
                     <div class="form-group">
                         @if ((Model != null) && (Model.Mensagem != null))
                         {
-                            <div class="@Model.Mensagem.CssClass alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i class="@Model.Mensagem.IconClass"></i>
-                                @Model.Mensagem.Mensagem
-                            </div>
+                        <div class="@Model.Mensagem.CssClass alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <i class="@Model.Mensagem.IconClass"></i>
+                            @Model.Mensagem.Mensagem
+                        </div>
                         }
                     </div>
                 </div>
@@ -54,19 +54,19 @@
                         <label>Corretor</label>
                         @if (UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) == (byte?)EnumeradorModel.Perfil.Corretor)
                         {
-                            <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
-                            <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
+                        <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />
                         }
                         else
                         {
-                            <select class="form-control select2" style="width: 100%;"
-                                    asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
-                                <option selected="selected">Selecione...</option>
-                                @foreach (var Item in Model.ListCorretor)
+                        <select class="form-control select2" style="width: 100%;"
+                                asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
+                            <option selected="selected">Selecione...</option>
+                            @foreach (var Item in Model.ListCorretor)
                                 {
-                                    <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                            <option value="@Item.IdUsuario">@(Item.Nome)</option>
                                 }
-                            </select>
+                        </select>
                         }
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListModalidade)
                             {
-                                <option value="@Item.IdModalidade">@(Item.Descricao)</option>
+                            <option value="@Item.IdModalidade">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -92,7 +92,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListOperadora)
                             {
-                                <option value="@Item.IdOperadora">@(Item.Descricao)</option>
+                            <option value="@Item.IdOperadora">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -133,7 +133,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListPorte)
                             {
-                                <option value="@Item.IdPorte">@(Item.Descricao)</option>
+                            <option value="@Item.IdPorte">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -226,7 +226,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListFaseProposta)
                             {
-                                <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
+                            <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -282,7 +282,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListStatusProposta)
                             {
-                                <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
+                            <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -294,7 +294,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListMotivoDeclinio)
                             {
-                                <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
+                            <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -306,6 +306,13 @@
                             <input type="checkbox" class="custom-control-input" id="PropostaAtivo" checked asp-for="@Model.Entity.Ativo">
                             <label class="custom-control-label" for="PropostaAtivo">Ativo</label>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem">
+                            Abordagem
+                        </button>
                     </div>
                 </div>
             </div>
@@ -330,25 +337,25 @@
                         {
                             if ((i == 0) || (i % 5 == 0))
                             {
-                                @Html.Raw("<div class=\"row\">")
+                    @Html.Raw("<div class=\"row\">")
                             }
 
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label>@Model.ListFaixaEtaria[i].Descricao</label>
-                                    <input type="text" class="form-control faixaetaria" placeholder="0" name="PropostaFaixaEtariaQuantidade"
-                                           value="@(Model.ListEntityPropostaFaixaEtaria == null || Model.ListEntityPropostaFaixaEtaria.Count() == 0 ? 0 : Model.ListEntityPropostaFaixaEtaria[i].Quantidade)" />
-                                </div>
-                            </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label>@Model.ListFaixaEtaria[i].Descricao</label>
+                            <input type="text" class="form-control faixaetaria" placeholder="0" name="PropostaFaixaEtariaQuantidade"
+                                   value="@(Model.ListEntityPropostaFaixaEtaria == null || Model.ListEntityPropostaFaixaEtaria.Count() == 0 ? 0 : Model.ListEntityPropostaFaixaEtaria[i].Quantidade)" />
+                        </div>
+                    </div>
 
                             if ((i + 1) % 5 == 0)
                             {
-                                @Html.Raw("</div>")
+                    @Html.Raw("</div>")
                             }
                         }
                         if (Model.ListFaixaEtaria.Count() % 5 > 0)
                         {
-                            @Html.Raw("</div>")
+                    @Html.Raw("</div>")
                         }
                     }
                 </div>
@@ -380,43 +387,43 @@
                                                     {
                                                         i++;
                                                         <!-- timeline time label -->
-                                                        <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
-                                                            <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                    <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                </div>
+ <!-- /.timeline-label -->
+ <!-- timeline item -->
+                                                <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                    <i class="fas fa-user bg-green"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
+                                                        <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
+                                                        <div class="timeline-body">
+                                                            @Item.Observacao
                                                         </div>
-                                                        <!-- /.timeline-label -->
-                                                        <!-- timeline item -->
-                                                        <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
-                                                            <i class="fas fa-user bg-green"></i>
-                                                            <div class="timeline-item">
-                                                                <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
-                                                                <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
-                                                                <div class="timeline-body">
-                                                                    @Item.Observacao
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- END timeline item -->
+                                                    </div>
+                                                </div>
+ <!-- END timeline item -->
                                                     }
-                                                        <div>
-                                                            <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
-                                                            <i class="fas fa-clock bg-gray"></i>
-                                                        </div>
+                                                <div>
+                                                    <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
+                                                    <i class="fas fa-clock bg-gray"></i>
+                                                </div>
                                                     }
                                                     else
                                                     {
-                                                        <div>
-                                                            <i class="fas fa-clock bg-gray"></i>
-                                                            <div class="timeline-item">
-                                                                <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
-                                                                <div class="timeline-body">
-                                                                    Nenhum histórico registrado
-                                                                </div>
-                                                            </div>
-
+                                                <div>
+                                                    <i class="fas fa-clock bg-gray"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
+                                                        <div class="timeline-body">
+                                                            Nenhum histórico registrado
                                                         </div>
-                                                    }
+                                                    </div>
 
                                                 </div>
+                                                    }
+
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
                                             Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
@@ -438,4 +445,56 @@
             <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
         </div>
     </form>
+</div>
+
+<div class="modal fade" id="modalAbordagem" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-warning">
+            <div class="modal-header">
+                <h4 class="modal-title">Dicas de Abordagem</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-outline-dark">Informações</button>
+                <button type="button" class="btn btn-outline-dark">Comparativo Região</button>
+                <button type="button" class="btn btn-outline-dark">Suporte na Venda</button>
+                <button type="button" class="btn btn-outline-dark">Reembolso</button>
+
+                <p>  </p>
+                <p>Olá, meu nome é (nome e sobrenome) consultor de benefícios da YIA Broker (ou nome de sua empresa), por gentileza o senhor(a) (Nome do Cliente)</p>
+                <p>Sr(a) (nome do cliente) como vai? O motivo do meu contato é para apresentar ao senhor uma oportunidade através de uma consultoria gratuita sobre o plano de saúde atual   </p>
+                <p>(Qual Plano) do senhor(a)! O(a) senhor(a) pode falar por 5 minutos? </p>
+                <p>(se não) qual melhor horário para falarmos? </p>
+                <p>(se sim) Falo em nome da April Broker (ou nome de sua empresa), somos uma Multinacional com mais de 30 anos de mercado e presente em 34 países especializados em identificar </p>
+                <p>oportunidades de Custo x Benefício, através de uma consultoria gratuita em sua atual Apólice da (Operadora/Seguradora), o senhor(a) sabia que todos os anos o plano </p>
+                <p>do senhor passa por reajustes que chegam até 30%?      </p>
+                <p>- Pois é, essa é a minha especialidade, buscar oferecer uma opção de atendimento igual ou superior a que o senhor(a) possui atualmente e com um preço Justo assim reduzindo  </p>
+                <p>seu Custo Mensal e possibilitando o investimento em outros ramos.  </p>
+                <p>Perguntas: (Senhor para uma cotação mais assertiva vou fazer algumas perguntas, ok?)      </p>
+                <p>  </p>
+                <p>1) Atualmente o senhor possui um plano de saúde PF, Adesão ou PME? Como está o Custo x Benefício da sua apólice?  </p>
+                <p>________________________________________________________________________________________________ </p>
+                <p>2) Quantas vidas estão ativas? Quais idades?
+                <p>________________________________________________________________________________________________ </p>
+                <p>3) O senhor possui um CNPJ ativo? Qual ramo de atividade da empresa?                            </p>
+                <p>________________________________________________________________________________________________     </p>
+                <p>4) Qual a profissão ou formação acadêmica do senhor ou sua esposa? (Se cliente for Pessoa Física ou contrato por Adesão)  </p>
+                <p>________________________________________________________________________________________________    </p>
+                <p>5) Qual região você mora? Qual região trabalha? (importante para apresentar alternativas em caso de necessidade)    </p>
+                <p>________________________________________________________________________________________________   </p>
+                <p>6) Qual Hospital costuma utilizar em caso de emergência ou urgência?                                </p>
+                <p>________________________________________________________________________________________________  </p>
+                <p>7) Algumas das pessoas que vou cotar fazem ou está fazendo algum tratamento de saúde?             </p>
+                <p>________________________________________________________________________________________________    </p>
+                <p>8) Com estas informações vou elaborar uma consultoria e volto a ligar para senhor(a).                </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
