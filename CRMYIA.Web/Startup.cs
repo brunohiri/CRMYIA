@@ -40,6 +40,13 @@ namespace CRMYIA.Web
             });
 
 
+            //Configurações para execução no IIS
+            services.Configure<IISOptions>(options =>
+            {
+                //options.ForwardClientCertificate = false;
+            });
+
+
             //Início - Autentição via cookies
             services.AddAuthentication("CookieAuthentication")
                .AddCookie("CookieAuthentication", config =>

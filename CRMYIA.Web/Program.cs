@@ -12,21 +12,21 @@ namespace CRMYIA.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main(string[] args)                                                        
         {
-#if (DEBUG)
+//#if (DEBUG)
             CreateHostBuilder(args).Build().Run();
-#endif
-#if (!DEBUG)
-            var host = new WebHostBuilder()
-            .UseKestrel()
-            .UseContentRoot(Directory.GetCurrentDirectory())
-            .UseIISIntegration()
-            .UseStartup<Startup>()
-            .Build();
+//#endif
+//#if (!DEBUG)
+//            var host = new WebHostBuilder()
+            //.UseKestrel()
+            //.UseContentRoot(Directory.GetCurrentDirectory())
+            //.UseIISIntegration()
+            //.UseStartup<Startup>()
+            //.Build();
 
-            host.Run();
-#endif
+            //host.Run();
+//#endif
 
         }
 
@@ -34,6 +34,7 @@ namespace CRMYIA.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://crm.q2bn.com.br:5000");
                     webBuilder.UseStartup<Startup>();
                 });
     }
