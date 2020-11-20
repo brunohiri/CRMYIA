@@ -14,27 +14,16 @@ namespace CRMYIA.Web
     {
         public static void Main(string[] args)                                                        
         {
-//#if (DEBUG)
             CreateHostBuilder(args).Build().Run();
-//#endif
-//#if (!DEBUG)
-//            var host = new WebHostBuilder()
-            //.UseKestrel()
-            //.UseContentRoot(Directory.GetCurrentDirectory())
-            //.UseIISIntegration()
-            //.UseStartup<Startup>()
-            //.Build();
-
-            //host.Run();
-//#endif
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+#if (!DEBUG)
                     webBuilder.UseUrls("http://crm.q2bn.com.br:5000");
+#endif
                     webBuilder.UseStartup<Startup>();
                 });
     }

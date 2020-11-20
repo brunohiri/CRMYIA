@@ -3,7 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://crm.q2bn.com.br:5000",
+      "applicationUrl": "http://localhost:55966",
+      //"applicationUrl": "http://crm.q2bn.com.br:5000",
       "sslPort": 44387
     }
   },
