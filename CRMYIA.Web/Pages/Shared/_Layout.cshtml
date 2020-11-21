@@ -33,6 +33,11 @@
     <link rel="stylesheet" href="../plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <style>
+        .tooltip {
+            opacity: 1 !important;
+        }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -338,6 +343,8 @@
 
     @if (ViewData["Pagina"].ToString().ToUpper().Equals("VISITAS"))
     {
+        <script src="../plugins/popper/unpkg-popper.min.js"></script>
+        <script src="../plugins/tooltip/tooltip.min.js"></script>
         <script src="../js/CalendarVisit.js"></script>
     }
     <!-- Page specific script -->
