@@ -115,6 +115,7 @@ function CarregarCalendar(Calendar, calendarEl) {
     $('#calendar').html('');
     var calendar = new Calendar(calendarEl, {
         plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+        defaultView: 'dayGridMonth',
         locale: 'pt-br',
         header: {
             left: 'prev,next today',
@@ -122,7 +123,6 @@ function CarregarCalendar(Calendar, calendarEl) {
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         'themeSystem': 'bootstrap',
-        //Random default events
         events: function (info, successCallback, failureCallback) {
             $.ajax({
                 url: '/Visita?handler=Visitas',
@@ -143,6 +143,15 @@ function CarregarCalendar(Calendar, calendarEl) {
                     });
                     successCallback(events);
                 }
+            });
+        },
+        eventRender(info) {
+            let tooltip = new Tooltip(info.el, {
+                title: info.event.title,
+                placement: 'top',
+                trigger: 'hover',
+                container: 'body',
+                html: true,
             });
         },
         editable: true,
