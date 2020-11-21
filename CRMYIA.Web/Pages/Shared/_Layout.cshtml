@@ -340,11 +340,10 @@
     <script src="../plugins/fullcalendar-bootstrap/main.min.js"></script>
     <script src='../plugins/fullcalendar/locales/pt-br.js'></script>
 
-    <!---->
-    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-    <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
     @if (ViewData["Pagina"].ToString().ToUpper().Equals("VISITAS"))
     {
+        <script src="/plugins/popper/unpkg-popper.min.js"></script>
+        <script src="/plugins/tooltip/tooltip.min.js"></script>
         <script src="../js/CalendarVisit.js"></script>
     }
     <!-- Page specific script -->
