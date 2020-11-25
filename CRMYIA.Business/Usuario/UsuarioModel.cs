@@ -8,6 +8,7 @@ using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
@@ -224,6 +225,76 @@ namespace CRMYIA.Business
             {
                 throw;
             }
+        }
+
+        public static List<Usuario> GetListIdNome(long IdUsuario)
+        {
+            List<Usuario> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+
+                    UsuarioPerfil up = context.UsuarioPerfil.Find(IdUsuario);
+
+
+                    if (up.IdPerfil == 1)
+                    {
+                        ListEntity = context.Usuario
+                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario), up => up.IdUsuario, (u, up) => u.Nome)
+                        .Select(x => new Usuario()
+                        {
+                          Nome = x
+                        })
+                        .ToList();
+                    }
+
+                    if (up.IdPerfil == 2)
+                    {
+                        ListEntity = context.Usuario
+                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario),up => up.IdUsuario,(u, up) =>new{u = u, up = up})
+                        .Where(temp0 => ((Int32?)(temp0.up.IdPerfil) != (Int32?)1))
+                        .Select(temp0 => temp0.u.Nome)
+                        .Select(x => new Usuario()
+                        {
+                            Nome = x
+                        })
+                        .ToList();
+                    }
+
+                    if (up.IdPerfil == 3)
+                    {
+                        ListEntity = context.Usuario
+                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario), up => up.IdUsuario, (u, up) => new { u = u, up = up })
+                        .Where(temp0 => ((Int32?)(temp0.up.IdPerfil) != (Int32?)1) && ((Int32?)(temp0.up.IdPerfil) != (Int32?)2))
+                        .Select(temp0 => temp0.u.Nome)
+                        .Select(x => new Usuario()
+                        {
+                            Nome = x
+                        })
+                        .ToList();
+                    }
+
+                    if (up.IdPerfil == 4)
+                    {
+                        ListEntity = context.Usuario
+                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario), up => up.IdUsuario, (u, up) => new { u = u, up = up })
+                        .Where(temp0 => ((Int32?)(temp0.up.IdPerfil) != (Int32?)1) && ((Int32?)(temp0.up.IdPerfil) != (Int32?)2) && ((Int32?)(temp0.up.IdPerfil) != (Int32?)3))
+                        .Select(temp0 => temp0.u.Nome)
+                        .Select(x => new Usuario()
+                        {
+                            Nome = x
+                        })
+                        .ToList();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+
         }
         #endregion
 

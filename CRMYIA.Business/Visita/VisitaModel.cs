@@ -94,22 +94,163 @@ namespace CRMYIA.Business
             List<Visita> ListEntity = null;
             try
             {
-                using (YiaContext context = new YiaContext())
+                if(IdUsuario != 0)
                 {
-                    ListEntity = context.Visita
-                        .Include(y => y.IdStatusVisitaNavigation)
-                        .Include(y => y.IdPropostaNavigation)
-                        .AsNoTracking()
-                        .Where(x => x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true))
-                        .AsNoTracking()
-                        .OrderBy(o => o.DataAgendamento).ToList();
+                    using (YiaContext context = new YiaContext())
+                    {
+                        ListEntity = context.Visita
+                            .Include(y => y.IdStatusVisitaNavigation)
+                            .Include(y => y.IdPropostaNavigation)
+                            .AsNoTracking()
+                            .Where(x => x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true))
+                            .AsNoTracking()
+                            .OrderBy(o => o.DataAgendamento).ToList();
+                    }
                 }
+                
             }
             catch (Exception)
             {
                 throw;
             }
             return ListEntity;
+        }
+
+        public static List<Visita> GetListByDataAgendamento(long IdPerfil, DateTime? DataInicial, DateTime? DataFinal, string Nome = "", int IdPerfilUsuario = 0)
+        {
+            List<Visita> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    switch (IdPerfil)
+                    {
+                        case 0:
+                            {
+
+                                switch (IdPerfilUsuario)
+                                {
+                                    
+                                    case 1:
+                                        {
+                                            return ListEntity = context.Visita
+                                           .Include(y => y.IdStatusVisitaNavigation)
+                                           .Include(y => y.IdPropostaNavigation)
+                                           .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                                           .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                                           .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                                           .Where(pp =>  (pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario)) && 
+                                            (pp.o.u.Nome.Contains(Nome))).OrderBy(p => p.o.u.Nome)
+                                           .Select(pp => pp.o.v).ToList();
+                                        }
+                                    case 2:
+                                        {
+                                            return ListEntity = context.Visita
+                                            .Include(y => y.IdStatusVisitaNavigation)
+                                            .Include(y => y.IdPropostaNavigation)
+                                            .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                                            .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                                            .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                                            .Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario))))) &&
+                                            ((Int32?)(pp.up.IdPerfil) != (Int32?)1) && 
+                                            (pp.o.u.Nome.Contains(Nome)))).OrderBy(p => p.o.u.Nome) 
+                                            .Select(pp => pp.o.v).ToList();
+                                        }
+                                    case 3:
+                                        {
+                                            return ListEntity = context.Visita
+                                            .Include(y => y.IdStatusVisitaNavigation)
+                                            .Include(y => y.IdPropostaNavigation)
+                                            .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                                            .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                                            .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                                            .Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario))))) &&
+                                            ((Int32?)(pp.up.IdPerfil) != (Int32?)1) && ((Int32?)(pp.up.IdPerfil) != (Int32?)2) && 
+                                            (pp.o.u.Nome.Contains(Nome)))).OrderBy(p => p.o.u.Nome)
+                                            .Select(pp => pp.o.v).ToList();
+                                        }
+                                    case 4:
+                                        {
+                                            return ListEntity = context.Visita
+                                            .Include(y => y.IdStatusVisitaNavigation)
+                                            .Include(y => y.IdPropostaNavigation)
+                                            .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                                            .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                                            .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                                            .Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario))))) &&
+                                            ((Int32?)(pp.up.IdPerfil) != (Int32?)1) && ((Int32?)(pp.up.IdPerfil) != (Int32?)2) && ((Int32?)(pp.up.IdPerfil) != (Int32?)3) && 
+                                            (pp.o.u.Nome.Contains(Nome)))).OrderBy(p => p.o.u.Nome)
+                                            .Select(pp => pp.o.v).ToList();
+                                        }
+                                    default:
+                                        {
+                                            return ListEntity;
+                                        }
+                                }
+
+                               return ListEntity;
+                                   
+                            }
+                        case 2:
+                            {
+                                return ListEntity = context.Visita
+                                        .Include(y => y.IdStatusVisitaNavigation)
+                                        .Include(y => y.IdPropostaNavigation)
+                                        .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                                        .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                                        .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                                        .Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario))))) &&
+                                        ((Int32?)(pp.up.IdPerfil) != (Int32?)1))&& (pp.o.u.Nome.Contains(Nome))).OrderBy(p => p.o.u.Nome)
+                                        .Select(pp => pp.o.v).ToList();
+                            }
+                        case 3:
+                            {
+                                return ListEntity = context.Visita
+                                .Include(y => y.IdStatusVisitaNavigation)
+                                .Include(y => y.IdPropostaNavigation)
+                                .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                                .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                                .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                                .Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario))))) &&
+                                ((Int32?)(pp.up.IdPerfil) != (Int32?)1)) &&
+                                ((Int32?)(pp.up.IdPerfil) != (Int32?)2) && (pp.o.u.Nome.Contains(Nome))).OrderBy(p => p.o.u.Nome)
+                                .Select(pp => pp.o.v).ToList();
+                            }
+                        case 4:
+                            {
+                                return ListEntity = context.Visita
+                               .Include(y => y.IdStatusVisitaNavigation)
+                               .Include(y => y.IdPropostaNavigation)
+                               .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
+                               .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
+                               .Where(c => !(c.o.v.DataAgendamento > DataFinal || c.o.v.DataAgendamento < DataInicial))
+                               .Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario))))) &&
+                               ((Int32?)(pp.up.IdPerfil) != (Int32?)1)) &&
+                               ((Int32?)(pp.up.IdPerfil) != (Int32?)2) && ((Int32?)(pp.up.IdPerfil) != (Int32?)3) && (pp.o.u.Nome.Contains(Nome))).OrderBy(p => p.o.u.Nome)
+                               .Select(pp => pp.o.v).ToList();
+                            }
+                        default:
+                            {
+                                return ListEntity;
+                            }
+                    }
+                    // ListEntity = context.Visita
+                    //.Include(y => y.IdStatusVisitaNavigation)
+                    //.Include(y => y.IdPropostaNavigation)
+                    //.Join(context.Usuario,v => v.IdUsuario,u => (Int64?)(u.IdUsuario), (v, u) =>new{v = v,u = u})
+                    //.Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) =>new {o = o,up = up})
+                    //.Where(pp => (((((pp.o.v.IdUsuario == (Int64?)(pp.o.u.IdUsuario)) &&
+                    //((Int32?)(pp.up.IdPerfil) != (Int32?)1)) &&
+                    //((Int32?)(pp.up.IdPerfil) != (Int32?)2)) &&
+                    //((Int32?)(pp.up.IdPerfil) != (Int32?)0)) &&
+                    //((Int32?)(pp.up.IdPerfil) != (Int32?)4)))
+                    //.Select(pp => pp.o.v).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public static List<VisitaViewModel> GetListByDataAgendamentoReturnsViewModel(long IdUsuario, DateTime? DataInicial, DateTime? DataFinal)
@@ -119,6 +260,31 @@ namespace CRMYIA.Business
             try
             {
                 ListEntity = GetListByDataAgendamento(IdUsuario, DataInicial, DataFinal);
+                if (ListEntity != null && ListEntity.Count() > 0)
+                    ListEntityViewModel = ListEntity.Select(x => new VisitaViewModel()
+                    {
+                        sourceId = x.IdVisita,
+                        backgroundColor = x.IdStatusVisitaNavigation.CorHexa,
+                        borderColor = x.IdStatusVisitaNavigation.CorHexa,
+                        start = x.DataAgendamento.Value,
+                        title = x.Descricao,
+                        allDay = false
+                    }).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntityViewModel;
+        }
+
+        public static List<VisitaViewModel> GetListByDataAgendamentoPesquisaViewModel(DateTime? DataInicial, DateTime? DataFinal, long IdPerfil = 0, string Nome = "", int IdPerfilUsuario = 0)
+        {
+            List<VisitaViewModel> ListEntityViewModel = null;
+            List<Visita> ListEntity = null;
+            try
+            {
+                ListEntity = GetListByDataAgendamento(IdPerfil, DataInicial, DataFinal, Nome, IdPerfilUsuario);
                 if (ListEntity != null && ListEntity.Count() > 0)
                     ListEntityViewModel = ListEntity.Select(x => new VisitaViewModel()
                     {

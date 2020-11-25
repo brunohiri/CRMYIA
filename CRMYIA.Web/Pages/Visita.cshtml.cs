@@ -8,6 +8,7 @@ using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -59,6 +60,26 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true, listVisita = ListVisita });
         }
 
+        public JsonResult OnGetVisitasPesquisa(long IdPerfil, string Nome, string DataInicial, string DataFinal, int IdPerfilUsuario)
+        {
+            DateTime Inicio = Convert.ToDateTime(DataInicial);
+            DateTime Fim = Convert.ToDateTime(DataFinal);
+            List<VisitaViewModel> ListVisita = null;
+
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            if(Nome == "Selecione um Nome")
+            {
+                Nome = User.Identity.Name;
+            }
+            if (Nome == null)
+            {
+                Nome = User.Identity.Name;
+            }
+            ListVisita = Business.VisitaModel.GetListByDataAgendamentoPesquisaViewModel(Inicio, Fim, IdPerfil, Nome, IdPerfilUsuario);
+
+            return new JsonResult(new { status = true, listVisita = ListVisita });
+        }
+
 
         public IActionResult OnPostVisitas()
         {
@@ -102,7 +123,28 @@ namespace CRMYIA.Web.Pages
                 return new JsonResult(new { status = true, listVisita = ListVisita });
             }
         }
+        public IActionResult OnGetTodosPerfil()
+        {
+            byte? IdPerfil = 0;
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            List<PerfilViewModel> ListEntity = null;
+            
+            ListEntity =  PerfilModel.GetListIdDescricao(IdUsuario, ref IdPerfil);
+
+            return new JsonResult(new { status = true, listVisita = ListEntity, IdPerfil = IdPerfil });
+        }
+
+        public IActionResult OnGetTodosNomes()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            List<Usuario> ListEntity = null;
+
+            ListEntity = UsuarioModel.GetListIdNome(IdUsuario);
+
+            return new JsonResult(new { status = true, listVisita = ListEntity });
+        }
+    }
 
         #endregion
-    }
 }
+
