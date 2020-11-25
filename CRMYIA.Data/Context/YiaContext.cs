@@ -40,6 +40,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
         public virtual DbSet<MotivoDeclinio> MotivoDeclinio { get; set; }
+        public virtual DbSet<Notificacao> Notificacao { get; set; }
         public virtual DbSet<Operadora> Operadora { get; set; }
         public virtual DbSet<OperadoraDocumento> OperadoraDocumento { get; set; }
         public virtual DbSet<OperadoraTelefone> OperadoraTelefone { get; set; }
@@ -860,6 +861,35 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Notificacao>(entity =>
+            {
+                entity.HasKey(e => e.IdNotificacao);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Titulo)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Url)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioCadastroNavigation)
+                    .WithMany(p => p.NotificacaoIdUsuarioCadastroNavigation)
+                    .HasForeignKey(d => d.IdUsuarioCadastro)
+                    .HasConstraintName("Usuario_Notificacao_Cadastro");
+
+                entity.HasOne(d => d.IdUsuarioVisualizarNavigation)
+                    .WithMany(p => p.NotificacaoIdUsuarioVisualizarNavigation)
+                    .HasForeignKey(d => d.IdUsuarioVisualizar)
+                    .HasConstraintName("Usuario_Notificacao_Visualizar");
             });
 
             modelBuilder.Entity<Operadora>(entity =>
