@@ -253,13 +253,16 @@ function CadastroUsuario() {
         var IdPerfil = $('#UsuarioIdPerfil').val();
         CarregarUsuarioHierarquia(IdPerfil);
     }
+
+    $('#IdUsuarioHierarquia').change(function () { 
+        $('#IdUsuarioHierarquiaHidden').val($(this).val());
+    });
 }
 
 function CarregarUsuarioHierarquia(IdPerfil) {
     if (IdPerfil == 3 || IdPerfil == 4) //Perfil: Supervisor ou Corretor
     {
         var IdUsuarioHierarquia = $('#IdUsuarioHierarquiaHidden').val();
-        console.log('id ' + IdUsuarioHierarquia);
         $('#IdUsuarioHierarquia').removeAttr('disabled');
         $.ajax({
             url: '/NovoUsuario?handler=Perfil',

@@ -32,7 +32,7 @@
                             foreach (var Item in Model.ListEntity)
                             {
                                 <tr>
-                                    <td>@(Item.UsuarioPerfil != null ? Item.UsuarioPerfil?.First().IdPerfilNavigation?.Descricao : "")</td>
+                                    <td>@(Item.UsuarioPerfil != null && Item.UsuarioPerfil.Count > 0 && Item.UsuarioPerfil.First().IdPerfilNavigation != null ? Item.UsuarioPerfil?.First().IdPerfilNavigation?.Descricao : "")</td>
                                     <td>@Item.Nome</td>
                                     <td>@Item.Email</td>
                                     <td>@Item.Telefone</td>

@@ -535,8 +535,16 @@ namespace CRMYIA.Business.Dashboard
                        .AsEnumerable()
                        .GroupBy(g => new
                        {
-                           IdUsuario = g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMaster,
-                           Nome = g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.Nome.ToString()
+                           IdUsuario =
+                                g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation == null
+                                || g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation == null
+                                || g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Count == 0
+                                ? 0 : g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMaster,
+                           Nome = g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation == null
+                                || g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation == null
+                                || g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Count == 0
+                                || g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation == null
+                                ? "" : g.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMasterNavigation.Nome.ToString()
                        })
                        .Select(s => new RankingViewModel()
                        {

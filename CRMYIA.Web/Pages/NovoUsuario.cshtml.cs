@@ -54,8 +54,11 @@ namespace CRMYIA.Web.Pages
             else
             {
                 Entity = UsuarioModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-                Entity.Senha = Criptography.Decrypt(Entity.Senha);
-                ConfirmarSenha = Entity.Senha;
+                if (!Entity.Senha.IsNullOrEmpty())
+                {
+                    Entity.Senha = Criptography.Decrypt(Entity.Senha);
+                    ConfirmarSenha = Entity.Senha;
+                }
                 UsuarioIdPerfil = Entity.UsuarioPerfil != null && Entity.UsuarioPerfil.Count() > 0 ? Entity.UsuarioPerfil.FirstOrDefault().IdPerfil : null;
                 IdUsuarioHierarquia =  Entity.UsuarioHierarquiaIdUsuarioSlaveNavigation != null && Entity.UsuarioHierarquiaIdUsuarioSlaveNavigation.Count() > 0 ? Entity.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMaster : null;
             }
