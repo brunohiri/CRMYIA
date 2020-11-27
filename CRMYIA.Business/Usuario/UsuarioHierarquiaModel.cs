@@ -41,6 +41,26 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static UsuarioHierarquia GetSlave(long IdUsuario)
+        {
+            UsuarioHierarquia Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.UsuarioHierarquia
+                        .Where(x => x.IdUsuarioSlave == IdUsuario)
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<UsuarioHierarquia> GetList()
         {
             List<UsuarioHierarquia> ListEntity = null;

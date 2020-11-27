@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Newtonsoft.Json.Serialization;
+using CRMYIA.Web.Controller;
 
 namespace CRMYIA.Web
 {
@@ -32,6 +33,8 @@ namespace CRMYIA.Web
         {
             services.AddRazorPages()
             .AddRazorRuntimeCompilation();
+
+            services.AddSignalR();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -130,6 +133,7 @@ namespace CRMYIA.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapHub<NotificacaoController>("/notificacaohub");
             });
 
             //Set CultureInfo

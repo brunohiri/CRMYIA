@@ -42,6 +42,7 @@
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
+    <input type="hidden" id="IdUsuario" name="IdUsuario" value="@Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value" />
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -131,7 +132,7 @@
                     </div>
                 </li>
                 <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id="lista-notificacoes">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
                         <span class="badge badge-warning navbar-badge">15</span>
@@ -363,6 +364,11 @@
     <script src="../plugins/jquery-mapael/maps/usa_states.min.js"></script>
     <!-- ChartJS -->
     <script src="../plugins/chart.js/Chart.min.js"></script>
+    <!--Notificações-->
+    <script src="~/js/signalr/signalr.js"></script>
+    <script src="~/js/notificacao/notificacao.js"></script>
+    <!--Geral-->
+    <script src="~/js/sistema/geral.js"></script>
 
     <!-- PAGE SCRIPTS -->
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
