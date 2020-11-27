@@ -7,6 +7,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.ViewModel;
+using CRMYIA.Web.Controller;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -105,6 +106,23 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
                         IdUsuario = IdUsuario
                     });
+
+                    UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
+                    Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+                    {
+                        IdUsuarioCadastro = Entity.IdUsuario,
+                        IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+                        Titulo = null,
+                        Descricao = "Novo Agendamento",
+                        Url = "",
+                        Visualizado = false,
+                        DataCadastro = DateTime.Now,
+                        Ativo = true
+                    });
+
+                    //NotificacaoController NcCtrl = new NotificacaoController();
+                    //NcCtrl.NotificacaoHub(EntityNotificacao);
+
                 }
                 else
                 {
