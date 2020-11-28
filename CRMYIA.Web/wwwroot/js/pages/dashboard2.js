@@ -14,74 +14,6 @@ $(function () {
     CarregarRankingUsuarioCorretoresAniversariantes();
     CarregarPropostasPendentes();
 
-    //-----------------------
-    //- MONTHLY SALES CHART -
-    //-----------------------
-
-    // Get context with jQuery - using jQuery's .get() method.
-    var salesChartCanvas = $('#salesChart').get(0).getContext('2d')
-
-    var salesChartData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'Digital Goods',
-                backgroundColor: 'rgba(60,141,188,0.9)',
-                borderColor: 'rgba(60,141,188,0.8)',
-                pointRadius: false,
-                pointColor: '#3b8bba',
-                pointStrokeColor: 'rgba(60,141,188,1)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: [28, 48, 40, 19, 86, 27, 90]
-            },
-            {
-                label: 'Electronics',
-                backgroundColor: 'rgba(210, 214, 222, 1)',
-                borderColor: 'rgba(210, 214, 222, 1)',
-                pointRadius: false,
-                pointColor: 'rgba(210, 214, 222, 1)',
-                pointStrokeColor: '#c1c7d1',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(220,220,220,1)',
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-        ]
-    }
-
-    var salesChartOptions = {
-        maintainAspectRatio: false,
-        responsive: true,
-        legend: {
-            display: false
-        },
-        scales: {
-            xAxes: [{
-                gridLines: {
-                    display: false,
-                }
-            }],
-            yAxes: [{
-                gridLines: {
-                    display: false,
-                }
-            }]
-        }
-    }
-
-    // This will get the first returned node in the jQuery collection.
-    var salesChart = new Chart(salesChartCanvas, {
-        type: 'line',
-        data: salesChartData,
-        options: salesChartOptions
-    }
-    )
-
-    //---------------------------
-    //- END MONTHLY SALES CHART -
-    //---------------------------
-
-
 
 })
 
@@ -122,18 +54,17 @@ function CarregarProducao() {
                 for (var i = 0; i < data.entityDashboard.operadorasMaisVendidas.length; i++) {
                     result += '<div class="progress-group">';
                     result += ' ' + data.entityDashboard.operadorasMaisVendidas[i].descricao + ' ';
-                    result += '    <span class="float-right"><b>' + data.entityDashboard.operadorasMaisVendidas[i].quantidade + '</b></span>';
+                    result += '    <span class="float-right"><b>' + data.entityDashboard.operadorasMaisVendidas[i].valor + '</b></span>';
                     result += '    <div class="progress progress-sm">';
-                    result += '        <div class="progress-bar bg-primary" style="width: ' + data.entityDashboard.operadorasMaisVendidas[i].quantidade + '%"></div>';
+                    result += '        <div class="progress-bar" style="background-color:' + RetornarBackgroundColor(i) + ' !important;width: ' + (parseFloat(data.entityDashboard.operadorasMaisVendidas[i].valor.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim())/2000000 * 100).toString() + '%"></div>';
                     result += '    </div>';
                     result += '</div>';
-
                     resultulOperadorasMaisVendidas += '<li><i class="far fa-circle ' + RetornarTextClass(i) + '"></i> ' + data.entityDashboard.operadorasMaisVendidas[i].descricao + '</li> ';
 
                     resultulOperadoraMaisVendidasValor += '<li class="nav-item">';
                     resultulOperadoraMaisVendidasValor += '  <a href = "#" class="nav-link"> ' + data.entityDashboard.operadorasMaisVendidas[i].descricao
                     resultulOperadoraMaisVendidasValor += '     <span class="float-right ' + RetornarTextClass(i) + '">';
-                    resultulOperadoraMaisVendidasValor += '         <i class="fas fa-arrow-up text-sm"></i>' + data.entityDashboard.operadorasMaisVendidas[i].quantidade;
+                    resultulOperadoraMaisVendidasValor += '         <i class="fas fa-arrow-up text-sm"></i>' + data.entityDashboard.operadorasMaisVendidas[i].valor;
                     resultulOperadoraMaisVendidasValor += '     </span>';
                     resultulOperadoraMaisVendidasValor += '  </a>';
                     resultulOperadoraMaisVendidasValor += '</li>';
@@ -142,8 +73,7 @@ function CarregarProducao() {
                 $('#ulOperadorasMaisVendidas').html(resultulOperadorasMaisVendidas);
                 $('#ulOperadoraMaisVendidasValor').html(resultulOperadoraMaisVendidasValor);
                 CarregarPieChart(data.entityDashboard);
-
-
+                CarregarSalesChart(data.entityDashboard);
 
                 $('#ValorSegurosFechados').text(data.entityDashboard.valorSegurosFechados);
                 $('#ValorPlanoSaude').text(data.entityDashboard.valorPlanoSaude);
@@ -255,7 +185,7 @@ function CarregarPropostasPendentes() {
             var result = '';
 
             if (data.status) {        
-                if (data.entityDashboard.propostasPendentes.length == 0) {
+                if (data.entityDashboard.propostasPendentes == null || data.entityDashboard.propostasPendentes.length == 0) {
                     result += "<tr>";
                     result += "<td colspan=\"5\" style=\"text-align:center;\">Não há registros!</td>";
                     result += "</tr>";
@@ -286,10 +216,10 @@ function CarregarPieChart(data) {
 
     var dataLabel = [];
     var datasetsData = [];
-    var datasetColor = ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'];
+    var datasetColor = ['#3c8dbc', '#f56954', '#00a65a', '#f39c12', '#00c0ef', '#d2d6de'];
     for (var i = 0; i < data.operadorasMaisVendidas.length; i++) {
         dataLabel.push(data.operadorasMaisVendidas[i].descricao);
-        datasetsData.push(data.operadorasMaisVendidas[i].quantidade);
+        datasetsData.push(data.operadorasMaisVendidas[i].valor.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
     }
 
 
@@ -321,6 +251,89 @@ function CarregarPieChart(data) {
     //-----------------
 }
 
+function CarregarSalesChart(data) {
+    //-----------------------
+    //- MONTHLY SALES CHART -
+    //-----------------------
+
+    // Get context with jQuery - using jQuery's .get() method.
+    var salesChartCanvas = $('#salesChart').get(0).getContext('2d')
+
+    var date = new Date();
+    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+    var Dias = [];
+    var Valores = [];
+
+    for (var i = 0; i < data.listValorProducaoPorDia.length; i++) {
+        Dias.push(data.listValorProducaoPorDia[i].dia);
+        Valores.push(data.listValorProducaoPorDia[i].valor);
+    }
+
+    console.log(data.listValorProducaoPorDia);
+
+    var salesChartData = {
+        labels: Dias,
+        datasets: [
+            {
+                label: 'Propostas Fechadas',
+                backgroundColor: RetornarBackgroundColor(0),
+                borderColor: RetornarBackgroundColor(0),
+                pointRadius: false,
+                pointColor: RetornarBackgroundColor(0),
+                pointStrokeColor: RetornarBackgroundColor(0),
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: RetornarBackgroundColor(0),
+                data: Valores
+            },
+            {
+                label: 'Electronics',
+                backgroundColor: 'rgba(210, 214, 222, 1)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: [65, 59, 80, 81, 56, 55, 40]
+            },
+        ]
+    }
+
+    var salesChartOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        legend: {
+            display: false
+        },
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display: false,
+                }
+            }],
+            yAxes: [{
+                gridLines: {
+                    display: false,
+                }
+            }]
+        }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    var salesChart = new Chart(salesChartCanvas, {
+        type: 'line',
+        data: salesChartData,
+        options: salesChartOptions
+    }
+    )
+
+    //---------------------------
+    //- END MONTHLY SALES CHART -
+    //---------------------------
+}
+
 function RetornarTextClass(i) {
     var textClass = 'text-success';
     if (i == 0)
@@ -341,4 +354,9 @@ function RetornarTextClass(i) {
                         if (i == 5)
                             textClass = 'text-secondary';
     return textClass;
+}
+
+function RetornarBackgroundColor(i) {
+    var datasetColor = ['#3c8dbc', '#f56954', '#00a65a', '#f39c12', '#00c0ef', '#d2d6de'];
+    return datasetColor[i];
 }

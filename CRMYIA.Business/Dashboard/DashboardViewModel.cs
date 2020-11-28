@@ -29,6 +29,7 @@ namespace CRMYIA.Business.Dashboard
         public string ValorPlanoSaude { get; set; }
         public string ValorMetaEstipulada { get; set; }
         public string QtdNegociosPerdidos { get; set; }
+        public List<ValorProducaoPorDiaViewModel> ListValorProducaoPorDia { get; set; }
         #endregion
 
         #region Bloco Posição no Ranking
@@ -242,8 +243,8 @@ namespace CRMYIA.Business.Dashboard
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    DateTime DataInicial = Util.Util.GetFirstDayOfMonth(DateTime.Now.Month);
-                    DateTime DataFinal = Util.Util.GetLastDayOfMonth(DateTime.Now.Month);
+                    DateTime DataInicial = Util.Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+                    DateTime DataFinal = Util.Util.GetLastDayOfMonth(DateTime.Now.Month - 1);
                     Entity = new DashboardViewModel();
 
                     if (TipoPerfil == EnumeradorModel.Perfil.Administrador)
@@ -257,6 +258,7 @@ namespace CRMYIA.Business.Dashboard
                          .Where(x => x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Ativo
                         //&& (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
                         && x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito))
+                        .AsEnumerable()
                         .GroupBy(g => new
                         {
                             IdOperadora = g.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.IdOperadora,
@@ -266,7 +268,7 @@ namespace CRMYIA.Business.Dashboard
                         {
                             IdOperadora = s.Key.IdOperadora,
                             Descricao = s.Key.Descricao,
-                            Quantidade = s.Count().ExtractIntMilharFormat()
+                            Valor = s.Sum(soma => soma.ValorPrevisto).Value.ToString("c2")
                         })
                         .ToList();
 
@@ -285,6 +287,29 @@ namespace CRMYIA.Business.Dashboard
                         Entity.QtdNegociosPerdidos = context.Proposta
                             .Where(x => !x.Ativo || x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Declinado))
                             .Count().ExtractIntMilharFormat();
+
+                        Entity.ListValorProducaoPorDia = context.Proposta
+                            .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(z => z.IdLinhaNavigation)
+                                .ThenInclude(k => k.IdProdutoNavigation)
+                                    .ThenInclude(p => p.IdOperadoraNavigation)
+                           .Where(x => x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito)
+                            && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal))
+                           .AsEnumerable()
+                           .GroupBy(g => new
+                           {
+                               Operadora = g.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao,
+                               Dia = g.DataSolicitacao.Value.Day.ToString()
+                           })
+                           .Select(s => new ValorProducaoPorDiaViewModel()
+                           {
+                               Dia = s.Key.Dia.ExtractInt32(),
+                               Operadora = s.Key.Operadora,
+                               Valor = s.Sum(soma => soma.ValorPrevisto).Value//.ToString("c2")
+                           })
+                           .OrderBy(o => o.Dia)
+                           .ToList();
+
                         #endregion
                     }
                     else
@@ -319,7 +344,7 @@ namespace CRMYIA.Business.Dashboard
                          {
                              IdOperadora = s.Key.IdOperadora,
                              Descricao = s.Key.Descricao,
-                             Quantidade = s.Count().ExtractIntMilharFormat()
+                             Valor = s.Sum(soma => soma.ValorPrevisto).Value.ToString("c2")
                          })
                          .ToList();
 
@@ -401,7 +426,7 @@ namespace CRMYIA.Business.Dashboard
                          {
                              IdOperadora = s.Key.IdOperadora,
                              Descricao = s.Key.Descricao,
-                             Quantidade = s.Count().ExtractIntMilharFormat()
+                             Valor = s.Sum(soma => soma.ValorPrevisto).Value.ToString("c2")
                          })
                          .ToList();
 
@@ -465,7 +490,7 @@ namespace CRMYIA.Business.Dashboard
                           {
                               IdOperadora = s.Key.IdOperadora,
                               Descricao = s.Key.Descricao,
-                              Quantidade = s.Count().ExtractIntMilharFormat()
+                              Valor = s.Sum(soma => soma.ValorPrevisto).Value.ToString("c2")
                           })
                           .ToList();
 
@@ -492,7 +517,7 @@ namespace CRMYIA.Business.Dashboard
                 if (Entity.OperadorasMaisVendidas != null)
                 {
                     int QtdTake = (Entity.OperadorasMaisVendidas.Count() < 4 ? Entity.OperadorasMaisVendidas.Count() : 4);
-                    Entity.OperadorasMaisVendidas = Entity.OperadorasMaisVendidas.OrderByDescending(o => o.Quantidade).Take(QtdTake).ToList();
+                    Entity.OperadorasMaisVendidas = Entity.OperadorasMaisVendidas.OrderBy(o => o.Valor).Take(QtdTake).ToList();
                 }
                 #endregion
             }

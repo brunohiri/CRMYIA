@@ -13,7 +13,7 @@ namespace CRMYIA.Business.Dashboard
         #region Propriedades
         public long IdOperadora { get; set; }
         public string Descricao { get; set; }
-        public string Quantidade { get; set; }
+        public string Valor { get; set; }
         #endregion
 
         #region Construtores
@@ -43,7 +43,7 @@ namespace CRMYIA.Business.Dashboard
                         {
                             IdOperadora = r.Operadora.IdOperadora,
                             Descricao = r.Operadora.Descricao,
-                            Quantidade = r.Quantidade.ExtractIntMilharFormat()
+                            Valor = r.Quantidade.ExtractIntMilharFormat()
                         }).ToList();
                 }
             }
