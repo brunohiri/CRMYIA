@@ -1,4 +1,5 @@
 ﻿var qtdNotificacao = 0;
+var vazio = true;
 $(document).ready(function () {
 
 });

@@ -110,7 +110,7 @@ namespace CRMYIA.Web.Pages
                     UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
                     Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
                     {
-                        IdUsuarioCadastro = Entity.IdUsuario,
+                        IdUsuarioCadastro = IdUsuario,
                         IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
                         Titulo = null,
                         Descricao = "Novo Agendamento",

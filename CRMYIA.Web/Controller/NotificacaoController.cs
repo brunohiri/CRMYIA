@@ -21,14 +21,15 @@ namespace CRMYIA.Web.Controller
             List<Notificacao> Entity = null;
 
             Entity = Business.NotificacaoModel.GetTodasNotificacaoId(Convert.ToInt32(id));
-
+            bool status;
+            status = Entity.Count == 0 ? false : true;
             //var retorno = new
             //{
             //    descricao = Entity.Descricao,
             //    url = Entity.Url,
             //    data = Entity.DataCadastro
             //};
-            await Clients.All.SendAsync("ReceberNotificacao", Entity);
+            await Clients.All.SendAsync("ReceberNotificacao", Entity, status, id);
         }
     }
 }
