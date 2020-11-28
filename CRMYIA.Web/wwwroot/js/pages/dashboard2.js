@@ -263,21 +263,38 @@ function CarregarSalesChart(data) {
     var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-    var Dias = [];
-    var Valores = [];
+    var DiasAmil = [];
+    var ValoresAmil = [];
+    var DiasBradesco = [];
+    var ValoresBradesco = [];
+    var DiasGNDI = [];
+    var ValoresGNDI = [];
+
 
     for (var i = 0; i < data.listValorProducaoPorDia.length; i++) {
-        Dias.push(data.listValorProducaoPorDia[i].dia);
-        Valores.push(data.listValorProducaoPorDia[i].valor);
+        if (data.listValorProducaoPorDia[i].operadora == 'Amil') {
+            DiasAmil.push(data.listValorProducaoPorDia[i].dia);
+            ValoresAmil.push(data.listValorProducaoPorDia[i].valor);
+        }
+        else
+            if (data.listValorProducaoPorDia[i].operadora == 'Bradesco Seguros') {
+                DiasBradesco.push(data.listValorProducaoPorDia[i].dia);
+                ValoresBradesco.push(data.listValorProducaoPorDia[i].valor);
+            }
+            else
+                if (data.listValorProducaoPorDia[i].operadora == 'GNDI') {
+                    DiasGNDI.push(data.listValorProducaoPorDia[i].dia);
+                    ValoresGNDI.push(data.listValorProducaoPorDia[i].valor);
+                }
     }
 
     console.log(data.listValorProducaoPorDia);
 
     var salesChartData = {
-        labels: Dias,
+        labels: DiasAmil,
         datasets: [
             {
-                label: 'Propostas Fechadas',
+                label: 'GNDI',
                 backgroundColor: RetornarBackgroundColor(0),
                 borderColor: RetornarBackgroundColor(0),
                 pointRadius: false,
@@ -285,19 +302,30 @@ function CarregarSalesChart(data) {
                 pointStrokeColor: RetornarBackgroundColor(0),
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: RetornarBackgroundColor(0),
-                data: Valores
+                data: ValoresGNDI
             },
             {
-                label: 'Electronics',
-                backgroundColor: 'rgba(210, 214, 222, 1)',
-                borderColor: 'rgba(210, 214, 222, 1)',
+                label: 'Bradesco Seguros',
+                backgroundColor: RetornarBackgroundColor(1),
+                borderColor: RetornarBackgroundColor(1),
                 pointRadius: false,
-                pointColor: 'rgba(210, 214, 222, 1)',
-                pointStrokeColor: '#c1c7d1',
+                pointColor: RetornarBackgroundColor(1),
+                pointStrokeColor: RetornarBackgroundColor(1),
                 pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(220,220,220,1)',
-                data: [65, 59, 80, 81, 56, 55, 40]
+                pointHighlightStroke: RetornarBackgroundColor(1),
+                data: ValoresBradesco
             },
+            {
+                label: 'Amil',
+                backgroundColor: RetornarBackgroundColor(2),
+                borderColor: RetornarBackgroundColor(2),
+                pointRadius: false,
+                pointColor: RetornarBackgroundColor(2),
+                pointStrokeColor: RetornarBackgroundColor(2),
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: RetornarBackgroundColor(2),
+                data: ValoresAmil
+            }
         ]
     }
 
