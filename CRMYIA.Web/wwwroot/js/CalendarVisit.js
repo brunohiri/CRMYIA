@@ -161,16 +161,25 @@
     PreencherDropdown();
 })
 
-$(document).on('keyup', '.input-nome-pesquisa', function () {
-    let search = $("#NomePesquisa").val().toLowerCase();
-    Filtro(search.trim().toLowerCase());
+//$(document).on('keyup', '.select2', function () {
+//    let search = $(".select2-selection__rendered").html().toLowerCase();//select2-results__option
+//    Filtro(search.trim().toLowerCase());
+//});
+
+$('.select2').on('change', function () {
+    //var data = $(".select2 option:selected").text();
+    //$("#test").val(data);
+    VisitasPesquisa();
+})
+
+$(document).ready(function () {
+    $(document).on('click', '.select2-results__option', function () {
+        $("#select2-menuItems-container").val($(this).html());
+    });
 });
 
-$(document).on('click', '.dropdown-item', function () {
-    $("#NomePesquisa").val($(this).val());
-});
 
-$(document).on('click', '.visitas-pesquisa-dropdown', function () {
+$(document).on('click', '.todos-perfil', function () {
 
     VisitasPesquisa();
 });
@@ -205,7 +214,7 @@ function VisitasPesquisa() {
     $.ajax({
         url: '/Visita?handler=VisitasPesquisa',
         method: "GET",
-        data: { IdPerfil: this.value, Nome: $("#NomePesquisa").val(), DataInicial: DataInicial, DataFinal: DataFinal, IdPerfilUsuario: $("#IdPerfilUsuario").val() },
+        data: { IdPerfil: $("#PreencherOption option:selected").val(), Nome: $("#select2-menuItems-container").html(), DataInicial: DataInicial, DataFinal: DataFinal, IdPerfilUsuario: $("#IdPerfilUsuario").val() },
         dataType: 'json',
         success: function (data) {
             if (data.status == true) {
@@ -374,7 +383,7 @@ function PreencherRadio() {
         let html = '<option selected value="0">Todos</option>';
         if (data.status) {
             $.each(data.listVisita, function () {
-                html += '<option value="' + this.idPerfil + '">' + this.descricao + '</option>';
+                html += '<option class="todos-perfil" value="' + this.idPerfil + '">' + this.descricao + '</option>';
             });
 
             $("#IdPerfilUsuario").val(data.idPerfil);
@@ -386,8 +395,11 @@ function PreencherRadio() {
 function PreencherDropdown() {
     $.getJSON("/Visita?handler=TodosNomes", function (data) {
         let contents = [];
+        let i = 0;
         for (let name of data.listVisita) {
-            contents.push('<input type="button" class="dropdown-item visitas-pesquisa-dropdown" type="button" value="' + name.nome.toUpperCase() + '"/>');
+            //contents.push('<input type="button" class="dropdown-item visitas-pesquisa-dropdown" role="option" aria-selected="true" type="button" value="' + name.nome.toUpperCase() + '"/>');
+            contents.push('<option value="' + i + '">' + name.nome.toUpperCase() + '</option>');
+            i++;
         }
         $('#menuItems').append(contents.join(""));
 

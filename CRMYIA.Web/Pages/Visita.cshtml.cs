@@ -68,7 +68,7 @@ namespace CRMYIA.Web.Pages
             List<VisitaViewModel> ListVisita = null;
 
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            if(Nome == "Selecione um Nome")
+            if(Nome == "Selecione...")
             {
                 Nome = User.Identity.Name;
             }
@@ -107,21 +107,19 @@ namespace CRMYIA.Web.Pages
                         IdUsuario = IdUsuario
                     });
 
+                    //Notificação
                     UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
                     Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
                     {
                         IdUsuarioCadastro = IdUsuario,
                         IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
                         Titulo = null,
-                        Descricao = "Novo Agendamento",
-                        Url = "",
+                        Descricao = Entity.Descricao,
+                        Url = "/Visita",
                         Visualizado = false,
                         DataCadastro = DateTime.Now,
                         Ativo = true
                     });
-
-                    //NotificacaoController NcCtrl = new NotificacaoController();
-                    //NcCtrl.NotificacaoHub(EntityNotificacao);
 
                 }
                 else
@@ -160,6 +158,21 @@ namespace CRMYIA.Web.Pages
             ListEntity = UsuarioModel.GetListIdNome(IdUsuario);
 
             return new JsonResult(new { status = true, listVisita = ListEntity });
+        }
+
+        public IActionResult OnGetDesativarNotificacao(long IdNotificacao)
+        {
+            bool status;
+            if (IdNotificacao > 0)
+            {
+                NotificacaoModel.DesativarNotificacao(IdNotificacao);
+                status = true; 
+            }
+            else
+            {
+                status = false;
+            }
+            return new JsonResult(new {status = status });
         }
     }
 

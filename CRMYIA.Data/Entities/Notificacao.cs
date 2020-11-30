@@ -12,7 +12,7 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public string Url { get; set; }
         public bool Visualizado { get; set; }
-        public DateTime DataCadastro { get; set; }
+        public DateTime? DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
         public virtual Usuario IdUsuarioCadastroNavigation { get; set; }

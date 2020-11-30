@@ -219,6 +219,7 @@ namespace CRMYIA.Web.Pages
 
                 if (Entity.IdProposta == 0)
                 {
+                    long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
                     PropostaModel.Add(Entity);
 
                     #region Salvar PropostaFaixaEtaria
@@ -253,6 +254,21 @@ namespace CRMYIA.Web.Pages
                     #endregion
 
                     Observacao = "Proposta Criada!";
+
+                    //Notificação
+                    UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
+                    Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+                    {
+                        IdUsuarioCadastro = IdUsuario,
+                        IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+                        Titulo = null,
+                        Descricao = "Próximo contato com " + (EntityCliente.Nome.Split(' ').Count() > 0 ? EntityCliente.Nome.Split(' ')[0] : EntityCliente.Nome),
+                        Url = "/NovaProposta?id=" + HttpUtility.UrlDecode(Criptography.Encrypt(Entity.IdProposta.ToString())),
+                        Visualizado = false,
+                        DataCadastro = DateTime.Now,
+                        Ativo = true
+                    });
+
                 }
                 else
                 {
