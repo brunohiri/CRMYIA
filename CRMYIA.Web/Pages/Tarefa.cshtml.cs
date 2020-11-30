@@ -55,6 +55,14 @@ namespace CRMYIA.Web.Pages
             }
             return new JsonResult(new { status = true });
         }
+        public IActionResult OnGetListarFaseProposta()
+        {
+            //public List<FaseProposta> ListFaseProposta { get; set; }
+            List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
+            List<Proposta> Proposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
+
+            return new JsonResult(new { status = true, FaseProposta = FaseProposta, Proposta = Proposta });
+        }
         #endregion
     }
 }

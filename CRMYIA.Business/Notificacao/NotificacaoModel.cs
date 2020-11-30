@@ -37,7 +37,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Notificacao
-                        .Where(x => ((x.IdUsuarioVisualizar == IdUsuario) && (x.Visualizado == false)))
+                        .Where(x => ((x.IdUsuarioVisualizar == IdUsuario)))
                         .ToList();
                 }
             }

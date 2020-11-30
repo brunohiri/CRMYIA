@@ -3,15 +3,32 @@
 var connection = new signalR.HubConnectionBuilder().withUrl("/notificacaohub").build();
 
 connection.on("ReceberNotificacao", function (dados, status, id) {
-    let tam = dados.length;
 
-    if (qtdNotificacao < tam && status == true && id == $("#IdUsuario").val()) {
-        var html = '';
-        html += '<a class="nav-link" data-toggle="dropdown" href="#">\
+    let tam = 0;
+    let tamNotificacao = 0;
+    var html = '';
+
+    $.each(dados, function () {
+        if (this.visualizado === true) {
+            tam++;
+        } else {
+            tamNotificacao++;
+        }
+    });
+
+    if (tamNotificacao > qtdNotificacao && status == true && id == $("#IdUsuario").val()) {
+        if (tam > 0) {
+            html += '<a class="nav-link" data-toggle="dropdown" href="#">\
                     <i class="far fa-bell"></i >\
-                    <span class="badge badge-warning navbar-badge">'+ tam + '</span>\
-                </a>\
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">\
+                    <span class="badge badge-warning navbar-badge">'+ tamNotificacao + '</span>\
+                </a>';
+        } else {
+            html += '<a class="nav-link" data-toggle="dropdown" href="#">\
+                    <i class="far fa-bell"></i>\
+                </a>';
+        }
+       
+        html += '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">\
                     <span class="dropdown-item dropdown-header" >'+ tam + ' Notificações</span>\
                     <div class="dropdown-divider"></div>';
 
@@ -25,16 +42,22 @@ connection.on("ReceberNotificacao", function (dados, status, id) {
         html += '<a href="#" class="dropdown-item dropdown-footer">Ver todas as notificações</a>\
                      <div class="dropdown-divider"></div>\
                  </div>';
-        qtdNotificacao = tam;
+        qtdNotificacao = tamNotificacao;
         $("#lista-notificacoes").html(html);
         vazio = false;
     } 
     else if (vazio && id == $("#IdUsuario").val()) {
-        var html = '';
-        html += '<a class="nav-link" data-toggle="dropdown" href="#">\
+        if (tam > 0) {
+            html += '<a class="nav-link" data-toggle="dropdown" href="#">\
                     <i class="far fa-bell"></i>\
-                </a>\
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">\
+                </a>';
+        } else {
+            html += '<a class="nav-link" data-toggle="dropdown" href="#">\
+                    <i class="far fa-bell"></i >\
+                    <span class="badge badge-warning navbar-badge">'+ tamNotificacao + '</span>\
+                </a>';
+        }
+        html += '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">\
                     <span class="dropdown-item dropdown-header" >0 Notificações</span>\
                     <div class="dropdown-divider"></div>\
                     <a href="#" class="dropdown-item dropdown-footer">Ver todas as notificações</a>\
