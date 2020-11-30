@@ -76,6 +76,12 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<OperadoraTelefone> ListOperadoraTelefone { get; set; }
         #endregion
+
+        #region Operadora
+        public long? IdOperadora { get; set; }
+        [BindProperty]
+        public List<Operadora> ListOperadora { get; set; }
+        #endregion
         #endregion
 
         #region Construtores
@@ -119,14 +125,14 @@ namespace CRMYIA.Web.Pages
             {
                 CarregarLists();
 
-                if (!Util.IsCpf(Entity.CPF))
-                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF Inválido!");
+                if ((!Util.IsCpf(Entity.CPF)) && (!Util.IsCnpj(Entity.CPF)))
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");
                 else
                 {
                     if (Entity.IdCliente == 0)
                     {
                         if (ClienteModel.GetByCPF(Entity.CPF) != null)
-                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um cliente cadastrado com este CPF!");
+                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um cliente cadastrado com este CPF/CNPJ!");
                         else
                         {
                             ClienteModel.Add(Entity);
@@ -251,6 +257,7 @@ namespace CRMYIA.Web.Pages
             ListCidade = CidadeModel.GetListIdDescricao();
             ListEstado = EstadoModel.GetListIdSigla();
             ListOperadoraTelefone = OperadoraTelefoneModel.GetListIdDescricao();
+            ListOperadora = OperadoraModel.GetListIdDescricao();
         }
         #endregion
     }
