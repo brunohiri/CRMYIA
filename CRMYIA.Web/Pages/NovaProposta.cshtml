@@ -34,13 +34,13 @@
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuario">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Data de Cadastro</label>
+                        <label>Data de Cadastro *</label>
                         <input type="text" class="form-control" placeholder="" asp-for="@Model.Entity.DataCadastro" readonly>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Data de Solicitação</label>
+                        <label>Data de Solicitação *</label>
                         <div class="input-group date" id="PropostaDataSolicitacao" data-target-input="nearest">
                             <input type="text" class="form-control datetimepicker-input" data-target="#PropostaDataSolicitacao" asp-for="@Model.Entity.DataSolicitacao" />
                             <div class="input-group-append" data-target="#PropostaDataSolicitacao" data-toggle="datetimepicker">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Corretor</label>
+                        <label>Corretor *</label>
                         @if (UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) == (byte?)EnumeradorModel.Perfil.Corretor)
                         {
                         <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
@@ -75,7 +75,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Modalidade</label>
+                        <label>Modalidade *</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdModalidade" id="PropostaIdModalidade">
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListModalidade)
@@ -87,7 +87,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Operadora</label>
+                        <label>Operadora *</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdOperadora" id="PropostaIdOperadora">
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListOperadora)
@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Produto</label>
+                        <label>Produto *</label>
                         <input type="hidden" id="PropostaIdProdutoHidden" value="" />
                         <select class="form-control select2" style="width: 100%;" id="PropostaIdProduto">
                             <option selected="selected" value="0">Selecione...</option>
@@ -119,7 +119,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Categoria</label>
+                        <label>Categoria *</label>
                         <input type="hidden" id="PropostaIdCategoriaHidden" value="@Model.Entity.IdCategoria" />
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCategoria" id="PropostaIdCategoria">
                             <option selected="selected" value="0">Selecione...</option>
@@ -128,7 +128,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Porte</label>
+                        <label>Porte *</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdPorte" id="PropostaIdPorte">
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListPorte)
@@ -142,14 +142,14 @@
             <div class="row">
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label>CPF/CNPJ</label>
+                        <label>CPF/CNPJ *</label>
                         <input type="text" class="form-control cpf-cnpj" placeholder="CPF/CNPJ" required id="PropostaDocumentoCliente" />
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCliente" id="PropostaIdClienteHidden" />
-                        <label>Nome/Razão Social</label>
+                        <label>Nome/Razão Social *</label>
                         <input type="text" class="form-control" placeholder="Nome/Razão Social" readonly id="PropostaClienteNome" />
                     </div>
                 </div>
@@ -159,10 +159,15 @@
                         <input type="text" class="form-control" placeholder="Data de Nascimento ou Abertura" readonly id="PropostaClienteDataNascAbertura" />
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <div class="form-group">
                         <label>Situação</label>
                         <input type="text" class="form-control" placeholder="Situação" readonly id="PropostaClienteSituacao" />
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group" style="margin-top:38px;">
+                       <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))">Ver Cadastro</a>
                     </div>
                 </div>
             </div>
@@ -221,7 +226,7 @@
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Fase da Proposta</label>
+                        <label>Fase da Proposta *</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdFaseProposta" id="PropostaIdFaseProposta">
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListFaseProposta)
@@ -234,13 +239,13 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label>Valor da Proposta</label>
+                        <label>Valor da Proposta R$ *</label>
                         <input type="text" class="form-control money" style="text-align:right;" placeholder="R$" asp-for="@Model.Entity.ValorPrevisto">
                     </div>
                 </div>
                 <div class="col-sm-1">
                     <div class="form-group">
-                        <label>Qtd Vidas</label>
+                        <label>Qtd Vidas *</label>
                         <input type="text" class="form-control" style="text-align:right;" placeholder="0" asp-for="@Model.Entity.QuantidadeVidas" id="PropostaQuantidadeVidas" readonly>
                     </div>
                 </div>
@@ -248,7 +253,7 @@
             <div class="row">
                 <div class="col-sm-1">
                     <div class="form-group">
-                        <label>Possui Plano?</label>
+                        <label>Possui Plano?*</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                             <input type="checkbox" class="custom-control-input" id="PropostaPossuiPlano" asp-for="@Model.Entity.PossuiPlano">
                             <label class="custom-control-label" for="PropostaPossuiPlano">Sim</label>
@@ -277,12 +282,12 @@
             <div class="row">
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label>Status da Proposta</label>
+                        <label>Status da Proposta *</label>
                         <select class="form-control" style="width: 100%;" asp-for="@Model.Entity.IdStatusProposta" id="PropostaIdStatusProposta">
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListStatusProposta)
                             {
-                            <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
+                                <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -294,24 +299,53 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListMotivoDeclinio)
                             {
-                            <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
+                                <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
                 </div>
                 <div class="col-sm-1">
                     <div class="form-group">
-                        <label>Status</label>
+                        <label>Status *</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                             <input type="checkbox" class="custom-control-input" id="PropostaAtivo" checked asp-for="@Model.Entity.Ativo">
                             <label class="custom-control-label" for="PropostaAtivo">Ativo</label>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-1">
+                <div class="col-sm-2">
                     <div class="form-group">
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem">
-                            Abordagem
+                        <label>Probabilidade de Fechamento</label>
+                        <select class="form-control" style="width: 100%;" asp-for="@Model.Entity.Probabilidade" id="PropostaProbabilidade">
+                            <option selected="selected" value="0">Selecione...</option>
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25">25%</option>
+                            <option value="30">30%</option>
+                            <option value="35">35%</option>
+                            <option value="40">40%</option>
+                            <option value="45">45%</option>
+                            <option value="50">50%</option>
+                            <option value="55">55%</option>
+                            <option value="60">60%</option>
+                            <option value="65">65%</option>
+                            <option value="70">70%</option>
+                            <option value="75">75%</option>
+                            <option value="80">80%</option>
+                            <option value="85">85%</option>
+                            <option value="90">90%</option>
+                            <option value="95">95%</option>
+                            <option value="100">100%</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" style="margin-top:32px;">
+                            Sugestão de Abordagem
                         </button>
                     </div>
                 </div>
@@ -369,7 +403,7 @@
                                             <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Histórico</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Estudo</a>
+                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Ligações</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">Produções</a>
@@ -426,7 +460,51 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                            Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                                            <div class="timeline">
+                                                @if (Model.ListEntityHistoricoProposta != null && Model.ListEntityHistoricoProposta.Count() > 0)
+                                                {
+                                                    int i = 0;
+                                                    foreach (var Item in Model.ListEntityHistoricoProposta)
+                                                    {
+                                                        i++;
+                                                        <!-- timeline time label -->
+                                                        <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                            <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                        </div>
+                                                        <!-- /.timeline-label -->
+                                                        <!-- timeline item -->
+                                                        <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                            <i class="fas fa-user bg-green"></i>
+                                                            <div class="timeline-item">
+                                                                <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
+                                                                <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
+                                                                <div class="timeline-body">
+                                                                    @Item.Observacao
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- END timeline item -->
+                                                    }
+                                                    <div>
+                                                        <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
+                                                        <i class="fas fa-clock bg-gray"></i>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div>
+                                                        <i class="fas fa-clock bg-gray"></i>
+                                                        <div class="timeline-item">
+                                                            <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
+                                                            <div class="timeline-body">
+                                                                Nenhum histórico registrado
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                }
+
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
                                             Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
