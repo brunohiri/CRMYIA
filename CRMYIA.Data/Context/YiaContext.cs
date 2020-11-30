@@ -33,6 +33,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Fechamento> Fechamento { get; set; }
         public virtual DbSet<Genero> Genero { get; set; }
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
+        public virtual DbSet<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual DbSet<KPIMeta> KPIMeta { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
@@ -73,8 +74,8 @@ namespace CRMYIA.Data.Context
                       builder => builder.EnableRetryOnFailure());
 #endif
 #if (!DEBUG)
-                optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                    builder => builder.EnableRetryOnFailure());
+			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+				builder => builder.EnableRetryOnFailure());
 #endif
             }
         }
@@ -169,6 +170,8 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.DataAdesaoLead).HasColumnType("date");
+
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.DataNascimento).HasColumnType("datetime");
@@ -187,6 +190,14 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Observacao)
                     .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OperadoraLead)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProdutoLead)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RG)
@@ -740,6 +751,29 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.HistoricoAcesso)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_HistoricoAcesso");
+            });
+
+            modelBuilder.Entity<HistoricoLigacao>(entity =>
+            {
+                entity.HasKey(e => e.IdHistoricoLigacao);
+
+                entity.Property(e => e.IdHistoricoLigacao).ValueGeneratedNever();
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Observacao)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdPropostaNavigation)
+                    .WithMany(p => p.HistoricoLigacao)
+                    .HasForeignKey(d => d.IdProposta)
+                    .HasConstraintName("Proposta_HistoricoLigacao");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.HistoricoLigacao)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_HistoricoLigacao");
             });
 
             modelBuilder.Entity<HistoricoProposta>(entity =>

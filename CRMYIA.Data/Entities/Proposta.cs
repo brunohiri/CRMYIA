@@ -8,6 +8,7 @@ namespace CRMYIA.Data.Entities
         public Proposta()
         {
             Documento = new HashSet<Documento>();
+            HistoricoLigacao = new HashSet<HistoricoLigacao>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
             PropostaFaixaEtaria = new HashSet<PropostaFaixaEtaria>();
             Visita = new HashSet<Visita>();
@@ -35,6 +36,7 @@ namespace CRMYIA.Data.Entities
         public string PreferenciaHospitalar { get; set; }
         public string Observacoes { get; set; }
         public string NumeroProposta { get; set; }
+        public int? Probabilidade { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
@@ -48,6 +50,7 @@ namespace CRMYIA.Data.Entities
         public virtual Usuario IdUsuarioCorretorNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
         public virtual ICollection<Documento> Documento { get; set; }
+        public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual ICollection<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual ICollection<Visita> Visita { get; set; }

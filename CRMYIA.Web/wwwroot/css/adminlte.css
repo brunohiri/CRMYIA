@@ -13437,8 +13437,8 @@ body.text-sm .control-sidebar {
 }
 
 .dropdown-menu-lg {
-  max-width: 300px;
-  min-width: 280px;
+  max-width: 340px;
+  min-width: 330px;
   padding: 0;
 }
 

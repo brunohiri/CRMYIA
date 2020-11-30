@@ -257,6 +257,16 @@ function CadastroUsuario() {
     $('#IdUsuarioHierarquia').change(function () { 
         $('#IdUsuarioHierarquiaHidden').val($(this).val());
     });
+
+    $('#ClienteIdOperadora').change(function () {
+        var IdOperadora = $(this).val();
+        CarregarPropostaOperadoraProduto(IdOperadora);
+    });
+
+    $('#ClienteIdProduto').change(function () {
+        var IdProduto = $(this).val();
+    });
+
 }
 
 function CarregarUsuarioHierarquia(IdPerfil) {
@@ -575,12 +585,14 @@ function CarregarPropostaOperadoraProduto(IdOperadora) {
                         result += '<option value="' + data.listProduto[i].idProduto + '">' + data.listProduto[i].descricao + '</option>';
                     }
                     $('#PropostaIdProduto').html(result);
+                    $('#ClienteIdProduto').html(result);
                 }
 
                 if (IdOperadora == "0") {
-                    console.log(data.idOperadora);
                     $('#PropostaIdProduto').val(IdProduto);
                     $('#PropostaIdOperadora').val(data.idOperadora);
+                    $('#ClienteIdProduto').val(IdProduto);
+                    $('#ClienteIdOperadora').val(data.idOperadora);
                     $('.select2').select2();
                 }
             }

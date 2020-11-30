@@ -256,7 +256,7 @@ namespace CRMYIA.Business.Dashboard
                                 .ThenInclude(k => k.IdProdutoNavigation)
                                     .ThenInclude(p => p.IdOperadoraNavigation)
                          .Where(x => x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Ativo
-                        //&& (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
+                        && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
                         && x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito))
                         .AsEnumerable()
                         .GroupBy(g => new
@@ -328,7 +328,7 @@ namespace CRMYIA.Business.Dashboard
                                         .ThenInclude(y => y.IdUsuarioMasterNavigation)
                                             .ThenInclude(y => y.UsuarioPerfil)
                           .Where(x => x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Ativo
-                           //&& (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
+                           && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
                            && x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation
                                                                                .Where(a => a.IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation
                                                                                     .Where(h => h.IdUsuarioMaster == IdUsuario && h.IdUsuarioMasterNavigation.UsuarioPerfil.Where(p => p.IdPerfil == (byte?)EnumeradorModel.Perfil.Gerente).Count() > 0)
@@ -396,6 +396,40 @@ namespace CRMYIA.Business.Dashboard
                                                                                     .Count() > 0)
                                                                                 .Count() > 0)
                             .Count().ExtractIntMilharFormat();
+
+                        Entity.ListValorProducaoPorDia = context.Proposta
+                            .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(z => z.IdLinhaNavigation)
+                                .ThenInclude(k => k.IdProdutoNavigation)
+                                    .ThenInclude(p => p.IdOperadoraNavigation)
+                           .Include(y => y.IdUsuarioCorretorNavigation)
+                           .ThenInclude(y => y.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                               .ThenInclude(y => y.IdUsuarioMasterNavigation)
+                                    .ThenInclude(y => y.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                                        .ThenInclude(y => y.IdUsuarioMasterNavigation)
+                                            .ThenInclude(y => y.UsuarioPerfil)
+                           .Where(x => x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito)
+                            && x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation
+                                                                            .Where(a => a.IdUsuarioMasterNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation
+                                                                                .Where(h => h.IdUsuarioMaster == IdUsuario && h.IdUsuarioMasterNavigation.UsuarioPerfil.Where(p => p.IdPerfil == (byte?)EnumeradorModel.Perfil.Gerente).Count() > 0)
+                                                                                .Count() > 0)
+                                                                            .Count() > 0
+                            && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal))
+                           .AsEnumerable()
+                           .GroupBy(g => new
+                           {
+                               Operadora = g.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao,
+                               Dia = g.DataSolicitacao.Value.Day.ToString()
+                           })
+                           .Select(s => new ValorProducaoPorDiaViewModel()
+                           {
+                               Dia = s.Key.Dia.ExtractInt32(),
+                               Operadora = s.Key.Operadora,
+                               Valor = s.Sum(soma => soma.ValorPrevisto).Value//.ToString("c2")
+                           })
+                           .OrderBy(o => o.Dia)
+                           .ToList();
+
                         #endregion
                     }
                     else
@@ -412,7 +446,7 @@ namespace CRMYIA.Business.Dashboard
                                .ThenInclude(y => y.IdUsuarioMasterNavigation)
                                    .ThenInclude(y => y.UsuarioPerfil)
                           .Where(x => x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Ativo
-                           //&& (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
+                           && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
                            && x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation
                                                                                     .Where(h => h.IdUsuarioMaster == IdUsuario && h.IdUsuarioMasterNavigation.UsuarioPerfil.Where(p => p.IdPerfil == (byte?)EnumeradorModel.Perfil.Gerente).Count() > 0)
                                                                                 .Count() > 0
@@ -466,6 +500,36 @@ namespace CRMYIA.Business.Dashboard
                                                                                     .Where(h => h.IdUsuarioMaster == IdUsuario && h.IdUsuarioMasterNavigation.UsuarioPerfil.Where(p => p.IdPerfil == (byte?)EnumeradorModel.Perfil.Gerente).Count() > 0)
                                                                                 .Count() > 0)
                             .Count().ExtractIntMilharFormat();
+
+                        Entity.ListValorProducaoPorDia = context.Proposta
+                            .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(z => z.IdLinhaNavigation)
+                                .ThenInclude(k => k.IdProdutoNavigation)
+                                    .ThenInclude(p => p.IdOperadoraNavigation)
+                           .Include(y => y.IdUsuarioCorretorNavigation)
+                            .ThenInclude(y => y.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                               .ThenInclude(y => y.IdUsuarioMasterNavigation)
+                                   .ThenInclude(y => y.UsuarioPerfil)
+                           .Where(x => x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito)
+                            && x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation
+                                                                                    .Where(h => h.IdUsuarioMaster == IdUsuario && h.IdUsuarioMasterNavigation.UsuarioPerfil.Where(p => p.IdPerfil == (byte?)EnumeradorModel.Perfil.Gerente).Count() > 0)
+                                                                                .Count() > 0
+                            && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
+                            )
+                           .AsEnumerable()
+                           .GroupBy(g => new
+                           {
+                               Operadora = g.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao,
+                               Dia = g.DataSolicitacao.Value.Day.ToString()
+                           })
+                           .Select(s => new ValorProducaoPorDiaViewModel()
+                           {
+                               Dia = s.Key.Dia.ExtractInt32(),
+                               Operadora = s.Key.Operadora,
+                               Valor = s.Sum(soma => soma.ValorPrevisto).Value//.ToString("c2")
+                                                   })
+                           .OrderBy(o => o.Dia)
+                           .ToList();
                         #endregion
                     }
                     else
@@ -478,7 +542,7 @@ namespace CRMYIA.Business.Dashboard
                                   .ThenInclude(k => k.IdProdutoNavigation)
                                       .ThenInclude(p => p.IdOperadoraNavigation)
                            .Where(x => x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Ativo
-                          //&& (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
+                          && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
                           && x.IdUsuarioCorretor == IdUsuario
                           && x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito))
                           .GroupBy(g => new
@@ -509,6 +573,30 @@ namespace CRMYIA.Business.Dashboard
                         Entity.QtdNegociosPerdidos = context.Proposta
                             .Where(x => !x.Ativo || x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Declinado) && x.IdUsuarioCorretor == IdUsuario)
                             .Count().ExtractIntMilharFormat();
+
+                        Entity.ListValorProducaoPorDia = context.Proposta
+                          .Include(y => y.IdCategoriaNavigation)
+                          .ThenInclude(z => z.IdLinhaNavigation)
+                              .ThenInclude(k => k.IdProdutoNavigation)
+                                  .ThenInclude(p => p.IdOperadoraNavigation)
+                         .Where(x => x.Ativo && x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Aceito)
+                          && x.IdUsuarioCorretor == IdUsuario
+                          && (x.DataSolicitacao.Value >= DataInicial && x.DataSolicitacao.Value <= DataFinal)
+                          )
+                         .AsEnumerable()
+                         .GroupBy(g => new
+                         {
+                             Operadora = g.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao,
+                             Dia = g.DataSolicitacao.Value.Day.ToString()
+                         })
+                         .Select(s => new ValorProducaoPorDiaViewModel()
+                         {
+                             Dia = s.Key.Dia.ExtractInt32(),
+                             Operadora = s.Key.Operadora,
+                             Valor = s.Sum(soma => soma.ValorPrevisto).Value//.ToString("c2")
+                           })
+                         .OrderBy(o => o.Dia)
+                         .ToList();
                         #endregion
                     }
                 }

@@ -278,8 +278,11 @@ namespace CRMYIA.Web.Pages
                     ListFaixaEtaria.ForEach(delegate (FaixaEtaria Item)
                     {
                         PropostaFaixaEtaria EntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.Get(Entity.IdProposta, Item.IdFaixaEtaria);
-                        EntityPropostaFaixaEtaria.Quantidade = PropostaFaixaEtariaQuantidade[Item.IdFaixaEtaria - 1].ExtractInt32OrNull();
-                        PropostaFaixaEtariaModel.Update(EntityPropostaFaixaEtaria);
+                        if (EntityPropostaFaixaEtaria != null)
+                        {
+                            EntityPropostaFaixaEtaria.Quantidade = PropostaFaixaEtariaQuantidade[Item.IdFaixaEtaria - 1].ExtractInt32OrNull();
+                            PropostaFaixaEtariaModel.Update(EntityPropostaFaixaEtaria);
+                        }
                     });
                     #endregion
 
@@ -346,7 +349,7 @@ namespace CRMYIA.Web.Pages
         private void CarregarLists()
         {
             ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
-            ListCliente = ClienteModel.GetListIdNome();
+            //ListCliente = ClienteModel.GetListIdNome();
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             ListStatusProposta = StatusPropostaModel.GetListIdDescricao();
             ListModalidade = ModalidadeModel.GetListIdDescricao();

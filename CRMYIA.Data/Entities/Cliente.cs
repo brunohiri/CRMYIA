@@ -31,9 +31,14 @@ namespace CRMYIA.Data.Entities
         public string Numero { get; set; }
         public string Bairro { get; set; }
         public string Complemento { get; set; }
+        public string Observacao { get; set; }
+        public string OperadoraLead { get; set; }
+        public string ProdutoLead { get; set; }
+        public bool StatusPlanoLead { get; set; }
+        public DateTime? DataAdesaoLead { get; set; }
+        public bool IsLead { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
-        public string Observacao { get; set; }
 
         public virtual ArquivoLead IdArquivoLeadNavigation { get; set; }
         public virtual Cidade IdCidadeNavigation { get; set; }
