@@ -5,158 +5,170 @@
     ViewData["Pagina"] = "Visitas";
 }
 <!-- Horizontal Form Pesquisa-->
-<div class="card card-light">
-    <div class="card-header">
-        <h3 class="card-title">Pesquisar</h3>
-    </div>
-    <!-- /.card-header -->
-    <!-- form start -->
-    <form id="FormPesquisa">
-        <input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />
-        <div class="form-row">
+<section class="content">
+    <div class="container-fluid">
 
-            <fieldset class="form-group col-md-3">
-                <div class="row m-2">
-                    <div class="col-md-6 mb-3">
-                        <label for="estado">Perfil</label>
-                        <select class="custom-select visitas-pesquisa" id="PreencherOption" name="PreencherOption">
-                           
-                        </select>
-                        <div class="invalid-feedback">
-                            Please select a valid state.
-                        </div>
-                    </div>
+        <div class="card card-default">
+
+                <div class="card-header">
+                    <h3 class="card-title">Pesquisar</h3>
                 </div>
-            </fieldset>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form id="FormPesquisa">
+                    <div class="card-body">
+                        <input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />
+                        <div class="row">
 
-            <fieldset class="form-group col-md-6">
-                <div class="row m-2">
-                    <legend class="col-form-label col-sm-3 pt-0">Nome</legend>
-                    <div class="dropdown" style=" margin: 20px;">
-                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdown_coins" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Selecione um Nome</button>
-                        <div id="menu" class="dropdown-menu" aria-labelledby="dropdown_coins" style="max-height: 20rem; overflow-y: auto;">
-                            
-                                <input type="search" class="form-control input-nome-pesquisa visitas-pesquisa" id="NomePesquisa" placeholder="" autofocus="autofocus">
-                            
-                            <div id="menuItems"></div>
-                            <div id="empty" class="dropdown-header">Nenhum nome Encontrado</div>
-                        </div>
-                    </div>
-
-                </div>
-            </fieldset>
-
-            <fieldset class="form-group col-md-3">
-                <div class="row m-2">
-                    <legend class="col-form-label col-sm-4 pt-0">Data</legend>
-
-                    <div class="row">  
-                        <div class="form-group">
-                            @*<label>Date rangee:</label>*@
-
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="far fa-calendar-alt"></i>
-                                    </span>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="estado">Perfil</label>
+                                    <select class="custom-select visitas-pesquisa" id="PreencherOption" name="PreencherOption">
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a valid state.
+                                    </div>
                                 </div>
-                                <input type="text" class="form-control float-right daterange visitas-pesquisa" id="Inicio" name="Inicio">
                             </div>
-                        </div>
-                    </div>
 
-                </div>
-            </fieldset>
-        </div>
-    </form>
-</div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Nome</label>
+                                    @*<div id="menu" class="dropdown-menu" aria-labelledby="dropdown_coins" style="max-height: 20rem; overflow-y: auto;">*@
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="sticky-top mb-3">
-            <div class="card" style="display:none;">
-                <div class="card-header">
-                    <h4 class="card-title">Eventos não agendados </h4>
-                </div>
-                <div class="card-body">
-                    <!-- the events -->
-                    <div id="external-events">
+                                            @*<input type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" class="form-control input-nome-pesquisa visitas-pesquisa" id="NomePesquisa" placeholder="" autofocus="autofocus">*@
+                                            @*<select class="form-control select2" style="width: 100%;"id="menuItems">
+                                                <option selected="selected">Selecione...</option>
+                                            </select>*@
+                                            @*<div id="menuItems"></div>*@
+                                <select class="form-control select2 itens-option-nome" style="width: 100%;" id="menuItems">
+                                    <option selected="selected">Selecione...</option>
+                                </select>
+                                </div>
+                            </div>
 
-                        <div class="external-event bg-info">Nenhum evento</div>
-                        <div class="checkbox">
-                            <label for="drop-remove">
-                                <input type="checkbox" id="drop-remove" checked>
-                                remover depois de arrastar
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
+                            @*<div class="col-sm-6">
+            <div class="form-group">
+                <label>Corretor</label>
+
+                <input type="hidden" class="form-control" id="PropostaIdUsuarioCorretor" />
+                <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="Nome" />
+
+                <select class="form-control select2" style="width: 100%;" id="PropostaIdUsuarioCorretor">
+                    <option selected="selected">Selecione...</option>
+
+                </select>
             </div>
-            <!-- /.card -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Criar Evento</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" asp-page="/Visita" asp-page-handler="Visitas" id="formVisita">
-                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdVisita" id="VisitaIdVisita" />
-                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdStatusVisita" id="VisitaIdStatusVisita" />
-                        @Html.AntiForgeryToken()
-                        <span>Escolha um tipo de evento:</span>
-                        <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                            <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                            <ul class="fc-color-picker" id="color-chooser">
-                                @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
-                                {
-                                    foreach (var Item in Model.ListStatusVisita)
-                                    {
-                                        <li><a class="@Item.CssClass" href="#" title="@Item.Descricao" data-id="@Item.IdStatusVisita"><i class="fas fa-square"></i></a></li>
-                                    }
-                                }
-                            </ul>
+        </div>*@
+
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Data</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right daterange visitas-pesquisa" id="Inicio" name="Inicio">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                        <!-- /btn-group -->
-                        <div style="padding-bottom:10px;">
-                            <span>Título:</span>
-                            <input id="VisitaTitulo" type="text" class="form-control" placeholder="Título" asp-for="@Model.Entity.Descricao">
+                    </div>
+                </form>
+        </div>
+     </div>
+</section>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sticky-top mb-3">
+                    <div class="card" style="display:none;">
+                        <div class="card-header">
+                            <h4 class="card-title">Eventos não agendados </h4>
                         </div>
-                        <div>
-                            <span>Data:</span>
-                            <div class="input-group date" id="VisitaDataHora" data-target-input="nearest" style="padding-bottom:10px;">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#VisitaDataHora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00")" id="VisitaEventoDataHora" asp-for="@Model.Entity.DataAgendamento" />
-                                <div class="input-group-append" data-target="#VisitaDataHora" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        <div class="card-body">
+                            <!-- the events -->
+                            <div id="external-events">
+
+                                <div class="external-event bg-info">Nenhum evento</div>
+                                <div class="checkbox">
+                                    <label for="drop-remove">
+                                        <input type="checkbox" id="drop-remove" checked>
+                                        remover depois de arrastar
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                        <div style="padding-bottom:10px;">
-                            <span>Observação:</span>
-                            <textarea class="form-control" rows="3" id="VisitaObservacao" asp-for="@Model.Entity.Observacao"></textarea>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Criar Evento</h3>
                         </div>
-                        <div class="input-group">
-                            <div class="input-group-append">
-                                <button id="add-new-event" type="button" class="btn btn-primary">Salvar</button>
-                            </div>
-                            <!-- /btn-group -->
+                        <div class="card-body">
+                            <form method="post" asp-page="/Visita" asp-page-handler="Visitas" id="formVisita">
+                                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdVisita" id="VisitaIdVisita" />
+                                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdStatusVisita" id="VisitaIdStatusVisita" />
+                                @Html.AntiForgeryToken()
+                                <span>Escolha um tipo de evento:</span>
+                                <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                                    <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                                    <ul class="fc-color-picker" id="color-chooser">
+                                        @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
+                                        {
+                                            foreach (var Item in Model.ListStatusVisita)
+                                            {
+                                                <li><a class="@Item.CssClass" href="#" title="@Item.Descricao" data-id="@Item.IdStatusVisita"><i class="fas fa-square"></i></a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <!-- /btn-group -->
+                                <div style="padding-bottom:10px;">
+                                    <span>Título:</span>
+                                    <input id="VisitaTitulo" type="text" class="form-control" placeholder="Título" asp-for="@Model.Entity.Descricao">
+                                </div>
+                                <div>
+                                    <span>Data:</span>
+                                    <div class="input-group date" id="VisitaDataHora" data-target-input="nearest" style="padding-bottom:10px;">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#VisitaDataHora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00")" id="VisitaEventoDataHora" asp-for="@Model.Entity.DataAgendamento" />
+                                        <div class="input-group-append" data-target="#VisitaDataHora" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="padding-bottom:10px;">
+                                    <span>Observação:</span>
+                                    <textarea class="form-control" rows="3" id="VisitaObservacao" asp-for="@Model.Entity.Observacao"></textarea>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-append">
+                                        <button id="add-new-event" type="button" class="btn btn-primary">Salvar</button>
+                                    </div>
+                                    <!-- /btn-group -->
+                                </div>
+                            </form>
+                            <!-- /input-group -->
                         </div>
-                    </form>
-                    <!-- /input-group -->
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- /.col -->
-    <div class="col-md-9">
-        <div class="card card-primary">
-            <div class="card-body p-0">
-                <!-- THE CALENDAR -->
-                <div id="calendar"></div>
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card card-primary">
+                    <div class="card-body p-0">
+                        <!-- THE CALENDAR -->
+                        <div id="calendar"></div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
             </div>
-            <!-- /.card-body -->
+            <!-- /.col -->
         </div>
-        <!-- /.card -->
-    </div>
-    <!-- /.col -->
-</div>
-<!-- /.row -->
+        <!-- /.row -->

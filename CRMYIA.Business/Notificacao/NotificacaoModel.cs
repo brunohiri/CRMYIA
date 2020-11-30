@@ -1,5 +1,6 @@
 ﻿using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Notificacao
-                        .Where(x => x.IdUsuarioVisualizar == IdUsuario)
+                        .Where(x => ((x.IdUsuarioVisualizar == IdUsuario) && (x.Visualizado == false)))
                         .ToList();
                 }
             }
@@ -45,6 +46,29 @@ namespace CRMYIA.Business
                 throw;
             }
             return ListEntity;
+        }
+
+        public static void DesativarNotificacao(long IdNotificacao)
+        {
+            try
+            {
+                
+                using (YiaContext context = new YiaContext())
+                {
+                    var notificacao = context.Notificacao
+                   .Where(x => x.IdNotificacao == IdNotificacao).First();
+
+                    notificacao.Ativo = false;
+                    notificacao.Visualizado = true;
+                    context.Notificacao.Attach(notificacao);
+                    context.Entry(notificacao).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
