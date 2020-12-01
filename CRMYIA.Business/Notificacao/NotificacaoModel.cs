@@ -38,6 +38,8 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.Notificacao
                         .Where(x => ((x.IdUsuarioVisualizar == IdUsuario)))
+                        .OrderByDescending(x => x.DataCadastro)
+                        .Take(5)
                         .ToList();
                 }
             }
