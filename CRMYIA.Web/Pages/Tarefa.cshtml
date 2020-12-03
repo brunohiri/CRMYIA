@@ -14,7 +14,7 @@
     <form method="post">
         <div class="card-body">
             <div class="row">
-                <div class="task-board" id="task-board">
+                <div class="task-board">
                     @if (Model.ListFaseProposta != null)
                     {
                         foreach (var Item in Model.ListFaseProposta)
@@ -26,26 +26,26 @@
                                         <br />
                                         @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0) && (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0))
                                         {
-                                            @Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2");
+                                            <div id="total-@Item.IdFaseProposta">@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
                                         }
                                         else
                                         {
-                                            @Html.Raw("R$ 0,00");
-                                        }
-                                        </span>
+                                            <div id="total-@Item.IdFaseProposta">@Html.Raw("R$ 0,00")</div>
+                                         }
+                                    </span>
                                 </div>
-                                <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta">
+                                <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta" data-total="@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
                                     @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
                                     {
                                         if (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0)
                                         {
                                             foreach (var ItemProposta in Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList())
                                             {
-                                                <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta">
+                                                <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
                                                     <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
-                                                        <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0,22) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
-                                                        <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 20) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
-                                                        <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 25 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 22) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome ))</p>
+                                                        <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0,16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
+                                                        <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
+                                                        <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 25 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome ))</p>
                                                         <p><strong>Valor Previsto:</strong> @(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</p>
                                                         <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
                                                         <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>

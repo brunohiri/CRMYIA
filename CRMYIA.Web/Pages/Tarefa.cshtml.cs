@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
@@ -53,15 +54,22 @@ namespace CRMYIA.Web.Pages
 
                 PropostaModel.Update(EntityProposta);
             }
-            return new JsonResult(new { status = true });
+
+            return new JsonResult(new { status = true});
         }
-        public IActionResult OnGetListarFaseProposta()
+        public IActionResult OnGetBuscarFasesProposta()
         {
             //public List<FaseProposta> ListFaseProposta { get; set; }
             List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
             List<Proposta> Proposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
 
             return new JsonResult(new { status = true, FaseProposta = FaseProposta, Proposta = Proposta });
+        }
+
+        public IActionResult OnGetObterHashId(string Id)
+        {
+            var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
+            return new JsonResult(new { hashId = HashId });
         }
         #endregion
     }

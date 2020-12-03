@@ -1,6 +1,7 @@
 ﻿var qtdNotificacao = 0;
 var vazio = true;
 var statusNotificacao = true;
+var atualizar = true;
 $(document).ready(function () {
 
 });
