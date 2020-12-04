@@ -69,7 +69,7 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Proposta> GetListCardProposta(long IdUsuario)
+        public static List<Proposta> GetListCardProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim)
         {
             List<Proposta> ListEntity = null;
             try
@@ -89,10 +89,14 @@ namespace CRMYIA.Business
                          .Include(y => y.IdCategoriaNavigation)
                             .ThenInclude(k => k.IdLinhaNavigation)
                                 .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(o => o.IdOperadoraNavigation)
                          .Include(y => y.IdClienteNavigation)
+                         .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario
+                                && x.DataSolicitacao.Value >= DataInicio
+                                && x.DataSolicitacao.Value <= DataFim
+                         )
                          .AsNoTracking()
-                         .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario)
-                         .AsNoTracking()
+                         .AsEnumerable()
                          .OrderBy(o => o.DataCadastro)
                          .ToList()
                          .Select(s => new Proposta()
@@ -124,9 +128,12 @@ namespace CRMYIA.Business
                             .ThenInclude(k => k.IdLinhaNavigation)
                                 .ThenInclude(l => l.IdProdutoNavigation)
                         .Include(y => y.IdClienteNavigation)
-                        .AsNoTracking()
-                        .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario))
-                        .AsNoTracking()
+                        .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                                && x.DataSolicitacao.Value >= DataInicio
+                                && x.DataSolicitacao.Value <= DataFim
+                         )
+                         .AsNoTracking()
+                         .AsEnumerable()
                         .OrderBy(o => o.DataCadastro)
                         .ToList()
                         .Select(s => new Proposta()
@@ -153,13 +160,16 @@ namespace CRMYIA.Business
                         .Include(y => y.IdStatusPropostaNavigation)
                         .Include(y => y.IdUsuarioCorretorNavigation)
                         .Include(y => y.IdUsuarioNavigation)
-                         .Include(y => y.IdCategoriaNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
                             .ThenInclude(k => k.IdLinhaNavigation)
                                 .ThenInclude(l => l.IdProdutoNavigation)
                         .Include(y => y.IdClienteNavigation)
+                        .Where(x => x.Ativo 
+                            && x.DataSolicitacao.Value >= DataInicio
+                            && x.DataSolicitacao.Value <= DataFim
+                         )
                         .AsNoTracking()
-                        .Where(x => x.Ativo)
-                        .AsNoTracking()
+                        .AsEnumerable()
                         .OrderBy(o => o.DataCadastro)
                         .ToList()
                         .Select(s => new Proposta()

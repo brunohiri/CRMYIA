@@ -254,7 +254,7 @@ function CadastroUsuario() {
         CarregarUsuarioHierarquia(IdPerfil);
     }
 
-    $('#IdUsuarioHierarquia').change(function () { 
+    $('#IdUsuarioHierarquia').change(function () {
         $('#IdUsuarioHierarquiaHidden').val($(this).val());
     });
 
@@ -699,6 +699,8 @@ function CadastroTarefas() {
                                 }
                             }
                             AtualizarCardsPropostas();
+                            AtualizarCardSomaPropostas();
+
                         }
                     }
                 });
@@ -711,6 +713,19 @@ function CadastroTarefas() {
             if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
                 $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
             }
+        }
+    }
+
+    function AtualizarCardSomaPropostas() {
+        var soma = 0;
+        for (var i = 0; i < 6; i++) {
+            soma = 0;
+            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
+                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
+                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
+                console.log(parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim()));
+            }
+            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
         }
     }
 }

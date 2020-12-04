@@ -50,13 +50,13 @@ function AtualizarSortable(resultado) {
                 for (j in data.proposta) {
                     hashId = ObterHashId(data.proposta[j].idProposta, RetornoObterHashId);
                     if (data.proposta[j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-                        html += '<li class="text-row ui-sortable-handle" data-task-id="' + data.proposta[j].idProposta + '" data-valorprevisto="1200,00">\
+                        html += '<li class="text-row ui-sortable-handle" data-task-id="' + data.proposta[j].idProposta + '" data-valorprevisto="' + data.proposta[j].valorPrevisto + '">\
                                         <a title="Ver Proposta" href="/NovaProposta?id=' + hashId + '">\
                                             <p style="margin-top:10px;" title="' + data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong>' + LimitaTexto(data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '</strong></p>\
                                             <p title="' + data.proposta[j].idClienteNavigation.nome + '"><strong>Cliente:</strong>' + LimitaTexto(data.proposta[j].idClienteNavigation.nome, 16) + '</p>\
                                             <p title="' + data.proposta[j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + LimitaTexto(data.proposta[j].idUsuarioCorretorNavigation.nome, 16) + '</p>\
                                             <p><strong>Valor Previsto:</strong> ' + formatter.format(data.proposta[j].valorPrevisto) + '</p>\
-                                            <p><strong>Data:</strong>' + data.proposta[j].dataCadastro + '</p>\
+                                            <p><strong>Data:</strong>' + new Date(data.proposta[j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.proposta[j].dataCadastro).toLocaleTimeString('pt-br') + '</p>\
                                             <p><strong>Retorno:</strong> Não agendado</p>\
                                         </a>\
                                     </li>';
@@ -110,7 +110,7 @@ function ObterHashId(Id, callback) {
         type: "GET",
         dataType: "json",
         url: '/Tarefa?handler=ObterHashId',
-        data: { Id, Id },
+        data: { Id: Id },
         success: function (data) {
             var resultado = '';
             resultado = data.hashId;

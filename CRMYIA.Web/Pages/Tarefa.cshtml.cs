@@ -40,7 +40,9 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet()
         {
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
+            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+            DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+            ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
 
             return Page();
         }
@@ -61,9 +63,11 @@ namespace CRMYIA.Web.Pages
         {
             //public List<FaseProposta> ListFaseProposta { get; set; }
             List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
-            List<Proposta> Proposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
+            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+            DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+            ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
 
-            return new JsonResult(new { status = true, FaseProposta = FaseProposta, Proposta = Proposta });
+            return new JsonResult(new { status = true, FaseProposta = FaseProposta, Proposta = ListEntityProposta });
         }
 
         public IActionResult OnGetObterHashId(string Id)
