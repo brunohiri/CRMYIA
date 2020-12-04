@@ -14,7 +14,82 @@ $(document).ready(function () {
             BuscarFasesProposta();
         },
         remove: function (event, ui) {}
-    });       
+    });  
+    $('input[name="Data"]').daterangepicker({
+        "locale": {
+            "format": "DD/MM/YYYY",
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "daysOfWeek": [
+                "Dom",
+                "Seg",
+                "Ter",
+                "Qua",
+                "Qui",
+                "Sex",
+                "Sab"
+            ],
+            "monthNames": [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro"
+            ],
+            "firstDay": 1
+        }
+    });
+
+    $('.pesquisa-tarefa').change(function () {
+
+        let Data = $('#Data').val();
+
+        var d = new Date();
+        var anoC = d.getFullYear();
+        var mesC = d.getMonth();
+
+        var DInicio = new Date(anoC, mesC, 1);
+        var DFim = new Date(anoC, mesC + 1, 0);
+        let Inicio = "";
+        let Fim = "";
+
+        GetDiaMesAno(DInicio);
+        GetDiaMesAno(DFim);
+
+        let vetData = $("#Data").val().split(' - ');
+        if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
+            Inicio = GetDiaMesAno(DInicio);
+            Fim = GetDiaMesAno(DFim);
+        } else {
+            Inicio = vetData[0];
+            Fim = vetData[1];
+        }
+        let IdOperadora = $('#operadoraMenuItems').val();
+        let IdUsuarioCorretor = $('#corretorMenuItems').val(); 
+        $.ajax({
+            url: '/Tarefa?handler=PesquisaTarefa',
+            method: "GET",
+            data: { IdOperadora: IdOperadora, IdUsuarioCorretor: IdUsuarioCorretor, Inicio: Inicio, Fim: Fim},
+            dataType: 'json',
+            success: function (data) {
+                return data;
+            },
+            error: function () {
+            }
+        });
+    });
+
+    CarregarOperadoras();
+    CarregarCorretores();
+
 });
 
 function BuscarFasesProposta() {
@@ -123,4 +198,37 @@ function ObterHashId(Id, callback) {
 
 function RetornoObterHashId(Id) {
     hashId = Id;
+}
+
+
+function CarregarOperadoras() {
+    $.getJSON("/Tarefa?handler=TodasOperadoras", function (data) {
+        let contents = [];
+        let i = 0;
+        for (let name of data.operadora) {
+            //contents.push('<input type="button" class="dropdown-item visitas-pesquisa-dropdown" role="option" aria-selected="true" type="button" value="' + name.nome.toUpperCase() + '"/>');
+            contents.push('<option value="' + name.idOperadora + '">' + name.descricao.toUpperCase() + '</option>');
+            i++;
+        }
+        $('#operadoraMenuItems').append(contents.join(""));
+
+        //Esconder a linha que mostra que nenhum item foi encontrado
+        $('#empty').hide();
+    });
+}
+
+function CarregarCorretores() {
+    $.getJSON("/Tarefa?handler=TodasCorretores", function (data) {
+        let contents = [];
+        let i = 0;
+        for (let name of data.corretora) {
+            //contents.push('<input type="button" class="dropdown-item visitas-pesquisa-dropdown" role="option" aria-selected="true" type="button" value="' + name.nome.toUpperCase() + '"/>');
+            contents.push('<option value="' + name.idCorretora + '">' + name.razaoSocial.toUpperCase() + '</option>');
+            i++;
+        }
+        $('#corretorMenuItems').append(contents.join(""));
+
+        //Esconder a linha que mostra que nenhum item foi encontrado
+        $('#empty').hide();
+    });
 }

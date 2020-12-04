@@ -109,17 +109,20 @@ namespace CRMYIA.Web.Pages
 
                     //Notificação
                     UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
-                    Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+                    if (EntityUsuarioHierarquia != null)
                     {
-                        IdUsuarioCadastro = IdUsuario,
-                        IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
-                        Titulo = null,
-                        Descricao = Entity.Descricao,
-                        Url = "/Visita",
-                        Visualizado = false,
-                        DataCadastro = DateTime.Now,
-                        Ativo = true
-                    });
+                        Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+                        {
+                            IdUsuarioCadastro = IdUsuario,
+                            IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+                            Titulo = null,
+                            Descricao = Entity.Descricao,
+                            Url = "/Visita",
+                            Visualizado = false,
+                            DataCadastro = DateTime.Now,
+                            Ativo = true
+                        });
+                    }
 
                 }
                 else

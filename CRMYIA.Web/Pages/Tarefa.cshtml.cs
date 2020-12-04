@@ -27,6 +27,10 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<Proposta> ListEntityProposta { get; set; }
+        [BindProperty]
+        public Proposta Entity { get; set; }
+        [BindProperty]
+        public List<Usuario> ListCorretor { get; set; }
         #endregion
 
         #region Construtores
@@ -41,7 +45,7 @@ namespace CRMYIA.Web.Pages
         {
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
-
+            CarregarLists();
             return Page();
         }
 
@@ -55,7 +59,7 @@ namespace CRMYIA.Web.Pages
                 PropostaModel.Update(EntityProposta);
             }
 
-            return new JsonResult(new { status = true});
+            return new JsonResult(new { status = true });
         }
         public IActionResult OnGetBuscarFasesProposta()
         {
@@ -71,6 +75,40 @@ namespace CRMYIA.Web.Pages
             var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
             return new JsonResult(new { hashId = HashId });
         }
+
+        public IActionResult OnGetTodasOperadoras()
+        {
+            List<Operadora> EntityOperadora = OperadoraModel.GetList();
+
+            return new JsonResult(new { status = true, operadora = EntityOperadora });
+        }
+
+        //public IActionResult OnGetTodasCorretores()
+        //{
+        //    List<Corretora> EntityCorretora = CorretoraModel.GetList();
+
+        //    return new JsonResult(new { status = true, corretora = EntityCorretora });
+        //}
+
+
+        public IActionResult OnGetPesquisaTarefa(long? IdOperadora, long? IdUsuarioCorretor, string Inicio, string Fim)
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            DateTime DataInicial = Convert.ToDateTime(Inicio);
+            DateTime DataFinal = Convert.ToDateTime(Fim);
+            IdOperadora = IdOperadora == 0 ?null : IdOperadora;
+            IdUsuarioCorretor = IdUsuarioCorretor == 0 ? null : IdUsuarioCorretor;
+            List<Proposta> Proposta = PropostaModel.Pesquisa(IdOperadora, IdUsuarioCorretor, DataFinal, DataInicial, IdUsuario);
+            List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
+            return new JsonResult(new { status = true, faseProposta = FaseProposta, proposta = Proposta });
+        }
         #endregion
+
+        public void CarregarLists()
+        {
+            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+        }
+
     }
 }
