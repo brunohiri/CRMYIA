@@ -723,7 +723,6 @@ function CadastroTarefas() {
             for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
                 var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
                 soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
-                console.log(parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim()));
             }
             $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
         }
