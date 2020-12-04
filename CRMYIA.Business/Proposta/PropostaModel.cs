@@ -89,7 +89,6 @@ namespace CRMYIA.Business
                          .Include(y => y.IdCategoriaNavigation)
                             .ThenInclude(k => k.IdLinhaNavigation)
                                 .ThenInclude(l => l.IdProdutoNavigation)
-                                    .ThenInclude(o => o.IdOperadoraNavigation)
                          .Include(y => y.IdClienteNavigation)
                          .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario
                                 && x.DataSolicitacao.Value >= DataInicio
@@ -228,6 +227,49 @@ namespace CRMYIA.Business
                 throw;
             }
         }
+
+        public static List<Proposta> Pesquisa(long? IdOperadora , long? IdUsuarioCorretor, DateTime? DataFinal, DateTime? DataInicial, long IdUsuario)
+        {
+            List<Proposta> ListEntity = null;
+            try
+            {
+                byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
+                List<Proposta> listProposta = GetListCardProposta(IdUsuario);
+
+                if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
+                {
+                    ListEntity = listProposta
+                        .Where(x => (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.IdOperadora == IdOperadora)
+                        || (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation != null))
+                        .Where(x => (x.DataCadastro <= DataFinal && x.DataCadastro >= DataInicial))
+                        .ToList();
+                }
+                else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
+                {
+                    ListEntity = listProposta
+                        .Where(x => (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.IdOperadora == IdOperadora)
+                        || (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation != null) 
+                        || (x.IdUsuarioCorretor == IdUsuarioCorretor))
+                        .Where(x => (x.DataCadastro <= DataFinal && x.DataCadastro >= DataInicial))
+                        .ToList();
+                }
+                else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
+                {
+                    ListEntity = listProposta
+                        .Where(x => x.IdUsuarioCorretor == IdUsuarioCorretor)
+                        .Where(x => (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.IdOperadora == IdOperadora)
+                        && (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation != null))
+                        .Where(x => (x.DataCadastro > DataFinal || x.DataCadastro < DataInicial))
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         #endregion
     }
 }

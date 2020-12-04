@@ -5,6 +5,103 @@
     ViewData["Pagina"] = "Funil de Vendas";
 }
 @using CRMYIA.Business.Util;
+@using CRMYIA.Business;
+@using System.Security.Claims;
+
+<!-- Horizontal Form Pesquisa-->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card card-default">
+
+            <div class="card-header">
+                <h3 class="card-title">Pesquisar</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form id="FormPesquisa">
+                <div class="card-body">
+                    @*<input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />*@
+                    <div class="row">
+
+                        @if (UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) == (byte?)EnumeradorModel.Perfil.Corretor)
+                        {
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Operadora</label>
+
+                                    <select class="form-control select2 pesquisa-tarefa" style="width: 100%;" id="operadoraMenuItems">
+                                        <option selected="selected">Selecione...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Data</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right daterange pesquisa-tarefa" id="Data" name="Data">
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
+            <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />*@
+                        }
+                        else
+                        {
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Operadora</label>
+
+                                    <select class="form-control select2 pesquisa-tarefa" style="width: 100%;" id="operadoraMenuItems">
+                                        <option selected="selected">Selecione...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Corretor</label>
+                                    <select class="form-control select2  pesquisa-tarefa" style="width: 100%;"
+                                            asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
+                                        <option selected="selected">Selecione...</option>
+                                        @foreach (var Item in Model.ListCorretor)
+                                        {
+                                            <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Data</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control float-right daterange pesquisa-tarefa" id="Data" name="Data">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 
 <div class="card card-default">
     <div class="card-header">
@@ -31,7 +128,7 @@
                                         else
                                         {
                                             <div id="total-@Item.IdFaseProposta">@Html.Raw("R$ 0,00")</div>
-                                         }
+                                        }
                                     </span>
                                 </div>
                                 <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta" data-total="@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
