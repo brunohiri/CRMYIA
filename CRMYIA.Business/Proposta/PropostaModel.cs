@@ -234,14 +234,14 @@ namespace CRMYIA.Business
             try
             {
                 byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
-                List<Proposta> listProposta = GetListCardProposta(IdUsuario);
+                List<Proposta> listProposta = GetListCardProposta(IdUsuario, DataInicial.Value, DataFinal.Value);
 
                 if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
                 {
                     ListEntity = listProposta
                         .Where(x => (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.IdOperadora == IdOperadora)
                         || (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation != null))
-                        .Where(x => (x.DataCadastro <= DataFinal && x.DataCadastro >= DataInicial))
+                        .Where(x => (x.DataSolicitacao <= DataFinal && x.DataSolicitacao >= DataInicial))
                         .ToList();
                 }
                 else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
@@ -250,7 +250,7 @@ namespace CRMYIA.Business
                         .Where(x => (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.IdOperadora == IdOperadora)
                         || (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation != null) 
                         || (x.IdUsuarioCorretor == IdUsuarioCorretor))
-                        .Where(x => (x.DataCadastro <= DataFinal && x.DataCadastro >= DataInicial))
+                        .Where(x => (x.DataSolicitacao <= DataFinal && x.DataSolicitacao >= DataInicial))
                         .ToList();
                 }
                 else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
@@ -259,7 +259,7 @@ namespace CRMYIA.Business
                         .Where(x => x.IdUsuarioCorretor == IdUsuarioCorretor)
                         .Where(x => (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.IdOperadora == IdOperadora)
                         && (x.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation != null))
-                        .Where(x => (x.DataCadastro > DataFinal || x.DataCadastro < DataInicial))
+                        .Where(x => (x.DataSolicitacao > DataFinal || x.DataSolicitacao < DataInicial))
                         .ToList();
                 }
             }
