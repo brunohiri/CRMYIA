@@ -96,15 +96,17 @@ namespace CRMYIA.Web.Pages
         //}
 
 
-        public IActionResult OnGetPesquisaTarefa(long? IdOperadora, long? IdUsuarioCorretor, string Inicio, string Fim)
+        public IActionResult OnGetPesquisaTarefa(string? Nome, string? Descricao, string Inicio, string Fim)
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-
+      
             DateTime DataInicial = Convert.ToDateTime(Inicio);
             DateTime DataFinal = Convert.ToDateTime(Fim);
-            IdOperadora = IdOperadora == 0 ?null : IdOperadora;
-            IdUsuarioCorretor = IdUsuarioCorretor == 0 ? null : IdUsuarioCorretor;
-            List<Proposta> Proposta = PropostaModel.Pesquisa(IdOperadora, IdUsuarioCorretor, DataFinal, DataInicial, IdUsuario);
+           
+
+            Nome = Nome == "" ? null : Nome;
+            Descricao = Descricao == "" ? null : Descricao;
+            List<Proposta> Proposta = PropostaModel.Pesquisa(Nome, Descricao, DataFinal, DataInicial, IdUsuario);
             List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
             return new JsonResult(new { status = true, faseProposta = FaseProposta, proposta = Proposta });
         }

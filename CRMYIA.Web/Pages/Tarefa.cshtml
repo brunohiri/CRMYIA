@@ -51,8 +51,9 @@
                                 </div>
                             </div>
 
-                            @*<input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
-            <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />*@
+                            <div class="ml-auto p-2 bd-highlight">
+                                    <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                            </div>
                         }
                         else
                         {
@@ -93,6 +94,10 @@
                                         <input type="text" class="form-control float-right daterange pesquisa-tarefa" id="Data" name="Data">
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="ml-auto p-2 bd-highlight">
+                                    <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
                             </div>
                         }
 
