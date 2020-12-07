@@ -5,6 +5,7 @@ const formatter = new Intl.NumberFormat('pt-BR', {
 });
 var hashId = '';
 $(document).ready(function () {
+
     $('.sortable').sortable({
         connectWith: ".sortable",
         start: {},
@@ -14,7 +15,8 @@ $(document).ready(function () {
             BuscarFasesProposta();
         },
         remove: function (event, ui) {}
-    });  
+    }).disableSelection();
+
     $('input[name="Data"]').daterangepicker({
         "locale": {
             "format": "DD/MM/YYYY",
@@ -48,49 +50,209 @@ $(document).ready(function () {
         }
     });
 
-    $('.pesquisa-tarefa').change(function () {
+    let d = new Date();
+    let anoC = d.getFullYear();
+    let mesC = d.getMonth();
 
-        let Data = $('#Data').val();
+    let DInicio = new Date(anoC, mesC, 1);
+    let DFim = new Date(anoC, mesC + 1, 0);
 
+    $('#Data').val('');
+    
+    $('.limpar-pesquisa').click(function () {
         var d = new Date();
         var anoC = d.getFullYear();
         var mesC = d.getMonth();
 
         var DInicio = new Date(anoC, mesC, 1);
         var DFim = new Date(anoC, mesC + 1, 0);
-        let Inicio = "";
-        let Fim = "";
 
-        GetDiaMesAno(DInicio);
-        GetDiaMesAno(DFim);
+        $('#Data').val('');
+        $('#corretorMenuItems').val('');
+        $('#operadoraMenuItems').val('');
 
-        let vetData = $("#Data").val().split(' - ');
-        if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
-            Inicio = GetDiaMesAno(DInicio);
-            Fim = GetDiaMesAno(DFim);
-        } else {
-            Inicio = vetData[0];
-            Fim = vetData[1];
-        }
-        let IdOperadora = $('#operadoraMenuItems').val();
-        let IdUsuarioCorretor = $('#corretorMenuItems').val(); 
-        $.ajax({
-            url: '/Tarefa?handler=PesquisaTarefa',
-            method: "GET",
-            data: { IdOperadora: IdOperadora, IdUsuarioCorretor: IdUsuarioCorretor, Inicio: Inicio, Fim: Fim},
-            dataType: 'json',
-            success: function (data) {
-                return data;
-            },
-            error: function () {
-            }
-        });
+        $("#corretorMenuItems").select2('val', 'Selecione...');
+        $("#operadoraMenuItems").select2('val', 'Selecione...');
+        Pesquisa();
+    });
+
+    $('.pesquisa-tarefa').change(function () {
+        Pesquisa();
     });
 
     CarregarOperadoras();
     CarregarCorretores();
 
 });
+
+function Pesquisa() {
+    let Data = $('#Data').val();
+
+    var d = new Date();
+    var anoC = d.getFullYear();
+    var mesC = d.getMonth();
+
+    var DInicio = new Date(anoC, mesC, 1);
+    var DFim = new Date(anoC, mesC + 1, 0);
+    let Inicio = "";
+    let Fim = "";
+
+    GetDiaMesAno(DInicio);
+    GetDiaMesAno(DFim);
+
+    let vetData = $("#Data").val().split(' - ');
+    if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
+        Inicio = GetDiaMesAno(DInicio);
+        Fim = GetDiaMesAno(DFim);
+    } else {
+        Inicio = vetData[0];
+        Fim = vetData[1];
+    }
+    let Descricao = "";
+    let Nome = "";
+    if ($('#operadoraMenuItems').val() == undefined || $('#operadoraMenuItems').val() == "Selecione...")
+        Descricao = "";
+    else
+        Descricao = $('#operadoraMenuItems').val();
+
+    if ($('#corretorMenuItems').val() == undefined || $('#corretorMenuItems').val() == "Selecione...")
+        Nome = "";
+    else
+        Nome = $('#corretorMenuItems').val();
+    
+
+    var res = $.ajax({
+        url: '/Tarefa?handler=PesquisaTarefa',
+        method: "GET",
+        data: { Nome: Nome, Descricao: Descricao, Inicio: Inicio, Fim: Fim },
+        dataType: 'json',
+        success: function (data) {
+            return data;
+        },
+        error: function () {
+        }
+    });
+
+    AtualizarSortable(res);
+}
+
+function RedirecionarProposta(Id)  {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: '/Tarefa?handler=ObterHashId',
+        data: { Id: Id },
+        success: function (data) {
+            window.open("/NovaProposta?id=" + data.hashId , "_blank");
+        },
+
+    });
+
+}
+
+
+function AtualizarSortable(resultado) {
+    resultado.then(function (data) {
+        let html = '';
+        let proximoContatoComCliente 
+        let naoAgendado = 'Não agendado';
+        let produto = '';
+        let cliente = '';
+        let corretor = '';
+        let sortable = $('.sortable'); 
+        for (var k = 0; k < sortable.length; k++) {
+            sortable[k].innerHTML = '';
+        }
+        if (data.faseProposta != undefined) {
+            for (i in data.faseProposta) {
+                for (j in data.proposta) {
+                   
+                    if (data.proposta[j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
+                        proximoContatoComCliente = data.proposta[j].proximoContatoComCliente == undefined ? new Date(data.proposta[j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                        produto = data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
+                        cliente = data.proposta[j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.proposta[j].idClienteNavigation.nome, 16) : data.proposta[j].idClienteNavigation.nome;
+                        corretor = data.proposta[j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.proposta[j].idUsuarioCorretorNavigation.nome, 16) : data.proposta[j].idUsuarioCorretorNavigation.nome;
+                        html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.proposta[j].idProposta + '" data-valorprevisto="' + data.proposta[j].valorPrevisto + '">\
+                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.proposta[j].idProposta + ')>\
+                                            <p style="margin-top:10px;" title="' + data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
+                                            <p title="' + data.proposta[j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
+                                            <p title="' + data.proposta[j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
+                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.proposta[j].idProposta + '"' + formatter.format(data.proposta[j].valorPrevisto) + ' "> ' + formatter.format(data.proposta[j].valorPrevisto) + '</p>\
+                                            <p><strong>Data:</strong> ' + new Date(data.proposta[j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.proposta[j].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
+                                            <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
+                                        </a>\
+                                    </li>';
+                        
+                    }
+                    if(html != '')
+                        $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
+                    html = '';
+                }
+               
+            }
+        }
+        AtualizarCardsPropostas();
+        AtualizarCardSomaPropostas();
+    }, function () {
+        console.log("Deu problema na requisição");
+    });
+
+    function AtualizarCardsPropostas() {
+        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
+            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
+                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
+            }
+        }
+    }
+
+    function AtualizarCardSomaPropostas() {
+        var soma = 0;
+        for (var i = 0; i < 6; i++) {
+            soma = 0;
+            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
+                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
+                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
+            }
+            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        }
+    }
+
+    
+}
+
+function SomarTotalFaseProposta(data, codicao) {
+    let array = 0;
+    array = BuscarTodosValorPrevisto(data, codicao);
+    let retorno;
+    retorno = array.reduce(function (accumulator, item, index, array) {
+        return (item + accumulator);
+    }, 0);
+    retorno == undefined ? retorno = formatter.format(0.00) : retorno = formatter.format(retorno);
+    return retorno;
+}
+
+function BuscarTodosValorPrevisto(data, condicao) {
+    let retorno = [];
+    data.reduce(function (accumulator, item, index, array) {
+
+        if (item.idFaseProposta == condicao) {
+
+            if (isNaN(accumulator)) {
+                retorno[index] = (0 + item.valorPrevisto);
+                return accumulator;
+            } else {
+                retorno[index] = (accumulator + item.valorPrevisto);
+                return accumulator;
+            }
+
+        }
+
+    }, 0.00);
+    console.log(retorno);
+    return retorno;
+}
+
+
 
 function BuscarFasesProposta() {
     var resultado = $.ajax({
@@ -106,99 +268,7 @@ function BuscarFasesProposta() {
     //AtualizarSortable(resultado);
 }
 
-//function AtualizarSortable(resultado) {
-//    resultado.then(function (data) {
-//        let html = '';
-//        $('.task-board').html('');
-//        if (data.faseProposta != undefined) {
-//            for (i in data.faseProposta) {
-//                html += '<div class="status-card">\
-//                            <div class="card-header">\
-//                                <span class="card-header-text">\
-//                                    '+ data.faseProposta[i].descricao + '\
-//                                <br>\
-//                                <div id="total-1">' + SomarTotalFaseProposta(data.proposta, data.faseProposta[i].idFaseProposta) + '</div>\
-//                                </span>\
-//                            </div>\
-//                            <ul class="sortable ui-sortable" id="sort' + data.faseProposta[i].idFaseProposta + '" data-status-id="' + data.faseProposta[i].idFaseProposta + '" data-total="1500,00">';
 
-//                for (j in data.proposta) {
-//                    hashId = ObterHashId(data.proposta[j].idProposta, RetornoObterHashId);
-//                    if (data.proposta[j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-//                        html += '<li class="text-row ui-sortable-handle" data-task-id="' + data.proposta[j].idProposta + '" data-valorprevisto="' + data.proposta[j].valorPrevisto + '">\
-//                                        <a title="Ver Proposta" href="/NovaProposta?id=' + hashId + '">\
-//                                            <p style="margin-top:10px;" title="' + data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong>' + LimitaTexto(data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '</strong></p>\
-//                                            <p title="' + data.proposta[j].idClienteNavigation.nome + '"><strong>Cliente:</strong>' + LimitaTexto(data.proposta[j].idClienteNavigation.nome, 16) + '</p>\
-//                                            <p title="' + data.proposta[j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + LimitaTexto(data.proposta[j].idUsuarioCorretorNavigation.nome, 16) + '</p>\
-//                                            <p><strong>Valor Previsto:</strong> ' + formatter.format(data.proposta[j].valorPrevisto) + '</p>\
-//                                            <p><strong>Data:</strong>' + new Date(data.proposta[j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.proposta[j].dataCadastro).toLocaleTimeString('pt-br') + '</p>\
-//                                            <p><strong>Retorno:</strong> Não agendado</p>\
-//                                        </a>\
-//                                    </li>';
-//                    }
-//                }
-//                html += '</ul>\
-//                                   </div>';
-//            }
-//        }
-//        $('.task-board').html(html);
-//        CadastroTarefas();
-//    }, function () {
-//        console.log("Deu problema na requisição");
-//    });
-//}
-
-//function SomarTotalFaseProposta(data, codicao) {
-//    let array = 0;
-//    array = BuscarTodosValorPrevisto(data, codicao);
-//    let retorno;
-//    retorno = array.reduce(function (accumulator, item, index, array) {
-//        return (item + accumulator);
-//    }, 0);
-//    retorno == undefined ? retorno = formatter.format(0.00) : retorno = formatter.format(retorno);
-//    return retorno;
-//}
-
-//function BuscarTodosValorPrevisto(data, condicao) {
-//    let retorno = [];
-//    data.reduce(function (accumulator, item, index, array) {
-
-//        if (item.idFaseProposta == condicao) {
-
-//            if (isNaN(accumulator)) {
-//                retorno[index] = (0 + item.valorPrevisto);
-//                return accumulator;
-//            } else {
-//                retorno[index] = (accumulator + item.valorPrevisto);
-//                return accumulator;
-//            }
-            
-//        }
-
-//    }, 0.00);
-//    console.log(retorno);
-//    return retorno;
-//}
-
-function ObterHashId(Id, callback) {
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: '/Tarefa?handler=ObterHashId',
-        data: { Id: Id },
-        success: function (data) {
-            var resultado = '';
-            resultado = data.hashId;
-            callback(resultado);
-        },
-       
-    });
-
-}
-
-function RetornoObterHashId(Id) {
-    hashId = Id;
-}
 
 
 function CarregarOperadoras() {
@@ -207,7 +277,7 @@ function CarregarOperadoras() {
         let i = 0;
         for (let name of data.operadora) {
             //contents.push('<input type="button" class="dropdown-item visitas-pesquisa-dropdown" role="option" aria-selected="true" type="button" value="' + name.nome.toUpperCase() + '"/>');
-            contents.push('<option value="' + name.idOperadora + '">' + name.descricao.toUpperCase() + '</option>');
+            contents.push('<option value="' + name.descricao.toUpperCase() + '">' + name.descricao.toUpperCase() + '</option>');
             i++;
         }
         $('#operadoraMenuItems').append(contents.join(""));
@@ -223,7 +293,7 @@ function CarregarCorretores() {
         let i = 0;
         for (let name of data.corretora) {
             //contents.push('<input type="button" class="dropdown-item visitas-pesquisa-dropdown" role="option" aria-selected="true" type="button" value="' + name.nome.toUpperCase() + '"/>');
-            contents.push('<option value="' + name.idCorretora + '">' + name.razaoSocial.toUpperCase() + '</option>');
+            contents.push('<option value="' + name.nome.toUpperCase() + '">' + name.nome.toUpperCase() + '</option>');
             i++;
         }
         $('#corretorMenuItems').append(contents.join(""));

@@ -123,6 +123,9 @@ $(document).ready(function () {
         //Cadastro de Tarefas
         CadastroTarefas();
     }
+
+   
+
 });
 
 function InitDatatables() {
@@ -728,3 +731,5 @@ function CadastroTarefas() {
         }
     }
 }
+
+
