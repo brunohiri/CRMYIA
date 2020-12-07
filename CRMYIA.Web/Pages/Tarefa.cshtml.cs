@@ -96,14 +96,27 @@ namespace CRMYIA.Web.Pages
         //}
 
 
-        public IActionResult OnGetPesquisaTarefa(string? Nome, string? Descricao, string Inicio, string Fim)
+        public IActionResult OnGetPesquisaTarefa(string? Nome, string? Descricao, string? Inicio, string? Fim)
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-      
-            DateTime DataInicial = Convert.ToDateTime(Inicio);
-            DateTime DataFinal = Convert.ToDateTime(Fim);
-           
 
+            DateTime? DataInicial;
+            DateTime? DataFinal;
+            bool Data;
+            if (Inicio == null && Fim == null)
+                Data = false;
+            else
+                Data = true;
+            if (Data)
+            {
+                DataInicial = Convert.ToDateTime(Inicio);
+                DataFinal = Convert.ToDateTime(Fim);
+            }
+            else
+            {
+                DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+                DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+            }
             Nome = Nome == "" ? null : Nome;
             Descricao = Descricao == "" ? null : Descricao;
             List<Proposta> Proposta = PropostaModel.Pesquisa(Nome, Descricao, DataFinal, DataInicial, IdUsuario);

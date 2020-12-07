@@ -231,7 +231,7 @@ namespace CRMYIA.Business
             }
         }
 
-        public static List<Proposta> Pesquisa(string? Nome = null, string? Descricao = null, DateTime? DataFinal = null, DateTime? DataInicial = null, long? IdUsuario = null)
+        public static List<Proposta> Pesquisa(string? Nome = "", string? Descricao = "", DateTime? DataFinal = null, DateTime? DataInicial = null, long? IdUsuario = null)
         {
             List<Proposta> ListEntity = new List<Proposta>();
             try
@@ -243,13 +243,69 @@ namespace CRMYIA.Business
                 foreach (Proposta item in listProposta)
                 {
                    
-                    if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao)))
-                       || (item.DataSolicitacao <= DataFinal && item.DataSolicitacao >= DataInicial) 
-                       && (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
+                    if(Nome != null || Descricao != null){
+                        if (Nome != null)
+                        {
+                            if (item.IdUsuarioCorretorNavigation != null)
+                                if ((item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
+                                {
+                                    ListEntity.Add(item);
+                                }
+                        }
+                        else if (Descricao != null)
+                        {
+                            if (item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation != null)
+                                if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao))))
+                            {
+                                ListEntity.Add(item);
+                            }
+                        }else if (Nome != null && Descricao != null)
+                        {
+                            if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation != null))
+                       || (item.IdUsuarioCorretorNavigation != null))
+                                if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao)))
+                        || (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
 
+                            {
+                                ListEntity.Add(item);
+                            }
+                            
+                        }
+                    }
+                    else
                     {
                         ListEntity.Add(item);
                     }
+
+                    
+                    //else if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao))) || (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
+                    //{
+                    //    ListEntity.Add(item);
+                    //}
+
+                    //if (!Data && item.DataSolicitacao.Value == DateTime.MinValue)
+                    //{
+                    //    ListEntity.Add(item);
+                    //}
+                    //else
+                    //{
+                    //    if (Data)
+                    //    {
+                    //        if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao)))
+                    //           || (item.DataSolicitacao <= DataFinal && item.DataSolicitacao >= DataInicial)
+                    //           || (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
+
+                    //        {
+                    //            ListEntity.Add(item);
+                    //        }
+                    //    }
+                    //    else if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao))) || (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
+                    //    {
+                    //        ListEntity.Add(item);
+                    //    }
+
+                    //}
+
                 }
                
 

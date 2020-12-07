@@ -57,7 +57,7 @@ $(document).ready(function () {
     let DInicio = new Date(anoC, mesC, 1);
     let DFim = new Date(anoC, mesC + 1, 0);
 
-    $('#Data').val(GetDiaMesAno(DInicio) + ' - ' + GetDiaMesAno(DFim));
+    $('#Data').val('');
     
     $('.limpar-pesquisa').click(function () {
         var d = new Date();
@@ -67,58 +67,74 @@ $(document).ready(function () {
         var DInicio = new Date(anoC, mesC, 1);
         var DFim = new Date(anoC, mesC + 1, 0);
 
-        $('#Data').val(GetDiaMesAno(DInicio) + ' - ' + GetDiaMesAno(DFim));
+        $('#Data').val('');
         $('#corretorMenuItems').val('');
-        $('#operadoraMenuItems').val();
+        $('#operadoraMenuItems').val('');
+
+        $("#corretorMenuItems").select2('val', 'Selecione...');
+        $("#operadoraMenuItems").select2('val', 'Selecione...');
+        Pesquisa();
     });
 
     $('.pesquisa-tarefa').change(function () {
-        
-        let Data = $('#Data').val();
-
-        var d = new Date();
-        var anoC = d.getFullYear();
-        var mesC = d.getMonth();
-
-        var DInicio = new Date(anoC, mesC, 1);
-        var DFim = new Date(anoC, mesC + 1, 0);
-        let Inicio = "";
-        let Fim = "";
-
-        GetDiaMesAno(DInicio);
-        GetDiaMesAno(DFim);
-
-        let vetData = $("#Data").val().split(' - ');
-        if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
-            Inicio = GetDiaMesAno(DInicio);
-            Fim = GetDiaMesAno(DFim);
-        } else {
-            Inicio = vetData[0];
-            Fim = vetData[1];
-        }
-        let Descricao = $('#operadoraMenuItems').val();
-        let Nome = $('#corretorMenuItems').val();
-        var res = $.ajax({
-            url: '/Tarefa?handler=PesquisaTarefa',
-            method: "GET",
-            data: { Nome: Nome, Descricao: Descricao, Inicio: Inicio, Fim: Fim },
-            dataType: 'json',
-            success: function (data) {
-                return data;
-            },
-            error: function () {
-            }
-        });
-
-        AtualizarSortable(res);
-
+        Pesquisa();
     });
-    
 
     CarregarOperadoras();
     CarregarCorretores();
 
 });
+
+function Pesquisa() {
+    let Data = $('#Data').val();
+
+    var d = new Date();
+    var anoC = d.getFullYear();
+    var mesC = d.getMonth();
+
+    var DInicio = new Date(anoC, mesC, 1);
+    var DFim = new Date(anoC, mesC + 1, 0);
+    let Inicio = "";
+    let Fim = "";
+
+    GetDiaMesAno(DInicio);
+    GetDiaMesAno(DFim);
+
+    let vetData = $("#Data").val().split(' - ');
+    if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
+        Inicio = GetDiaMesAno(DInicio);
+        Fim = GetDiaMesAno(DFim);
+    } else {
+        Inicio = vetData[0];
+        Fim = vetData[1];
+    }
+    let Descricao = "";
+    let Nome = "";
+    if ($('#operadoraMenuItems').val() == undefined || $('#operadoraMenuItems').val() == "Selecione...")
+        Descricao = "";
+    else
+        Descricao = $('#operadoraMenuItems').val();
+
+    if ($('#corretorMenuItems').val() == undefined || $('#corretorMenuItems').val() == "Selecione...")
+        Nome = "";
+    else
+        Nome = $('#corretorMenuItems').val();
+    
+
+    var res = $.ajax({
+        url: '/Tarefa?handler=PesquisaTarefa',
+        method: "GET",
+        data: { Nome: Nome, Descricao: Descricao, Inicio: Inicio, Fim: Fim },
+        dataType: 'json',
+        success: function (data) {
+            return data;
+        },
+        error: function () {
+        }
+    });
+
+    AtualizarSortable(res);
+}
 
 function RedirecionarProposta(Id)  {
     $.ajax({
