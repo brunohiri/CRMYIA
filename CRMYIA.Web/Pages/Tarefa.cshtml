@@ -52,7 +52,7 @@
                             </div>
 
                             @*<input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
-            <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />*@
+                                <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />*@
                         }
                         else
                         {
@@ -118,16 +118,50 @@
                         {
                             <div class="status-card">
                                 <div class="card-header">
-                                    <span class="card-header-text">
+                                    <span class="card-header-text text-center" >
                                         @Item.Descricao
                                         <br />
-                                        @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0) && (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0))
+                                        @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
                                         {
-                                            <div id="total-@Item.IdFaseProposta">@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
-                                        }
-                                        else
-                                        {
-                                            <div id="total-@Item.IdFaseProposta">@Html.Raw("R$ 0,00")</div>
+                                            if (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0)
+                                            {
+                                                <div class="text-center" id="total-@Item.IdFaseProposta">@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-center" id="total-@Item.IdFaseProposta">@Html.Raw("R$ 0,00")</div>
+                                            }
+
+                                            <div class="text-center" id="percentual-@Item.IdFaseProposta">
+                                                @if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Oportunidade))
+                                                {
+                                                    @Html.Raw("5%")
+                                                }
+                                                else
+                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros))
+                                                {
+                                                    @Html.Raw("10%")
+                                                }
+                                                else
+                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao))
+                                                {
+                                                    @Html.Raw("11-90%")
+                                                }
+                                                else
+                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao))
+                                                {
+                                                    @Html.Raw("95%")
+                                                }
+                                                else
+                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Fechamento))
+                                                {
+                                                    @Html.Raw("100%")
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw("0%")
+                                                }
+                                            </div>
                                         }
                                     </span>
                                 </div>

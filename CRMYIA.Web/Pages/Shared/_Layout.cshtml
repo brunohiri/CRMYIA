@@ -179,28 +179,31 @@
         </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="../../index3.html" class="brand-link">
-                <img src="../img/logoIn.png"
-                     alt="CRM YIA"
-                     class="brand-image elevation-3"
-                     style="max-height: 23px !important; margin-top:3px !important;">
-                <span class="brand-text font-weight-light">CRM YIA</span>
-            </a>
+        @{
+            List<CRMYIA.Data.Entities.Modulo> ListEntity = null;
+            if (Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO") != null)
+            {
+                ListEntity = Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO");
+            }
+            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+                <!-- Brand Logo -->
+                @if ((ListEntity != null) && (ListEntity.Count() > 0))
+                {
+                    <a href="@ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y=>y.Ordem).FirstOrDefault().Url" class="brand-link">
+                        <img src="../img/logoIn.png"
+                             alt="CRM YIA"
+                             class="brand-image elevation-3"
+                             style="max-height: 23px !important; margin-top:3px !important;">
+                        <span class="brand-text font-weight-light">CRM YIA</span>
+                    </a>
+                }
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Sidebar Menu -->
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        @{
-                            List<CRMYIA.Data.Entities.Modulo> ListEntity = null;
-                            if (Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO") != null)
-                            {
-                                ListEntity = Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO");
-                            }
-                            if ((ListEntity != null) && (ListEntity.Count() > 0))
+                            @if ((ListEntity != null) && (ListEntity.Count() > 0))
                             {
                                 foreach (var ItemMenu in ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y => y.Ordem))
                                 {
@@ -249,14 +252,14 @@
 
                                 }
                             }
-                        }
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
 
+                        </ul>
+                    </nav>
+                    <!-- /.sidebar-menu -->
+                </div>
+                <!-- /.sidebar -->
+            </aside>
+        }
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
