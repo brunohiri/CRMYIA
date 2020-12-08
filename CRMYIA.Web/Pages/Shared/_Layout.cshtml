@@ -261,7 +261,7 @@
             </aside>
         }
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper" id="pdf-dow">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <div class="container-fluid">
@@ -377,6 +377,8 @@
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
     {
         <script src="../js/pages/dashboard2.js"></script>
+        <script src="~/js/jsPdf/jspdf.min.js"></script>
+        <script src="~/js/canvas2image/canvas2image.min.js"></script>
     }
     @if (ViewData["Pagina"].ToString().Equals("Funil de Vendas"))
     {

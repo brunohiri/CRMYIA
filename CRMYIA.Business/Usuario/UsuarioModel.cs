@@ -194,6 +194,29 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Usuario> GetListAniversariante(byte IdPerfil)
+        {
+            List<Usuario> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Usuario
+                            .Include(y => y.UsuarioPerfil)
+                                .ThenInclude(u => u.IdPerfilNavigation)
+                                    .ThenInclude(v => v.UsuarioPerfil)
+                            .Where(x => x.DataNascimentoAbertura.HasValue ? (x.DataNascimentoAbertura.Value.Day == DateTime.Now.Day && x.DataNascimentoAbertura.Value.Month == DateTime.Now.Month) : false)
+                            .OrderBy(o => o.Nome)
+                            .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static void Add(Usuario Entity)
         {
             try

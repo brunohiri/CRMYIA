@@ -67,6 +67,66 @@
 </div>
 <!-- /.row -->
 
+<!-- Horizontal Form Pesquisa-->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card card-default">
+
+            <div class="card-header">
+                <h3 class="card-title">Pesquisar</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="card-body">
+                @*<input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />*@
+
+                <div class="form-row">
+
+                    <div class="form-group col-md-4">
+                        <div class="form-group">
+                            <label>Data Início / Data Fim</label>
+
+                            <div class="input-group">
+
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control float-right daterange pesquisa-dashboard" id="Data" name="Data">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <div class="input-group">
+                                <button class="btn btn-primary limpar-pesquisa-dashboard" type="button">Limpar Pesquisa</button>
+                            </div>
+                        </div>
+                        </div>
+
+                    <div class="form-group col-md-4">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                                <div class="input-group">
+                                    <button class="btn btn-danger exportar-pdf" type="button">Exportar PDF</button>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+
+                @*<div class="float-right">
+                    <button class="btn btn-primary limpar-pesquisa-dashboard" type="button">Limpar Pesquisa</button>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -99,7 +159,7 @@
                 <div class="row">
                     <div class="col-md-8">
                         <p class="text-center">
-                            <strong>Vendas: @DateTime.Now.ToString("01 \"de\" MMMM \"de\" yyyy") até @DateTime.Now.ToString("dd \"de\" MMMM \"de\" yyyy")</strong>
+                            <strong>Vendas: <span id="data-inicio"></span> até <span id="data-fim"></span></strong>
                         </p>
 
                         <div class="chart">
@@ -115,7 +175,7 @@
                         </p>
                         <div id="DivProducaoMes">
 
-                        </div> 
+                        </div>
                         <!-- /.progress-group -->
                     </div>
                     <!-- /.col -->
@@ -356,7 +416,7 @@
                                 <th width="20%">Nº Vidas</th>
                             </tr>
                         </thead>
-                        <tbody  id="TBodyRankingCorretores">
+                        <tbody id="TBodyRankingCorretores">
                         </tbody>
                     </table>
                 </div>
@@ -373,7 +433,7 @@
             <!-- /.info-box-content -->
         </div>
         <!-- /.info-box -->
-        <div class="info-box mb-3 bg-info">
+        <a href="/ListarAniversariante" class="info-box mb-3 bg-info">
             <span class="info-box-icon"><i class="far fa-comment"></i></span>
 
             <div class="info-box-content">
@@ -381,7 +441,7 @@
                 <span class="info-box-number" id="CorretoresAniversariantesMes">0</span>
             </div>
             <!-- /.info-box-content -->
-        </div>
+        </a>
         <!-- /.info-box -->
 
         <div class="card">
@@ -409,7 +469,6 @@
                     <!-- /.col -->
                     <div class="col-md-4">
                         <ul class="chart-legend clearfix" id="ulOperadorasMaisVendidas">
-                            
                         </ul>
                     </div>
                     <!-- /.col -->

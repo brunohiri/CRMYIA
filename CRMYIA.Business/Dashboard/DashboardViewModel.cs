@@ -236,15 +236,13 @@ namespace CRMYIA.Business.Dashboard
             return Entity;
         }
 
-        public static DashboardViewModel GetProducao(EnumeradorModel.Perfil TipoPerfil, long? IdUsuario = null)
+        public static DashboardViewModel GetProducao(EnumeradorModel.Perfil TipoPerfil, long? IdUsuario = null, DateTime? DataInicial = null , DateTime? DataFinal = null)
         {
             DashboardViewModel Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    DateTime DataInicial = Util.Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
-                    DateTime DataFinal = Util.Util.GetLastDayOfMonth(DateTime.Now.Month - 1);
                     Entity = new DashboardViewModel();
 
                     if (TipoPerfil == EnumeradorModel.Perfil.Administrador)

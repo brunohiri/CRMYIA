@@ -45,11 +45,25 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status=true, entityDashboard = EntityDashboard });
         }
 
-        public IActionResult OnGetProducao()
+        public IActionResult OnGetProducao(string? Inicio, string? Fim)
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            DashboardViewModel EntityDashboard = DashboardViewModel.GetProducao((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
+            DateTime? DataInicial;
+            DateTime? DataFinal;
+            
+            if (Inicio == null && Fim == null)
+            {
+                DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+                DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+            }
+            else
+            {
+                DataInicial = Convert.ToDateTime(Inicio);
+                DataFinal = Convert.ToDateTime(Fim);
+            }
+
+            DashboardViewModel EntityDashboard = DashboardViewModel.GetProducao((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario, DataInicial , DataFinal);
 
             return new JsonResult(new { status = true, entityDashboard = EntityDashboard });
         }

@@ -9,6 +9,59 @@
         "dist/browser/signalr.min.js",
         "dist/browser/signalr.js"
       ]
+    },
+    {
+      "library": "xlsx@0.16.9",
+      "destination": "wwwroot/js/sheejs/xlsx/",
+      "files": [
+        "dist/cpexcel.js",
+        "dist/jszip.js",
+        "dist/LICENSE",
+        "dist/shim.min.js",
+        "dist/xlsx.core.min.js",
+        "dist/xlsx.core.min.map",
+        "dist/xlsx.extendscript.js",
+        "dist/xlsx.full.min.js",
+        "dist/xlsx.full.min.map",
+        "dist/xlsx.js",
+        "dist/xlsx.min.js",
+        "dist/xlsx.min.map",
+        "dist/xlsx.mini.min.js",
+        "dist/xlsx.mini.min.map"
+      ]
+    },
+    {
+      "library": "jspdf@2.2.0",
+      "destination": "wwwroot/js/jspdf/",
+      "files": [
+        "dist/jspdf.es.js",
+        "dist/jspdf.es.js.map",
+        "dist/jspdf.es.min.js",
+        "dist/jspdf.es.min.js.map",
+        "dist/jspdf.node.js",
+        "dist/jspdf.node.js.map",
+        "dist/jspdf.node.min.js",
+        "dist/jspdf.node.min.js.map",
+        "dist/jspdf.umd.js",
+        "dist/jspdf.umd.js.map",
+        "dist/jspdf.umd.min.js",
+        "dist/jspdf.umd.min.js.map",
+        "dist/polyfills.es.js",
+        "dist/polyfills.umd.js",
+        "types/index.d.ts",
+        "LICENSE",
+        "package.json",
+        "README.md"
+      ]
+    },
+    {
+      "library": "canvas2image@1.0.5",
+      "destination": "wwwroot/js/canvas2image/",
+      "files": [
+        "canvas2image.js",
+        "package.json",
+        "README.md"
+      ]
     }
   ]
 }

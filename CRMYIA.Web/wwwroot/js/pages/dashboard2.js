@@ -7,16 +7,194 @@ $(function () {
      * Here we will create a few charts using ChartJS
      */
 
+    let d = new Date();
+    let anoC = d.getFullYear();
+    let mesC = d.getMonth();
 
+    let DInicio = new Date(anoC, mesC, 1);
+    let DFim = new Date(anoC, mesC + 1, 0);
     CarregarQuantificadores();
-    CarregarProducao();
+    $('#Data').val(GetDiaMesAno(DInicio) + ' - ' + GetDiaMesAno(DFim));
+    $('#data-inicio').html(GetStringDiaMesAno(DInicio));
+    $('#data-fim').html(GetStringDiaMesAno(DFim));
+    CarregarProducao("", "");
     CarregarRankings();
     CarregarRankingUsuarioCorretoresAniversariantes();
     CarregarPropostasPendentes();
 
 
+    
+
 })
 
+$(document).ready(function () {
+
+    $('input[name="Data"]').daterangepicker({
+        "locale": {
+            "format": "DD/MM/YYYY",
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "daysOfWeek": [
+                "Dom",
+                "Seg",
+                "Ter",
+                "Qua",
+                "Qui",
+                "Sex",
+                "Sab"
+            ],
+            "monthNames": [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro"
+            ],
+            "firstDay": 1
+        }
+    });
+
+    let d = new Date();
+    let anoC = d.getFullYear();
+    let mesC = d.getMonth();
+
+    let DInicio = new Date(anoC, mesC, 1);
+    let DFim = new Date(anoC, mesC + 1, 0);
+});
+
+$(document).on('click', '.limpar-pesquisa-dashboard', function () {
+
+    let d = new Date();
+    let anoC = d.getFullYear();
+    let mesC = d.getMonth();
+
+    let DInicio = new Date(anoC, mesC, 1);
+    let DFim = new Date(anoC, mesC + 1, 0);
+    CarregarProducao(GetDiaMesAno(DInicio), GetDiaMesAno(DFim));
+    $("#Data").val(GetDiaMesAno(DInicio) + ' - ' + GetDiaMesAno(DFim));
+    $('#data-inicio').html(GetStringDiaMesAno(DInicio));
+    $('#data-fim').html(GetStringDiaMesAno(DFim));
+
+});
+
+$(document).on('click', '.exportar-pdf', function () {
+    var Data = new Date();
+    var diaM = Data.getDate();
+    var mes = Data.getMonth();
+    switch (mes) { 
+        case 0: {
+            mesF = mes + 1;
+            mes = "Janeiro";
+        }
+            break;
+        case 1: {
+            mesF = mes + 1;
+            mes = "Fevereiro";
+        }
+            break;
+        case 2: {
+            mesF = mes + 1;
+            mes = "Março";
+        }
+            break;
+        case 3: {
+            mesF = mes + 1;
+            mes = "Abril";
+        }
+            break;
+        case 4: {
+            mesF = mes + 1;
+            mes = "Maio";
+        }
+            break;
+        case 5: {
+            mesF = mes + 1;
+            mes = "Junho";
+        }
+            break;
+        case 6: {
+            mesF = mes + 1;
+            mes = "Julho";
+        }
+            break;
+        case 7: {
+            mesF = mes + 1;
+            mes = "Agosto";
+        }
+            break;
+        case 8: {
+            mesF = mes + 1;
+            mes = "Setembro";
+        }
+            break;
+        case 9: {
+            mesF = mes + 1;
+            mes = "Outubro";
+        }
+            break;
+        case 10: {
+            mesF = mes + 1;
+            mes = "Novembro";
+        }
+            break;
+        case 11: {
+            mesF = mes + 1;
+            mes = "Dezembro";
+        }
+            break;
+    }
+
+    if (diaM.toString().length == 1)
+        diaM = "0" + diaM;
+
+    var NomeArquivo = 'Dashboard_' + diaM + '_' + (Data.getMonth() + 1) + '_' + Data.getFullYear() + '_' + Data.getHours() + '_' + Data.getMinutes() + '_' + Data.getSeconds() + '.pdf'; //_dd_MM_yyyy_HH_mm_ss.pdf
+    var options = {
+
+    };
+    var pdf = new jsPDF('p', 'pt', 'a4', true);
+    pdf.addHTML($("#pdf-dow"), -1, -1, options, function () {
+        pdf.save(NomeArquivo);
+  	});
+});
+
+$(document).on('change', '.pesquisa-dashboard', function () {
+
+    var d = new Date();
+    var anoC = d.getFullYear();
+    var mesC = d.getMonth();
+
+    var DInicio = new Date(anoC, mesC, 1);
+    var DFim = new Date(anoC, mesC + 1, 0);
+    let Inicio = "";
+    let Fim = "";
+
+    GetDiaMesAno(DInicio);
+    GetDiaMesAno(DFim);
+
+    let vetData = $("#Data").val().split(' - ');
+    if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
+        Inicio = GetDiaMesAno(DInicio);
+        Fim = GetDiaMesAno(DFim);
+    } else {
+        Inicio = vetData[0];
+        Fim = vetData[1];
+    }
+
+    CarregarProducao(Inicio, Fim);
+
+    vetInicio = Inicio.split('/');
+    vetFim = Fim.split('/');
+    $('#data-inicio').html(GetStringData({ ano: vetInicio[2], mes: vetInicio[1], dia: vetInicio[0]} ));
+    $('#data-fim').html(GetStringData({ ano: vetFim[2], mes: vetFim[1], dia: vetFim[0]} ));
+});
 
 function CarregarQuantificadores() {
     $.ajax({
@@ -40,9 +218,10 @@ function CarregarQuantificadores() {
     });
 }
 
-function CarregarProducao() {
+function CarregarProducao(Inicio, Fim) {
     $.ajax({
         url: '/Index?handler=Producao',
+        data: { Inicio: Inicio, Fim: Fim },
         cache: false,
         async: true,
         type: "GET",
