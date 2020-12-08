@@ -159,7 +159,7 @@ $(document).on('click', '.exportar-pdf', function () {
     var options = {
 
     };
-    var pdf = new jsPDF('p', 'pt', 'a4', true);
+    var pdf = new jsPDF('p', 'px', 'letter', true);
     pdf.addHTML($("#pdf-dow"), -1, -1, options, function () {
         pdf.save(NomeArquivo);
   	});

@@ -33,7 +33,7 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet()
         {
-            ListEntity = UsuarioModel.GetListAniversariante((byte)EnumeradorModel.Perfil.Corretor);//GetListAniversariante
+            ListEntity = UsuarioModel.GetListAniversariante();//GetListAniversariante
             return Page();
         }
         #endregion
