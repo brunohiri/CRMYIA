@@ -27,12 +27,12 @@
                         {
                             foreach (var Item in Model.ListEntity)
                             {
-                                <tr>
-                                    <td>@Item.Nome</td>
-                                    <td class="text-center">@Item.UsuarioPerfil.First().IdPerfilNavigation.Descricao</td>
-                                    <td class="text-center">@(Item.Telefone == null ? "Não Informado" : Item.Telefone)</td>
-                                    <td class="text-center">@Item.DataNascimentoAbertura?.ToString("dd/MM")</td>
-                                </tr>
+                        <tr>
+                            <td>@Item.Nome.ToUpper()</td>
+                            <td class="text-center">@Item.UsuarioPerfil.First().IdPerfilNavigation.Descricao.ToUpper()</td>
+                            <td class="text-center">@Html.Raw(string.IsNullOrEmpty(Item.Telefone) ? "<span class=\"badge badge-pill badge-warning\">NÃO INFORMADO</span>" : Item.Telefone)</td>
+                            <td class="text-center">@Item.DataNascimentoAbertura?.ToString("dd/MM")</td>
+                        </tr>
                             }
                         }
                     </tbody>
