@@ -39,7 +39,8 @@ namespace CRMYIA.Business.Util
             Gerente = 2,
             Supervisor = 3,
             Corretor = 4,
-            Vendedor = 5
+            Vendedor = 5,
+            Marketing = 6
         }
         #endregion
 

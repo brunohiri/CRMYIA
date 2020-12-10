@@ -2,34 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using CRMYIA.Business;
-using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using CRMYIA.Business.Business;
+using System.Security.Claims;
+using CRMYIA.Business.Util;
+using System.Web;
 
 namespace CRMYIA.Web.Pages
 {
-    public class NovoModuloModel : PageModel
+    public class NovaCampanha : PageModel
     {
         #region Propriedades
         readonly IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
-                                                                
-        [BindProperty]
-        public Modulo Entity { get; set; }
 
         [BindProperty]
-        public List<Modulo> ListModuloReferencia { get; set; }
+        public Campanha Entity { get; set; }
 
         #endregion
 
         #region Construtores
-        public NovoModuloModel(IConfiguration configuration)
+        public NovaCampanha(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -39,15 +37,9 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet(string Id = null)
         {
             if (Id.IsNullOrEmpty())
-            {
-                Entity = new Modulo();
-                ListModuloReferencia = ModuloModel.GetListIdDescricao();
-            }
+                Entity = new Campanha();
             else
-            {
-                Entity = ModuloModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-                ListModuloReferencia = ModuloModel.GetListIdDescricao();
-            }
+                Entity = CampanhaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
             Entity.DataCadastro = DateTime.Now;
             return Page();
@@ -55,24 +47,32 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnPost()
         {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             try
             {
-                if (Entity.IdModulo == 0)
-                    ModuloModel.Add(Entity);
+                if (Entity.IdCampanha == 0)
+                {
+                    Entity.IdUsuario = IdUsuario;
+                    Entity.DataCadastro = DateTime.Now;
+                    CampanhaModel.Add(Entity);
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                }
                 else
-                    ModuloModel.Update(Entity);
-
-                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
-                //Entity = new Modulo();
-                //ListModuloReferencia = ModuloModel.GetListIdDescricao();
+                {
+                    Entity.IdUsuario = IdUsuario;
+                    Entity.DataCadastro = DateTime.Now;
+                    CampanhaModel.Update(Entity);
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados atualizado com sucesso!");
+                }
             }
             catch (Exception ex)
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
             }
-            
             return Page();
         }
+
+       
         #endregion
     }
 }

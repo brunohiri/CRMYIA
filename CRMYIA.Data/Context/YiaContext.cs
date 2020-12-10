@@ -17,6 +17,8 @@ namespace CRMYIA.Data.Context
         }
 
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
+        public virtual DbSet<Campanha> Campanha { get; set; }
+        public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
         public virtual DbSet<Categoria> Categoria { get; set; }
         public virtual DbSet<Cidade> Cidade { get; set; }
         public virtual DbSet<Classificacao> Classificacao { get; set; }
@@ -69,14 +71,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -99,6 +95,50 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.NomeArquivoTratado)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Campanha>(entity =>
+            {
+                entity.HasKey(e => e.IdCampanha);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Campanha)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_Campanha");
+            });
+
+            modelBuilder.Entity<CampanhaArquivo>(entity =>
+            {
+                entity.HasKey(e => e.IdCampanhaArquivo);
+
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Observacao)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCampanhaNavigation)
+                    .WithMany(p => p.CampanhaArquivo)
+                    .HasForeignKey(d => d.IdCampanha)
+                    .HasConstraintName("Campanha_CampanhaArquivo");
             });
 
             modelBuilder.Entity<Categoria>(entity =>
