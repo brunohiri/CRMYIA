@@ -124,9 +124,25 @@ $(document).ready(function () {
         CadastroTarefas();
     }
 
-   
+
 
 });
+
+/* ========================== Loading =================================== */
+
+$(window).on('beforeunload', function () {
+    displayBusyIndicator()
+});
+
+$(document).on('submit', 'form', function () {
+    displayBusyIndicator();
+});
+
+function displayBusyIndicator() {
+    $('.loading').show();
+}
+
+/* ========================== DataTableJS =================================== */
 
 function InitDatatables() {
     //Datatables
