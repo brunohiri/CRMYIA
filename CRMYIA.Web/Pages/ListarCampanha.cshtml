@@ -1,0 +1,46 @@
+﻿@page
+@model CRMYIA.Web.Pages.ListarCampanhaModel
+@{
+    ViewData["Title"] = "Listar";
+    ViewData["Pagina"] = "Campanha";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="tableListagem" class="table table-bordered table-striped datatable">
+                    <thead>
+                        <tr>
+                            <th width="45%">Descrição</th>
+                            <th width="25%">Data de Aniversario</th>
+                            <th width="25%">Ativo</th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListCampanha != null && Model.ListCampanha.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListCampanha)
+                            {
+                                <tr>
+                                    <td class="text-center">@Item.Descricao.ToUpper()</td>
+                                    <td class="text-center">@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                    <td class="text-center">
+                                        <a asp-page="/NovaCampanha" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

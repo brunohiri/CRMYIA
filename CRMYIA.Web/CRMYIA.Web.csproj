@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\ArquivoLead\" />
+    <Folder Include="wwwroot\ArquivoCampanha\" />
   </ItemGroup>
 
 </Project>
