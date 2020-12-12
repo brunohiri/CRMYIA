@@ -125,7 +125,43 @@ $(document).ready(function () {
     }
 
    
+   $('.filter-container').filterizr({ gutterPixels: 3 });
+    $('.btn[data-filter]').on('click', function () {
+        $('.btn[data-filter]').removeClass('active');
+        $(this).addClass('active');
+    });
 
+
+});
+
+ $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+        event.preventDefault();
+        $(this).ekkoLightbox({
+            alwaysShowClose: true
+        });
+ });
+
+$(document).on('click', '.img-fluid.mb-2', function () {
+    let Descricao = $(this).data('descricao');
+    let Caminho = $(this).data('caminho');
+    setTimeout(function () {
+        $('.modal-body').append('<div class="d-flex justify-content-center m-3"><a class="btn btn-success" href="' + Caminho + '" download="' + Caminho + '">Download</a></div>\
+                                 <div class="form-group">\
+                                    <label for="Descricao">Descrição</label>\
+                                    <textarea class="form-control" id="TextDescricao" rows="3">' + Descricao + '</textarea>\
+                                 </div>\
+                                 <div class="d-flex justify-content-center m-3"><button class="btn btn-success copiar-descricao">COPIAR</button></div>');
+    }, 500);
+});
+
+$(document).on('click', '.copiar-descricao', function () {
+    /* Pega o texto do textArea */
+    var copyText = document.getElementById("TextDescricao");
+    /* Seleciona o textArea */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*Para dispositivos móveis*/
+    /* Copie o texto dentro do campo de texto */
+    document.execCommand("copy");
 });
 
 function InitDatatables() {
@@ -733,3 +769,22 @@ function CadastroTarefas() {
 }
 
 
+//function CarregarCampanha(Id) {
+//    window.location.href = "/MaterialDivulgacao?Id=" + Id;
+//    //$.ajax(location.host + "/ListarCampanha?Id=" + Id);  
+//    //https://localhost:44387/ListarCampanha/CarregarLists?Id=1
+//}
+function CarregarCampanha(Id) {
+    Id = Id + "hash";
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: '/Index?handler=ObterHashId',
+        data: { Id: Id },
+        success: function (data) {
+            window.location.href = "/MaterialDivulgacao?Id=" + data.hashId;
+            //window.open("/NovaProposta?id=" + data.hashId, "_blank");
+        },
+
+    });
+}

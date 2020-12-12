@@ -39,6 +39,9 @@
         .tooltip {
             opacity: 1 !important;
         }
+        .banners:hover {
+            background-color: #E9ECEF;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -384,6 +387,16 @@
     {
         <script src="../js/sistema/tarefa.js"></script>
         <script src="~/js/sistema/numeral.min.js"></script>
+    }
+
+    @if (ViewData["Pagina"].ToString().Equals("Material De Divulgacao"))
+    {
+        <!-- jQuery UI -->
+        <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <!-- Ekko Lightbox -->
+        <script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+        <!-- Filterizr-->
+        <script src="~/plugins/filterizr/jquery.filterizr.min.js"></script>
     }
 
     <script src="../js/main.js"></script>

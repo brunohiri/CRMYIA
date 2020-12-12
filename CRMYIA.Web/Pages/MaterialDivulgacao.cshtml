@@ -1,0 +1,70 @@
+﻿@page
+@model CRMYIA.Web.Pages.MaterialDivulgacaoModel
+@{
+    ViewData["Title"] = "Material De Divulgacao";
+    ViewData["Pagina"] = "Material De Divulgacao";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-primary">
+            @if (Model.ListCampanhaArquivo != null && Model.ListCampanhaArquivo.Count() > 0 && Model.ListCampanha != null && Model.ListCampanha.Count() > 0)
+            {
+                foreach (var ItemCampanha in Model.ListCampanha)
+                {
+                    <div class="card-header">
+                        <h4 class="card-title">@ItemCampanha.Descricao</h4>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <div class="filter-container p-0 row">
+                            @if (@ItemCampanha.IdCampanha == @ItemCampanha.IdCampanha)
+                                foreach (var ItemCampanhaArquivo in Model.ListCampanhaArquivo)
+                                {
+
+                                    @if (@ItemCampanha.IdCampanha == @ItemCampanhaArquivo.IdCampanha)
+                                    {
+
+                                        <div class="filtr-item col-sm-2" data-category="1" data-sort="white sample">
+                                            <a href="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-toggle="lightbox" data-title="@ItemCampanhaArquivo.IdCampanhaNavigation?.Descricao">
+                                                <img src="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-descricao="@ItemCampanhaArquivo.Descricao" data-caminho="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" class="img-fluid mb-2" alt="@ItemCampanhaArquivo.NomeArquivo" />
+                                            </a>
+                                        </div>
+
+                                    }
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="card-header">
+                    <h4 class="card-title">@Model.ListCampanhaArquivo[0].IdCampanhaNavigation.Descricao</h4>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="filter-container p-0 row">
+                            @if (true)
+                                foreach (var ItemCampanhaArquivo in Model.ListCampanhaArquivo)
+                                {
+
+                                    <div class="filtr-item col-sm-2" data-category="1" data-sort="white sample">
+                                        <a href="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-toggle="lightbox" data-title="@ItemCampanhaArquivo.IdCampanhaNavigation?.Descricao">
+                                            <img src="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-descricao="@ItemCampanhaArquivo.Descricao" data-caminho="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" class="img-fluid mb-2" alt="@ItemCampanhaArquivo.NomeArquivo" />
+                                        </a>
+                                    </div>
+
+                                }
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
