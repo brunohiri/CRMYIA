@@ -37,6 +37,25 @@ namespace CRMYIA.Business.Business
             }
             return ListEntity;
         }
+        public static List<Campanha> GetListOrderById()
+        {
+            List<Campanha> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Campanha
+                        .OrderBy(o => o.IdCampanha)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
 
         public static Campanha Get(long Id)
         {

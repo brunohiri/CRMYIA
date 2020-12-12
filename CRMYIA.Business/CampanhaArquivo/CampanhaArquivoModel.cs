@@ -60,6 +60,48 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static List<CampanhaArquivo> GetListaCampanhaArquivo()
+        {
+            List<CampanhaArquivo> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.CampanhaArquivo
+                        .Include(x => x.IdCampanhaNavigation)
+                        .OrderBy(o => o.IdCampanha)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+        public static List<CampanhaArquivo> GetListaCampanhaArquivo(long Id)
+        {
+            List<CampanhaArquivo> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.CampanhaArquivo
+                        .Include(x => x.IdCampanhaNavigation)
+                        .Where(x => x.IdCampanha == Id)
+                        .OrderBy(o => o.Descricao)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static List<CampanhaArquivo> GetList()
         {
             List<CampanhaArquivo> ListEntity = null;
@@ -68,8 +110,9 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.CampanhaArquivo
+                        .Include(x => x.IdCampanhaNavigation)
                         .AsNoTracking()
-                        .OrderByDescending(o => o.DataCadastro).ToList();
+                        .OrderByDescending(o => o.IdCampanha).ToList();
                 }
             }
             catch (Exception)

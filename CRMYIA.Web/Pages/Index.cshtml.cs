@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using CRMYIA.Business;
 using CRMYIA.Business.Dashboard;
 using CRMYIA.Business.Util;
@@ -93,6 +94,11 @@ namespace CRMYIA.Web.Pages
             DashboardViewModel EntityDashboard = DashboardViewModel.GetPropostasPendentes((EnumeradorModel.Perfil)(UsuarioPerfilModel.Get(IdUsuario).IdPerfil), IdUsuario);
 
             return new JsonResult(new { status = true, entityDashboard = EntityDashboard });
+        }
+        public IActionResult OnGetObterHashId(string Id)
+        {
+            var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
+            return new JsonResult(new { hashId = HashId });
         }
     }
 }

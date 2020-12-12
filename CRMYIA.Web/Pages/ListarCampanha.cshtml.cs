@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using CRMYIA.Business;
 using CRMYIA.Business.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
@@ -32,17 +33,18 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Métodos
-        public IActionResult OnGet(string Id = null)
+        public IActionResult OnGet(long Id )
         {
             CarregarLists();
-
             return Page();
         }
 
         public void CarregarLists()
         {
-            ListCampanha = CampanhaModel.GetList();
+            ListCampanha = Business.Business.CampanhaModel.GetList();
         }
+
+       
         #endregion
     }
 }

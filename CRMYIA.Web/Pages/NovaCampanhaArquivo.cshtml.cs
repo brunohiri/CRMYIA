@@ -152,7 +152,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListEntity = CampanhaArquivoModel.GetList();
-            ListCampanha = CampanhaModel.GetList();
+            ListCampanha = Business.Business.CampanhaModel.GetList();
         }
 
         #endregion

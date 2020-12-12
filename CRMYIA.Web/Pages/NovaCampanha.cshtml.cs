@@ -39,7 +39,7 @@ namespace CRMYIA.Web.Pages
             if (Id.IsNullOrEmpty())
                 Entity = new Campanha();
             else
-                Entity = CampanhaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                Entity = Business.Business.CampanhaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
             Entity.DataCadastro = DateTime.Now;
             return Page();
@@ -54,14 +54,14 @@ namespace CRMYIA.Web.Pages
                 {
                     Entity.IdUsuario = IdUsuario;
                     Entity.DataCadastro = DateTime.Now;
-                    CampanhaModel.Add(Entity);
+                    Business.Business.CampanhaModel.Add(Entity);
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                 }
                 else
                 {
                     Entity.IdUsuario = IdUsuario;
                     Entity.DataCadastro = DateTime.Now;
-                    CampanhaModel.Update(Entity);
+                    Business.Business.CampanhaModel.Update(Entity);
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados atualizado com sucesso!");
                 }
             }
