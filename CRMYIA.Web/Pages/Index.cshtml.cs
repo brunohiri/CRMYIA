@@ -97,7 +97,7 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnGetObterHashId(string Id)
         {
-            var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
+            var HashId = HttpUtility.UrlEncode(Criptography.Encrypt(Id));
             return new JsonResult(new { hashId = HashId });
         }
     }

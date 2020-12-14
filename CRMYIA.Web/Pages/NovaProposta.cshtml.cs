@@ -79,7 +79,7 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Métodos
-        public IActionResult OnGet(string Id = null)
+        public IActionResult OnGet(string Id = null, string IdNotificacao = null)
         {
             if (Id.IsNullOrEmpty())
             {
@@ -94,6 +94,10 @@ namespace CRMYIA.Web.Pages
             else
             {
                 Entity = PropostaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                if(Entity != null && IdNotificacao != null)
+                {
+                    NotificacaoModel.DesativarNotificacao(Criptography.Decrypt(HttpUtility.UrlDecode(IdNotificacao)).ExtractLong());
+                }
                 ListEntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityHistoricoProposta = HistoricoPropostaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 

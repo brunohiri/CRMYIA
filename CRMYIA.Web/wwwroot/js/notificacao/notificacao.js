@@ -39,7 +39,7 @@ connection.on("ReceberNotificacao", function (dados, status, id) {
                     </a>\
                     <div class="dropdown-divider"></div>';
         });
-        html += '<a href="#" class="dropdown-item dropdown-footer">Ver todas as notificações</a>\
+        html += '<a href="/ListarNotificacao" class="dropdown-item dropdown-footer">Ver todas as notificações</a>\
                      <div class="dropdown-divider"></div>\
                  </div>';
         qtdNotificacao = tamNotificacao;
@@ -74,7 +74,7 @@ connection.on("ReceberNotificacao", function (dados, status, id) {
                     </a>\
                     <div class="dropdown-divider"></div>';
         });
-        html += '<a href="#" class="dropdown-item dropdown-footer">Ver todas as notificações</a>\
+        html += '<a href="/ListarNotificacao" class="dropdown-item dropdown-footer">Ver todas as notificações</a>\
                      <div class="dropdown-divider"></div>\
                  </div>';
         vazio = false;

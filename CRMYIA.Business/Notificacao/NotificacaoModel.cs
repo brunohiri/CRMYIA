@@ -72,5 +72,25 @@ namespace CRMYIA.Business
                 throw;
             }
         }
+
+        public static List<Notificacao> GetListNotificacao(long IdUsuario)
+        {
+            List<Notificacao> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Notificacao
+                        .Where(x => ((x.IdUsuarioVisualizar == IdUsuario)))
+                        .OrderByDescending(x => x.DataCadastro)
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
     }
 }

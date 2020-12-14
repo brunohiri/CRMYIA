@@ -775,14 +775,14 @@ function CadastroTarefas() {
 //    //https://localhost:44387/ListarCampanha/CarregarLists?Id=1
 //}
 function CarregarCampanha(Id) {
-    Id = Id + "hash";
+    Id = Id;
     $.ajax({
         type: "GET",
         dataType: "json",
         url: '/Index?handler=ObterHashId',
         data: { Id: Id },
         success: function (data) {
-            window.location.href = "/MaterialDivulgacao?Id=" + data.hashId;
+            window.location.href = "/MaterialDivulgacao?Id=" + encodeURIComponent(data.hashId);
             //window.open("/NovaProposta?id=" + data.hashId, "_blank");
         },
 
