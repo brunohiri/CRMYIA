@@ -853,7 +853,7 @@ namespace CRMYIA.Business.Dashboard
                     Entity = new DashboardViewModel();
 
                     Entity.CorretoresAniversariantesMes = context.Usuario
-                             .Where(x => x.DataNascimentoAbertura.HasValue ? (x.DataNascimentoAbertura.Value.Day == DateTime.Now.Day && x.DataNascimentoAbertura.Value.Month == DateTime.Now.Month) : false)
+                             .Where(x => x.DataNascimentoAbertura.HasValue ? (x.DataNascimentoAbertura.Value.Month == DateTime.Now.Month) : false)
                              .Count().ExtractIntMilharFormat();
 
                     Entity.PosicaoRanking = 1;
