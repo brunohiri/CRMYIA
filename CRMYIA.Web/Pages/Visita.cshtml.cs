@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
@@ -25,6 +26,7 @@ namespace CRMYIA.Web.Pages
 
         #region Lists
         public List<StatusVisita> ListStatusVisita { get; set; }
+        public Visita ResultadoVisita { get; set; }
         #endregion
         #endregion
 
@@ -33,7 +35,7 @@ namespace CRMYIA.Web.Pages
 
         #region Métodos
         public IActionResult OnGet()
-        { 
+        {
                 Entity = new Visita();
                 ListStatusVisita = StatusVisitaModel.GetList();
                 return Page();
@@ -111,13 +113,14 @@ namespace CRMYIA.Web.Pages
                     UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
                     if (EntityUsuarioHierarquia != null)
                     {
+                        Visita EntityVisita = Business.VisitaModel.GetLastId();
                         Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
                         {
                             IdUsuarioCadastro = IdUsuario,
                             IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
                             Titulo = null,
                             Descricao = Entity.Descricao,
-                            Url = "/Visita",
+                            Url = "/Visita?id=" + HttpUtility.UrlDecode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
                             Visualizado = false,
                             DataCadastro = DateTime.Now,
                             Ativo = true
@@ -176,6 +179,28 @@ namespace CRMYIA.Web.Pages
                 status = false;
             }
             return new JsonResult(new {status = status });
+        }
+
+        public IActionResult OnGetBuscarVisita(string Id = null, string IdNotificacao = null)
+        {
+
+            ResultadoVisita = Business.VisitaModel.GetVisitaId(Criptography.Decrypt(HttpUtility.UrlEncode(Id)).ExtractLong());
+            
+            VisitaViewModel Resultado = (new VisitaViewModel()
+            {
+                sourceId = ResultadoVisita.IdVisita,
+                backgroundColor = ResultadoVisita.IdStatusVisitaNavigation.CorHexa,
+                borderColor = ResultadoVisita.IdStatusVisitaNavigation.CorHexa,
+                start = ResultadoVisita.DataAgendamento.Value,
+                title = ResultadoVisita.Descricao,
+                allDay = false
+            });
+
+            if (ResultadoVisita != null && IdNotificacao != null)
+            {
+                NotificacaoModel.DesativarNotificacao(Criptography.Decrypt(HttpUtility.UrlDecode(IdNotificacao)).ExtractLong());
+            }
+            return new JsonResult(new { status = true, listVisita = Resultado });
         }
     }
 

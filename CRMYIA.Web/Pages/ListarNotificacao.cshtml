@@ -7,6 +7,13 @@
 @using CRMYIA.Business.Util;
 @using CRMYIA.Business;
 @using System.Security.Claims;
+@{
+    string[] urlAux;
+    string url;
+    string idAux;
+    string idNotificacao;
+}
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -27,13 +34,18 @@
                     <tbody>
                         @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
                         {
-                            foreach (var Item in Model.ListEntity)
+                            @foreach (var Item in Model.ListEntity)
                             {
+                                urlAux = Item.Url.Split('?');
+                                idAux = urlAux[1].Substring(3);
+                                idNotificacao = @System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdNotificacao.ToString()));
+                                url = (urlAux[0] == "/Visita" ? "<a href=\"#\" onclick=\"RedirecionarVisita('" + idAux + "', '" + idNotificacao + "')\"><i class=\"fas fa-link\"></i></a>" :
+                                                    "<a href='" + @Item.Url + "'&IdNotificacao='" + idNotificacao + "'><i class=\"fas fa-link\"></i></a>");
                                 <tr>
                                     <td>@Item.Descricao.ToUpper()</td>
                                     <td class="text-center">@Html.Raw(Item.Visualizado == true ? "<span class=\"badge badge-pill badge-success\">VISUALIZADO</span>" : "<span class=\"badge badge-pill badge-warning\">NÃO VISUALIZADO</span>")</td>
                                     <td class="text-center">@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                    <td class="text-center"><a href="@Html.Raw(Item.Url + "&IdNotificacao=" + System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdNotificacao.ToString())))"><i class="fas fa-link"></i></a></td>
+                                    <td class="text-center">@Html.Raw(url)</td>
                                 </tr>
                             }
                         }

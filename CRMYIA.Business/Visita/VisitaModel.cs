@@ -42,6 +42,26 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Visita GetVisitaId(long IdVisita)
+        {
+            Visita Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Visita
+                        .Include(y => y.IdStatusVisitaNavigation)
+                        .Where(x => x.IdVisita == IdVisita)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static Visita GetByIdProposta(long IdProposta)
         {
             Visita Entity = null;
@@ -333,6 +353,25 @@ namespace CRMYIA.Business
             {
                 throw;
             }
+        }
+
+        public static Visita GetLastId()
+        {
+            Visita Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Visita
+                        .ToList()
+                        .LastOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
         }
         #endregion
     }

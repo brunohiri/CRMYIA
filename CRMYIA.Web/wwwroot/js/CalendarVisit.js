@@ -146,6 +146,7 @@
     });
 
     PreencherRadio();
+    BuscarVisita();
 
     $('.visitas-pesquisa').change(function () {
 
@@ -160,11 +161,6 @@
 
     PreencherDropdown();
 })
-
-//$(document).on('keyup', '.select2', function () {
-//    let search = $(".select2-selection__rendered").html().toLowerCase();//select2-results__option
-//    Filtro(search.trim().toLowerCase());
-//});
 
 $('.select2').on('change', function () {
     //var data = $(".select2 option:selected").text();
@@ -183,6 +179,39 @@ $(document).on('click', '.todos-perfil', function () {
 
     VisitasPesquisa();
 });
+
+function BuscarVisita() {
+    let UrlParametro = window.location.search;
+    var ParametroIdNotificacao = UrlParametro.split('IdNotificacao');
+    var IdNotificacao = ParametroIdNotificacao[1].substring(1, ParametroIdNotificacao[1].length);
+    var ParametroId = ParametroIdNotificacao[0].split('Id');
+    var Id = ParametroId[1].substring(1, ParametroId[1].length - 1)
+    var Calendar = FullCalendar.Calendar;
+    var calendarEl = document.getElementById('calendar');
+    $.post({
+        url: '/Visita?handler=BuscarVisita',
+        method: "Post",
+        data: { Id: Id, IdNotificacao: IdNotificacao },
+        dataType: 'json',
+        success: function (data) {
+            if (data.status == true) {
+                var events = [];
+                events.push({
+                    sourceId: data.listVisita.sourceId,
+                    title: data.listVisita.title,
+                    backgroundColor: data.listVisita.backgroundColor,
+                    borderColor: data.listVisita.borderColor,
+                    start: data.listVisita.start,
+                    allDay: data.listVisita.allDay
+                });
+            }
+            CarregarCalendarPesquisa(Calendar, calendarEl, events);
+        },
+        error: function () {
+
+        }
+    });
+}
 
 function VisitasPesquisa() {
     var d = new Date();

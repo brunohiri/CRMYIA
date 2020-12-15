@@ -124,14 +124,21 @@ $(document).ready(function () {
         CadastroTarefas();
     }
 
-    $('.filter-container').filterizr({ gutterPixels: 3 });
-    $('.btn[data-filter]').on('click', function () {
-        $('.btn[data-filter]').removeClass('active');
-        $(this).addClass('active');
-    });
+    if ($('.filter-container').length) {
+        $('.filter-container').filterizr({ gutterPixels: 3 });
+        $('.btn[data-filter]').on('click', function () {
+            $('.btn[data-filter]').removeClass('active');
+            $(this).addClass('active');
+        });
+    }
 
+    $("#StartBuscaVisita").val(true);
 });
 
+function RedirecionarVisita(Id, IdNotificacao) {
+    if (Id && IdNotificacao)
+        window.location.href = '/Visita?Id=' + encodeURIComponent(Id) + '&IdNotificacao=' + IdNotificacao;
+}
 
 function InitDatatables() {
     //Datatables
