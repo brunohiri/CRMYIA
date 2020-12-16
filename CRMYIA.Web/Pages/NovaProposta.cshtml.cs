@@ -269,7 +269,7 @@ namespace CRMYIA.Web.Pages
                             IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
                             Titulo = null,
                             Descricao = "Próximo contato com " + (EntityCliente.Nome.Split(' ').Count() > 0 ? EntityCliente.Nome.Split(' ')[0] : EntityCliente.Nome),
-                            Url = "/NovaProposta?id=" + HttpUtility.UrlDecode(Criptography.Encrypt(Entity.IdProposta.ToString())),
+                            Url = "/NovaProposta?Id=" + HttpUtility.UrlDecode(Criptography.Encrypt(Entity.IdProposta.ToString())),
                             Visualizado = false,
                             DataCadastro = DateTime.Now,
                             Ativo = true

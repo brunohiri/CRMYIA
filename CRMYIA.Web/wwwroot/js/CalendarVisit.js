@@ -181,36 +181,40 @@ $(document).on('click', '.todos-perfil', function () {
 });
 
 function BuscarVisita() {
-    let UrlParametro = window.location.search;
-    var ParametroIdNotificacao = UrlParametro.split('IdNotificacao');
-    var IdNotificacao = ParametroIdNotificacao[1].substring(1, ParametroIdNotificacao[1].length);
-    var ParametroId = ParametroIdNotificacao[0].split('Id');
-    var Id = ParametroId[1].substring(1, ParametroId[1].length - 1)
-    var Calendar = FullCalendar.Calendar;
-    var calendarEl = document.getElementById('calendar');
-    $.post({
-        url: '/Visita?handler=BuscarVisita',
-        method: "Post",
-        data: { Id: Id, IdNotificacao: IdNotificacao },
-        dataType: 'json',
-        success: function (data) {
-            if (data.status == true) {
-                var events = [];
-                events.push({
-                    sourceId: data.listVisita.sourceId,
-                    title: data.listVisita.title,
-                    backgroundColor: data.listVisita.backgroundColor,
-                    borderColor: data.listVisita.borderColor,
-                    start: data.listVisita.start,
-                    allDay: data.listVisita.allDay
-                });
-            }
-            CarregarCalendarPesquisa(Calendar, calendarEl, events);
-        },
-        error: function () {
+    
+    var UrlParametro = window.location.search;
+    if (UrlParametro) {
+        var ParametroIdNotificacao = UrlParametro.split('IdNotificacao');
+        var IdNotificacao = ParametroIdNotificacao[1].substring(1, ParametroIdNotificacao[1].length);
+        var ParametroId = ParametroIdNotificacao[0].split('Id');
+        var Id = ParametroId[1].substring(1, ParametroId[1].length - 1)
+        var Calendar = FullCalendar.Calendar;
+        var calendarEl = document.getElementById('calendar');
 
-        }
-    });
+        $.ajax({
+            url: '/Visita?handler=BuscarVisita',
+            method: "Get",
+            data: { Id: Id, IdNotificacao: IdNotificacao },
+            dataType: 'json',
+            success: function (data) {
+                if (data.status == true) {
+                    var events = [];
+                    events.push({
+                        sourceId: data.listVisita.sourceId,
+                        title: data.listVisita.title,
+                        backgroundColor: data.listVisita.backgroundColor,
+                        borderColor: data.listVisita.borderColor,
+                        start: data.listVisita.start,
+                        allDay: data.listVisita.allDay
+                    });
+                }
+                CarregarCalendarPesquisa(Calendar, calendarEl, events);
+            },
+            error: function () {
+
+            }
+        });
+    }
 }
 
 function VisitasPesquisa() {

@@ -132,13 +132,8 @@ $(document).ready(function () {
         });
     }
 
-    $("#StartBuscaVisita").val(true);
+  
 });
-
-function RedirecionarVisita(Id, IdNotificacao) {
-    if (Id && IdNotificacao)
-        window.location.href = '/Visita?Id=' + encodeURIComponent(Id) + '&IdNotificacao=' + IdNotificacao;
-}
 
 function InitDatatables() {
     //Datatables
@@ -745,11 +740,6 @@ function CadastroTarefas() {
 }
 
 
-//function CarregarCampanha(Id) {
-//    window.location.href = "/MaterialDivulgacao?Id=" + Id;
-//    //$.ajax(location.host + "/ListarCampanha?Id=" + Id);  
-//    //https://localhost:44387/ListarCampanha/CarregarLists?Id=1
-//}
 function CarregarCampanha(Id) {
     Id = Id;
     $.ajax({

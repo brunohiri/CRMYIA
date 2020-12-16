@@ -39,8 +39,9 @@
                                 urlAux = Item.Url.Split('?');
                                 idAux = urlAux[1].Substring(3);
                                 idNotificacao = @System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdNotificacao.ToString()));
-                                url = (urlAux[0] == "/Visita" ? "<a href=\"#\" onclick=\"RedirecionarVisita('" + idAux + "', '" + idNotificacao + "')\"><i class=\"fas fa-link\"></i></a>" :
-                                                    "<a href='" + @Item.Url + "'&IdNotificacao='" + idNotificacao + "'><i class=\"fas fa-link\"></i></a>");
+                                //url = (urlAux[0] == "/Visita" ? "<a href=\"" + Item.Url + "'&IdNotificacao='" + idNotificacao + "\"><i class=\"fas fa-link\"></i></a>" :
+                                //                    "<a href='" + @Item.Url + "'&IdNotificacao='" + idNotificacao + "'><i class=\"fas fa-link\"></i></a>");
+                                url = "<a href=" + @Item.Url + "&IdNotificacao=" + idNotificacao + "><i class=\"fas fa-link\"></i></a>";
                                 <tr>
                                     <td>@Item.Descricao.ToUpper()</td>
                                     <td class="text-center">@Html.Raw(Item.Visualizado == true ? "<span class=\"badge badge-pill badge-success\">VISUALIZADO</span>" : "<span class=\"badge badge-pill badge-warning\">NÃO VISUALIZADO</span>")</td>

@@ -120,7 +120,7 @@ namespace CRMYIA.Web.Pages
                             IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
                             Titulo = null,
                             Descricao = Entity.Descricao,
-                            Url = "/Visita?id=" + HttpUtility.UrlDecode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
+                            Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
                             Visualizado = false,
                             DataCadastro = DateTime.Now,
                             Ativo = true
@@ -183,24 +183,27 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnGetBuscarVisita(string Id = null, string IdNotificacao = null)
         {
-
-            ResultadoVisita = Business.VisitaModel.GetVisitaId(Criptography.Decrypt(HttpUtility.UrlEncode(Id)).ExtractLong());
-            
-            VisitaViewModel Resultado = (new VisitaViewModel()
+            bool status = false;
+            VisitaViewModel Resultado = null;
+            ResultadoVisita = Business.VisitaModel.GetVisitaId(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+            if (ResultadoVisita != null)
             {
-                sourceId = ResultadoVisita.IdVisita,
-                backgroundColor = ResultadoVisita.IdStatusVisitaNavigation.CorHexa,
-                borderColor = ResultadoVisita.IdStatusVisitaNavigation.CorHexa,
-                start = ResultadoVisita.DataAgendamento.Value,
-                title = ResultadoVisita.Descricao,
-                allDay = false
-            });
-
-            if (ResultadoVisita != null && IdNotificacao != null)
-            {
-                NotificacaoModel.DesativarNotificacao(Criptography.Decrypt(HttpUtility.UrlDecode(IdNotificacao)).ExtractLong());
-            }
-            return new JsonResult(new { status = true, listVisita = Resultado });
+                Resultado = (new VisitaViewModel()
+                {
+                    sourceId = ResultadoVisita.IdVisita,
+                    backgroundColor = ResultadoVisita.IdStatusVisitaNavigation.CorHexa,
+                    borderColor = ResultadoVisita.IdStatusVisitaNavigation.CorHexa,
+                    start = ResultadoVisita.DataAgendamento.Value,
+                    title = ResultadoVisita.Descricao,
+                    allDay = false
+                });
+                status = true;
+                if (IdNotificacao != null)
+                {
+                    NotificacaoModel.DesativarNotificacao(Criptography.Decrypt(HttpUtility.UrlDecode(IdNotificacao)).ExtractLong());
+                }
+            }           
+            return new JsonResult(new { status = status, listVisita = Resultado });
         }
     }
 
