@@ -101,9 +101,11 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { hashId = HashId });
         }
 
-        public IActionResult OnGetPesquisaChat()
+        public IActionResult OnGetPesquisaChat(string parametro)
         {
-            return new JsonResult(new { status = true });
+            List<Usuario> Entity = null;
+            Entity = UsuarioModel.GetAll(parametro);
+            return new JsonResult(new { status = true , entityUsuario = Entity });
         }
     }
 }

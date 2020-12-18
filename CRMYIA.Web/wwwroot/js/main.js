@@ -163,7 +163,7 @@ $(document).ready(function () {
                     parametro: $('#pesquisa-chat').val()
                 },
                 success: function (data) {
-                    response(data);
+                    response(data.entityUsuario);
                 }
             });
         },
@@ -178,8 +178,15 @@ $(document).ready(function () {
         }
     })
         .autocomplete("instance")._renderItem = function (ul, item) {
+            let url = "";
+            if (item.caminhoFoto == null || item.nomeFoto == null) {
+                url = "/img/fotoCadastro/foto-cadastro.jpeg";
+            } else {
+                url = item.caminhoFoto + item.nomeFoto;
+            }
+
             return $("<li>")
-                .append("<a><b>Código de Barra: </b>" + item.codigo_barra + "<br><b>Título: </b>" + item.titulo + " - <b> Categoria: </b>" + item.categoria + "</a><br>")
+                .append("<span><img src=" + url + " class='rounded-circle' width='40' height='51' /> <span class='badge badge-light'>0</span>" + item.nome.toUpperCase() + " </span>")
                 .appendTo(ul);
         };
 
