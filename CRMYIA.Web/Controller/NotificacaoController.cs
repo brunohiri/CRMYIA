@@ -10,6 +10,17 @@ namespace CRMYIA.Web.Controller
 {
     public class NotificacaoController : Hub
     {
+
+        public async Task Chat(string id, string url)
+        {
+            List<Notificacao> Entity = null;
+
+            //Entity = Business.NotificacaoModel.GetTodasNotificacaoId(Convert.ToInt32(id));
+            //bool status;
+            //status = Entity.Count == 0 ? false : true;
+            await Clients.All.SendAsync("ReceberChat", id, url);
+        }
+
         public async Task NotificacaoHub(string id)
         {
             List<Notificacao> Entity = null;

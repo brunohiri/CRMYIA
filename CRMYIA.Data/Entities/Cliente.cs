@@ -45,7 +45,6 @@ namespace CRMYIA.Data.Entities
         public virtual EstadoCivil IdEstadoCivilNavigation { get; set; }
         public virtual Genero IdGeneroNavigation { get; set; }
         public virtual Origem IdOrigemNavigation { get; set; }
-        public virtual TipoLead IdTipoLeadNavigation { get; set; }
         public virtual ICollection<Email> Email { get; set; }
         public virtual ICollection<Proposta> Proposta { get; set; }
         public virtual ICollection<Telefone> Telefone { get; set; }

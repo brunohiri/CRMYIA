@@ -100,5 +100,10 @@ namespace CRMYIA.Web.Pages
             var HashId = HttpUtility.UrlEncode(Criptography.Encrypt(Id));
             return new JsonResult(new { hashId = HashId });
         }
+
+        public IActionResult OnGetPesquisaChat()
+        {
+            return new JsonResult(new { status = true });
+        }
     }
 }

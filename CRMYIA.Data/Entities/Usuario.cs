@@ -8,6 +8,8 @@ namespace CRMYIA.Data.Entities
         public Usuario()
         {
             Campanha = new HashSet<Campanha>();
+            ChatIdUsuarioDeNavigation = new HashSet<Chat>();
+            ChatIdUsuarioParaNavigation = new HashSet<Chat>();
             HistoricoAcesso = new HashSet<HistoricoAcesso>();
             HistoricoLigacao = new HashSet<HistoricoLigacao>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
@@ -38,11 +40,16 @@ namespace CRMYIA.Data.Entities
         public string IP { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public string CaminhoFoto { get; set; }
+        public string NomeFoto { get; set; }
+        public bool Logado { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }
         public virtual Producao IdProducaoNavigation { get; set; }
         public virtual ICollection<Campanha> Campanha { get; set; }
+        public virtual ICollection<Chat> ChatIdUsuarioDeNavigation { get; set; }
+        public virtual ICollection<Chat> ChatIdUsuarioParaNavigation { get; set; }
         public virtual ICollection<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }

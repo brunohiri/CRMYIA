@@ -20,6 +20,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
         public virtual DbSet<Categoria> Categoria { get; set; }
+        public virtual DbSet<Chat> Chat { get; set; }
         public virtual DbSet<Cidade> Cidade { get; set; }
         public virtual DbSet<Classificacao> Classificacao { get; set; }
         public virtual DbSet<Cliente> Cliente { get; set; }
@@ -37,7 +38,10 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual DbSet<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
-        public virtual DbSet<KPIMeta> KPIMeta { get; set; }
+        public virtual DbSet<KPICargo> KPICargo { get; set; }
+        public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
+        public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
+        public virtual DbSet<KPIServico> KPIServico { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Meta> Meta { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
@@ -157,6 +161,25 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Linha_Categoria");
             });
 
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.HasKey(e => e.IdChat);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Mensagem).HasColumnType("text");
+
+                entity.HasOne(d => d.IdUsuarioDeNavigation)
+                    .WithMany(p => p.ChatIdUsuarioDeNavigation)
+                    .HasForeignKey(d => d.IdUsuarioDe)
+                    .HasConstraintName("Usuario_Chat_De");
+
+                entity.HasOne(d => d.IdUsuarioParaNavigation)
+                    .WithMany(p => p.ChatIdUsuarioParaNavigation)
+                    .HasForeignKey(d => d.IdUsuarioPara)
+                    .HasConstraintName("Usuario_Chat_Para");
+            });
+
             modelBuilder.Entity<Cidade>(entity =>
             {
                 entity.HasKey(e => e.IdCidade);
@@ -268,11 +291,6 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdOrigem)
                     .HasConstraintName("Origem_Cliente");
-
-                entity.HasOne(d => d.IdTipoLeadNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdTipoLead)
-                    .HasConstraintName("TipoLead_Cliente");
             });
 
             modelBuilder.Entity<Corretora>(entity =>
@@ -837,20 +855,66 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_HistoricoProposta");
             });
 
-            modelBuilder.Entity<KPIMeta>(entity =>
+            modelBuilder.Entity<KPICargo>(entity =>
             {
-                entity.HasKey(e => e.IdKPIMeta);
+                entity.HasKey(e => e.IdKPICargo);
+
+                entity.Property(e => e.Cargo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<KPIMetaValor>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIMetaValor);
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Estipulado).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
 
                 entity.HasOne(d => d.IdTipoLeadNavigation)
-                    .WithMany(p => p.KPIMeta)
+                    .WithMany(p => p.KPIMetaValor)
                     .HasForeignKey(d => d.IdTipoLead)
-                    .HasConstraintName("TipoLead_KPIMeta");
+                    .HasConstraintName("TipoLead_KPIMetaValor");
+            });
+
+            modelBuilder.Entity<KPIMetaVida>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIMetaVida);
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Estipulado).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.IdTipoLeadNavigation)
+                    .WithMany(p => p.KPIMetaVida)
+                    .HasForeignKey(d => d.IdTipoLead)
+                    .HasConstraintName("TipoLead_KPIMetaVida");
+            });
+
+            modelBuilder.Entity<KPIServico>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIServico);
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Perfil)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Linha>(entity =>
@@ -1306,11 +1370,29 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.MetaAte).HasColumnType("datetime");
+
+                entity.Property(e => e.MetaDe).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdKPICargoNavigation)
+                    .WithMany(p => p.TipoLead)
+                    .HasForeignKey(d => d.IdKPICargo)
+                    .HasConstraintName("KPICargo_TipoLead");
+
+                entity.HasOne(d => d.IdKPIServicoNavigation)
+                    .WithMany(p => p.TipoLead)
+                    .HasForeignKey(d => d.IdKPIServico)
+                    .HasConstraintName("KPIServico_TipoLead");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasKey(e => e.IdUsuario);
+
+                entity.Property(e => e.CaminhoFoto)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Codigo)
                     .HasMaxLength(50)
@@ -1338,6 +1420,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeFoto)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Senha)

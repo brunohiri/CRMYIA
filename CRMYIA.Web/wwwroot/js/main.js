@@ -131,7 +131,80 @@ $(document).ready(function () {
             $(this).addClass('active');
         });
     }
+    // Atribui evento e função para limpeza dos campos
+    $('#pesquisa-chat').on('input', limpaCampos);
 
+    // Dispara o Autocomplete a partir do segundo caracter
+    $("#pesquisa-chat").autocomplete({
+        minLength: 2,
+        source: function (request, response) {
+            $.ajax({
+                url: "/Index?handler=PesquisaChat",
+                dataType: "json",
+                data: {
+                    acao: 'autocomplete',
+                    parametro: $('#pesquisa-chat').val()
+                },
+                success: function (data) {
+                    response(data);
+                }
+            });
+        },
+        focus: function (event, ui) {
+            $("#pesquisa-chat").val(ui.item.titulo);
+            carregarDados();
+            return false;
+        },
+        select: function (event, ui) {
+            $("#pesquisa-chat").val(ui.item.titulo);
+            return false;
+        }
+    })
+        .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .append("<a><b>Código de Barra: </b>" + item.codigo_barra + "<br><b>Título: </b>" + item.titulo + " - <b> Categoria: </b>" + item.categoria + "</a><br>")
+                .appendTo(ul);
+        };
+
+    // Função para carregar os dados da consulta nos respectivos campos
+    function carregarDados() {
+        var busca = $('#pesquisa-chat').val();
+
+        if (busca != "" && busca.length >= 2) {
+            $.ajax({
+                url: "consulta.php",
+                dataType: "json",
+                data: {
+                    acao: 'consulta',
+                    parametro: $('#pesquisa-chat').val()
+                },
+                success: function (data) {
+                    $('#codigo_barra').val(data[0].codigo_barra);
+                    $('#titulo_livro').val(data[0].titulo);
+                    $('#categoria').val(data[0].categoria);
+                    $('#valor_compra').val(data[0].valor_compra);
+                    $('#valor_venda').val(data[0].valor_venda);
+                    $('#data_cadastro').val(data[0].data_cadastro);
+                    $('#status').val(data[0].status);
+                }
+            });
+        }
+    }
+
+    // Função para limpar os campos caso a busca esteja vazia
+    function limpaCampos() {
+        var busca = $('#pesquisa-chat').val();
+
+        if (busca == "") {
+            $('#codigo_barra').val('');
+            $('#titulo_livro').val('')
+            $('#categoria').val('');
+            $('#valor_compra').val('');
+            $('#valor_venda').val('');
+            $('#data_cadastro').val('');
+            $('#status').val('')
+        }
+    }
   
 });
 
@@ -792,6 +865,12 @@ $(window).on('beforeunload', function () {
 
 $(document).on('submit', 'form', function () {
     displayBusyIndicator();
+});
+
+$(document).on('click', '.float-open', function () {
+    $('.float-open').addClass('d-none');
+    $('.float-chat').addClass('d-block');
+    //lembrar de nao encerrar um as conversa
 });
 
 function displayBusyIndicator() {
