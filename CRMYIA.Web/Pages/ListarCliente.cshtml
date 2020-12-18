@@ -19,7 +19,7 @@
                         <tr>
                             <th width="15%">Nome</th>
                             <th width="10%">Origem</th>
-                            <th width="10%">Tipo</th>
+                            @*<th width="10%">Tipo</th>*@
                             <th width="10%">Corretor</th>
                             <th width="15%">Cidade/UF</th>
                             <th width="15%">Cadastro</th>
@@ -35,7 +35,7 @@
                         <tr>
                             <td>@(Item.Nome.Length > 30 ? Item.Nome.Substring(0,30) + "..." : Item.Nome)</td>
                             <td>@Item.IdOrigemNavigation?.Descricao</td>
-                            <td>@Item.IdTipoLeadNavigation?.Descricao</td>
+                            @*<td>@Item.IdTipoLeadNavigation?.Descricao</td>*@
                             <td>@(Item.UsuarioCliente == null || Item.UsuarioCliente.Count == 0 ? "Sem Corretor" : Item.UsuarioCliente?.FirstOrDefault().IdUsuarioNavigation?.Nome)</td>
                             <td>@(Item.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", Item.IdCidadeNavigation.Descricao, Item.IdCidadeNavigation.IdEstadoNavigation.Sigla))</td>
                             <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>

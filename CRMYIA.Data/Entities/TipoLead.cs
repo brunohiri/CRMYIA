@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public TipoLead()
         {
+            Cliente = new HashSet<Cliente>();
             KPIMetaValor = new HashSet<KPIMetaValor>();
             KPIMetaVida = new HashSet<KPIMetaVida>();
         }
@@ -21,6 +22,7 @@ namespace CRMYIA.Data.Entities
 
         public virtual KPICargo IdKPICargoNavigation { get; set; }
         public virtual KPIServico IdKPIServicoNavigation { get; set; }
+        public virtual ICollection<Cliente> Cliente { get; set; }
         public virtual ICollection<KPIMetaValor> KPIMetaValor { get; set; }
         public virtual ICollection<KPIMetaVida> KPIMetaVida { get; set; }
     }

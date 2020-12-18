@@ -291,6 +291,11 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdOrigem)
                     .HasConstraintName("Origem_Cliente");
+
+                entity.HasOne(d => d.IdTipoLeadNavigation)
+                    .WithMany(p => p.Cliente)
+                    .HasForeignKey(d => d.IdTipoLead)
+                    .HasConstraintName("TipoLead_Cliente");
             });
 
             modelBuilder.Entity<Corretora>(entity =>

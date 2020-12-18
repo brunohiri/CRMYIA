@@ -131,6 +131,23 @@ $(document).ready(function () {
             $(this).addClass('active');
         });
     }
+
+    $('input[type="file"]').change(function () {
+        //alert("A file has been selected.");
+        if (this.files && this.files[0]) {
+
+            var FR = new FileReader();
+
+            FR.addEventListener("load", function (e) {
+                document.getElementById("imagem").src = e.target.result;
+                document.getElementById("imagem").value = e.target.result;
+                var basee = e.target.result;
+            });
+
+            FR.readAsDataURL(this.files[0]);
+        }
+    });
+
     // Atribui evento e função para limpeza dos campos
     $('#pesquisa-chat').on('input', limpaCampos);
 

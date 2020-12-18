@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
@@ -17,9 +20,15 @@ namespace CRMYIA.Web.Pages
     public class NovoUsuarioModel : PageModel
     {
         #region Propriedades
-        readonly IConfiguration _configuration;
+        private IHostingEnvironment _environment;
+        private IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
+
+        [BindProperty]
+        public IFormFile NomeArquivoFoto { get; set; }
+        [BindProperty]
+        public string ImagemDiferente { get; set; }
 
         [BindProperty]
         public Usuario Entity { get; set; }
@@ -40,9 +49,10 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Construtores
-        public NovoUsuarioModel(IConfiguration configuration)
+        public NovoUsuarioModel(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
+            _environment = environment;
         }
         #endregion
 
@@ -89,7 +99,7 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true, List = ListUsuario.Select(x => new { IdUsuario = x.IdUsuario, Nome = x.Nome }).ToList() });
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             try
             {
@@ -128,6 +138,16 @@ namespace CRMYIA.Web.Pages
                                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");
                             else
                             {
+                                string NomeArquivoOriginal = NomeArquivoFoto.FileName;
+                                string NomeArquivo = string.Empty;
+                                NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
+                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"], NomeArquivo);
+                                using (var fileStream = new FileStream(file, FileMode.Create))
+                                {
+                                    await NomeArquivoFoto.CopyToAsync(fileStream);
+                                }
+                                Entity.CaminhoFoto = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"]);
+                                Entity.NomeFoto = NomeArquivo;
                                 UsuarioModel.Add(Entity);
                                 UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = UsuarioIdPerfil, Ativo = true });
                                 if (IdUsuarioHierarquia.HasValue)
@@ -138,6 +158,27 @@ namespace CRMYIA.Web.Pages
                         }
                         else
                         {
+                            string NomeArquivo = string.Empty;
+                            if (!string.IsNullOrEmpty(ImagemDiferente) && NomeArquivoFoto != null)
+                            {
+                                string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"], ImagemDiferente);
+                                if ((System.IO.File.Exists(_imageToBeDeleted)))
+                                {
+                                    System.IO.File.Delete(_imageToBeDeleted);
+                                }
+                                string NomeArquivoOriginal = NomeArquivoFoto.FileName;
+
+                                NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
+                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"], NomeArquivo);
+                                using (var fileStream = new FileStream(file, FileMode.Create))
+                                {
+                                    await NomeArquivoFoto.CopyToAsync(fileStream);
+                                }
+                            }
+                            else
+                            {
+                                NomeArquivo = ImagemDiferente;
+                            }
                             if (!Entity.Senha.IsNullOrEmpty())
                                 Entity.Senha = Criptography.Encrypt(Entity.Senha);
                             UsuarioModel.Update(Entity);
