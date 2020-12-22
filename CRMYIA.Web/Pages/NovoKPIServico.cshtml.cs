@@ -13,23 +13,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace CRMYIA.Web.Pages
 {
-    public class NovoTipoLeadModel : PageModel
+    public class NovoKPIServico : PageModel
     {
         #region Propriedades
         readonly IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
+
         [BindProperty]
-        public List<KPIServico> ListKPIServico { get; set; }
-        [BindProperty]
-        public List<KPICargo> ListKPICargo { get; set; }
-        [BindProperty]
-        public TipoLead Entity { get; set; }
+        public KPIServico Entity { get; set; }
 
         #endregion
 
         #region Construtores
-        public NovoTipoLeadModel(IConfiguration configuration)
+        public NovoKPIServico(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -39,12 +36,10 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet(string Id = null)
         {
             if (Id.IsNullOrEmpty())
-                Entity = new TipoLead();
+                Entity = new KPIServico();
             else
-                Entity =TipoLeadModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                Entity = KPIServicoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
-
-            CarregarLists();
             return Page();
         }
 
@@ -52,10 +47,10 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
-                if (Entity.IdTipoLead == 0)
-                    TipoLeadModel.Add(Entity);
+                if (Entity.IdKPIServico == 0)
+                    KPIServicoModel.Add(Entity);
                 else
-                    TipoLeadModel.Update(Entity);
+                    KPIServicoModel.Update(Entity);
 
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
             }
@@ -66,10 +61,5 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
-        public void CarregarLists()
-        {
-            ListKPIServico = KPIServicoModel.GetList();
-            ListKPICargo = KPICargoModel.GetList();
-        }
     }
 }

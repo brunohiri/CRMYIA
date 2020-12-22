@@ -13,23 +13,21 @@ using Microsoft.Extensions.Configuration;
 
 namespace CRMYIA.Web.Pages
 {
-    public class NovoTipoLeadModel : PageModel
+    public class NovoKPIMetaValorModel : PageModel
     {
         #region Propriedades
         readonly IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
         [BindProperty]
-        public List<KPIServico> ListKPIServico { get; set; }
+        public List<TipoLead> ListTipoLead { get; set; }
         [BindProperty]
-        public List<KPICargo> ListKPICargo { get; set; }
-        [BindProperty]
-        public TipoLead Entity { get; set; }
+        public KPIMetaValor Entity { get; set; }
 
         #endregion
 
         #region Construtores
-        public NovoTipoLeadModel(IConfiguration configuration)
+        public NovoKPIMetaValorModel(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -39,9 +37,9 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet(string Id = null)
         {
             if (Id.IsNullOrEmpty())
-                Entity = new TipoLead();
+                Entity = new KPIMetaValor();
             else
-                Entity =TipoLeadModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                Entity =KPIMetaValorModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
 
             CarregarLists();
@@ -53,9 +51,9 @@ namespace CRMYIA.Web.Pages
             try
             {
                 if (Entity.IdTipoLead == 0)
-                    TipoLeadModel.Add(Entity);
+                    KPIMetaValorModel.Add(Entity);
                 else
-                    TipoLeadModel.Update(Entity);
+                    KPIMetaValorModel.Update(Entity);
 
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
             }
@@ -68,8 +66,7 @@ namespace CRMYIA.Web.Pages
         #endregion
         public void CarregarLists()
         {
-            ListKPIServico = KPIServicoModel.GetList();
-            ListKPICargo = KPICargoModel.GetList();
+            ListTipoLead = TipoLeadModel.GetList();
         }
     }
 }

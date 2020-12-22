@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class TipoLeadModel
+    public class KPIMetaValorModel
     {
         #region Propriedades
         #endregion
@@ -21,16 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static TipoLead Get(long IdTipoLead)
+        public static KPIMetaValor Get(long IdKPIMetaValor)
         {
-            TipoLead Entity = null;
+            KPIMetaValor Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.TipoLead
+                    Entity = context.KPIMetaValor
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdTipoLead == IdTipoLead)
+                        .Where(x => x.Ativo && x.IdKPIMetaValor == IdKPIMetaValor)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -42,17 +42,15 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<TipoLead> GetList()
+        public static List<KPIMetaValor> GetList()
         {
-            List<TipoLead> ListEntity = null;
+            List<KPIMetaValor> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.TipoLead
+                    ListEntity = context.KPIMetaValor
                         .Where(x => x.Ativo)
-                        .Include(KPICargo => KPICargo.IdKPICargoNavigation)
-                        .Include(KPIServico => KPIServico.IdKPIServicoNavigation)
                         .AsNoTracking()
                         .OrderBy(o => o.Descricao).ToList();
                 }
@@ -64,20 +62,20 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<TipoLead> GetListIdDescricao()
+        public static List<KPIMetaValor> GetListIdDescricao()
         {
-            List<TipoLead> ListEntity = null;
+            List<KPIMetaValor> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.TipoLead
+                    ListEntity = context.KPIMetaValor
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .Select(y => new TipoLead()
+                        .Select(y => new KPIMetaValor()
                         {
-                            IdTipoLead = y.IdTipoLead,
+                            IdKPIMetaValor = y.IdKPIMetaValor,
                             Descricao = y.Descricao
                         }).OrderBy(o => o.Descricao).ToList();
                 }
@@ -89,13 +87,13 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(TipoLead Entity)
+        public static void Add(KPIMetaValor Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.TipoLead.Add(Entity);
+                    context.KPIMetaValor.Add(Entity);
                     context.SaveChanges();
                 }
             }
@@ -105,13 +103,13 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(TipoLead Entity)
+        public static void Update(KPIMetaValor Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.TipoLead.Update(Entity);
+                    context.KPIMetaValor.Update(Entity);
                     context.SaveChanges();
                 }
             }
