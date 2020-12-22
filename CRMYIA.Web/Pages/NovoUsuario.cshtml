@@ -10,7 +10,7 @@
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
-    <form method="post" autocomplete="off" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -30,9 +30,9 @@
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuario">
 
-                @if (@Model.Entity.IdUsuario! > 0)
+                @if (@Model.Entity.IdUsuario !> 0)
                 {
-                    <input type="hidden" class="form-control" asp-for="@Model.NomeArquivoFoto" id="@Model.NomeArquivoFoto">
+                    <input type="hidden" class="form-control" asp-for="@Model.ImagemDiferente" id="@Model.ImagemDiferente">
                 }
                 <div class="col-sm-2">
                     <div class="form-group">
@@ -143,9 +143,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <label for="CaminhoFoto">Selecione um arquivo:</label>
+                        <label for="NomeArquivoFoto">Selecione um Arquivo</label>
                         <div class="input-group">
-                            <input type="file" id="CaminhoFoto" asp-for="@Model.Entity.CaminhoFoto" name="CaminhoFoto" accept=".png">
+                            <input type="file" id="NomeArquivoFoto" asp-for="NomeArquivoFoto" name="NomeArquivoFoto" accept=".png">
                         </div>
                     </div>
                 </div>

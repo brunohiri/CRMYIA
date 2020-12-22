@@ -69,6 +69,7 @@ namespace CRMYIA.Web.Pages
                     Entity.Senha = Criptography.Decrypt(Entity.Senha);
                     ConfirmarSenha = Entity.Senha;
                 }
+                ImagemDiferente = Entity.NomeFoto;
                 UsuarioIdPerfil = Entity.UsuarioPerfil != null && Entity.UsuarioPerfil.Count() > 0 ? Entity.UsuarioPerfil.FirstOrDefault().IdPerfil : null;
                 IdUsuarioHierarquia =  Entity.UsuarioHierarquiaIdUsuarioSlaveNavigation != null && Entity.UsuarioHierarquiaIdUsuarioSlaveNavigation.Count() > 0 ? Entity.UsuarioHierarquiaIdUsuarioSlaveNavigation.FirstOrDefault().IdUsuarioMaster : null;
             }
@@ -146,8 +147,9 @@ namespace CRMYIA.Web.Pages
                                 {
                                     await NomeArquivoFoto.CopyToAsync(fileStream);
                                 }
-                                Entity.CaminhoFoto = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"]);
+                                Entity.CaminhoFoto = "ArquivoFoto/";
                                 Entity.NomeFoto = NomeArquivo;
+                                Entity.Logado = true;
                                 UsuarioModel.Add(Entity);
                                 UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = UsuarioIdPerfil, Ativo = true });
                                 if (IdUsuarioHierarquia.HasValue)

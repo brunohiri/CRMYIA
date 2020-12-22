@@ -361,6 +361,31 @@ namespace CRMYIA.Business
             }
             return IdPerfil;
         }
+
+        public static List<Usuario> GetAll(string parametro)
+        {
+            List<Usuario> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Usuario
+                        .Where(x => x.Nome.Contains(parametro))
+                        .Select(x => new Usuario() { 
+                            IdUsuario = x.IdUsuario,
+                            Nome = x.Nome,
+                            CaminhoFoto = x.CaminhoFoto,
+                            NomeFoto = x.NomeFoto
+                        })
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
         #endregion
     }
 }
