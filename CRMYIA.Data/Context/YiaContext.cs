@@ -1419,6 +1419,11 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Logado)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Login)
                     .HasMaxLength(200)
                     .IsUnicode(false);

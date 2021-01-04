@@ -77,6 +77,7 @@ namespace CRMYIA.Web.Pages
                         #endregion
 
                         #region Módulos
+
                         List<Modulo> ListEntity = ModuloModel.GetList(EntityUsuario.IdUsuario);
 
                         if ((ListEntity == null) || (ListEntity.Count == 0))

@@ -95,6 +95,29 @@ namespace CRMYIA.Data.Model
             }
             return Titulo;
         }
+
+        public static string SetStatusChat(EnumeradorModel.StatusChat StatusChat)
+        {
+            string Status = string.Empty;
+            switch (StatusChat)
+            {
+                case EnumeradorModel.StatusChat.Ativo:
+                    Status = "success";
+                    break;
+                case EnumeradorModel.StatusChat.Ausente:
+                    Status = "warning";
+                    break;
+                case EnumeradorModel.StatusChat.NaoIncomodar:
+                    Status = "danger";
+                    break;
+                case EnumeradorModel.StatusChat.Invisivel:
+                    Status = "light";
+                    break;
+                default:
+                    break;
+            }
+            return Status;
+        }
         #endregion
     }
 }
