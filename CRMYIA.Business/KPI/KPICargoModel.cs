@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class TipoLeadModel
+    public class KPICargoModel
     {
         #region Propriedades
         #endregion
@@ -21,16 +21,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static TipoLead Get(long IdTipoLead)
+        public static KPICargo Get(int IdKPICargo)
         {
-            TipoLead Entity = null;
+            KPICargo Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.TipoLead
+                    Entity = context.KPICargo
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdTipoLead == IdTipoLead)
+                        .Where(x => x.Ativo && x.IdKPICargo == IdKPICargo)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -42,19 +42,17 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<TipoLead> GetList()
+        public static List<KPICargo> GetList()
         {
-            List<TipoLead> ListEntity = null;
+            List<KPICargo> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.TipoLead
+                    ListEntity = context.KPICargo
                         .Where(x => x.Ativo)
-                        .Include(KPICargo => KPICargo.IdKPICargoNavigation)
-                        .Include(KPIServico => KPIServico.IdKPIServicoNavigation)
                         .AsNoTracking()
-                        .OrderBy(o => o.Descricao).ToList();
+                        .OrderBy(o => o.Cargo).ToList();
                 }
             }
             catch (Exception)
@@ -64,22 +62,22 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<TipoLead> GetListIdDescricao()
+        public static List<KPICargo> GetListIdCargo()
         {
-            List<TipoLead> ListEntity = null;
+            List<KPICargo> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.TipoLead
+                    ListEntity = context.KPICargo
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
-                        .Select(y => new TipoLead()
+                        .Select(y => new KPICargo()
                         {
-                            IdTipoLead = y.IdTipoLead,
-                            Descricao = y.Descricao
-                        }).OrderBy(o => o.Descricao).ToList();
+                            IdKPICargo = y.IdKPICargo,
+                            Cargo = y.Cargo
+                        }).OrderBy(o => o.Cargo).ToList();
                 }
             }
             catch (Exception)
@@ -89,13 +87,13 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(TipoLead Entity)
+        public static void Add(KPICargo Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.TipoLead.Add(Entity);
+                    context.KPICargo.Add(Entity);
                     context.SaveChanges();
                 }
             }
@@ -105,13 +103,13 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(TipoLead Entity)
+        public static void Update(KPICargo Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.TipoLead.Update(Entity);
+                    context.KPICargo.Update(Entity);
                     context.SaveChanges();
                 }
             }

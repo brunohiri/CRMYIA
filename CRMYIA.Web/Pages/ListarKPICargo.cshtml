@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.ListarTipoLeadModel
+@model CRMYIA.Web.Pages.ListarKPICargoModel
 @{
     ViewData["Title"] = "Listar";
-    ViewData["Pagina"] = "KPI";
+    ViewData["Pagina"] = "KPICargo";
 }
 @using CRMYIA.Business.Util;
 
@@ -17,11 +17,8 @@
                 <table id="tableListagem" class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
-                            <th>Descrição</th>
-                            <th>Meta De</th>
-                            <th>Meta Até</th>
                             <th>Cargo</th>
-                            <th>Serviço</th>
+                            <th>Descrição</th>
                             <th>Status</th>
                             <th></th>
                         </tr>
@@ -32,14 +29,11 @@
                             foreach (var Item in Model.ListEntity)
                             {
                         <tr>
+                            <td>@Item.Cargo</td>
                             <td>@Item.Descricao</td>
-                            <td>@Item.MetaDe.Value.ToString("dd/MM/yyyy")</td>
-                            <td>@Item.MetaAte.Value.ToString("dd/MM/yyyy")</td>
-                            <td>@Item.IdKPICargoNavigation.Cargo</td>
-                            <td>@Item.IdKPIServicoNavigation.Perfil</td>
                             <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
                             <td>
-                                <a asp-page="/NovoTipoLead" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdTipoLead.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                <a asp-page="/NovoKPICargo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdKPICargo.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
                             </td>
                         </tr>
                             }

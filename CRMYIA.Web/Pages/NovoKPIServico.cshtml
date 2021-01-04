@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.NovoTipoLeadModel
+@model CRMYIA.Web.Pages.NovoKPIServico
 @{
     ViewData["Title"] = "Novo";
-    ViewData["Pagina"] = "KPI";
+    ViewData["Pagina"] = "KPIServico";
 }
 
 <div class="card card-default">
@@ -27,49 +27,17 @@
                 </div>
             </div>
             <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdKPIServico">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>Serviço</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdKPIServico">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListKPIServico)
-                            {
-                                <option value="@Item.IdKPIServico">@(Item.Perfil)</option>
-                            }
-                        </select>
+                        <label>Perfil</label>
+                        <input type="text" class="form-control" placeholder="Perfil" required asp-for="@Model.Entity.Perfil">
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Cargo</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdKPICargo">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListKPICargo)
-                            {
-                                <option value="@Item.IdKPICargo">@(Item.Cargo)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdTipoLead">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Descrição</label>
-                        <input type="text" class="form-control" placeholder="Descrição" required asp-for="@Model.Entity.Descricao">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Meta De</label>
-                        <input type="date" class="form-control" placeholder="Data de Nascimento ou Abertura" asp-for="@Model.Entity.MetaDe">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Até</label>
-                        <input type="date" class="form-control" placeholder="Data de Nascimento ou Abertura" asp-for="@Model.Entity.MetaAte">
+                        <input type="text" class="form-control" placeholder="Descrição"  asp-for="@Model.Entity.Descricao">
                     </div>
                 </div>
                 <div class="col-sm-2">
