@@ -34,7 +34,12 @@ namespace CRMYIA.Web
             services.AddRazorPages()
             .AddRazorRuntimeCompilation();
 
-            services.AddSignalR();
+            //services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+                //options.KeepAliveInterval = TimeSpan.FromSeconds(3);
+            });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

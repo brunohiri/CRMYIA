@@ -42,7 +42,7 @@ namespace CRMYIA.Data.Entities
         public bool Ativo { get; set; }
         public string CaminhoFoto { get; set; }
         public string NomeFoto { get; set; }
-        public bool Logado { get; set; }
+        public string Logado { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }

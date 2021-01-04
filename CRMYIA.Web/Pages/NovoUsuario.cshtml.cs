@@ -139,17 +139,24 @@ namespace CRMYIA.Web.Pages
                                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");
                             else
                             {
-                                string NomeArquivoOriginal = NomeArquivoFoto.FileName;
-                                string NomeArquivo = string.Empty;
-                                NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
-                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"], NomeArquivo);
-                                using (var fileStream = new FileStream(file, FileMode.Create))
+                                string NomeArquivo = "foto-cadastro.jpeg";
+                                string CaminhoFoto = "img/fotoCadastro/";
+                                if (NomeArquivoFoto != null)
                                 {
-                                    await NomeArquivoFoto.CopyToAsync(fileStream);
+                                    string NomeArquivoOriginal = NomeArquivoFoto.FileName;
+                                    NomeArquivo = string.Empty;
+                                    NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
+                                    var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"], NomeArquivo);
+                                    using (var fileStream = new FileStream(file, FileMode.Create))
+                                    {
+                                        await NomeArquivoFoto.CopyToAsync(fileStream);
+                                        CaminhoFoto = "ArquivoFoto/";
+                                    }
                                 }
-                                Entity.CaminhoFoto = "ArquivoFoto/";
+                               
+                                Entity.CaminhoFoto = CaminhoFoto;
                                 Entity.NomeFoto = NomeArquivo;
-                                Entity.Logado = true;
+                                Entity.Logado = MensagemModel.SetStatusChat(Business.Util.EnumeradorModel.StatusChat.Ativo);
                                 UsuarioModel.Add(Entity);
                                 UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = UsuarioIdPerfil, Ativo = true });
                                 if (IdUsuarioHierarquia.HasValue)
@@ -216,7 +223,7 @@ namespace CRMYIA.Web.Pages
                         }
 
 
-                        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                        //Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }
                 }
             }

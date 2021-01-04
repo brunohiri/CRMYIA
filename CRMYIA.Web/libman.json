@@ -62,6 +62,10 @@
         "package.json",
         "README.md"
       ]
+    },
+    {
+      "library": "knockout@3.5.1",
+      "destination": "wwwroot/knockout/"
     }
   ]
 }

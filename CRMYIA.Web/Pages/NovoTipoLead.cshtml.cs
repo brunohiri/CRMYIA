@@ -19,7 +19,10 @@ namespace CRMYIA.Web.Pages
         readonly IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
-
+        [BindProperty]
+        public List<KPIServico> ListKPIServico { get; set; }
+        [BindProperty]
+        public List<KPICargo> ListKPICargo { get; set; }
         [BindProperty]
         public TipoLead Entity { get; set; }
 
@@ -38,8 +41,10 @@ namespace CRMYIA.Web.Pages
             if (Id.IsNullOrEmpty())
                 Entity = new TipoLead();
             else
-                Entity = TipoLeadModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                Entity =TipoLeadModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
+
+            CarregarLists();
             return Page();
         }
 
@@ -61,5 +66,10 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
+        public void CarregarLists()
+        {
+            ListKPIServico = KPIServicoModel.GetList();
+            ListKPICargo = KPICargoModel.GetList();
+        }
     }
 }

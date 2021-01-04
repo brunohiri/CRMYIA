@@ -73,5 +73,15 @@ namespace CRMYIA.Business.Util
             Fechamento = 5
         }
         #endregion
+
+        #region Chat
+        public enum StatusChat
+        {
+            Ativo,
+            Ausente,
+            NaoIncomodar,
+            Invisivel
+        }
+        #endregion
     }
 }

@@ -51,6 +51,8 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.TipoLead
                         .Where(x => x.Ativo)
+                        .Include(KPICargo => KPICargo.IdKPICargoNavigation)
+                        .Include(KPIServico => KPIServico.IdKPIServicoNavigation)
                         .AsNoTracking()
                         .OrderBy(o => o.Descricao).ToList();
                 }

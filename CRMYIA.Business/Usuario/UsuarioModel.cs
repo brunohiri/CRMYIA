@@ -375,7 +375,8 @@ namespace CRMYIA.Business
                             IdUsuario = x.IdUsuario,
                             Nome = x.Nome,
                             CaminhoFoto = x.CaminhoFoto,
-                            NomeFoto = x.NomeFoto
+                            NomeFoto = x.NomeFoto,
+                            Logado = x.Logado
                         })
                         .ToList();
                 }
