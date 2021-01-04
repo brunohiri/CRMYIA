@@ -55,7 +55,7 @@ namespace CRMYIA.Web.Pages
             
             if (Inicio == null && Fim == null)
             {
-                DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+                DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
                 DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
             }
             else
