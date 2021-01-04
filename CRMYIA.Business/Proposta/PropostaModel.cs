@@ -189,6 +189,43 @@ namespace CRMYIA.Business
                             ProximoContatoComCliente = s.ProximoContatoComCliente
                         }).ToList();
                     }
+                    else
+                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Gerente))
+                    {
+                        ListEntity = context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(m => m.IdOperadoraNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .Where(x => x.Ativo
+                            && x.DataSolicitacao.Value >= DataInicio
+                            && x.DataSolicitacao.Value <= DataFim
+                         )
+                        .AsNoTracking()
+                        .AsEnumerable()
+                        .OrderBy(o => o.DataCadastro)
+                        .ToList()
+                        .Select(s => new Proposta()
+                        {
+                            IdProposta = s.IdProposta,
+                            IdClienteNavigation = s.IdClienteNavigation,
+                            IdFaseProposta = s.IdFaseProposta,
+                            IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                            IdUsuarioCorretor = s.IdUsuarioCorretor,
+                            IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                            IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                            DataCadastro = s.DataCadastro,
+                            ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas,
+                            ProximoContatoComCliente = s.ProximoContatoComCliente
+                        }).ToList();
+                    }
 
                 }
             }

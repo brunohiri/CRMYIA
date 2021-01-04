@@ -44,7 +44,7 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet()
         {
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 1);
+            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
             ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
 
