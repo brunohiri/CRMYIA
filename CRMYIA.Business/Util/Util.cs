@@ -246,11 +246,11 @@ namespace CRMYIA.Business.Util
         #region Tratar Datas
         public static DateTime GetFirstDayOfMonth(int month)
         {
-            return new DateTime(DateTime.Now.Year, month, 1);
+            return new DateTime(DateTime.Now.Year, month == 0 ? 1 : month, 1);
         }
         public static DateTime GetLastDayOfMonth(int month)
         {
-            return new DateTime(DateTime.Now.Year, month, DateTime.DaysInMonth(DateTime.Now.Year, month));
+            return new DateTime(DateTime.Now.Year, month == 0 ? 1 : month, DateTime.DaysInMonth(DateTime.Now.Year, month == 0 ? 1 : month));
         }
         #endregion
         #endregion
