@@ -63,6 +63,8 @@
         self.buscarContato = function (item) {
             self.para(item);
             console.log(self.para().idUsuario(), self.para().nome());
+            $('.direct-chat').removeClass('direct-chat-contacts-open');
+            chat.invoke("SendPrivate", String(self.para().idUsuario()), String(self.para().nome()));
         };
 
         //null
@@ -102,8 +104,9 @@
                 var receiver = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
                 var message = text.substring(text.indexOf(")") + 1, text.length);
 
-                if (receiver.length > 0 && message.length > 0)
-                    connection.invoke("SendPrivate", receiver.trim(), message.trim());
+                if (receiver.length > 0 && message.length > 0) {
+                  //connection.invoke("SendPrivate", receiver.trim(), message.trim());
+                }    
             }
             else {
                 if (self.joinedRoom().length > 0 && self.message().length > 0)

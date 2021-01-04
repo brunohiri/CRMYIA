@@ -129,7 +129,8 @@ namespace CRMYIA.Web.Pages
                     if (Mensagem == null)
                     {
                         Entity.IP = HttpContext.Connection.RemoteIpAddress.ToString();
-
+                        string NomeArquivo = "foto-cadastro.jpeg";
+                        string CaminhoFoto = "img/fotoCadastro/";
                         if (Entity.IdUsuario == 0)
                         {
                             if (UsuarioModel.GetByDocumento(Entity.Documento) != null)
@@ -139,8 +140,7 @@ namespace CRMYIA.Web.Pages
                                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");
                             else
                             {
-                                string NomeArquivo = "foto-cadastro.jpeg";
-                                string CaminhoFoto = "img/fotoCadastro/";
+                                
                                 if (NomeArquivoFoto != null)
                                 {
                                     string NomeArquivoOriginal = NomeArquivoFoto.FileName;
@@ -167,13 +167,16 @@ namespace CRMYIA.Web.Pages
                         }
                         else
                         {
-                            string NomeArquivo = string.Empty;
+                            NomeArquivo = string.Empty;
+                            
                             if (!string.IsNullOrEmpty(ImagemDiferente) && NomeArquivoFoto != null)
                             {
                                 string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoFoto"], ImagemDiferente);
                                 if ((System.IO.File.Exists(_imageToBeDeleted)))
                                 {
                                     System.IO.File.Delete(_imageToBeDeleted);
+                                    Entity.CaminhoFoto = CaminhoFoto;
+                                    Entity.NomeFoto = NomeArquivo;
                                 }
                                 string NomeArquivoOriginal = NomeArquivoFoto.FileName;
 
