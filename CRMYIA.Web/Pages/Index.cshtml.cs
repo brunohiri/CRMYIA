@@ -108,11 +108,11 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true , entityUsuario = Entity });
         }
 
-        public IActionResult OnGetCarregaMensagem(long Para, long De, int Limit = 0, int NumeroDeMensagem = 0)
-        {
-            List<Chat> ListChat = null;
-            ListChat = ChatModel.CarregaMensagem(Para, De, Limit, NumeroDeMensagem);
-            return new JsonResult(new { status = true, listChat = ListChat});
-        }
+        //public IActionResult OnGetCarregaMensagem(long Para, long De, int Limit = 0, int NumeroDeMensagem = 0)
+        //{
+        //    List<Chat> ListChat = null;
+        //    ListChat = ChatModel.CarregaMensagem(Para, De, Limit, NumeroDeMensagem);
+        //    return new JsonResult(new { status = true, listChat = ListChat});
+        //}
     }
 }

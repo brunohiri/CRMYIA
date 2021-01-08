@@ -29,7 +29,7 @@ namespace CRMYIA.Business
             
         }
 
-        public static List<Notificacao> GetTodasNotificacaoId(int IdUsuario)
+        public static List<Notificacao> GetTodasNotificacaoId(long IdUsuario)
         {
             List<Notificacao> ListEntity = null;
             try

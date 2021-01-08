@@ -252,6 +252,42 @@ namespace CRMYIA.Business.Util
         {
             return new DateTime(DateTime.Now.Year, month == 0 ? 1 : month, DateTime.DaysInMonth(DateTime.Now.Year, month == 0 ? 1 : month));
         }
+
+        public static string CalculaTempo(DateTime Data)
+        {
+            var now = DateTime.Now;
+
+            TimeSpan tempo = now - Data;
+
+            string retorno = "";
+
+
+            if((tempo.TotalMilliseconds / 1000) <= 60)
+            {
+                retorno = Convert.ToInt32((tempo.TotalMilliseconds / 1000)).ToString() + " Segundos atrás";
+            }
+            else if((tempo.TotalSeconds / 60) <= 60)
+            {
+                retorno = Convert.ToInt32((tempo.TotalSeconds / 60)).ToString() + " Minutos atrás";
+            }
+            else if ((tempo.TotalMinutes / 60) <= 24)
+            {
+                retorno = Convert.ToInt32((tempo.TotalMinutes / 60)).ToString() + " Horas atrás";
+            }
+            else if ((tempo.TotalMinutes / 60) <= 30)
+            {
+                retorno = Convert.ToInt32((tempo.TotalMinutes / 60)).ToString() + " Dias atrás";
+            }
+            else
+            {
+                retorno = Convert.ToInt32(tempo).ToString() + " Anos atrás";
+            }
+           
+
+            //retorno = tempo.TotalMilliseconds.ToString();
+
+            return retorno;
+        }
         #endregion
         #endregion
     }

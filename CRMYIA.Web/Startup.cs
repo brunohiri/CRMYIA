@@ -38,6 +38,7 @@ namespace CRMYIA.Web
             services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
+                options.MaximumReceiveMessageSize = 102400000;
                 //options.KeepAliveInterval = TimeSpan.FromSeconds(3);
             });
             services.Configure<CookiePolicyOptions>(options =>
