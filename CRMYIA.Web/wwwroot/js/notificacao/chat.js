@@ -1,45 +1,145 @@
 ﻿$(document).ready(function () {
-    var ScrollListaUsuario = 250;
-    var scrollAltoBaixo = true;
     var chat = new signalR.HubConnectionBuilder().withUrl("/notificacaohub").build();
-
+   
     chat.start().then(function () {
         console.log('SignalR Started...')
-        //viewModel.roomList();
         viewModel.userList();
-        //setTimeout(function () {
-        //    if (viewModel.chatRooms().length > 0) {
-        //        viewModel.joinRoom(viewModel.chatRooms()[0]);
-        //    }
-        //}, 250);
     }).catch(function (err) {
         return console.error(err);
     });
 
     //chat.serverTimeoutInMilliseconds = 1000 * 60 * 10; // 1 second * 60 * 10 = 10 minutes.
-
-    chat.on("newMessage", function (messageView) {
-        var e_meu = messageView.de === viewModel.meuNome();
-        var mensagem = new ChatMensagem(messageView.conteudo, messageView.dataCadastro, messageView.de, e_meu, messageView.imagem);
-        viewModel.chatMensagem.push(mensagem);
-        $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 1000);
+    chat.on("NovaMensagemCaller", function (messageView) {
+            var e_meu = messageView.nome === viewModel.meuNome();
+            var mensagem = new ChatMensagem(messageView.nome, messageView.mensagem, messageView.dataCadastro, messageView.de, messageView.para, messageView.imagem, e_meu);
+            viewModel.chatMensagem.push(mensagem);
+        $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250);
+        console.log('Meu')
     });
 
-    connection.on("getProfileInfo", function (meuNome, minhaImagem) {
+    chat.on("NovaMensagem", function (messageView) {
+        var notificar = true;
+        if ((messageView.para == $('#IdUsuario').val()) && ($('.direct-chat').hasClass('chat' + messageView.de))) {
+            var e_meu = messageView.nome === viewModel.meuNome();
+            var mensagem = new ChatMensagem(messageView.nome, messageView.mensagem, messageView.dataCadastro, messageView.de, messageView.para, messageView.imagem, e_meu);
+            viewModel.chatMensagem.push(mensagem);
+            notificar = false;
+            $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250);
+            //let AudioReceberMensagem = document.getElementById('receber-mensagem');
+            //AudioReceberMensagem.play();
+
+            //var AudioReceberMensagem = $('#receber-mensagem');
+            //AudioReceberMensagem.trigger('load');
+
+            var u = document.getElementById("receber-mensagem");
+
+            function playChatSound() {
+                u.play();
+            };
+            playChatSound();
+        } 
+
+        if (notificar && messageView.para == $('#IdUsuario').val()) {
+            chat.invoke("NotificarMensagem", messageView.nome, messageView.mensagem, messageView.dataCadastro, messageView.de, messageView.para, messageView.imagem).catch(function (err) {
+                return console.log(err.toString());
+            });
+        }
+    });
+    
+
+    chat.on("getProfileInfo", function (meuNome, minhaImagem) {
         viewModel.meuNome(meuNome);
         viewModel.minhaImagem(minhaImagem);
     });
+
+    chat.on("ReceberNotificacaoMensagem", function (dados) {
+        //let audio = document.getElementById('notificacao');
+        //audio.play();
+        var html = '';
+        if (dados.length == 0 && notificacaoMensagemVazia) {
+            html = '';
+            html = '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right show">\
+                    <span class="dropdown-item dropdown-header"> 0 Mensagens</span>\
+                        <div class="dropdown-divider"></div>\
+                        <a href="/ListarNotificacao" class="dropdown-item dropdown-footer">Ver todas as mensagens</a>\
+                        <div class="dropdown-divider"></div></div>';
+            $('#notificacao-mensagem').html(html);
+            notificacaoMensagemVazia = false;
+        }
+        else if (dados.length == 0 && $("#IdUsuario").val() == dados[0].para) {
+            html = '';
+            html = '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right show">\
+                    <span class="dropdown-item dropdown-header"> 0 Mensagens</span>\
+                        <div class="dropdown-divider"></div>\
+                        <a href="/ListarNotificacao" class="dropdown-item dropdown-footer">Ver todas as mensagens</a>\
+                        <div class="dropdown-divider"></div></div>';
+            $('#notificacao-mensagem').html(html);
+        }
+       else if ($("#IdUsuario").val() == dados[0].para) {
+            var notificacaoMensagem = dados.length;
+
+            if (notificacaoMensagem > qtdNotificacaoMensagem) {
+                qtdNotificacaoMensagem = notificacaoMensagem;
+                //let AudioNotificacao = document.getElementById('notificacao');
+                //AudioNotificacao.play();
+
+                //var AudioNotificacao = $('#notificacao');
+                //AudioNotificacao.trigger('load');
+
+                //var v = document.getElementById("notificacao");
+
+                //function playChatSound() {
+                //    v.play();
+                //};
+                //playChatSound();
+            } 
+            if (!$('.notificacao-mensagem').hasClass('show')) {
+
+
+                $.each(dados, function () {
+                    if ($("#IdUsuario").val() == this.para) {
+
+                        html += '<a href="#" class="dropdown-item">\
+                                            <div class="media">\
+                                                <img src="'+ this.imagem + '" alt="User Avatar" class="img-size-50 mr-3 img-circle">\
+                                                    <div class="media-body">\
+                                                        <h3 class="dropdown-item-title">'
+                            + this.nome +
+                            '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>\
+                                                        </h3>\
+                                                        <p class="text-sm">' + this.mensagem + '</p>\
+                                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>' + this.dataCadastro + '</p>\
+                                                    </div>\
+                                        </div>\
+                                    </a>\
+                                    <div class="dropdown-divider"></div>';
+
+                    }
+                });
+                html += '<div class="dropdown-divider"></div><a href="/ListarNotificacao" class="dropdown-item dropdown-footer">Ver todas as notificações</a><div class="dropdown-divider"></div>';
+                $('.quantidade-notificacao-mensagem').html(qtdNotificacaoMensagem);
+                $('#notificacao-mensagem').html(html);
+
+            }
+        }
+        
+    });
+
+     setInterval(function () {
+        let Id = $("#IdUsuario").val();
+        connection.invoke("NotificacaoMensagemHub", Id).catch(function (err) {
+            return console.log(err.toString());
+        });
+    }, 500);
 
     function AppViewModel() {
         var self = this;
         var allBindingsAccessor = $('#lista-usuario');
         self.idUsuario = ko.observable($("#IdUsuario").val());
         self.mensagem = ko.observable("");
-        //self.chatRooms = ko.observableArray([]);
         self.chatUsers = ko.observableArray([]);
         self.chatMensagem = ko.observableArray([]);
-        //self.joinedRoom = ko.observable("");
-        //self.joinedRoomId = ko.observable("");
+        self.chatMensagem = ko.observableArray([]);
         self.numeroDeLinha = ko.observable($("#NumeroDeLinha").val());
         self.pesquisaNome = ko.observable("");
         self.limite = ko.observable($("#Limite").val());
@@ -54,17 +154,36 @@
         }
         self.filter = ko.observable("");
 
-        //scroll
-
         self.filteredChatUsers = ko.observableArray([]);
         self.barraListaUsuario = ko.observable();
 
         self.para = ko.observable(null);
         self.buscarContato = function (item) {
             self.para(item);
-            console.log(self.para().idUsuario(), self.para().nome());
+            
+            $('.direct-chat').addClass('chat' + self.para().idUsuario());
             $('.direct-chat').removeClass('direct-chat-contacts-open');
-            chat.invoke("SendPrivate", String(self.para().idUsuario()), String(self.para().nome()));
+            SelectInputChat();
+            $('#De').val(self.idUsuario());
+            $('#Para').val(self.para().idUsuario());
+            $('#Nome').val(self.meuNome())
+            chat.invoke("GetMessageHistory", String(self.para().idUsuario()), String(self.idUsuario())).then(function (result) {
+                self.chatMensagem.removeAll();
+                for (var i = 0; i < result.length; i++) {
+                    var eMeu = result[i].de == self.idUsuario();
+                    self.chatMensagem.push(new ChatMensagem(
+                        result[i].nome,
+                        result[i].mensagem,
+                        result[i].dataCadastro,
+                        result[i].de,
+                        result[i].para,
+                        result[i].imagem,
+                        eMeu
+                    ));
+                }
+            });
+
+            setTimeout(function () { $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250); }, 500)
         };
 
         //null
@@ -96,29 +215,20 @@
                     return displayName.includes(self.filter().toLowerCase());
                 });
             }
-        });
+        }); 
 
-        self.sendNewMessage = function () {
-            var text = self.message();
-            if (text.startsWith("/")) {
-                var receiver = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
-                var message = text.substring(text.indexOf(")") + 1, text.length);
-
-                if (receiver.length > 0 && message.length > 0) {
-                  //connection.invoke("SendPrivate", receiver.trim(), message.trim());
-                }    
-            }
-            else {
-                if (self.joinedRoom().length > 0 && self.message().length > 0)
-                    connection.invoke("SendToRoom", self.joinedRoom(), self.message());
-            }
-
-            self.message("");
-        }  
-
-        self.pesquisarNomeUsuario = function (form, event) {
+        self.pesquisarNomeUsuario = function (form, event) { 
             event.stopPropagation();
             self.userList();
+        }
+
+        self.enviarMensagem = function (form, event) {
+            event.stopPropagation();
+            chat.invoke('EnviarPrivado', String($('#De').val()), String($('#Para').val()), String($('#Nome').val()), String($('#Mensagem').val()), String(self.minhaImagem()))
+                .catch(function (err) {
+                return console.error(err.toString());
+            });
+            $('#Mensagem').val('')
         }
 
         self.userList = function () {
@@ -165,22 +275,24 @@
         self.dataMensagem = ko.observable(dataMensagem);
     }
 
+    function ChatMensagem(nome, mensagem, dataCadastro, de, para, imagem, eMeu) {
+        var self = this;
+        self.nomePessoaChat = ko.observable(nome);
+        self.mensagemPessoaChat = ko.observable(mensagem);
+        self.dataCadastroPessoaChat = ko.observable(dataCadastro);
+        self.dePessoaChat = ko.observable(de);
+        self.paraPessoaChat = ko.observable(para);
+        self.imagemPessoaChat = ko.observable(imagem);
+        self.eMeuPessoaChat = ko.observable(eMeu);
+    }
+
     var viewModel = new AppViewModel();
     ko.applyBindings(viewModel);
-    //bindScrollHandler();
     $(".btn-contato").on('click', function () {
         SelectInputChat();
     });
     
 });
-
-//$(document).on('click', '.idusuario-para', function () {
-//    $('.direct-chat').removeClass('direct-chat-contacts-open');
-//    SelectInputChat();
-//   $('#Para').val($(this).data('idusuario'));
-    
-//    console.log(ko);
-//});
 
 function SelectInputChat() {
     if ($("#pesquisar").hasClass("d-none")) {
@@ -195,11 +307,3 @@ function SelectInputChat() {
         $("#mensagem").addClass('d-none');
     }
 }
-
-//var bindScrollHandler = function () {
-//    $("#lista-usuario").scroll(function () {
-//        if ($("#lista-usuario").scrollTop() + $("#lista-usuario").height() > $(document).height() - 200) {
-//            console.log('foi');
-//        }
-//    });
-//};

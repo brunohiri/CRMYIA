@@ -6,7 +6,8 @@ namespace CRMYIA.Data.ViewModel
 {
     public class ChatViewModel
     {
-        public string Conteudo { get; set; }
+        public string Nome { get; set; }
+        public string Mensagem { get; set; }
         public string DataCadastro { get; set; }
         public string De { get; set; }
         public string Para { get; set; }

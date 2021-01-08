@@ -22,20 +22,11 @@ namespace CRMYIA.Web.Controller
         public readonly static List<UsuarioChatViewModel> _Connections = new List<UsuarioChatViewModel>();
         private readonly static Dictionary<string, string> _ConnectionsMap = new Dictionary<string, string>();
 
-        //private readonly YiaContext _context;
-        //private readonly IMapper _mapper;
-        //public NotificacaoController(YiaContext context, IMapper mapper)
-        //{
-        //    _context = context;
-        //    _mapper = mapper;
-        //}
-
-
         public async Task NotificacaoHub(string id)
         {
             List<Notificacao> Entity = null;
 
-            Entity = Business.NotificacaoModel.GetTodasNotificacaoId(Convert.ToInt32(id));
+            Entity = Business.NotificacaoModel.GetTodasNotificacaoId(id.ExtractLong());
             bool status;
             status = Entity.Count == 0 ? false : true;
             await Clients.All.SendAsync("ReceberNotificacao", Entity, status, id);
@@ -45,10 +36,53 @@ namespace CRMYIA.Web.Controller
         {
             List<Notificacao> Entity = null;
 
-            //Entity = Business.NotificacaoModel.GetTodasNotificacaoId(Convert.ToInt32(id));
-            //bool status;
-            //status = Entity.Count == 0 ? false : true;
+            
             await Clients.All.SendAsync("Redirecionar", id, url);
+        }
+
+        public async Task NotificarMensagem(string Nome, string Mensagem, string DataCadastro, string De, string Para, string Imagem)
+        {
+            List<NotificacaoMensagemViewModel> EntityNotificacaoMensagem = null;
+            string IdUsuario = "";
+            var identity = (ClaimsIdentity)Context.User.Identity;
+            IEnumerable<Claim> Claims = identity.Claims;
+            foreach (var t in Claims)
+            {
+                if (t.Type.Equals("http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"))
+                    IdUsuario = t.Value;
+            }
+
+            if (!NotificacaoMensagemModel.QuantidadeNotificacaoMensagem(De.ExtractLong(), Para.ExtractLong()))
+            {
+                NotificacaoMensagem EntityNotificacao = NotificacaoMensagemModel.Add(new NotificacaoMensagem()
+                {
+                    IdUsuarioDe = De.ExtractLong(),
+                    IdUsuarioPara = Para.ExtractLong(),
+                    Mensagem = Mensagem,
+                    DataCadastro = DateTime.Now,
+                    Visualizado = false,
+                    Ativo = true
+                });
+            }
+            else
+            {
+                NotificacaoMensagemModel.AtualizarNotificacaoMensagem(De.ExtractLong(), Para.ExtractLong(), Mensagem);
+            }
+
+           
+            EntityNotificacaoMensagem = NotificacaoMensagemModel.ObterTodos(IdUsuario.ExtractLong());
+
+            await Clients.All.SendAsync("ReceberNotificacaoMensagem", EntityNotificacaoMensagem);
+        }
+
+        public async Task NotificacaoMensagemHub(string Id)
+        {
+            List<NotificacaoMensagemViewModel> Entity = null;
+
+            Entity = NotificacaoMensagemModel.ObterTodos(Id.ExtractLong());
+            bool status;
+            status = Entity.Count == 0 ? false : true;
+            await Clients.All.SendAsync("ReceberNotificacaoMensagem", Entity, status, Id);
         }
 
         //Chat
@@ -71,9 +105,6 @@ namespace CRMYIA.Web.Controller
                     IdUsuario = Entity.IdUsuario,
                     Nome = Entity.Nome,
                     Status = MensagemModel.SetStatusChat(Business.Util.EnumeradorModel.StatusChat.Ativo),
-                    //EnumeradorModel.StatusChat.Ativo,
-                    //Mensagem = Item.ChatIdUsuarioDeNavigation.Count() == 0 ? "" : Item.ChatIdUsuarioDeNavigation?.Select(x=> x.Mensagem).Last(),
-                    //DataMensagem = DateTime.Now,
                     Imagem = Entity.CaminhoFoto + Entity.NomeFoto,
                 };
 
@@ -82,8 +113,13 @@ namespace CRMYIA.Web.Controller
                     _Connections.Add(UsuarioChatView);
                     _ConnectionsMap.Add(IdentityName, Context.ConnectionId);
                 }
+                var Imagem = "img/fotoCadastro/foto-cadastro.jpeg";
+                if (Entity.CaminhoFoto != null && Entity.NomeFoto != null)
+                {
+                    Imagem = Entity.CaminhoFoto + Entity.NomeFoto;
+                }
 
-                Clients.Caller.SendAsync("getProfileInfo", Entity.Nome, Entity.CaminhoFoto + Entity.NomeFoto);
+                Clients.Caller.SendAsync("getProfileInfo", Entity.Nome, Imagem);
             }
             catch (Exception ex)
             {
@@ -94,7 +130,7 @@ namespace CRMYIA.Web.Controller
 
         public List<UsuarioChatViewModel> CarregarUsuarios(string Nome = "")
         {
-            //return _Connections.Select(u => u).ToList();
+           
             List<Usuario> ListUsuario = null;
             ListUsuario = ChatModel.GetUsers(Nome);
             List<UsuarioChatViewModel> ListView = new List<UsuarioChatViewModel>();
@@ -110,43 +146,68 @@ namespace CRMYIA.Web.Controller
             Chat EntityDe = null;
             Chat EntityPara = null;
             string data = null;
+            string imagem = "";
             foreach (Usuario Item in ListUsuario)
             {
                 if (Item.ChatIdUsuarioParaNavigation.Count() > 0 && Item.ChatIdUsuarioParaNavigation.Any(x => x.IdUsuarioDe == IdUsuario.ExtractLong())) {
                     EntityPara = Item.ChatIdUsuarioParaNavigation.Select(x => x).Where(x => x.IdUsuarioDe == IdUsuario.ExtractLong()).Last();
                     data = Item.DataCadastro.ToString("dd/MM/yyyy");
+                    if(Item.CaminhoFoto == null && Item.CaminhoFoto == null)
+                    {
+                        imagem = "img/fotoCadastro/foto-cadastro.jpeg";
+                    }
+                    else
+                    {
+                        imagem = Item.CaminhoFoto + Item.NomeFoto;
+                    }
                     UsuarioChatViewModel lista = new UsuarioChatViewModel()
                     {
                         IdUsuario = Item.IdUsuario,
                         Nome = Item.Nome,
                         Mensagem = EntityPara.Mensagem,
                         DataMensagem = data,
-                        Imagem = Item.CaminhoFoto + Item.NomeFoto,
+                        Imagem = imagem,
                     };
                     ListView.Add(lista);
                 }
                 else if (Item.ChatIdUsuarioDeNavigation.Count() > 0 && Item.ChatIdUsuarioDeNavigation.Any(x => x.IdUsuarioPara == IdUsuario.ExtractLong())){
                     EntityDe = Item.ChatIdUsuarioDeNavigation.Select(x => x).Where(x => x.IdUsuarioPara == IdUsuario.ExtractLong()).Last();
                     data = Item.DataCadastro.ToString("dd/MM/yyyy");
+                    if (Item.CaminhoFoto == null && Item.CaminhoFoto == null)
+                    {
+                        imagem = "img/fotoCadastro/foto-cadastro.jpeg";
+                    }
+                    else
+                    {
+                        imagem = Item.CaminhoFoto + Item.NomeFoto;
+                    }
                     UsuarioChatViewModel lista = new UsuarioChatViewModel()
                     {
                         IdUsuario = Item.IdUsuario,
                         Nome = Item.Nome,
                         Mensagem = EntityDe.Mensagem,
                         DataMensagem = data,
-                        Imagem = Item.CaminhoFoto + Item.NomeFoto,
+                        Imagem = imagem,
                     };
                     ListView.Add(lista);
                 }
                 else
                 {
+                    if (Item.CaminhoFoto == null && Item.CaminhoFoto == null)
+                    {
+                        imagem = "img/fotoCadastro/foto-cadastro.jpeg";
+                    }
+                    else
+                    {
+                        imagem = Item.CaminhoFoto + Item.NomeFoto;
+                    }
                     UsuarioChatViewModel lista = new UsuarioChatViewModel()
                     {
                         IdUsuario = Item.IdUsuario,
                         Nome = Item.Nome,
                         Mensagem = null,
                         DataMensagem = null,
-                        Imagem = Item.CaminhoFoto + Item.NomeFoto,
+                        Imagem = imagem,
                     };
                     ListView.Add(lista);
                 }
@@ -157,28 +218,48 @@ namespace CRMYIA.Web.Controller
         {
             get { return Context.User.Identity.Name; }
         }
-        public async Task SendPrivate(string receiverName, string message)
+        public IEnumerable<ChatViewModel> GetMessageHistory(string Para, string De)
         {
-            if (_ConnectionsMap.TryGetValue(receiverName, out string userId))
+            List<ChatViewModel> EntityChat = null;
+            EntityChat = ChatModel.CarregaMensagem(Para.ExtractLong(), De.ExtractLong());
+            
+            return EntityChat;
+        }
+        public async Task EnviarPrivado(string De, string Para, string Nome, string Mensagem, string Imagem)
+        {
+            Chat Entity = null;
+            ChatViewModel ChatView = null;
+            if (_ConnectionsMap.TryGetValue(Nome, out string userId))
             {
-                // Who is the sender;
-                var sender = _Connections.Where(u => u.Nome == IdentityName).First();
-
-                if (!string.IsNullOrEmpty(message.Trim()))
+                if (De != null && Para != null && Mensagem != null)
                 {
-                    // Build the message
-                    var messageViewModel = new ChatViewModel()
-                    {
-                        Conteudo = Regex.Replace(message, @"(?i)<(?!img|a|/a|/img).*?>", string.Empty),
-                        De = sender.Nome,
-                        Imagem = sender.Imagem,
-                        Para = "",
-                        DataCadastro = DateTime.Now.ToLongTimeString()
+                    
+                    Entity = new Chat() {
+                        IdUsuarioDe = De.ExtractLong(),
+                        IdUsuarioPara = Para.ExtractLong(),
+                        Mensagem = Mensagem,
+                        DataCadastro = DateTime.Now,
+                        Visualizado = false,
+                        Ativo = true,
                     };
+                    
 
-                    // Send the message
-                    await Clients.Client(userId).SendAsync("newMessage", messageViewModel);
-                    await Clients.Caller.SendAsync("newMessage", messageViewModel);
+                ChatModel.Add(Entity);
+
+                    ChatView = new ChatViewModel() {
+                        Nome = Nome,
+                        Mensagem = Mensagem,
+                        DataCadastro = Convert.ToString(DateTime.Now.ToString("dd MMM HH:mm tt")),
+                        De = De,
+                        Para = Para,
+                        Imagem = Imagem,
+                    };
+                    
+                    // Envia a Mensagem
+                    //await Clients.Client(userId).SendAsync("novaMensagem", ChatView);
+                    await Clients.All.SendAsync("novaMensagem", ChatView);
+                    await Clients.Caller.SendAsync("NovaMensagemCaller", ChatView);
+
                 }
             }
         }
