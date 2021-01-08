@@ -1,5 +1,7 @@
 ﻿var qtdNotificacao = 0;
+var qtdNotificacaoMensagem = 0;
 var vazio = true;
+var notificacaoMensagemVazia = true;
 var statusNotificacao = true;
 var atualizar = true;
 $(document).ready(function () {

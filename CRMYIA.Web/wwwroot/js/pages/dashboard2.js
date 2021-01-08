@@ -229,7 +229,7 @@ function CarregarProducao(Inicio, Fim) {
             var result = '';
             var resultulOperadorasMaisVendidas = '';
             var resultulOperadoraMaisVendidasValor = '';
-            if (data.status) {
+            if (data.status && data.entityDashboard.operadorasMaisVendidas != null) {
                 for (var i = 0; i < data.entityDashboard.operadorasMaisVendidas.length; i++) {
                     result += '<div class="progress-group">';
                     result += ' ' + data.entityDashboard.operadorasMaisVendidas[i].descricao + ' ';

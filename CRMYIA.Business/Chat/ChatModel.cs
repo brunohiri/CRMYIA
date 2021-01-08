@@ -46,42 +46,38 @@ namespace CRMYIA.Business
             }
             return retorno;
         }
-        public static List<Chat> CarregaMensagem(long Para, long De, int Limit = 0, int NumeroDeMensagem = 0)
+        public static List<ChatViewModel> CarregaMensagem(long Para, long De/*, int Limit = 0, int NumeroDeMensagem = 0*/)
         {
-            //List<Chat> ListEntityPara = null;
-            //List<Chat> ListEntityDe = null;
-            List<Chat> ListEntity = null;
-            int ingnorar = CountConsulta(Para, De, Limit, NumeroDeMensagem) >= 4 ? CountConsulta(Para, De, Limit, NumeroDeMensagem) - 4 : CountConsulta(Para, De, Limit, NumeroDeMensagem);
-            try
+            List<ChatViewModel> ListChatEntity = null;
+           try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Chat
-                        .Include(x => x.IdUsuarioDeNavigation)
-                        .Include(x => x.IdUsuarioParaNavigation)
-                        .AsNoTracking()
-                        .Where(x => ((x.IdUsuarioPara == Para && x.IdUsuarioDe == De) || (x.IdUsuarioPara == De && x.IdUsuarioDe == Para)))
-                        .OrderBy(x => x.DataCadastro)
-                        .Skip(ingnorar)
-                        .Take(Limit)
-                        .ToList();
+                    ListChatEntity = context.Chat
+                       .Include(x => x.IdUsuarioDeNavigation)
+                       .Include(x => x.IdUsuarioParaNavigation)
+                       .Where(x => (x.IdUsuarioPara == Para && x.IdUsuarioDe == De) || (x.IdUsuarioPara == De && x.IdUsuarioDe == Para))
+                       .OrderBy(x => x.DataCadastro)
+                       .Select(x => new ChatViewModel() {
+                           Nome = x.IdUsuarioDeNavigation != null? x.IdUsuarioDeNavigation.Nome: x.IdUsuarioParaNavigation.Nome,
+                           Mensagem = x.Mensagem,
+                           De = Convert.ToString(x.IdUsuarioDe),
+                           Imagem = x.IdUsuarioDeNavigation != null?
+                           x.IdUsuarioDeNavigation.CaminhoFoto != null && x.IdUsuarioDeNavigation.NomeFoto != null? x.IdUsuarioDeNavigation.CaminhoFoto + x.IdUsuarioDeNavigation.NomeFoto: "img/fotoCadastro/foto-cadastro.jpeg":
+                           x.IdUsuarioParaNavigation.CaminhoFoto != null && x.IdUsuarioParaNavigation.NomeFoto != null ? x.IdUsuarioParaNavigation.CaminhoFoto + x.IdUsuarioParaNavigation.NomeFoto : "img/fotoCadastro/foto-cadastro.jpeg",
+                           Para = Convert.ToString(x.IdUsuarioPara),
+                           DataCadastro = Convert.ToString(x.DataCadastro.ToString("dd MMM HH:mm tt")),//23 Jan 2:00 pm
+                       })
+                       //.Skip(ingnorar)
+                       //.Take(Limit)
+                       .ToList();
                 }
-
-                //using (YiaContext context = new YiaContext())
-                //{
-                //    ListEntityDe = context.Chat
-                //        .Where(x => ((x.IdUsuarioPara == De && x.IdUsuarioDe == Para)))
-                //        .Skip(NumeroDeMensagem)
-                //        .Take(Limit)
-                //        .OrderByDescending(x => x.DataCadastro)
-                //        .ToList();
-                //}
             }
             catch (Exception)
             {
                 throw;
             }
-            return ListEntity;
+            return ListChatEntity;
         }
 
         public static List<Usuario> GetUsers(string Nome = "")
@@ -134,93 +130,5 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
-        //public static List<UsuarioChatViewModel> GetUsers(long IdUsuario)
-        //{
-        //    List<Usuario> ListUsuario = null;
-        //    List<UsuarioChatViewModel> ListUsuarioChat = null;
-        //    try
-        //    {
-        //        ListUsuario = ListarUsuarios();
-        //        foreach (Usuario itemU in ListUsuario)
-        //        {
-        //            ListUsuarioChat.Add(new UsuarioChatViewModel()
-        //            {
-        //                Nome = itemU.Nome,
-        //            });
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return ListUsuarioChat;
-        //}
-
-        //public static List<UsuarioChatViewModel> GetUsers(long IdUsuario)
-        //{
-        //    List<UsuarioChatViewModel> ListUsuarioChatViewModel = null;
-        //    UsuarioChatViewModel UsuarioChatViewModel;
-        //    List<Usuario> ListUsuario = null;
-        //    List<Chat> ListChat = null;
-        //    DateTime? Data = null;
-        //    string Msg = null;
-        //    int i = 0;
-        //    try
-        //    {
-        //        using (YiaContext context = new YiaContext())
-        //        {
-
-        //            ListUsuario = context.Usuario
-        //                .Select(x => x).ToList();
-
-        //            ListChat = context.Chat
-        //                .Select(x => x).ToList();
-
-
-
-
-        //            //ListEntity = context.Usuario
-        //            //    .Include(x => x.ChatIdUsuarioDeNavigation)
-        //            //    .Include(x => x.ChatIdUsuarioParaNavigation)
-        //            //    .Select(x => new UsuarioChatViewModel() { 
-        //            //        Nome = x.Nome,
-        //            //        Imagem = x.CaminhoFoto + x.NomeFoto,
-        //            //        Mensagem = (x.ChatIdUsuarioDeNavigation.Where(x => x.DataCadastro.Value != ).Count() > 0 ? x.:),
-        //            //        DataMensagem = x.DataCadastro
-        //            //    })
-        //            //    .AsNoTracking()
-        //            //    .ToList();
-        //        }
-
-        //        foreach (var itemU in ListUsuario)
-        //        {
-        //            foreach (var itemCh in ListChat)
-        //            {
-        //                if ((itemU.IdUsuario == itemCh.IdUsuarioDe || itemU.IdUsuario == itemCh.IdUsuarioPara) && itemCh.IdUsuarioPara == IdUsuario)
-        //                {
-        //                    Data = ListChat.Select(x => x.DataCadastro).Last();
-        //                    Msg = ListChat.Select(x => x.Mensagem).Last();
-        //                    i++;
-        //                }
-        //            }
-        //            UsuarioChatViewModel = new UsuarioChatViewModel
-        //            {
-        //                Nome = itemU.Nome,
-        //                Imagem = "dfgdgbdf",
-        //                Mensagem = Msg,
-        //                DataMensagem = Data
-        //            };
-        //            ListUsuarioChatViewModel.Add(UsuarioChatViewModel);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return ListUsuarioChatViewModel;
-        //}
-
-
     }
 }
