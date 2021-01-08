@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="ml-auto p-2 bd-highlight">
-                                    <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                                <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
                             </div>
                         }
                         else
@@ -97,7 +97,7 @@
                             </div>
 
                             <div class="ml-auto p-2 bd-highlight">
-                                    <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                                <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
                             </div>
                         }
 
@@ -123,7 +123,7 @@
                         {
                             <div class="status-card">
                                 <div class="card-header">
-                                    <span class="card-header-text text-center" >
+                                    <span class="card-header-text text-center">
                                         @Item.Descricao
                                         <br />
                                         @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
@@ -143,22 +143,22 @@
                                                     @Html.Raw("5%")
                                                 }
                                                 else
-                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros))
+                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros))
                                                 {
                                                     @Html.Raw("10%")
                                                 }
                                                 else
-                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao))
+                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao))
                                                 {
                                                     @Html.Raw("11-90%")
                                                 }
                                                 else
-                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao))
+                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao))
                                                 {
                                                     @Html.Raw("95%")
                                                 }
                                                 else
-                                          if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Fechamento))
+                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Fechamento))
                                                 {
                                                     @Html.Raw("100%")
                                                 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CRMYIA.Web.Entities
+namespace CRMYIA.Data.Entities
 {
-    public partial class Chat
+    public partial class NotificacaoMensagem
     {
-        public long IdChat { get; set; }
+        public long IdNotificacaoMensagem { get; set; }
         public long? IdUsuarioDe { get; set; }
         public long? IdUsuarioPara { get; set; }
         public string Mensagem { get; set; }

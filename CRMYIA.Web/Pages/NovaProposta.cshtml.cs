@@ -25,6 +25,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public Proposta Entity { get; set; }
+        [BindProperty]
+        public HistoricoLigacao EntityHistoricoLigacao { get; set; }
 
         [BindProperty]
         public Visita EntityVisita { get; set; }
@@ -32,6 +34,8 @@ namespace CRMYIA.Web.Pages
         public List<PropostaFaixaEtaria> ListEntityPropostaFaixaEtaria { get; set; }
 
         public List<HistoricoProposta> ListEntityHistoricoProposta { get; set; }
+
+        public List<HistoricoLigacao> ListEntityHistoricoLigacao { get; set; }
 
         [BindProperty]
         public string[] PropostaFaixaEtariaQuantidade { get; set; }
@@ -100,6 +104,7 @@ namespace CRMYIA.Web.Pages
                 }
                 ListEntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ListEntityHistoricoProposta = HistoricoPropostaModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                ListEntityHistoricoLigacao = HistoricoLigacaoModel.GetList(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong().ToString());
 
                 EntityVisita = Business.VisitaModel.GetByIdProposta(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 if (EntityVisita == null)
@@ -205,7 +210,33 @@ namespace CRMYIA.Web.Pages
 
             return new JsonResult(new { status = true, listCategoria = ListCategoria, idLinha = IdLinhaCategoria });
         }
-
+        public IActionResult OnPostHistoricoLigacao()
+        {
+            try
+            {
+                
+                if (EntityHistoricoLigacao.IdHistoricoLigacao == 0 && EntityHistoricoLigacao.DataCadastro != null && EntityHistoricoLigacao.Observacao.Length > 0)
+                {
+                    EntityHistoricoLigacao.Ativo = true;
+                    HistoricoLigacaoModel.Add(EntityHistoricoLigacao);
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                    ListEntityHistoricoLigacao = HistoricoLigacaoModel.GetList(EntityHistoricoLigacao.IdProposta.ToString());
+                }
+                else if (EntityHistoricoLigacao.DataCadastro == null && EntityHistoricoLigacao.Observacao.Length <= 0)
+                {
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Verifique os campos!");
+                }
+                else
+                {
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Não foi possivel salvar!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
+            }
+            return new JsonResult(new { mensagem = Mensagem });
+        }
         public IActionResult OnPost()
         {
             string Observacao = string.Empty;
@@ -338,6 +369,8 @@ namespace CRMYIA.Web.Pages
 
                 ListEntityPropostaFaixaEtaria = PropostaFaixaEtariaModel.GetList(Entity.IdProposta);
                 ListEntityHistoricoProposta = HistoricoPropostaModel.GetList(Entity.IdProposta);
+
+                ListEntityHistoricoLigacao = HistoricoLigacaoModel.GetList(EntityHistoricoLigacao.IdHistoricoLigacao.ToString());
 
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
             }

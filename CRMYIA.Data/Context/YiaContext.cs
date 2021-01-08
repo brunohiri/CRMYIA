@@ -48,6 +48,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Modulo> Modulo { get; set; }
         public virtual DbSet<MotivoDeclinio> MotivoDeclinio { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
+        public virtual DbSet<NotificacaoMensagem> NotificacaoMensagem { get; set; }
         public virtual DbSet<Operadora> Operadora { get; set; }
         public virtual DbSet<OperadoraDocumento> OperadoraDocumento { get; set; }
         public virtual DbSet<OperadoraTelefone> OperadoraTelefone { get; set; }
@@ -75,14 +76,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -826,8 +821,6 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdHistoricoLigacao);
 
-                entity.Property(e => e.IdHistoricoLigacao).ValueGeneratedNever();
-
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacao)
@@ -1039,6 +1032,28 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.NotificacaoIdUsuarioVisualizarNavigation)
                     .HasForeignKey(d => d.IdUsuarioVisualizar)
                     .HasConstraintName("Usuario_Notificacao_Visualizar");
+            });
+
+            modelBuilder.Entity<NotificacaoMensagem>(entity =>
+            {
+                entity.HasKey(e => e.IdNotificacaoMensagem)
+                    .HasName("PK__Notifica__60F1092ADE335413");
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Mensagem)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioDeNavigation)
+                    .WithMany(p => p.NotificacaoMensagemIdUsuarioDeNavigation)
+                    .HasForeignKey(d => d.IdUsuarioDe)
+                    .HasConstraintName("Usuario_NotificacaoMensagem_De");
+
+                entity.HasOne(d => d.IdUsuarioParaNavigation)
+                    .WithMany(p => p.NotificacaoMensagemIdUsuarioParaNavigation)
+                    .HasForeignKey(d => d.IdUsuarioPara)
+                    .HasConstraintName("Usuario_NotificacaoMensagem_Para");
             });
 
             modelBuilder.Entity<Operadora>(entity =>

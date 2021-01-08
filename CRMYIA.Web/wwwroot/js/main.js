@@ -10,6 +10,9 @@ $(document).ready(function () {
     //Timepicker
     $('#timepicker').datetimepicker({
         format: 'H:m',
+        icons: {
+            time: 'far fa-clock'
+        }
     });
 
 
@@ -118,6 +121,7 @@ $(document).ready(function () {
     if (window.location.href.indexOf('NovaProposta') > 0) {
         //Cadastro de Propostas
         CadastroPropostas();
+        SalvarHistoricoLigacao();
     }
     if (window.location.href.indexOf('Tarefa') > 0) {
         //Cadastro de Tarefas
@@ -148,8 +152,8 @@ $(document).ready(function () {
         }
     });
 
-    
-  
+
+
 });
 
 function InitDatatables() {
@@ -414,6 +418,21 @@ function SalvarCadastroTelefone() {
             $('#TelefoneMensagemSpan').text(data.mensagem.mensagem);
 
             CarregarListaTelefone();
+        });
+    });
+}
+
+function SalvarHistoricoLigacao() {
+    $('#ButtonSalvarHistoricoLigacao').on('click', function (evt) {
+        evt.preventDefault();
+        $.post('/NovaProposta?handler=HistoricoLigacao', $('#formHistoricoLigacao').serialize(), function (data) {
+            $('#HistoricoMensagemDiv').show();
+            $('#HistoricoMensagemDivAlert').removeClass();
+            $('#HistoricoMensagemDivAlert').addClass(data.mensagem.cssClass);
+
+            $('#HistoricoMensagemIcon').removeClass();
+            $('#HistoricoMensagemIcon').addClass(data.mensagem.iconClass);
+            $('#HistoricoMensagemSpan').text(data.mensagem.mensagem);
         });
     });
 }

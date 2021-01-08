@@ -16,6 +16,8 @@ namespace CRMYIA.Data.Entities
             Meta = new HashSet<Meta>();
             NotificacaoIdUsuarioCadastroNavigation = new HashSet<Notificacao>();
             NotificacaoIdUsuarioVisualizarNavigation = new HashSet<Notificacao>();
+            NotificacaoMensagemIdUsuarioDeNavigation = new HashSet<NotificacaoMensagem>();
+            NotificacaoMensagemIdUsuarioParaNavigation = new HashSet<NotificacaoMensagem>();
             PropostaIdUsuarioCorretorNavigation = new HashSet<Proposta>();
             PropostaIdUsuarioNavigation = new HashSet<Proposta>();
             UsuarioCliente = new HashSet<UsuarioCliente>();
@@ -56,6 +58,8 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<Meta> Meta { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioCadastroNavigation { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioVisualizarNavigation { get; set; }
+        public virtual ICollection<NotificacaoMensagem> NotificacaoMensagemIdUsuarioDeNavigation { get; set; }
+        public virtual ICollection<NotificacaoMensagem> NotificacaoMensagemIdUsuarioParaNavigation { get; set; }
         public virtual ICollection<Proposta> PropostaIdUsuarioCorretorNavigation { get; set; }
         public virtual ICollection<Proposta> PropostaIdUsuarioNavigation { get; set; }
         public virtual ICollection<UsuarioCliente> UsuarioCliente { get; set; }
