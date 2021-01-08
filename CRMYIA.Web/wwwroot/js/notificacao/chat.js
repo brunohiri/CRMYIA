@@ -99,7 +99,7 @@
                 $.each(dados, function () {
                     if ($("#IdUsuario").val() == this.para) {
 
-                        html += '<a href="#" class="dropdown-item">\
+                        html += '<a href="#" class="dropdown-item open-notificacao-mensagem" data-nome='+ this.nome +' data-idusuario=' + this.de +'>\
                                             <div class="media">\
                                                 <img src="'+ this.imagem + '" alt="User Avatar" class="img-size-50 mr-3 img-circle">\
                                                     <div class="media-body">\
@@ -130,7 +130,59 @@
         connection.invoke("NotificacaoMensagemHub", Id).catch(function (err) {
             return console.log(err.toString());
         });
-    }, 500);
+     }, 500);
+
+    $(document).on('click', '.open-notificacao-mensagem', function () {
+        //alert($(this).data('idusuario') + " " + $('#IdUsuario').val());
+
+        $('.direct-chat').addClass('chat' + $(this).data('idusuario'));
+        $('.direct-chat').removeClass('direct-chat-contacts-open');
+        SelectInputChat();
+        $('#De').val($('#IdUsuario').val());
+        $('#Para').val($(this).data('idusuario'));
+        $('#Nome').val($(this).data('idusuario'))
+        chat.invoke("GetMessageHistory", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (dados) {
+            var html = '';
+            $.each(dados, function () {
+                var eMeu = this.de == $('#IdUsuario').val();
+
+                if (eMeu) {
+                    html += '<div class="direct-chat-msg right">\
+                    <div class="direct-chat-infos clearfix">\
+                        <span class="direct-chat-name float-right">'+ this.nome +'</span>\
+                        <span class="direct-chat-timestamp text-capitalize float-left">' + this.dataCadastro + '</span>\
+                    </div >\
+                    <!-- /.direct-chat-infos -->\
+                    <img class="direct-chat-img" src="' + this.imagem + '" alt="Message User Image">\
+                    <!-- /.direct-chat-img -->\
+                        <div class="direct-chat-text">' + this.mensagem + '</div>\
+                    <!-- /.direct-chat-text -->\
+                </div> ';
+                } else {
+                    html += '<div class="direct-chat-msg">\
+                        <div class="direct-chat-infos clearfix">\
+                        <span class="direct-chat-name float-left">' + this.nome + '</span>\
+                        <span class="direct-chat-timestamp text-capitalize float-right">' + this.dataCadastro + '</span>\
+                    </div >\
+                    <!-- /.direct-chat-infos -->\
+                        <img class="direct-chat-img" src = "' + this.imagem + '" alt="Message User Image">\
+                    <!-- /.direct-chat-img -->\
+                            <div class="direct-chat-text">' + this.mensagem + '</div>\
+                    <!-- /.direct-chat-text -->\
+                </div >';
+                }
+
+
+            });
+            $('.direct-chat-messages').html(html);
+        });
+
+        chat.invoke("DesativarNotificacaoMensagem", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (dados) {
+
+        });
+        setTimeout(function () { $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250); }, 500)
+
+    });
 
     function AppViewModel() {
         var self = this;
@@ -247,6 +299,10 @@
                     ))
                 }
             });
+        }
+
+        self.notificacaoMensagens = function () {
+            alert('foi');
         }
 
         

@@ -6,6 +6,7 @@ namespace CRMYIA.Data.ViewModel
 {
     public class NotificacaoMensagemViewModel
     {
+        public string De { get; set; }
         public string Para { get; set; }
         public string  Nome { get; set; }
         public string Mensagem { get; set; }

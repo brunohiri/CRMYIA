@@ -80,6 +80,30 @@ namespace CRMYIA.Business
             }
         }
 
+        public static void DesativarNotificacaoMensagem(long Para,long De)
+        {
+            try
+            {
+
+                using (YiaContext context = new YiaContext())
+                {
+                    var notificacaoMensagem = context.NotificacaoMensagem
+                   .Where(x => x.IdUsuarioDe == Para && x.IdUsuarioPara == De && x.Ativo == true).First();
+
+                    notificacaoMensagem.Visualizado = true;
+                    notificacaoMensagem.Ativo = false;
+
+                    context.NotificacaoMensagem.Attach(notificacaoMensagem);
+                    context.Entry(notificacaoMensagem).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public static List<NotificacaoMensagemViewModel> ObterTodos(long IdUsuario)
         {
             List<NotificacaoMensagemViewModel> ListEntity = null;
@@ -90,6 +114,7 @@ namespace CRMYIA.Business
                     ListEntity = context.NotificacaoMensagem
                         .Where(x => x.IdUsuarioPara == IdUsuario && x.Ativo == true)
                         .Select(x => new NotificacaoMensagemViewModel() { 
+                            De = x.IdUsuarioDe.ToString(),
                             Para = x.IdUsuarioPara.ToString(),
                             Nome = x.IdUsuarioDeNavigation.Nome,
                             Mensagem = x.Mensagem,

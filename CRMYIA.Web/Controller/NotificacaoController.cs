@@ -263,5 +263,25 @@ namespace CRMYIA.Web.Controller
                 }
             }
         }
+        public async Task DesativarNotificacaoMensagem(string Para, string De)
+        {
+            bool status = false;
+            List<NotificacaoMensagemViewModel> EntityNotificacaoMensagem = null;
+
+            string IdUsuario = "";
+            var identity = (ClaimsIdentity)Context.User.Identity;
+            IEnumerable<Claim> Claims = identity.Claims;
+            foreach (var t in Claims)
+            {
+                if (t.Type.Equals("http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"))
+                    IdUsuario = t.Value;
+            }
+
+            NotificacaoMensagemModel.DesativarNotificacaoMensagem(Para.ExtractLong(), De.ExtractLong());
+
+            EntityNotificacaoMensagem = NotificacaoMensagemModel.ObterTodos(IdUsuario.ExtractLong());
+
+            await Clients.All.SendAsync("ReceberNotificacaoMensagem", EntityNotificacaoMensagem);
+        }
     }
 }
