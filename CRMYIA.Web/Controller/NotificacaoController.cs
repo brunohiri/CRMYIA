@@ -104,7 +104,6 @@ namespace CRMYIA.Web.Controller
                 {
                     IdUsuario = Entity.IdUsuario,
                     Nome = Entity.Nome,
-                    Status = MensagemModel.SetStatusChat(Business.Util.EnumeradorModel.StatusChat.Ativo),
                     Imagem = Entity.CaminhoFoto + Entity.NomeFoto,
                 };
 
@@ -147,8 +146,26 @@ namespace CRMYIA.Web.Controller
             Chat EntityPara = null;
             string data = null;
             string imagem = "";
+            string logado = "";
             foreach (Usuario Item in ListUsuario)
             {
+                if(Item.Logado == "success")
+                {
+                    logado = "text-" + Item.Logado;
+                }
+                else if (Item.Logado == "warning")
+                {
+                    logado = "text-" + Item.Logado;
+                }
+                else if (Item.Logado == "danger")
+                {
+                    logado = "text-" + Item.Logado;
+                }
+                else if (Item.Logado == "light")
+                {
+                    logado = "text-" + Item.Logado;
+                }
+
                 if (Item.ChatIdUsuarioParaNavigation.Count() > 0 && Item.ChatIdUsuarioParaNavigation.Any(x => x.IdUsuarioDe == IdUsuario.ExtractLong())) {
                     EntityPara = Item.ChatIdUsuarioParaNavigation.Select(x => x).Where(x => x.IdUsuarioDe == IdUsuario.ExtractLong()).Last();
                     data = Item.DataCadastro.ToString("dd/MM/yyyy");
@@ -167,6 +184,7 @@ namespace CRMYIA.Web.Controller
                         Mensagem = EntityPara.Mensagem,
                         DataMensagem = data,
                         Imagem = imagem,
+                        Logado = logado
                     };
                     ListView.Add(lista);
                 }
@@ -188,6 +206,7 @@ namespace CRMYIA.Web.Controller
                         Mensagem = EntityDe.Mensagem,
                         DataMensagem = data,
                         Imagem = imagem,
+                        Logado = logado
                     };
                     ListView.Add(lista);
                 }
@@ -208,6 +227,7 @@ namespace CRMYIA.Web.Controller
                         Mensagem = null,
                         DataMensagem = null,
                         Imagem = imagem,
+                        Logado = logado
                     };
                     ListView.Add(lista);
                 }

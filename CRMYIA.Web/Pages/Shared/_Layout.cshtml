@@ -86,6 +86,22 @@
         75% {margin-left: -15px;}
         100% {margin-left: 0;}
     }
+        #status-usuario li ul {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            background-color: #fff;
+            display: none;
+        }
+        
+        #status-usuario li:hover ul, #status-usuario li.over ul {
+            display: block;
+        }
+        #status-usuario {
+            flex: 1; /* isto é para a nav ocupar a largura toda menos a logo */
+            justify-content: center; /* alinha horizontalmente */
+            align-items: center; /* alinha verticalmente */
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -166,16 +182,36 @@
                     <i class="far fa-user"></i> @Context.User.Identity.Name
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <span class="dropdown-item dropdown-header">Administrador</span>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fa users-cog mr-2"></i> Minha Conta
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="/Logout" class="dropdown-item">
-                        <i class="fas fa-door-closed mr-2"></i>
-                        Sair
-                    </a>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="dropdown-item dropdown-header">Administrador</span>
+                        </div>
+                        <div class="col-md-6">
+                                <span id="status-usuario">
+
+                                    <ul>
+                                        <li>
+                                            <span class="dropdown-item dropdown-header">Status: <a href="javascript:void(0)" title="Ativo" id="status-link"></a></span>
+                                            <ul class="bg-light" style="border-radius: 5px; border: 1px solid #c0c0c0;">
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(0)">Ativo<i class="fa fa-circle text-success"></i></a></li>
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(1)">Ausente<i class="fa fa-circle text-warning"></i></a></li>
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(2)">Não incomodar<i class="fa fa-circle text-danger"></i></a></li>
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(3)">Invisível<i class="fa fa-circle text-white"></i></a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+                    </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa users-cog mr-2"></i> Minha Conta
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/Logout" class="dropdown-item">
+                            <i class="fas fa-door-closed mr-2"></i>
+                            Sair
+                        </a>
                 </div>
             </li>
         </ul>
@@ -290,14 +326,14 @@
         </section>
         <!-- /.content -->
     </div>
-    <div class="bg-primary float-open">
+    <div id="float-open" class="bg-primary float-open">
         <a class="float-link" href="javascript:void(0)"> <i class="far fa-comments"></i></a>
     </div>
 
     <!-- DIRECT CHAT -->
-    <div class="card direct-chat direct-chat-primary d-none float-chat">
+    <div id="direct-chat" class="card direct-chat direct-chat-primary d-none float-chat">
         <div class="card-header">
-            <h3 class="card-title">Direct Chat</h3>
+            <h3 id="indentificacao-para" class="card-title"></h3>
 
             @*<input type="text" class="m-1" name="pesquisa-chat" id="pesquisa-chat" value="" placeholder="Pesquisar" style="border-radius: 0.25rem;" />*@
 
@@ -309,7 +345,7 @@
                 <button type="button" class="btn btn-tool btn-contato" title="Contacts" data-widget="chat-pane-toggle">
                     <i class="fas fa-comments"></i>
                 </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <button type="button" class="btn btn-tool btn-close" data-card-widget="remove">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -355,16 +391,16 @@
                     <li class="idusuario-para" data-bind="click: $parent.buscarContato, attr: {'data-idusuario': $data.idUsuario}">
                         <div data-bind="if: $data.mensagem">
                             <input type="hidden" class="nome" data-bind="value: $data.nome" />
+                            
                             <a href="javascript:void(0)">
-                                <img class="contacts-list-img" data-bind="attr:{src: $data.imagem}" alt="User Avatar">
+                                <i class="fa fa-circle" data-bind="css: $data.logado"></i> <span class="text-decoration-none font-weight-bolder text-white" data-bind="text: $data.nome"></span>
+                                    <img class="contacts-list-img" data-bind="attr:{src: $data.imagem}" alt="User Avatar">
 
-                                <div class="contacts-list-info">
-                                    <span class="contacts-list-name" data-bind="text: $data.nome">
-
-
-                                    </span><span class="contacts-list-date float-right" data-bind="text: $data.dataMensagem"></span>
-                                    <span class="contacts-list-msg" data-bind="text: $data.mensagem"></span>
-                                </div>
+                                    <div class="contacts-list-info">
+                                        @*<span class="contacts-list-name" data-bind="text: $data.nome"></span>*@
+                                        <span class="contacts-list-date float-right" data-bind="text: $data.dataMensagem"></span>
+                                        <span class="contacts-list-msg" data-bind="text: $data.mensagem"></span>
+                                    </div>
                                 <!-- /.contacts-list-info -->
                             </a>
                             @*<span href="javascript:void(0)" data-bind="ifnot: $parent.eNulo()">Null</span>*@

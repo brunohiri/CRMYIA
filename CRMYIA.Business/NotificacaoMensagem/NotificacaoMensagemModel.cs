@@ -121,6 +121,7 @@ namespace CRMYIA.Business
                             Imagem = x.IdUsuarioDeNavigation.CaminhoFoto != null && x.IdUsuarioDeNavigation.NomeFoto != null? x.IdUsuarioDeNavigation.CaminhoFoto + x.IdUsuarioDeNavigation.NomeFoto : "img/fotoCadastro/foto-cadastro.jpeg",
                             DataCadastro = Util.Util.CalculaTempo(x.DataCadastro),
                             DataOrdem = x.DataCadastro,
+                            Logado = x.IdUsuarioDeNavigation != null ? x.IdUsuarioDeNavigation.Logado  : x.IdUsuarioParaNavigation.Logado,
                         })
                         .OrderByDescending(x => x.DataOrdem)
                         .Take(3)

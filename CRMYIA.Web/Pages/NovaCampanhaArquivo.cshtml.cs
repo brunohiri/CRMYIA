@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
-using CRMYIA.Business.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
@@ -152,7 +151,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListEntity = CampanhaArquivoModel.GetList();
-            ListCampanha = Business.Business.CampanhaModel.GetList();
+            ListCampanha = Business.CampanhaModel.GetList();
         }
 
         #endregion

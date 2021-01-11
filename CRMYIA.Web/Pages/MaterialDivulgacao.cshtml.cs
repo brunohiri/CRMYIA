@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
-using CRMYIA.Business.Business;
+using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using Microsoft.AspNetCore.Authorization;

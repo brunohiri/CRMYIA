@@ -12,5 +12,6 @@ namespace CRMYIA.Data.ViewModel
         public string DataMensagem { get; set; }
         public string Mensagem { get; set; }
         public string Imagem { get; set; }
+        public string Logado { get; set; }
     }
 }

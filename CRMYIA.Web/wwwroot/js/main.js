@@ -152,7 +152,7 @@ $(document).ready(function () {
         }
     });
 
-
+    ObterStatusUsuario();
 
 });
 
@@ -838,4 +838,51 @@ $(document).on('click', '.float-open', function () {
 
 function displayBusyIndicator() {
     $('.loading').show();
+}
+
+function StatusUsuario(Status) {
+    if (Status != undefined) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: '/Index?handler=StatusUsuario',
+            data: { Status: Status },
+            success: function (data) {
+                if (data.status) {
+                    if (data.retorno != "") {
+                        if ("success" == data.retorno) {
+                            $('#status-link').html('Ativo <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('success');
+                        } else if ("warning" == data.retorno) {
+                            $('#status-link').html('Ausente <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('warning');
+                        } else if ("danger" == data.retorno) {
+                            $('#status-link').html('Não Incomodar <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('danger');
+                        } else if ("light" == data.retorno) {
+                            $('#status-link').html('Invisível <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('light');
+                        }
+
+                    }
+                }
+            },
+
+        });
+    }
+}
+
+function ObterStatusUsuario() {
+    $.getJSON('/Index?handler=ObterStatusUsuario', function (data) {
+        if (data.status) {
+            if (data.retorno != "") {
+                if ("success" == data.retorno) {
+                    $('#status-link').html('Ativo <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('success');
+                } else if ("warning" == data.retorno) {
+                    $('#status-link').html('Ausente <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('warning');
+                } else if ("danger" == data.retorno) {
+                    $('#status-link').html('Não Incomodar <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('danger');
+                } else if ("light" == data.retorno) {
+                    $('#status-link').html('Invisível <i class="fa fa-circle text-' + data.retorno + '" ></i>'); console.log('light');
+                }
+
+            }
+        }
+    });
 }

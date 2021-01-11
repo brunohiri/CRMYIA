@@ -108,11 +108,57 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true , entityUsuario = Entity });
         }
 
-        //public IActionResult OnGetCarregaMensagem(long Para, long De, int Limit = 0, int NumeroDeMensagem = 0)
-        //{
-        //    List<Chat> ListChat = null;
-        //    ListChat = ChatModel.CarregaMensagem(Para, De, Limit, NumeroDeMensagem);
-        //    return new JsonResult(new { status = true, listChat = ListChat});
-        //}
+        public IActionResult OnGetStatusUsuario(int Status)
+        {
+            string retorno = "";
+            var statusChat = EnumeradorModel.StatusChat.Invisivel;
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            switch (Status)
+            {
+                case 0:
+                    statusChat = EnumeradorModel.StatusChat.Ativo;
+                    break;
+                case 1:
+                    statusChat = EnumeradorModel.StatusChat.Ausente;
+                    break;
+                case 2:
+                    statusChat = EnumeradorModel.StatusChat.NaoIncomodar;
+                    break;
+                case 3:
+                    statusChat = EnumeradorModel.StatusChat.Invisivel;
+                    break;
+                default:
+                    break;
+            }
+            retorno = Business.Util.Util.SetStatusChat(statusChat);
+            if(retorno != "")
+            {
+                 UsuarioModel.AtualizarStatusUsuario(IdUsuario, retorno);
+
+                return new JsonResult(new { status = true, retorno = retorno});
+            }
+            else
+            {
+                return new JsonResult(new { status = false});
+            }
+        }
+
+        public IActionResult OnGetObterStatusUsuario()
+        {
+            string retorno = "";
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            retorno = UsuarioModel.ObterStatusUsuario(IdUsuario);
+            if(retorno != "")
+            {
+                return new JsonResult(new { status = true, retorno = retorno });
+            }
+            else
+            {
+                return new JsonResult(new { status = false});
+            }
+            
+        }
+
     }
 }

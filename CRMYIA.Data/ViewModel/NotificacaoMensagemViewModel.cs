@@ -13,5 +13,6 @@ namespace CRMYIA.Data.ViewModel
         public string Imagem { get; set; }
         public string DataCadastro { get; set; }
         public DateTime? DataOrdem { get; set; }
+        public string Logado { get; set; }
     }
 }

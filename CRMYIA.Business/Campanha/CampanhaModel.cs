@@ -6,7 +6,7 @@ using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace CRMYIA.Business.Business
+namespace CRMYIA.Business
 {
     public class CampanhaModel
     {
