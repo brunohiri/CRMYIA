@@ -4,8 +4,8 @@
     ViewData["Title"] = "Upload";
     ViewData["Pagina"] = "Campanha";
 }
-@using CRMYIA.Business.Util;
-
+@using CRMYIA.Business.Util; 
+@{ var caminhoImagem = ""; }
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -29,13 +29,25 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="d-flex justify-content-center">
+
+                        <div class="row m-2">
+                            <div class="col-sm-6">
+                                <img src="~/img/fotoCadastro/foto-cadastro.jpeg" id="imagem" width="170px" height="130px" alt="Responsive image">
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="row">
 
                         <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCampanhaArquivo" id="IdCampanhaArquivo">
+                        <input type="hidden" class="form-control" asp-for="@Model.CaminhoImagem" id="CaminhoImagem">
 
-                        @if (@Model.Entity.IdCampanhaArquivo !> 0)
+                        @if (@Model.Entity.IdCampanhaArquivo! > 0)
                         {
-                            <input type="hidden" class="form-control" asp-for="@Model.ImagemDiferente" id="@Model.ImagemDiferente">
+                            <input type="hidden" class="form-control" asp-for="@Model.ImagemDiferente" id="ImagemDiferente">
                         }
 
                         <div class="col-sm-4">
@@ -107,9 +119,10 @@
                 <table id="tableListagem" class="table table-bordered table-striped datatable">
                     <thead>
                         <tr>
-                            <th width="30%">Descrição</th>
-                            <th width="30%">Nome do Arquivo</th>
-                            <th width="25%">Cadastro</th>
+                            <th width="25%">Imagem</th>
+                            <th width="25%">Descrição</th>
+                            <th width="20%">Nome do Arquivo</th>
+                            <th width="15%">Cadastro</th>
                             <th width="10%">Status</th>
                             <th width="5%"></th>
                         </tr>
@@ -119,7 +132,16 @@
                         {
                             foreach (var Item in Model.ListEntity)
                             {
+                                if (Item.CaminhoArquivo != null && Item.NomeArquivo != null)
+                                {
+                                    caminhoImagem = Item.CaminhoArquivo + Item.NomeArquivo;
+                                }
+                                else
+                                {
+                                    caminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
+                                }
                                 <tr>
+                                    <td class="text-center"> @Html.Raw(!string.IsNullOrEmpty(caminhoImagem) ? "<img src='"+ caminhoImagem + "'  style=\"width: 161.5px!important; height: 165px!important;\" > " : "Não" )</td>
                                     <td class="text-center" title="@Item.Descricao">@Html.Raw(string.IsNullOrEmpty(Item.Descricao) ? "<span class=\"badge badge-pill badge-warning\" title=\"NÃO INFORMADA\">NÃO INFORMADA</span>" : (Item.Descricao.Length > 20 ? Item.Descricao.Substring(0, 16).ToUpper() + "..." : Item.Descricao))</td>
                                     <td>@(Item.NomeArquivo)</td>
                                     <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>

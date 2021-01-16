@@ -282,7 +282,14 @@ namespace CRMYIA.Business.Util
             else
             {
                 ano = now.Year - Data.Year;
-                retorno = Convert.ToInt32(ano).ToString() + " Anos atrás";
+                if (ano == 1)
+                {
+                    retorno = Convert.ToInt32(ano).ToString() + " Ano atrás";
+                }
+                else
+                {
+                    retorno = Convert.ToInt32(ano).ToString() + " Anos atrás";
+                }
             }
            
 

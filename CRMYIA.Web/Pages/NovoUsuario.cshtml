@@ -10,7 +10,7 @@
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" id="form-cadastro-usuario">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -29,10 +29,11 @@
 
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuario">
-
-                @if (@Model.Entity.IdUsuario !> 0)
+                <input type="hidden" class="form-control" asp-for="@Model.CaminhoImagem" id="CaminhoImagem">
+                @if (@Model.Entity.IdUsuario! > 0)
                 {
-                    <input type="hidden" class="form-control" asp-for="@Model.ImagemDiferente" id="@Model.ImagemDiferente">
+                    <input type="hidden" class="form-control" asp-for="@Model.ImagemDiferente" id="ImagemDiferente">
+                    <input type="hidden" class="form-control" asp-for="@Model.Entity.Logado" id="Logado">
                 }
                 <div class="col-sm-2">
                     <div class="form-group">
@@ -145,7 +146,7 @@
                     <div class="form-group">
                         <label for="NomeArquivoFoto">Selecione um Arquivo</label>
                         <div class="input-group">
-                            <input type="file" id="NomeArquivoFoto" asp-for="NomeArquivoFoto" name="NomeArquivoFoto" accept=".png">
+                            <input type="file" id="NomeArquivoFoto" asp-for="@Model.NomeArquivoFoto" name="NomeArquivoFoto" accept=".png">
                         </div>
                     </div>
                 </div>
@@ -153,7 +154,7 @@
 
         </div>
         <div class="card-footer">
-            <button type="submit" class="btn btn-success">Salvar</button>
+            <button type="submit" class="btn btn-success btn-salvar-cadastro-usuario">Salvar</button>
             <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
         </div>
     </form>

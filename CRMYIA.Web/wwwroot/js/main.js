@@ -128,6 +128,7 @@ $(document).ready(function () {
         CadastroTarefas();
     }
 
+
     if ($('.filter-container').length) {
         $('.filter-container').filterizr({ gutterPixels: 3 });
         $('.btn[data-filter]').on('click', function () {
@@ -135,6 +136,9 @@ $(document).ready(function () {
             $(this).addClass('active');
         });
     }
+
+    //$('#CaminhoImagem').attr('src');
+    $("#imagem").attr("src", $('#CaminhoImagem').val());
 
     $('input[type="file"]').change(function () {
         //alert("A file has been selected.");
