@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
-using CRMYIA.Business.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
@@ -40,6 +39,8 @@ namespace CRMYIA.Web.Pages
         public List<CampanhaArquivo> ListEntity { get; set; }
         [BindProperty]
         public string ImagemDiferente { get; set; }
+        [BindProperty]
+        public string CaminhoImagem { get; set; }
         #endregion
 
         #region Construtores
@@ -63,7 +64,14 @@ namespace CRMYIA.Web.Pages
                 Entity = CampanhaArquivoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
                 ImagemDiferente = Entity.NomeArquivo;
             }
-
+            if (Entity.CaminhoArquivo != null && Entity.NomeArquivo != null)
+            {
+                CaminhoImagem = Entity.CaminhoArquivo + Entity.NomeArquivo;
+            }
+            else
+            {
+                CaminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
+            }
             CarregarLists();
             return Page();
         }
@@ -89,12 +97,15 @@ namespace CRMYIA.Web.Pages
                         using (var fileStream = new FileStream(file, FileMode.Create))
                         {
                             await NomeArquivoCampanha.CopyToAsync(fileStream);
+                            Entity.CaminhoArquivo = "ArquivoCampanha/";
+                            Entity.NomeArquivo = NomeArquivo;
+                            CaminhoImagem = "ArquivoCampanha/" + NomeArquivo;
                         }
                         CampanhaArquivoModel.Add(new CampanhaArquivo()
                         {
                             IdCampanha = Entity.IdCampanha,
                             Descricao = Entity.Descricao,
-                            CaminhoArquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"]),
+                            CaminhoArquivo = "ArquivoCampanha/",
                             NomeArquivo = NomeArquivo,
                             Observacao = Entity.Observacao,
                             DataCadastro = DateTime.Now,
@@ -121,40 +132,44 @@ namespace CRMYIA.Web.Pages
                             using (var fileStream = new FileStream(file, FileMode.Create))
                             {
                                 await NomeArquivoCampanha.CopyToAsync(fileStream);
+                                Entity.CaminhoArquivo = "ArquivoCampanha/";
+                                Entity.NomeArquivo = NomeArquivo;
+                                CaminhoImagem = "ArquivoCampanha/" + NomeArquivo;
+                                ImagemDiferente = NomeArquivo;
                             }
                         }
                         else
                         {
-                            NomeArquivo = ImagemDiferente;
+                            Entity.CaminhoArquivo = "img/fotoCadastro/";
+                            Entity.NomeArquivo = "foto-cadastro.jpeg";
+                            ImagemDiferente = "foto-cadastro.jpeg";
                         }
-                       
+
                         CampanhaArquivoModel.Update(new CampanhaArquivo()
                         {
                             IdCampanhaArquivo = Entity.IdCampanhaArquivo,
                             IdCampanha = Entity.IdCampanha,
                             Descricao = Entity.Descricao,
-                            CaminhoArquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"]),
-                            NomeArquivo = NomeArquivo,
+                            CaminhoArquivo = Entity.CaminhoArquivo,
+                            NomeArquivo = Entity.NomeArquivo,
                             Observacao = Entity.Observacao,
                             DataCadastro = DateTime.Now,
                             Ativo = Entity.Ativo
                         });
-                        CampanhaArquivo EntityArquivoLead = CampanhaArquivoModel.GetLastId();
+                        //Entity = CampanhaArquivoModel.GetLastId();
+                        CaminhoImagem = Entity.CaminhoArquivo + Entity.NomeArquivo;
                         Mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Sucesso, string.Format("Arquivo de Campanha " + msg + " com sucesso!"));
                     }
                 }
             }
-
             CarregarLists();
             return Page();
         }
-
         public void CarregarLists()
         {
             ListEntity = CampanhaArquivoModel.GetList();
-            ListCampanha = Business.Business.CampanhaModel.GetList();
+            ListCampanha = Business.CampanhaModel.GetList();
         }
-
         #endregion
     }
 }

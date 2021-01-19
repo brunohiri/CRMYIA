@@ -7,7 +7,7 @@ using CRMYIA.Data.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
-using CRMYIA.Business.Business;
+using CRMYIA.Business;
 using System.Security.Claims;
 using CRMYIA.Business.Util;
 using System.Web;
@@ -39,7 +39,7 @@ namespace CRMYIA.Web.Pages
             if (Id.IsNullOrEmpty())
                 Entity = new Campanha();
             else
-                Entity = Business.Business.CampanhaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                Entity = Business.CampanhaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
 
             Entity.DataCadastro = DateTime.Now;
             return Page();
@@ -54,14 +54,14 @@ namespace CRMYIA.Web.Pages
                 {
                     Entity.IdUsuario = IdUsuario;
                     Entity.DataCadastro = DateTime.Now;
-                    Business.Business.CampanhaModel.Add(Entity);
+                    Business.CampanhaModel.Add(Entity);
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                 }
                 else
                 {
                     Entity.IdUsuario = IdUsuario;
                     Entity.DataCadastro = DateTime.Now;
-                    Business.Business.CampanhaModel.Update(Entity);
+                    Business.CampanhaModel.Update(Entity);
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados atualizado com sucesso!");
                 }
             }

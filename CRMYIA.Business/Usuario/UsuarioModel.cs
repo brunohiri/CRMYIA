@@ -387,6 +387,48 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+
+        public static void AtualizarStatusUsuario(long IdUsuario, string status)
+        {
+            try
+            {
+
+                using (YiaContext context = new YiaContext())
+                {
+                    var usuarioStatus = context.Usuario
+                   .Where(x => x.IdUsuario == IdUsuario && x.Ativo == true).First();
+
+                    usuarioStatus.Logado = status;
+
+                    context.Usuario.Attach(usuarioStatus);
+                    context.Entry(usuarioStatus).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static string ObterStatusUsuario(long IdUsuario)
+        {
+            string status = "";
+            try
+            {
+
+                using (YiaContext context = new YiaContext())
+                {
+                    status = context.Usuario
+                   .Where(x => x.IdUsuario == IdUsuario && x.Ativo == true).Select(x => x.Logado).First();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return status;
+        }
         #endregion
     }
 }

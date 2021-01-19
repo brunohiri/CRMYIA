@@ -261,6 +261,7 @@ namespace CRMYIA.Business.Util
 
             string retorno = "";
 
+            int ano = 0;
 
             if((tempo.TotalMilliseconds / 1000) <= 60)
             {
@@ -274,19 +275,49 @@ namespace CRMYIA.Business.Util
             {
                 retorno = Convert.ToInt32((tempo.TotalMinutes / 60)).ToString() + " Horas atrás";
             }
-            else if ((tempo.TotalMinutes / 60) <= 30)
+            else if ( ((tempo.TotalHours / 24) / 30) <= 12)
             {
-                retorno = Convert.ToInt32((tempo.TotalMinutes / 60)).ToString() + " Dias atrás";
+                retorno = Convert.ToInt32(((tempo.TotalHours / 24) / 30)).ToString() + " Mês atrás";
             }
             else
             {
-                retorno = Convert.ToInt32(tempo).ToString() + " Anos atrás";
+                ano = now.Year - Data.Year;
+                if (ano == 1)
+                {
+                    retorno = Convert.ToInt32(ano).ToString() + " Ano atrás";
+                }
+                else
+                {
+                    retorno = Convert.ToInt32(ano).ToString() + " Anos atrás";
+                }
             }
            
 
             //retorno = tempo.TotalMilliseconds.ToString();
 
             return retorno;
+        }
+        public static string SetStatusChat(EnumeradorModel.StatusChat StatusChat)
+        {
+            string Status = string.Empty;
+            switch (StatusChat)
+            {
+                case EnumeradorModel.StatusChat.Ativo:
+                    Status = "success";
+                    break;
+                case EnumeradorModel.StatusChat.Ausente:
+                    Status = "warning";
+                    break;
+                case EnumeradorModel.StatusChat.NaoIncomodar:
+                    Status = "danger";
+                    break;
+                case EnumeradorModel.StatusChat.Invisivel:
+                    Status = "light";
+                    break;
+                default:
+                    break;
+            }
+            return Status;
         }
         #endregion
         #endregion

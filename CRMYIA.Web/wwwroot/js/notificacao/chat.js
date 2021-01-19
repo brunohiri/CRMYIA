@@ -65,6 +65,7 @@
                         <div class="dropdown-divider"></div></div>';
             $('#notificacao-mensagem').html(html);
             notificacaoMensagemVazia = false;
+            $('.quantidade-notificacao-mensagem').html('');
         }
         else if (dados.length == 0 && $("#IdUsuario").val() == dados[0].para) {
             html = '';
@@ -95,11 +96,11 @@
             } 
             if (!$('.notificacao-mensagem').hasClass('show')) {
 
-
+                //console.log(self.chatMensagem());
                 $.each(dados, function () {
                     if ($("#IdUsuario").val() == this.para) {
 
-                        html += '<a href="#" class="dropdown-item open-notificacao-mensagem" data-nome='+ this.nome +' data-idusuario=' + this.de +'>\
+                        html += '<a href="#" class="dropdown-item open-notificacao-mensagem" data-bind="click: $parent.dd()" data-nome="'+ this.nome +'" data-idusuario=' + this.de +' data-imagem=' + this.imagem + ' data-logado=' + this.logado + '>\
                                             <div class="media">\
                                                 <img src="'+ this.imagem + '" alt="User Avatar" class="img-size-50 mr-3 img-circle">\
                                                     <div class="media-body">\
@@ -132,65 +133,110 @@
         });
      }, 500);
 
-    $(document).on('click', '.open-notificacao-mensagem', function () {
-        //alert($(this).data('idusuario') + " " + $('#IdUsuario').val());
-
-        $('.direct-chat').addClass('chat' + $(this).data('idusuario'));
-        $('.direct-chat').removeClass('direct-chat-contacts-open');
-        SelectInputChat();
-        $('#De').val($('#IdUsuario').val());
-        $('#Para').val($(this).data('idusuario'));
-        $('#Nome').val($(this).data('idusuario'))
-        chat.invoke("GetMessageHistory", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (dados) {
-            var html = '';
-            $.each(dados, function () {
-                var eMeu = this.de == $('#IdUsuario').val();
-
-                if (eMeu) {
-                    html += '<div class="direct-chat-msg right">\
-                    <div class="direct-chat-infos clearfix">\
-                        <span class="direct-chat-name float-right">'+ this.nome +'</span>\
-                        <span class="direct-chat-timestamp text-capitalize float-left">' + this.dataCadastro + '</span>\
-                    </div >\
-                    <!-- /.direct-chat-infos -->\
-                    <img class="direct-chat-img" src="' + this.imagem + '" alt="Message User Image">\
-                    <!-- /.direct-chat-img -->\
-                        <div class="direct-chat-text">' + this.mensagem + '</div>\
-                    <!-- /.direct-chat-text -->\
-                </div> ';
-                } else {
-                    html += '<div class="direct-chat-msg">\
-                        <div class="direct-chat-infos clearfix">\
-                        <span class="direct-chat-name float-left">' + this.nome + '</span>\
-                        <span class="direct-chat-timestamp text-capitalize float-right">' + this.dataCadastro + '</span>\
-                    </div >\
-                    <!-- /.direct-chat-infos -->\
-                        <img class="direct-chat-img" src = "' + this.imagem + '" alt="Message User Image">\
-                    <!-- /.direct-chat-img -->\
-                            <div class="direct-chat-text">' + this.mensagem + '</div>\
-                    <!-- /.direct-chat-text -->\
-                </div >';
-                }
-
-
-            });
-            $('.direct-chat-messages').html(html);
-        });
-
-        chat.invoke("DesativarNotificacaoMensagem", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (dados) {
-
-        });
-        setTimeout(function () { $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250); }, 500)
-
-    });
+  
 
     function AppViewModel() {
+
+        $(document).on('click', '.btn-close', function () {
+
+            $('#direct-chat').removeClass();
+            $('#direct-chat').addClass('card direct-chat direct-chat-primary d-none float-chat');
+            $('#float-open').removeClass();
+            $('#float-open').addClass('bg-primary float-open');
+            $('#Para').val('');
+            $('#De').val('');
+            $('#Nome').val('');
+            $('#Url').val('');
+            $('.chat-body').html('');
+            $('#indentificacao-para').html('');
+        });
+        $(document).on('click', '.open-notificacao-mensagem', function () {
+            //alert($(this).data('idusuario') + " " + $('#IdUsuario').val());
+            let nome = "";
+            if ($(this).data('nome').length > 16) {
+                nome = LimitaTexto($(this).data('nome'), 16);
+            } else {
+                nome =$(this).data('nome');
+            }
+            $('.direct-chat').addClass('chat' + $(this).data('idusuario'));
+            $('.direct-chat').removeClass('direct-chat-contacts-open');
+            $('#De').val($('#IdUsuario').val());
+            $('#Para').val($(this).data('idusuario'));
+            $('#Nome').val($(this).data('nome'));
+            $('#indentificacao-para').html('<img src="' + $(this).data('imagem') + '" alt="User Avatar" class="img-size-50 mr-3 img-circle"> <i class="fa fa-circle text-' + $(this).data('logado') + '"></i>' + nome);
+            $('.float-open').addClass('d-none');
+            $('.direct-chat').addClass('d-block');
+
+            SelectInputChat();
+            SelectInputChat();
+
+            chat.invoke("GetMessageHistory", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (result) {
+                self.chatMensagem.removeAll();
+                for (var i = 0; i < result.length; i++) {
+                    var eMeu = result[i].de == self.idUsuario();
+                    self.chatMensagem.push(new ChatMensagem(
+                        result[i].nome,
+                        result[i].mensagem,
+                        result[i].dataCadastro,
+                        result[i].de,
+                        result[i].para,
+                        result[i].imagem,
+                        eMeu
+                    ));
+                }
+            });
+
+            setTimeout(function () { $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250); }, 500)
+
+            //chat.invoke("GetMessageHistory", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (dados) {
+            //    var html = '';
+            //    $.each(dados, function () {
+            //        var eMeu = this.de == $('#IdUsuario').val();
+
+            //        if (eMeu) {
+            //            html += '<div class="direct-chat-msg right">\
+            //        <div class="direct-chat-infos clearfix">\
+            //            <span class="direct-chat-name float-right">'+ this.nome + '</span>\
+            //            <span class="direct-chat-timestamp text-capitalize float-left">' + this.dataCadastro + '</span>\
+            //        </div >\
+            //        <!-- /.direct-chat-infos -->\
+            //        <img class="direct-chat-img" src="' + this.imagem + '" alt="Message User Image">\
+            //        <!-- /.direct-chat-img -->\
+            //            <div class="direct-chat-text">' + this.mensagem + '</div>\
+            //        <!-- /.direct-chat-text -->\
+            //    </div> ';
+            //        } else {
+            //            html += '<div class="direct-chat-msg">\
+            //            <div class="direct-chat-infos clearfix">\
+            //            <span class="direct-chat-name float-left">' + this.nome + '</span>\
+            //            <span class="direct-chat-timestamp text-capitalize float-right">' + this.dataCadastro + '</span>\
+            //        </div >\
+            //        <!-- /.direct-chat-infos -->\
+            //            <img class="direct-chat-img" src = "' + this.imagem + '" alt="Message User Image">\
+            //        <!-- /.direct-chat-img -->\
+            //                <div class="direct-chat-text">' + this.mensagem + '</div>\
+            //        <!-- /.direct-chat-text -->\
+            //    </div >';
+            //        }
+
+
+            //    });
+            //    $('.direct-chat-messages').html(html);
+            //});
+
+            chat.invoke("DesativarNotificacaoMensagem", String($(this).data('idusuario')), String($('#IdUsuario').val())).then(function (dados) {
+
+            });
+            notificacaoMensagemVazia = true;
+            //setTimeout(function () { $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 250); }, 500);
+
+        });
+
         var self = this;
         var allBindingsAccessor = $('#lista-usuario');
         self.idUsuario = ko.observable($("#IdUsuario").val());
         self.mensagem = ko.observable("");
         self.chatUsers = ko.observableArray([]);
-        self.chatMensagem = ko.observableArray([]);
         self.chatMensagem = ko.observableArray([]);
         self.numeroDeLinha = ko.observable($("#NumeroDeLinha").val());
         self.pesquisaNome = ko.observable("");
@@ -210,15 +256,29 @@
         self.barraListaUsuario = ko.observable();
 
         self.para = ko.observable(null);
+
+        self.dd = function () {
+            alert('marcelo');
+        }
+
         self.buscarContato = function (item) {
             self.para(item);
+            console.log(item)
+
+            let nome = "";
+            if (self.para().nome().length > 16) {
+                nome = LimitaTexto(self.para().nome(), 16);
+            } else {
+                nome = self.para().nome();
+            }
             
             $('.direct-chat').addClass('chat' + self.para().idUsuario());
             $('.direct-chat').removeClass('direct-chat-contacts-open');
             SelectInputChat();
             $('#De').val(self.idUsuario());
             $('#Para').val(self.para().idUsuario());
-            $('#Nome').val(self.meuNome())
+            $('#Nome').val(self.meuNome());
+            $('#indentificacao-para').html('<img src="' + self.para().imagem() + '" alt="User Avatar" class="mb-1 img-circle" width="40" height="40"> <i class="mr-2 fa fa-circle ' + self.para().logado() + '"></i>' + nome);
             chat.invoke("GetMessageHistory", String(self.para().idUsuario()), String(self.idUsuario())).then(function (result) {
                 self.chatMensagem.removeAll();
                 for (var i = 0; i < result.length; i++) {
@@ -296,9 +356,12 @@
                         result[i].imagem,
                         result[i].mensagem,
                         result[i].dataMensagem,
+                        result[i].logado
                     ))
                 }
             });
+
+            self.pesquisaNome("");
         }
 
         self.notificacaoMensagens = function () {
@@ -322,13 +385,14 @@
     }
 
    
-    function ChatUser(idUsuario, nome, imagem, mensagem, dataMensagem) {
+    function ChatUser(idUsuario, nome, imagem, mensagem, dataMensagem, logado) {
         var self = this;
         self.idUsuario = ko.observable(idUsuario);
         self.nome = ko.observable(nome);
         self.imagem = ko.observable(imagem);
         self.mensagem = ko.observable(mensagem);
         self.dataMensagem = ko.observable(dataMensagem);
+        self.logado = ko.observable(logado);
     }
 
     function ChatMensagem(nome, mensagem, dataCadastro, de, para, imagem, eMeu) {
