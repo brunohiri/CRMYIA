@@ -884,10 +884,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
 
-                entity.HasOne(d => d.IdTipoLeadNavigation)
+                entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaValor)
-                    .HasForeignKey(d => d.IdTipoLead)
-                    .HasConstraintName("TipoLead_KPIMetaValor");
+                    .HasForeignKey(d => d.IdMeta)
+                    .HasConstraintName("Meta_KPIMetaValor");
             });
 
             modelBuilder.Entity<KPIMetaVida>(entity =>
@@ -902,10 +902,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
 
-                entity.HasOne(d => d.IdTipoLeadNavigation)
+                entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaVida)
-                    .HasForeignKey(d => d.IdTipoLead)
-                    .HasConstraintName("TipoLead_KPIMetaVida");
+                    .HasForeignKey(d => d.IdMeta)
+                    .HasConstraintName("Meta_KPIMetaVida");
             });
 
             modelBuilder.Entity<KPIServico>(entity =>
@@ -948,6 +948,16 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.ValorMaximo).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.ValorMinimo).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.IdKPICargoNavigation)
+                    .WithMany(p => p.Meta)
+                    .HasForeignKey(d => d.IdKPICargo)
+                    .HasConstraintName("KPICargo_Meta");
+
+                entity.HasOne(d => d.IdKPIServicoNavigation)
+                    .WithMany(p => p.Meta)
+                    .HasForeignKey(d => d.IdKPIServico)
+                    .HasConstraintName("KPIServico_Meta");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Meta)
@@ -1396,20 +1406,6 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.MetaAte).HasColumnType("datetime");
-
-                entity.Property(e => e.MetaDe).HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdKPICargoNavigation)
-                    .WithMany(p => p.TipoLead)
-                    .HasForeignKey(d => d.IdKPICargo)
-                    .HasConstraintName("KPICargo_TipoLead");
-
-                entity.HasOne(d => d.IdKPIServicoNavigation)
-                    .WithMany(p => p.TipoLead)
-                    .HasForeignKey(d => d.IdKPIServico)
-                    .HasConstraintName("KPIServico_TipoLead");
             });
 
             modelBuilder.Entity<Usuario>(entity =>

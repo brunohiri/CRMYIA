@@ -8,6 +8,7 @@ using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
@@ -61,7 +62,38 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+        public static List<UsuarioViewModel> GetListPerfilKPICargo(long IdUsuario)
+        {
+            List<UsuarioViewModel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
 
+                    //SELECT DISTINCT U1.IdUsuario,U1.Nome, U2.IdUsuario, U2.Nome
+                    //FROM UsuarioHierarquia UH1(NOLOCK)
+                    //LEFT JOIN Usuario U1(NOLOCK) ON UH1.IdUsuarioMaster = U1.IdUsuario
+                    //LEFT JOIN UsuarioHierarquia UH2(NOLOCK) ON UH1.IdUsuarioSlave = UH2.IdUsuarioMaster
+                    //LEFT JOIN Usuario U2(NOLOCK) ON UH2.IdUsuarioMaster = U2.IdUsuario
+                    //WHERE U1.IdUsuario = 5
+
+                    ListEntity = context.UsuarioHierarquia.Where(x => x.IdUsuarioMaster == IdUsuario)
+                     .Include(y => y.IdUsuarioSlaveNavigation)
+                     .OrderBy(o => o.IdUsuarioSlave)
+                     .ToList()
+                     .Select(s => new UsuarioViewModel
+                     {
+                         IdUsuario = Convert.ToInt64(s.IdUsuarioSlave),
+                         Nome = s.IdUsuarioSlaveNavigation.Nome
+                     }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
         public static List<KPICargo> GetListIdCargo()
         {
             List<KPICargo> ListEntity = null;

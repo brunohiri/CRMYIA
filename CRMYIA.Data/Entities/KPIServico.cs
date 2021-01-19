@@ -7,7 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public KPIServico()
         {
-            TipoLead = new HashSet<TipoLead>();
+            Meta = new HashSet<Meta>();
         }
 
         public long IdKPIServico { get; set; }
@@ -15,6 +15,6 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public bool Ativo { get; set; }
 
-        public virtual ICollection<TipoLead> TipoLead { get; set; }
+        public virtual ICollection<Meta> Meta { get; set; }
     }
 }

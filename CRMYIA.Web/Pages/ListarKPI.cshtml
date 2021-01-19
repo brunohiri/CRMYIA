@@ -1,5 +1,5 @@
 ﻿@page
-@model CRMYIA.Web.Pages.TarefaModel
+@model CRMYIA.Web.Pages.ListKPIModel
 @{
     ViewData["Title"] = "";
     ViewData["Pagina"] = "Listar KPI";
@@ -9,7 +9,41 @@
 @using System.Security.Claims;
 
 <!-- Horizontal Form Pesquisa-->
+<section class="content">
+    <div class="container-fluid">
 
+        <div class="card card-default">
+
+            <div class="card-header">
+                <h3 class="card-title">Pesquisar</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form method="post" id="FormPesquisaKPI">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Cargos</label>
+                                <select class="form-control select2" style="width: 100%;"
+                                        asp-for="@Model.ListKPICargo"
+                                        id="IdKPICargo" name="IdKPICargo"
+                                        onchange="this.form.submit();">
+                                    <option>Selecione...</option>
+                                    @foreach (var Item in Model.ListKPICargo)
+                                    {
+                                        <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 
 <div class="card card-default">
     <div class="card-header">
@@ -123,7 +157,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>Gerente Compinas</td>
+                                                <td>Gerente Campinas</td>
                                                 <td>R$ 1,000.00</td>
                                                 <td>R$ 850.00</td>
                                                 <td style="background-color:green; color:snow">85 %</td>
@@ -161,7 +195,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>Gerente Compinas</td>
+                                                <td>Gerente Campinas</td>
                                                 <td>R$ 1,000.00</td>
                                                 <td>R$ 850.00</td>
                                                 <td style="background-color:green; color:snow">85 %</td>
@@ -199,7 +233,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>Gerente Compinas</td>
+                                                <td>Gerente Campinas</td>
                                                 <td>R$ 1,000.00</td>
                                                 <td>R$ 850.00</td>
                                                 <td style="background-color:green; color:snow">85 %</td>
@@ -237,7 +271,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>Gerente Compinas</td>
+                                                <td>Gerente Campinas</td>
                                                 <td>R$ 1,000.00</td>
                                                 <td>R$ 850.00</td>
                                                 <td style="background-color:green; color:snow">85 %</td>

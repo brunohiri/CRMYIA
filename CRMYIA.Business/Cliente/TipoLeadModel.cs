@@ -49,12 +49,12 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.TipoLead
-                        .Where(x => x.Ativo)
-                        .Include(KPICargo => KPICargo.IdKPICargoNavigation)
-                        .Include(KPIServico => KPIServico.IdKPIServicoNavigation)
-                        .AsNoTracking()
-                        .OrderBy(o => o.Descricao).ToList();
+                    //ListEntity = context.TipoLead
+                    //    .Where(x => x.Ativo)
+                    //    .Include(KPICargo => KPICargo.IdKPICargoNavigation)
+                    //    .Include(KPIServico => KPIServico.IdKPIServicoNavigation)
+                    //    .AsNoTracking()
+                    //    .OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)
