@@ -22,7 +22,6 @@ namespace CRMYIA.Data.Entities
         public long? IdKPICargo { get; set; }
         public long? IdKPIServico { get; set; }
 
-        public virtual KPICargo IdKPICargoNavigation { get; set; }
         public virtual KPIServico IdKPIServicoNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
         public virtual ICollection<KPIMetaValor> KPIMetaValor { get; set; }

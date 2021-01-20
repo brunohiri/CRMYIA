@@ -61,7 +61,6 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            ListKPICargo = KPICargoModel.GetListPerfilKPICargo(IdUsuario);
             
             ListKPIMetaVida = KPIMetaVidaModel.GetList();
             ListKPIMetaValor = KPIMetaValorModel.GetList();

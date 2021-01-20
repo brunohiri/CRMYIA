@@ -27,17 +27,17 @@
                 </div>
             </div>
             <div class="row">
-                @*<input type="hidden" class="form-control" asp-for="@Model.Entity.IdKPIMetaValor">*@
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdKPIMetaValor">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Serviço</label>
-                        @*<select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdTipoLead">
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdMeta">
                             <option selected="selected">Selecione...</option>
                             @foreach (var Item in Model.ListTipoLead)
                             {
                                 <option value="@Item.IdTipoLead">@(Item.Descricao)</option>
                             }
-                        </select>*@
+                        </select>
                     </div>
                 </div>
                 <div class="col-sm-4">

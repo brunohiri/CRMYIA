@@ -46,23 +46,23 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        //public IActionResult OnPost()
-        //{
-        //    try
-        //    {
-        //        if (Entity.IdTipoLead == 0)
-        //            KPIMetaValorModel.Add(Entity);
-        //        else
-        //            KPIMetaValorModel.Update(Entity);
+        public IActionResult OnPost()
+        {
+            try
+            {
+                if (Entity.IdMeta == 0)
+                    KPIMetaValorModel.Add(Entity);
+                else
+                    KPIMetaValorModel.Update(Entity);
 
-        //        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
-        //    }
-        //    return Page();
-        //}
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
+            }
+            return Page();
+        }
         #endregion
         public void CarregarLists()
         {

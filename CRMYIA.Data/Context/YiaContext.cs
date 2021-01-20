@@ -38,7 +38,6 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual DbSet<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
-        public virtual DbSet<KPICargo> KPICargo { get; set; }
         public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
         public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
         public virtual DbSet<KPIServico> KPIServico { get; set; }
@@ -76,14 +75,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -865,19 +858,6 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_HistoricoProposta");
             });
 
-            modelBuilder.Entity<KPICargo>(entity =>
-            {
-                entity.HasKey(e => e.IdKPICargo);
-
-                entity.Property(e => e.Cargo)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<KPIMetaValor>(entity =>
             {
                 entity.HasKey(e => e.IdKPIMetaValor);
@@ -954,11 +934,6 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.ValorMaximo).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.ValorMinimo).HasColumnType("decimal(18, 2)");
-
-                entity.HasOne(d => d.IdKPICargoNavigation)
-                    .WithMany(p => p.Meta)
-                    .HasForeignKey(d => d.IdKPICargo)
-                    .HasConstraintName("KPICargo_Meta");
 
                 entity.HasOne(d => d.IdKPIServicoNavigation)
                     .WithMany(p => p.Meta)

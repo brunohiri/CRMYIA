@@ -69,7 +69,6 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListKPIServico = KPIServicoModel.GetList();
-            ListKPICargo = KPICargoModel.GetList();
         }
     }
 }
