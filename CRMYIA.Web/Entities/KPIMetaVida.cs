@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CRMYIA.Data.Entities
+namespace CRMYIA.Web.Entities
 {
     public partial class KPIMetaVida
     {

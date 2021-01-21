@@ -40,7 +40,6 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
         public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
-        public virtual DbSet<KPIServico> KPIServico { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Meta> Meta { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
@@ -866,9 +865,9 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Estipulado).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.ValorMaximo).HasColumnType("decimal(18, 2)");
 
-                entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.ValorMinimo).HasColumnType("decimal(18, 2)");
 
                 entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaValor)
@@ -884,27 +883,14 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Estipulado).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.ValorMaximo).HasColumnType("decimal(18, 2)");
 
-                entity.Property(e => e.Meta).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.ValorMinimo).HasColumnType("decimal(18, 2)");
 
                 entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaVida)
                     .HasForeignKey(d => d.IdMeta)
                     .HasConstraintName("Meta_KPIMetaVida");
-            });
-
-            modelBuilder.Entity<KPIServico>(entity =>
-            {
-                entity.HasKey(e => e.IdKPIServico);
-
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Perfil)
-                    .HasMaxLength(40)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Linha>(entity =>
@@ -930,15 +916,6 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.DataMaxima).HasColumnType("datetime");
 
                 entity.Property(e => e.DataMinima).HasColumnType("datetime");
-
-                entity.Property(e => e.ValorMaximo).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.ValorMinimo).HasColumnType("decimal(18, 2)");
-
-                entity.HasOne(d => d.IdKPIServicoNavigation)
-                    .WithMany(p => p.Meta)
-                    .HasForeignKey(d => d.IdKPIServico)
-                    .HasConstraintName("KPIServico_Meta");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Meta)

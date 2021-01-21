@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CRMYIA.Data.Entities
+namespace CRMYIA.Web.Entities
 {
-    public partial class KPIMetaVida
+    public partial class KPIMetaValor
     {
-        public long IdKPIMetaVida { get; set; }
+        public long IdKPIMetaValor { get; set; }
         public long? IdMeta { get; set; }
         public string Descricao { get; set; }
         public decimal? ValorMinimo { get; set; }

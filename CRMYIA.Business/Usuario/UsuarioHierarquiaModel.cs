@@ -80,6 +80,25 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<UsuarioHierarquia> GetAllUsuarioMaster()
+        {
+            List<UsuarioHierarquia> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.UsuarioHierarquia
+                        .Include(x => x.IdUsuarioMasterNavigation)
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static void Add(UsuarioHierarquia Entity)
         {
             try
