@@ -51,34 +51,8 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.KPIMetaVida
                         .Where(x => x.Ativo)
-                        .Include(Meta => Meta.IdMetaNavigation.IdKPIServicoNavigation)
                         .AsNoTracking()
                         .OrderBy(o => o.Descricao).ToList();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return ListEntity;
-        }
-
-        public static List<KPIMetaVida> GetListIdDescricao()
-        {
-            List<KPIMetaVida> ListEntity = null;
-            try
-            {
-                using (YiaContext context = new YiaContext())
-                {
-                    ListEntity = context.KPIMetaVida
-                        .AsNoTracking()
-                        .Where(x => x.Ativo)
-                        .AsNoTracking()
-                        .Select(y => new KPIMetaVida()
-                        {
-                            IdKPIMetaVida = y.IdKPIMetaVida,
-                            Descricao = y.Descricao
-                        }).OrderBy(o => o.Descricao).ToList();
                 }
             }
             catch (Exception)
