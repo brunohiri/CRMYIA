@@ -30,8 +30,7 @@ namespace CRMYIA.Web.Pages
         public List<KPIMetaValor> ListKPIMetaValor { get; set; }
         [BindProperty]
         public List<UsuarioViewModel> ListKPICargo { get; set; }
-        [BindProperty]
-        public List<KPIServico> ListKPIServico { get; set; }
+        
         
         #endregion
 
@@ -64,8 +63,6 @@ namespace CRMYIA.Web.Pages
             
             ListKPIMetaVida = KPIMetaVidaModel.GetList();
             ListKPIMetaValor = KPIMetaValorModel.GetList();
-            ListKPIServico = KPIServicoModel.GetList();
-
         }
 
     }

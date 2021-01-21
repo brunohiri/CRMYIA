@@ -279,8 +279,8 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         Entity.ValorMetaEstipulada = context.KPIMetaValor
-                             .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
-                             .Sum(y => y.ValorMaximo.Value).ToString("c2");//*
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
+                            .Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta
                             .Where(x => !x.Ativo || x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Declinado))
@@ -376,9 +376,9 @@ namespace CRMYIA.Business.Dashboard
                                                                                 .Count() > 0)
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
-                        Entity.ValorMetaEstipulada = context.KPIMetaValor
+                        context.KPIMetaValor
                             .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
-                            .Sum(y => y.ValorMaximo.Value).ToString("c2");//*
+                            .Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta
                           .Include(y => y.IdUsuarioCorretorNavigation)
@@ -485,8 +485,9 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         Entity.ValorMetaEstipulada = context.KPIMetaValor
-                             .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
-                             .Sum(y => y.ValorMaximo.Value).ToString("c2");//*
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
+                            .Sum(y => y.ValorMaximo.Value).ToString("c2");
+                            //.Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta
                             .Include(y => y.IdUsuarioCorretorNavigation)
@@ -565,8 +566,8 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         Entity.ValorMetaEstipulada = context.KPIMetaValor
-                             .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
-                             .Sum(y => y.ValorMaximo.Value).ToString("c2");//*
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdUsuario == IdUsuario)
+                            .Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta
                             .Where(x => !x.Ativo || x.IdStatusProposta == (byte?)(EnumeradorModel.StatusProposta.Declinado) && x.IdUsuarioCorretor == IdUsuario)
