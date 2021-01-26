@@ -20,23 +20,24 @@ namespace CRMYIA.Web.Pages
         readonly IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
-
+        #region Meta
         [BindProperty]
         public Meta Entity { get; set; }
-
-        #region Usuario
-        [BindProperty]
-        public List<Usuario> ListUsuario { get; set; }
         #endregion
 
         #region KPIMetaValor
         [BindProperty]
-        public List<KPIMetaValor> ListKPIMetaValor { get; set; }
+        public KPIMetaValor KPIMetaValorEntity { get; set; }
         #endregion
 
         #region KPIMetaVida
         [BindProperty]
-        public List<KPIMetaVida> ListKPIMetaVida { get; set; }
+        public KPIMetaVida KPIMetaVidaEntity { get; set; }
+        #endregion
+
+        #region Usuario
+        [BindProperty]
+        public List<Usuario> ListUsuario { get; set; }
         #endregion
 
         #endregion
@@ -51,53 +52,38 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet(string Id = null)
         {
-            //if (Id.IsNullOrEmpty())
-            //{
-            //    Entity = new Cliente();
-            //}
-            //else
-            //{
-            //    Entity = ClienteModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-            //}
-
-            //Entity.DataCadastro = DateTime.Now;
             CarregarLists();
-
-           
-
             return Page();
         }
 
         public IActionResult OnPost()
         {
-            //try
-            //{
-            //    CarregarLists();
+            try
+            {
+                CarregarLists();
 
-            //    if ((!Util.IsCpf(Entity.CPF)) && (!Util.IsCnpj(Entity.CPF)))
-            //        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");
-            //    else
-            //    {
-            //        if (Entity.IdCliente == 0)
-            //        {
-            //            if (ClienteModel.GetByCPF(Entity.CPF) != null)
-            //                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um cliente cadastrado com este CPF/CNPJ!");
-            //            else
-            //            {
-            //                ClienteModel.Add(Entity);
-            //            }
-            //        }
-            //        else
-            //        {
-            //            ClienteModel.Update(Entity);
-            //        }
-            //        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
-            //}
+                if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
+                {
+                    MetaModel.Add(Entity);
+                    KPIMetaValorEntity.IdMeta = Entity.IdMeta;
+                    KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
+
+                    KPIMetaValorModel.Add(KPIMetaValorEntity);
+                    KPIMetaVidaModel.Add(KPIMetaVidaEntity);
+
+                }
+                else
+                {
+                    MetaModel.Update(Entity);
+                    KPIMetaValorModel.Update(KPIMetaValorEntity);
+                    KPIMetaVidaModel.Update(KPIMetaVidaEntity);
+                }
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
+            }
             return Page();
         }
 
@@ -105,11 +91,10 @@ namespace CRMYIA.Web.Pages
         private void CarregarLists()
         {
             ListUsuario = UsuarioModel.GetList();
-            ListKPIMetaValor = KPIMetaValorModel.GetList();
-            ListKPIMetaVida = KPIMetaVidaModel.GetList();
+
         }
         #endregion
-        
+
         #endregion
     }
 }

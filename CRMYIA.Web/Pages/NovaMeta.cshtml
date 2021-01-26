@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.NovoClienteModel
+@model CRMYIA.Web.Pages.NovaMetaModel
 @{
     ViewData["Title"] = "Novo";
-    ViewData["Pagina"] = "Cliente (Lead)";
+    ViewData["Pagina"] = "KPI Meta";
 }
 
 <div class="card card-default">
@@ -27,437 +27,137 @@
                 </div>
             </div>
             <div class="row">
-                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCliente" id="ClienteIdCliente">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Tipo *</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdTipoLead" id="ClienteIdTipoLead">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListTipoLead)
-                            {
-                                <option value="@Item.IdTipoLead">@(Item.Descricao)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Origem *</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdOrigem" id="ClienteIdOrigem">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListOrigem)
-                            {
-                                <option value="@Item.IdOrigem">@(Item.Descricao)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>CPF/CNPJ *</label>
-                        <input type="text" class="form-control cpf-cnpj" placeholder="CPF/CNPJ" required asp-for="@Model.Entity.CPF">
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Nome/Razão Social *</label>
-                        <input type="text" class="form-control" placeholder="Nome/Razão Social" required asp-for="@Model.Entity.Nome">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Data de Nascimento/Abertura</label>
-                        <input type="date" class="form-control" asp-for="@Model.Entity.DataNascimento">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>RG</label>
-                        <input type="text" class="form-control" placeholder="RG" asp-for="@Model.Entity.RG">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Cartão do SUS</label>
-                        <input type="text" class="form-control" placeholder="Cartão do SUS" asp-for="@Model.Entity.CartaoSus">
-                    </div>
-                </div>
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMeta" id="MetaId">
+
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Gênero</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdGenero" id="ClienteIdGenero">
+                        <label>Usuário *</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuario" id="UsuarioId">
                             <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListGenero)
+                            @foreach (var Item in Model.ListUsuario)
                             {
-                                <option value="@Item.IdGenero">@(Item.Descricao)</option>
+                                <option value="@Item.IdUsuario">@(Item.Nome)</option>
                             }
                         </select>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Estado Civil</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdEstadoCivil" id="ClienteIdEstadoCivil">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListEstadoCivil)
-                            {
-                                <option value="@Item.IdEstadoCivil">@(Item.Descricao)</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>CEP *</label>
-                        <input type="text" class="form-control cep" placeholder="CEP" required asp-for="@Model.Entity.CEP">
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <label>Endereço *</label>
-                        <input type="text" class="form-control endereco" placeholder="Endereço" required asp-for="@Model.Entity.Endereco">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Número *</label>
-                        <input type="text" class="form-control numero" placeholder="Número" required asp-for="@Model.Entity.Numero">
+                        <label>Data mínima</label>
+                        <input type="date" class="form-control" id="DataMinima" asp-for="@Model.Entity.DataMinima">
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Complemento</label>
-                        <input type="text" class="form-control complemento" placeholder="Complemento" asp-for="@Model.Entity.Complemento">
+                        <label>Data máxima</label>
+                        <input type="date" class="form-control" id="DataMaxima" asp-for="@Model.Entity.DataMaxima">
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Bairro *</label>
-                        <input type="text" class="form-control bairro" placeholder="Bairro" required asp-for="@Model.Entity.Bairro">
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Cidade *</label>
-                        <select class="form-control cidade" style="width: 100%;" asp-for="@Model.Entity.IdCidade">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListCidade)
-                            {
-                                <option value="@Item.IdCidade" data-id="@Item.CodigoIBGE">@Item.Descricao</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>UF *</label>
-                        <select class="form-control select2 uf" style="width: 100%;">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListEstado)
-                            {
-                                <option value="@Item.IdEstado" data-id="@Item.Sigla">@Item.Sigla</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Data de Cadastro *</label>
-                        <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataCadastro" readonly>
-                    </div>
-                </div>
-                <div class="col-sm-1">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Status *</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch3" checked asp-for="@Model.Entity.Ativo">
-                            <label class="custom-control-label" for="customSwitch3">Ativo</label>
+                            <input type="checkbox" class="custom-control-input" id="MetaSwitch" checked asp-for="@Model.Entity.Ativo">
+                            <label class="custom-control-label" for="MetaSwitch">Ativo</label>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-1">
+            </div>
+
+            <h4>Meta de Valores Monetários</h4>
+            <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaValorEntity.IdKPIMetaValor" id="KPIMetaValorId">
+                <div class="col-sm-3">
                     <div class="form-group">
-                        <label>Lead? *</label>
-                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="customSwitchLead" checked asp-for="@Model.Entity.IsLead">
-                            <label class="custom-control-label" for="customSwitchLead">Ativo</label>
-                        </div>
+                        <label>Valor Mínimo</label>
+                        <input type="text" class="form-control money2" id="minValor" placeholder="Valores em R$" asp-for="@Model.KPIMetaValorEntity.ValorMinimo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Máximo</label>
+                        <input type="text" class="form-control money2" id="maxValor" placeholder="Valores em R$" asp-for="@Model.KPIMetaValorEntity.ValorMaximo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Mês</label>
+                        <input type="number" class="form-control" placeholder="Mês" id="MesValor" asp-for="@Model.KPIMetaValorEntity.Mes">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" class="form-control" placeholder="Ano" id="AnoValor" asp-for="@Model.KPIMetaValorEntity.Ano">
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Observação</label>
-                        <textarea rows="3" class="form-control" placeholder="Observações Gerais" asp-for="@Model.Entity.Observacao"></textarea>
+                        <label>Descrição de metas monetárias</label>
+                        <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaValorEntity.Descricao"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Status das Metas Monetárias*</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="KPIMetaValorSwitch" checked asp-for="@Model.KPIMetaValorEntity.Ativo">
+                            <label class="custom-control-label" for="KPIMetaValorSwitch">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4>Meta de Valores de Vidas</h4>
+            <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaVidaEntity.IdKPIMetaVida" id="KPIMetaVidaId">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Mínimo de Vidas</label>
+                        <input type="number" class="form-control" id="minVidas" min="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="N° de vidas" asp-for="@Model.KPIMetaVidaEntity.ValorMinimo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Máximo de Vidas</label>
+                        <input type="number" class="form-control" id="maxVidas" min="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="N° de vidas" asp-for="@Model.KPIMetaVidaEntity.ValorMaximo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Mês</label>
+                        <input type="number" class="form-control" placeholder="Mês" id="MesVida" asp-for="@Model.KPIMetaVidaEntity.Mes">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" class="form-control" placeholder="Ano" id="AnoVida" asp-for="@Model.KPIMetaVidaEntity.Ano">
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Operadora</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.OperadoraLead" id="ClienteIdOperadora">
-                            <option selected="selected" value="0">Selecione...</option>
-                            @foreach (var Item in Model.ListOperadora)
-                            {
-                                <option value="@Item.IdOperadora">@(Item.Descricao)</option>
-                            }
-                        </select>
+                        <label>Descrição de Metas de Vidas</label>
+                        <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaVidaEntity.Descricao"></textarea>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Produto</label>
-                        <input type="hidden" id="ClienteIdProdutoHidden" value="" />
-                        <select class="form-control select2" style="width: 100%;" id="ClienteIdProduto"  asp-for="@Model.Entity.ProdutoLead">
-                            <option selected="selected" value="0">Selecione...</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Status do Plano</label>
+                        <label>Status das Metas de Vidas*</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="customSwitchStatusPlano" checked asp-for="@Model.Entity.StatusPlanoLead">
-                            <label class="custom-control-label" for="customSwitchStatusPlano">Ativo</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>Data de Adesão</label>
-                        <div class="input-group date" id="ClienteDataAdesao" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#ClienteDataAdesao" asp-for="@Model.Entity.DataAdesaoLead" />
-                            <div class="input-group-append" data-target="#ClienteDataAdesao" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                            <input type="checkbox" class="custom-control-input" id="KPIMetaVidaSwitch" checked asp-for="@Model.KPIMetaVidaEntity.Ativo">
+                            <label class="custom-control-label" for="KPIMetaVidaSwitch">Ativo</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <br />
-            <div class="row @(Model.Entity.IdCliente == 0 ? "div-blocked" : string.Empty)">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Lista de Telefones</label>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button type="button" class="btn btn-info pull-right-button" data-toggle="modal" data-target="#modal-telefone" id="ButtonAdicionarModalTelefone">
-                                    Adicionar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 font-13">
-                                <table id="tableListagemTelefone" class="table table-bordered table-striped datatable_nopage">
-                                    <thead>
-                                        <tr>
-                                            <th>Telefone</th>
-                                            <th>WhatsApp</th>
-                                            <th>Operadora</th>
-                                            <th>Cadastro</th>
-                                            <th>Status</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clear-both"></div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Lista de Emails</label>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button type="button" class="btn btn-info pull-right-button" data-toggle="modal" data-target="#modal-email" id="ButtonAdicionarModalEmail">
-                                    Adicionar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 font-13">
-                                <table id="tableListagemEmail" class="table table-bordered table-striped datatable_nopage">
-                                    <thead>
-                                        <tr>
-                                            <th>Email</th>
-                                            <th>Cadastro</th>
-                                            <th>Status</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clear-both"></div>
-                </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
             </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-success">Salvar</button>
-            <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
         </div>
     </form>
-</div>
-
-<div class="modal fade" id="modal-telefone" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Novo/Editar Telefone</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form method="post" asp-page="/NovoCliente" asp-page-handler="Telefone" id="formTelefone">
-                @Html.AntiForgeryToken()
-                <input type="hidden" class="form-control" asp-for="@Model.EntityTelefone.IdCliente" value="@Model.Entity.IdCliente">
-                <input type="hidden" class="form-control" asp-for="@Model.EntityTelefone.IdTelefone" id="TelefoneIdTelefone">
-                <div class="modal-body">
-                    <div class="card-body">
-                        <div class="row" id="TelefoneMensagemDiv" style="display: none;">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <div class="alert alert-success alert-dismissible" id="TelefoneMensagemDivAlert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                        <i id="TelefoneMensagemIcon" class="icon fas fa-check"></i>
-                                        <span id="TelefoneMensagemSpan">Dados salvos com sucesso!</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Telefone</label>
-                                    <input type="text" class="form-control telefone" placeholder="Telefone" id="TelefoneNumero" asp-for="@Model.EntityTelefone.Telefone1">
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Operadora</label>
-                                    <select class="form-control select2" style="width: 100%;" id="TelefoneOperadora" asp-for="@Model.EntityTelefone.IdOperadoraTelefone">
-                                        <option selected="selected">Selecione...</option>
-                                        @foreach (var Item in Model.ListOperadoraTelefone)
-                                        {
-                                            <option value="@Item.IdOperadoraTelefone" data-id="@Item.IdOperadoraTelefone">@Item.Descricao</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>WhatsApp</label>
-                                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                        <input type="checkbox" class="custom-control-input" id="TelefoneWhatsApp" checked asp-for="@Model.EntityTelefone.WhatsApp">
-                                        <label class="custom-control-label" for="TelefoneWhatsApp">Sim</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Data de Cadastro</label>
-                                    <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" readonly id="TelefoneDataCadastro" asp-for="@Model.EntityTelefone.DataCadastro">
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                        <input type="checkbox" class="custom-control-input" id="TelefoneAtivo" checked asp-for="@Model.EntityTelefone.Ativo">
-                                        <label class="custom-control-label" for="TelefoneAtivo">Ativo</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success pull-left" id="ButtonSalvarTelefone">Salvar</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="ButtonCancelarTelefone">Cancelar</button>
-                </div>
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-
-<div class="modal fade" id="modal-email" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Novo/Editar Email</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form method="post" asp-page="/NovoCliente" asp-page-handler="Email" id="formEmail">
-                @Html.AntiForgeryToken()
-                <input type="hidden" class="form-control" asp-for="@Model.EntityEmail.IdCliente" value="@Model.Entity.IdCliente">
-                <input type="hidden" class="form-control" asp-for="@Model.EntityEmail.IdEmail" id="EmailIdEmail">
-                <div class="modal-body">
-                    <div class="card-body">
-                        <div class="row" id="EmailMensagemDiv" style="display: none;">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <div class="alert alert-success alert-dismissible" id="EmailMensagemDivAlert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                        <i id="EmailMensagemIcon" class="icon fas fa-check"></i>
-                                        <span id="EmailMensagemSpan">Dados salvos com sucesso!</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" class="form-control" placeholder="Email" id="EmailConta" asp-for="@Model.EntityEmail.EmailConta">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <div class="form-group">
-                                    <label>Data de Cadastro</label>
-                                    <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" readonly id="EmailDataCadastro" asp-for="@Model.EntityEmail.DataCadastro">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                        <input type="checkbox" class="custom-control-input" id="EmailAtivo" checked asp-for="@Model.EntityEmail.Ativo">
-                                        <label class="custom-control-label" for="EmailAtivo">Ativo</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success pull-left" id="ButtonSalvarEmail">Salvar</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="ButtonCancelarEmail">Cancelar</button>
-                </div>
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
 </div>
