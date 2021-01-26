@@ -107,86 +107,86 @@
 <body class="hold-transition sidebar-mini">
     <input type="hidden" id="IdUsuario" name="IdUsuario" value="@Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value" />
     @*<input type="hidden" id="NumeroDeLinha" name="NumeroDeLinha" value="0" />
-    <input type="hidden" id="Limite" name="Limite" value="2712" />*@
-<div class="wrapper">
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/Index" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="/Logout" class="nav-link">Contato</a>
-            </li>
-        </ul>
+        <input type="hidden" id="Limite" name="Limite" value="2712" />*@
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Index" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/Logout" class="nav-link">Contato</a>
+                </li>
+            </ul>
 
-        <!-- SEARCH FORM -->
-        <form class="form-inline ml-3">
-            <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
+            <!-- SEARCH FORM -->
+            <form class="form-inline ml-3">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
 
-        <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
-            <!-- Messages Dropdown Menu -->
-            <li class="nav-item dropdown notificacao-mensagem">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-comments"></i>
-                    <span class="badge badge-danger navbar-badge quantidade-notificacao-mensagem"></span>
-                </a>
-                <div id="notificacao-mensagem" class="dropdown-menu dropdown-menu-lg dropdown-menu-right notificacao-mensagem">
-                    
-                   
-                    
-                </div>
-            </li>
-            <!-- Notifications Dropdown Menu -->
-            <li class="nav-item dropdown" id="lista-notificacoes">
-                @*<a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Messages Dropdown Menu -->
+                <li class="nav-item dropdown notificacao-mensagem">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-comments"></i>
+                        <span class="badge badge-danger navbar-badge quantidade-notificacao-mensagem"></span>
+                    </a>
+                    <div id="notificacao-mensagem" class="dropdown-menu dropdown-menu-lg dropdown-menu-right notificacao-mensagem">
+
+
+
+                    </div>
+                </li>
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown" id="lista-notificacoes">
+                    @*<a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">15</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                                <span class="float-right text-muted text-sm">3 mins</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-users mr-2"></i> 8 friend requests
+                                <span class="float-right text-muted text-sm">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-file mr-2"></i> 3 new reports
+                                <span class="float-right text-muted text-sm">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>*@
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-user"></i> @Context.User.Identity.Name
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>*@
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-user"></i> @Context.User.Identity.Name
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <span class="dropdown-item dropdown-header">Administrador</span>
-                        </div>
-                        <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <span class="dropdown-item dropdown-header">Administrador</span>
+                            </div>
+                            <div class="col-md-7">
                                 <span id="status-usuario">
 
                                     <ul>
@@ -202,7 +202,7 @@
                                     </ul>
                                 </span>
                             </div>
-                    </div>
+                        </div>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
                             <i class="fa users-cog mr-2"></i> Minha Conta
@@ -212,188 +212,188 @@
                             <i class="fas fa-door-closed mr-2"></i>
                             Sair
                         </a>
-                </div>
-            </li>
-        </ul>
-    </nav>
-    <!-- /.navbar -->
-    <!-- Main Sidebar Container -->
-    @{
-        List<CRMYIA.Data.Entities.Modulo> ListEntity = null;
-        if (Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO") != null)
-        {
-            ListEntity = Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO");
-        }
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            @if ((ListEntity != null) && (ListEntity.Count() > 0))
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        @{
+            List<CRMYIA.Data.Entities.Modulo> ListEntity = null;
+            if (Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO") != null)
             {
-                <a href="@ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y=>y.Ordem).FirstOrDefault().Url" class="brand-link">
-                    <img src="../img/logoIn.png"
-                         alt="CRM YIA"
-                         class="brand-image elevation-3"
-                         style="max-height: 23px !important; margin-top:3px !important;">
-                    <span class="brand-text font-weight-light">CRM YIA</span>
-                </a>
+                ListEntity = Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO");
             }
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+                <!-- Brand Logo -->
+                @if ((ListEntity != null) && (ListEntity.Count() > 0))
+                {
+                    <a href="@ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y=>y.Ordem).FirstOrDefault().Url" class="brand-link">
+                        <img src="../img/logoIn.png"
+                             alt="CRM YIA"
+                             class="brand-image elevation-3"
+                             style="max-height: 23px !important; margin-top:3px !important;">
+                        <span class="brand-text font-weight-light">CRM YIA</span>
+                    </a>
+                }
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Sidebar Menu -->
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                        @if ((ListEntity != null) && (ListEntity.Count() > 0))
-                        {
-                            foreach (var ItemMenu in ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y => y.Ordem))
+                            @if ((ListEntity != null) && (ListEntity.Count() > 0))
                             {
-                                <li class="nav-item has-treeview">
-                                    <a href="@ItemMenu.Url" class="nav-link" title="@ItemMenu.ToolTip">
-                                        <i class="@ItemMenu.CssClass"></i>
-                                        <p>
-                                            @(string.IsNullOrEmpty(ItemMenu.Url) ? ItemMenu.Descricao.ToUpper() : ItemMenu.Descricao)
-                                            @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
-                                            {
-                                                <i class="right fas fa-angle-left"></i>
-                                            }
-                                        </p>
-                                    </a>
-                                    @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
-                                    {
-                                        <ul class="nav nav-treeview">
-                                            @foreach (var ItemSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).OrderBy(y => y.Ordem))
-                                            {
-                                                <li class="nav-item">
-                                                    <a href="@ItemSubMenu.Url" class="nav-link" title="@ItemSubMenu.ToolTip">
-                                                        <i class="@ItemSubMenu.CssClass"></i>
-                                                        <p>@ItemSubMenu.Descricao</p>
+                                foreach (var ItemMenu in ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y => y.Ordem))
+                                {
+                                    <li class="nav-item has-treeview">
+                                        <a href="@ItemMenu.Url" class="nav-link" title="@ItemMenu.ToolTip">
+                                            <i class="@ItemMenu.CssClass"></i>
+                                            <p>
+                                                @(string.IsNullOrEmpty(ItemMenu.Url) ? ItemMenu.Descricao.ToUpper() : ItemMenu.Descricao)
+                                                @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
+                                                {
+                                                    <i class="right fas fa-angle-left"></i>
+                                                }
+                                            </p>
+                                        </a>
+                                        @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
+                                        {
+                                            <ul class="nav nav-treeview">
+                                                @foreach (var ItemSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).OrderBy(y => y.Ordem))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a href="@ItemSubMenu.Url" class="nav-link" title="@ItemSubMenu.ToolTip">
+                                                            <i class="@ItemSubMenu.CssClass"></i>
+                                                            <p>@ItemSubMenu.Descricao</p>
+                                                            @if (ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).Count() > 0)
+                                                            {
+                                                                <i class="right fas fa-angle-left"></i>
+                                                            }
+                                                        </a>
                                                         @if (ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).Count() > 0)
                                                         {
-                                                            <i class="right fas fa-angle-left"></i>
+                                                            <ul class="nav nav-treeview">
+                                                                @foreach (var ItemSubSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).OrderBy(y => y.Ordem))
+                                                                {
+                                                                    <li>
+                                                                        <a href="@ItemSubSubMenu.Url" title="@ItemSubSubMenu.ToolTip"><i class="@ItemSubSubMenu.CssClass"></i>&nbsp;&nbsp;@ItemSubSubMenu.Descricao</a>
+                                                                    </li>
+                                                                }
+                                                            </ul>
                                                         }
-                                                    </a>
-                                                    @if (ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).Count() > 0)
-                                                    {
-                                                        <ul class="nav nav-treeview">
-                                                            @foreach (var ItemSubSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).OrderBy(y => y.Ordem))
-                                                            {
-                                                                <li>
-                                                                    <a href="@ItemSubSubMenu.Url" title="@ItemSubSubMenu.ToolTip"><i class="@ItemSubSubMenu.CssClass"></i>&nbsp;&nbsp;@ItemSubSubMenu.Descricao</a>
-                                                                </li>
-                                                            }
-                                                        </ul>
-                                                    }
 
-                                                </li>
-                                            }
-                                        </ul>
-                                    }
-                                </li>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                    </li>
 
+                                }
                             }
-                        }
 
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
-    }
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" id="pdf-dow">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>@ViewData["Pagina"]</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">@ViewData["Pagina"]</a></li>
-                            <li class="breadcrumb-item active">@ViewData["Title"]</li>
-                        </ol>
-                    </div>
+                        </ul>
+                    </nav>
+                    <!-- /.sidebar-menu -->
                 </div>
-            </div><!-- /.container-fluid -->
-        </section>
+                <!-- /.sidebar -->
+            </aside>
+        }
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" id="pdf-dow">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>@ViewData["Pagina"]</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">@ViewData["Pagina"]</a></li>
+                                <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
 
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                @RenderBody()
-            </div>
-        </section>
-        <!-- /.content -->
-    </div>
-    <div id="float-open" class="bg-primary float-open">
-        <a class="float-link" href="javascript:void(0)"> <i class="far fa-comments"></i></a>
-    </div>
-
-    <!-- DIRECT CHAT -->
-    <div id="direct-chat" class="card direct-chat direct-chat-primary d-none float-chat">
-        <div class="card-header">
-            <h3 id="indentificacao-para" class="card-title"></h3>
-
-            @*<input type="text" class="m-1" name="pesquisa-chat" id="pesquisa-chat" value="" placeholder="Pesquisar" style="border-radius: 0.25rem;" />*@
-
-            <div class="card-tools">
-                <span title="3 New Messages" class="badge badge-primary quantidade-notificacao-mensagem"></span>
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool btn-contato" title="Contacts" data-widget="chat-pane-toggle">
-                    <i class="fas fa-comments"></i>
-                </button>
-                <button type="button" class="btn btn-tool btn-close" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+            <!-- /.content -->
         </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-            <!-- Conversations are loaded here -->
-            <div class="direct-chat-messages chat-body" data-bind="foreach: chatMensagem">
+        <div id="float-open" class="bg-primary float-open">
+            <a class="float-link" href="javascript:void(0)"> <i class="far fa-comments"></i></a>
+        </div>
 
-                @*<div class="direct-chat-msg">
-                        <div class="direct-chat-infos clearfix">
-                            <span class="direct-chat-name float-left">Alexander Pierce</span>
-                            <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                        </div>
+        <!-- DIRECT CHAT -->
+        <div id="direct-chat" class="card direct-chat direct-chat-primary d-none float-chat">
+            <div class="card-header">
+                <h3 id="indentificacao-para" class="card-title"></h3>
 
-                        <img class="direct-chat-img" src="../dist/img/user1-128x128.jpg" alt="Message User Image">
+                @*<input type="text" class="m-1" name="pesquisa-chat" id="pesquisa-chat" value="" placeholder="Pesquisar" style="border-radius: 0.25rem;" />*@
 
-                        <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                        </div>
-
-                    </div>*@
-
-                <div class="direct-chat-msg" data-bind="css: $data.eMeuPessoaChat() === true ? 'right' : ''">
-                    <div class="direct-chat-infos clearfix">
-                        <span class="direct-chat-name" data-bind="css: $data.eMeuPessoaChat() === true ? 'float-right' : 'float-left', text: $data.nomePessoaChat"></span>
-                        <span class="direct-chat-timestamp text-capitalize" data-bind="css: $data.eMeuPessoaChat() === true ? 'float-left' : 'float-right', text: $data.dataCadastroPessoaChat"></span>
-                    </div>
-                    <!-- /.direct-chat-infos -->
-                    <img class="direct-chat-img" src="img/fotoCadastro/foto-cadastro.jpeg" data-bind="attr:{src: $data.imagemPessoaChat}" alt="Message User Image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text" data-bind="text: $data.mensagemPessoaChat">
-
-                    </div>
-                    <!-- /.direct-chat-text -->
+                <div class="card-tools">
+                    <span title="3 New Messages" class="badge badge-primary quantidade-notificacao-mensagem"></span>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool btn-contato" title="Contacts" data-widget="chat-pane-toggle">
+                        <i class="fas fa-comments"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool btn-close" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-
             </div>
-            <!--/.direct-chat-messages-->
-            <!-- Contacts are loaded here -->
-            <div class=" direct-chat-contacts">
-                <ul id="lista-usuario" class="contacts-list" data-bind="foreach: filteredChatUsers, event: { scroll: barraListaUsuario }">
-                    <li class="idusuario-para" data-bind="click: $parent.buscarContato, attr: {'data-idusuario': $data.idUsuario}">
-                        <div data-bind="if: $data.mensagem">
-                            <input type="hidden" class="nome" data-bind="value: $data.nome" />
-                            
-                            <a href="javascript:void(0)">
-                                <i class="fa fa-circle" data-bind="css: $data.logado"></i> <span class="text-decoration-none font-weight-bolder text-white" data-bind="text: $data.nome"></span>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!-- Conversations are loaded here -->
+                <div class="direct-chat-messages chat-body" data-bind="foreach: chatMensagem">
+
+                    @*<div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">Alexander Pierce</span>
+                                <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                            </div>
+
+                            <img class="direct-chat-img" src="../dist/img/user1-128x128.jpg" alt="Message User Image">
+
+                            <div class="direct-chat-text">
+                                Is this template really for free? That's unbelievable!
+                            </div>
+
+                        </div>*@
+
+                    <div class="direct-chat-msg" data-bind="css: $data.eMeuPessoaChat() === true ? 'right' : ''">
+                        <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name" data-bind="css: $data.eMeuPessoaChat() === true ? 'float-right' : 'float-left', text: $data.nomePessoaChat"></span>
+                            <span class="direct-chat-timestamp text-capitalize" data-bind="css: $data.eMeuPessoaChat() === true ? 'float-left' : 'float-right', text: $data.dataCadastroPessoaChat"></span>
+                        </div>
+                        <!-- /.direct-chat-infos -->
+                        <img class="direct-chat-img" src="img/fotoCadastro/foto-cadastro.jpeg" data-bind="attr:{src: $data.imagemPessoaChat}" alt="Message User Image">
+                        <!-- /.direct-chat-img -->
+                        <div class="direct-chat-text" data-bind="text: $data.mensagemPessoaChat">
+
+                        </div>
+                        <!-- /.direct-chat-text -->
+                    </div>
+
+                </div>
+                <!--/.direct-chat-messages-->
+                <!-- Contacts are loaded here -->
+                <div class=" direct-chat-contacts">
+                    <ul id="lista-usuario" class="contacts-list" data-bind="foreach: filteredChatUsers, event: { scroll: barraListaUsuario }">
+                        <li class="idusuario-para" data-bind="click: $parent.buscarContato, attr: {'data-idusuario': $data.idUsuario}">
+                            <div data-bind="if: $data.mensagem">
+                                <input type="hidden" class="nome" data-bind="value: $data.nome" />
+
+                                <a href="javascript:void(0)">
+                                    <i class="fa fa-circle" data-bind="css: $data.logado"></i> <span class="text-decoration-none font-weight-bolder text-white" data-bind="text: $data.nome"></span>
                                     <img class="contacts-list-img" data-bind="attr:{src: $data.imagem}" alt="User Avatar">
 
                                     <div class="contacts-list-info">
@@ -401,174 +401,177 @@
                                         <span class="contacts-list-date float-right" data-bind="text: $data.dataMensagem"></span>
                                         <span class="contacts-list-msg" data-bind="text: $data.mensagem"></span>
                                     </div>
-                                <!-- /.contacts-list-info -->
-                            </a>
-                            @*<span href="javascript:void(0)" data-bind="ifnot: $parent.eNulo()">Null</span>*@
-                        </div>
-                        <div class="container text-center" data-bind="ifnot: $data.mensagem">
-                            <span><img class="img-circle text-center" width="40" height="40" data-bind="attr:{src: $data.imagem}" alt="" /></span><br />
-                            <span>Clique e Envie uma Mensagem para </span><br />
-                            <span class="text-center" data-bind="text: $data.nome"></span>
-                        </div>
-                    </li>
-                    <!-- End Contact Item -->
-                </ul>
-                <!-- /.contacts-list -->
+                                    <!-- /.contacts-list-info -->
+                                </a>
+                                @*<span href="javascript:void(0)" data-bind="ifnot: $parent.eNulo()">Null</span>*@
+                            </div>
+                            <div class="container text-center" data-bind="ifnot: $data.mensagem">
+                                <span><img class="img-circle text-center" width="40" height="40" data-bind="attr:{src: $data.imagem}" alt="" /></span><br />
+                                <span>Clique e Envie uma Mensagem para </span><br />
+                                <span class="text-center" data-bind="text: $data.nome"></span>
+                            </div>
+                        </li>
+                        <!-- End Contact Item -->
+                    </ul>
+                    <!-- /.contacts-list -->
+                </div>
+                <!-- /.direct-chat-pane -->
             </div>
-            <!-- /.direct-chat-pane -->
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <form data-bind="event: { submit: pesquisarNomeUsuario }">
+                    <div class="d-none input-group" id="pesquisar">
+                        <input type="text" name="PesquisaNome" id="PesquisaNome" data-bind="value:pesquisaNome" placeholder="Pesquisar Contato..." class="form-control">
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary btn-enviar-pesquisar">Pesquisar</button>
+                        </span>
+                    </div>
+                </form>
+                <form data-bind="event: { submit: enviarMensagem }">
+                    <div class="input-group" id="mensagem">
+                        <input type="hidden" name="Para" id="Para" value="" />
+                        <input type="hidden" name="De" id="De" value="" />
+                        <input type="hidden" name="Nome" id="Nome" value="" />
+                        <input type="hidden" name="Url" id="Url" value="" />
+                        <input type="text" name="Mensagem" id="Mensagem" placeholder="Digite uma mensagem..." class="form-control">
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary btn-enviar-mensagem">Enviar</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-footer-->
         </div>
-        <!-- /.card-body -->
-        <div class="card-footer">
-            <form data-bind="event: { submit: pesquisarNomeUsuario }">
-                <div class="d-none input-group" id="pesquisar">
-                    <input type="text" name="PesquisaNome" id="PesquisaNome" data-bind="value:pesquisaNome" placeholder="Pesquisar Contato..." class="form-control">
-                    <span class="input-group-append">
-                        <button type="submit" class="btn btn-primary btn-enviar-pesquisar">Pesquisar</button>
-                    </span>
-                </div>
-            </form>
-            <form data-bind="event: { submit: enviarMensagem }">
-                <div class="input-group" id="mensagem">
-                    <input type="hidden" name="Para" id="Para" value="" />
-                    <input type="hidden" name="De" id="De" value="" />
-                    <input type="hidden" name="Nome" id="Nome" value="" />
-                    <input type="hidden" name="Url" id="Url" value="" />
-                    <input type="text" name="Mensagem" id="Mensagem" placeholder="Digite uma mensagem..." class="form-control">
-                    <span class="input-group-append">
-                        <button type="submit" class="btn btn-primary btn-enviar-mensagem">Enviar</button>
-                    </span>
-                </div>
-            </form>
-        </div>
-        <!-- /.card-footer-->
+        <!--/.direct-chat -->
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; @DateTime.Now.Year.ToString() <a href="http://www.yia.com.br">YIA</a>.</strong> Todos os direitos reservados.
+        </footer>
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Notificação -->
+        <audio controls id="notificacao" style="display: none;">
+            <source id="sound1" src="~/audio/notificacao.ogg" type="audio/ogg">
+            <source id="sound2" src="~/audio/notificacao.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Receber Mensagem -->
+        <audio controls id="receber-mensagem" style="display: none;">
+            <source id="sound1" src="~/audio/receber-mensagem.ogg" type="audio/ogg">
+            <source id="sound2" src="~/audio/receber-mensagem.mp3" type="audio/mpeg">
+        </audio>
+
     </div>
-    <!--/.direct-chat -->
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 1.0.0
-        </div>
-        <strong>Copyright &copy; @DateTime.Now.Year.ToString() <a href="http://www.yia.com.br">YIA</a>.</strong> Todos os direitos reservados.
-    </footer>
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
-
-    <!-- Notificação -->
-    <audio controls id="notificacao" style="display: none;">
-        <source id="sound1" src="~/audio/notificacao.ogg" type="audio/ogg">
-        <source id="sound2" src="~/audio/notificacao.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Receber Mensagem -->
-    <audio controls id="receber-mensagem" style="display: none;">
-        <source id="sound1" src="~/audio/receber-mensagem.ogg" type="audio/ogg">
-        <source id="sound2" src="~/audio/receber-mensagem.mp3" type="audio/mpeg">
-    </audio>
-
-</div>
-        <partial name="_BusyIndicatorPartial" />
-        <!-- ./wrapper -->
-        <!-- jQuery -->
-        <script src="../plugins/jquery/jquery.min.js"></script>
-        <!-- Jquery UI -->
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- Select2 -->
-        <script src="../plugins/select2/js/select2.full.min.js"></script>
-        <!-- DataTables -->
-        <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <script src="../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-        <!-- overlayScrollbars -->
-        <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-        <!-- jquery-validation -->
-        <script src="../plugins/jquery-validation/jquery.validate.min.js"></script>
-        <script src="../plugins/jquery-validation/additional-methods.min.js"></script>
-        <!-- jquery-inputmask -->
-        <script src="../plugins/jquery-inputmask/jquery.inputmask.js"></script>
-        <script src="../plugins/jquery-inputmask/jquery.inputmask.date.extensions.js"></script>
-        <script src="../plugins/jquery-inputmask/jquery.inputmask.numeric.extensions.js"></script>
-        <script src="../plugins/jquery-inputmask/jquery.inputmask.phone.extensions.js"></script>
-        <script src="../plugins/jquery-inputmask/jquery.inputmask.regex.extensions.js"></script>
-        <script src="../plugins/jquery-inputmask/jquery.mask.min.js"></script>
-        <!-- InputMask -->
-        <script src="../plugins/moment/moment.min.js"></script>
-        <script src="../plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
-        <!-- bootstrap color picker -->
-        <script src="../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-        <!-- date-range-picker -->
-        <script src="../plugins/daterangepicker/daterangepicker.js"></script>
-        <!-- tempus dominus datetimepicker -->
-        <script src="../plugins/moment/moment-with-locales.js"></script>
-        <!-- Tempusdominus Bootstrap 4 -->
-        <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-        <!-- fullCalendar 2.2.5 -->
-        <script src="../plugins/fullcalendar/main.min.js"></script>
-        <script src="../plugins/fullcalendar-daygrid/main.min.js"></script>
-        <script src="../plugins/fullcalendar-timegrid/main.min.js"></script>
-        <script src="../plugins/fullcalendar-interaction/main.min.js"></script>
-        <script src="../plugins/fullcalendar-bootstrap/main.min.js"></script>
-        <script src='../plugins/fullcalendar/locales/pt-br.js'></script>
+    <partial name="_BusyIndicatorPartial" />
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="../plugins/jquery/jquery.min.js"></script>
+    <!-- Jquery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="../plugins/select2/js/select2.full.min.js"></script>
+    <!-- DataTables -->
+    <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- jquery-validation -->
+    <script src="../plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../plugins/jquery-validation/additional-methods.min.js"></script>
+    <!-- jquery-inputmask -->
+    <script src="../plugins/jquery-inputmask/jquery.inputmask.js"></script>
+    <script src="../plugins/jquery-inputmask/jquery.inputmask.date.extensions.js"></script>
+    <script src="../plugins/jquery-inputmask/jquery.inputmask.numeric.extensions.js"></script>
+    <script src="../plugins/jquery-inputmask/jquery.inputmask.phone.extensions.js"></script>
+    <script src="../plugins/jquery-inputmask/jquery.inputmask.regex.extensions.js"></script>
+    <script src="../plugins/jquery-inputmask/jquery.mask.min.js"></script>
+    <!-- InputMask -->
+    <script src="../plugins/moment/moment.min.js"></script>
+    <script src="../plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
+    <!-- bootstrap color picker -->
+    <script src="../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="../plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- tempus dominus datetimepicker -->
+    <script src="../plugins/moment/moment-with-locales.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- fullCalendar 2.2.5 -->
+    <script src="../plugins/fullcalendar/main.min.js"></script>
+    <script src="../plugins/fullcalendar-daygrid/main.min.js"></script>
+    <script src="../plugins/fullcalendar-timegrid/main.min.js"></script>
+    <script src="../plugins/fullcalendar-interaction/main.min.js"></script>
+    <script src="../plugins/fullcalendar-bootstrap/main.min.js"></script>
+    <script src='../plugins/fullcalendar/locales/pt-br.js'></script>
 
 
-        @if (ViewData["Pagina"].ToString().ToUpper().Equals("VISITAS"))
-        {
-            <script src="../plugins/popper/unpkg-popper.min.js"></script>
-            <script src="../plugins/tooltip/tooltip.min.js"></script>
-            <script src="../js/CalendarVisit.js"></script>
-        }
-        <!-- Page specific script -->
-        <!-- AdminLTE App   -->
-        <script src="../js/adminlte.min.js"></script>
-        <!-- AdminLTE for demo purposes -->
-        <script src="../js/demo.js"></script>
+    @if (ViewData["Pagina"].ToString().ToUpper().Equals("VISITAS"))
+    {
+        <script src="../plugins/popper/unpkg-popper.min.js"></script>
+        <script src="../plugins/tooltip/tooltip.min.js"></script>
+        <script src="../js/CalendarVisit.js"></script>
+    }
+    <!-- Page specific script -->
+    <!-- AdminLTE App   -->
+    <script src="../js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../js/demo.js"></script>
 
-        <!-- PAGE PLUGINS -->
-        <!-- jQuery Mapael -->
-        <script src="../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-        <script src="../plugins/raphael/raphael.min.js"></script>
-        <script src="../plugins/jquery-mapael/jquery.mapael.min.js"></script>
-        <script src="../plugins/jquery-mapael/maps/usa_states.min.js"></script>
-        <!-- ChartJS -->
-        <script src="../plugins/chart.js/Chart.min.js"></script>
-        <!--Notificações-->
-        <script src="~/js/signalr/signalr.min.js"></script>
-        <script src="~/js/notificacao/notificacao.js" asp-append-version="true"></script>
-        <script src="~/js/notificacao/chat.js" asp-append-version="true"></script>
-        <script src="~/js/knockout/knockout-latest.js"></script>
-        <!--Geral-->
-        <script src="~/js/sistema/geral.js"></script>
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="../plugins/raphael/raphael.min.js"></script>
+    <script src="../plugins/jquery-mapael/jquery.mapael.min.js"></script>
+    <script src="../plugins/jquery-mapael/maps/usa_states.min.js"></script>
+    <!-- ChartJS -->
+    <script src="../plugins/chart.js/Chart.min.js"></script>
+    <!--Notificações-->
+    <script src="~/js/signalr/signalr.min.js"></script>
+    <script src="~/js/notificacao/notificacao.js" asp-append-version="true"></script>
+    <script src="~/js/notificacao/chat.js" asp-append-version="true"></script>
+    <script src="~/js/knockout/knockout-latest.js"></script>
+    <!--Geral-->
+    <script src="~/js/sistema/geral.js"></script>
 
-        <!-- PAGE SCRIPTS -->
-        @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
-        {
-            <script src="../js/pages/dashboard2.js"></script>
-            <script src="~/js/jsPdf/jspdf.min.js"></script>
-            <script src="~/js/canvas2image/canvas2image.min.js"></script>
-        }
-        @if (ViewData["Pagina"].ToString().Equals("Funil de Vendas"))
-        {
-            <script src="../js/sistema/tarefa.js"></script>
-            <script src="~/js/sistema/numeral.min.js"></script>
-        }
+    <!-- PAGE SCRIPTS -->
+    @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
+    {
+        <script src="../js/pages/dashboard2.js"></script>
+        <script src="~/js/jsPdf/jspdf.min.js"></script>
+        <script src="~/js/canvas2image/canvas2image.min.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("Funil de Vendas"))
+    {
+        <script src="../js/sistema/tarefa.js"></script>
+        <script src="~/js/sistema/numeral.min.js"></script>
+    }
 
-        @if (ViewData["Pagina"].ToString().Equals("Marketing"))
-        {
-            <!-- jQuery UI -->
-            <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
-            <!-- Ekko Lightbox -->
-            <script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
-            <!-- Filterizr-->
-            <script src="~/plugins/filterizr/jquery.filterizr.min.js"></script>
-        }
+    @if (ViewData["Pagina"].ToString().Equals("Marketing"))
+    {
+        <!-- jQuery UI -->
+        <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <!-- Ekko Lightbox -->
+        <script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+        <!-- Filterizr-->
+        <script src="~/plugins/filterizr/jquery.filterizr.min.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("KPI Meta"))
+    {
+        <script src="~/js/sistema/novaMeta.js"></script>
+    }
 
-        <script src="../js/main.js"></script>
+    <script src="../js/main.js"></script>
 
-        @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
