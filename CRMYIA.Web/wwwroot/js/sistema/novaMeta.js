@@ -41,8 +41,6 @@ $("#minValor").change(function () {
 $("#maxValor").change(function () {
     var min = $("#minValor").val();
     var max = $("#maxValor").val();
-    alert(min)
-    alert(max)
     if (parseFloat(min) >= parseFloat(max))  {
         $("#maxValor").val("");
     }
