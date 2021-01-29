@@ -76,18 +76,15 @@
         /* table {
             font-size: 1em;
         }*/
-
         /* .ui-draggable, .ui-droppable {
             background-position: top;
         }*/
-
         #notificacao-mensagem-tremer {
             /* apenas para dar um formato a div */
             /* animacao */
             animation: tremer .2s;
             animation-iteration-count: infinite;
         }
-
         /* keyframe para ajustar até onde treme */
         @@keyframes tremer {
             0% {
@@ -138,7 +135,7 @@
         foreach (var t in Claims)
         {
             if (t.Type.Equals("IdUsuarioSlave"))
-                 InputIdUsuarioSlave = t.Value.ExtractLong();
+                InputIdUsuarioSlave = t.Value.ExtractLong();
         }
     }
     <input type="hidden" id="IdUsuario" name="IdUsuario" value="@Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value" />
@@ -162,19 +159,58 @@
             </ul>
 
             <!-- SEARCH FORM -->
-            <form class="form-inline ml-3">
-                <div class="input-group input-group-sm">
-                    <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-navbar" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+            @*<form class="form-inline ml-3">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>*@
+
+            @if (UsuarioModel.GetPerfil(@Context.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) != (byte?)EnumeradorModel.Perfil.Corretor)
+            {
+                List<CRMYIA.Data.Entities.UsuarioHierarquia> ListEntityUsuarioHierarquia = null;
+
+                List<CRMYIA.Data.Entities.UsuarioHierarquia> ListEntityUsuarioHierarquia1 = null;
+
+
+
+                ListEntityUsuarioHierarquia = CRMYIA.Business.UsuarioHierarquiaModel.GetAllUsuarioMaster();
+                @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).OrderBy(y => y.IdUsuarioMaster).FirstOrDefault().IdUsuarioMaster;*@
+                @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMasterNavigation != null && x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).Select(x => x).ToList();*@
+                if (@ListEntityUsuarioHierarquia != null)
+                {
+
+                    @Html.AntiForgeryToken()
+                    <div class="col-sm-3 float-right d-block" id="bloco-id-usuario-slave">
+                        <div class="input-group input-group-sm">
+                            @*<label>Selecione um Usuário</label>*@
+                            <select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
+                                <option selected="selected">Selecione um Usuário</option>
+                                @foreach (var Item in @ListEntityUsuarioHierarquia)
+                                {
+                                    @if (Item.IdUsuarioMasterNavigation != null && Item.IdUsuarioSlaveNavigation != null && Item.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong())
+                                    {
+                                        <option value="@Item.IdUsuarioSlaveNavigation.IdUsuario">@(Item.IdUsuarioSlaveNavigation.Nome)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 float-right d-none" id="bloco-button-id-usuario-slave">
+                        <button class="btn btn-primary" id="desconectar-usuario">Desconectar do Usuário</button>
+                    </div>
+
+                }
+            }
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
+
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown notificacao-mensagem">
                     <a class="nav-link" data-toggle="dropdown" href="#">
@@ -579,7 +615,6 @@
     <script src="~/js/knockout/knockout-latest.js"></script>
     <!--Geral-->
     <script src="~/js/sistema/geral.js"></script>
-
     <!-- PAGE SCRIPTS -->
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
     {
@@ -601,10 +636,6 @@
         <script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
         <!-- Filterizr-->
         <script src="~/plugins/filterizr/jquery.filterizr.min.js"></script>
-    }
-    @if (ViewData["Pagina"].ToString().Equals("KPI Meta"))
-    {
-        <script src="~/js/sistema/novaMeta.js"></script>
     }
 
     <script src="../js/main.js"></script>
