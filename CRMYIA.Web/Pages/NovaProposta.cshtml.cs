@@ -254,7 +254,7 @@ namespace CRMYIA.Web.Pages
 
                 if (Entity.IdProposta == 0)
                 {
-                    long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                    long IdUsuario = GetIdUsuario();
                     PropostaModel.Add(Entity);
 
                     #region Salvar PropostaFaixaEtaria
@@ -397,6 +397,20 @@ namespace CRMYIA.Web.Pages
             ListMotivoDeclinio = MotivoDeclinioModel.GetListIdDescricao();
             ListFaixaEtaria = FaixaEtariaModel.GetListIdDescricao();
             ListPorte = PorteModel.GetListIdDescricao();
+        }
+        public long GetIdUsuario()
+        {
+            long IdUsuario = "0".ExtractLong();
+
+            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            {
+                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
+            }
+            else
+            {
+                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            }
+            return IdUsuario;
         }
         #endregion
     }

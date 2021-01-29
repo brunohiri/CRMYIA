@@ -1,7 +1,7 @@
 ﻿@using CRMYIA.Business;
 @using CRMYIA.Business.Util;
 @using System.Security.Claims;
-@{ int num = 0; }
+@{ long InputIdUsuarioSlave = 0;}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,8 +36,12 @@
     <link rel="stylesheet" href="../plugins/fullcalendar-bootstrap/main.min.css">
     <!-- datetimepicker -->
     <link rel="stylesheet" href="../plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
+
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="~/plugins/sweetAlert2_7.2.0/sweetalert2.min.css">
+    <script src="~/plugins/sweetAlert2_7.2.0/sweetalert2.all.min.js"></script>
     <style>
         .tooltip {
             opacity: 1 !important;
@@ -127,7 +131,18 @@
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
+    @{
+
+        var identity = (ClaimsIdentity)User.Identity;
+        IEnumerable<Claim> Claims = identity.Claims;
+        foreach (var t in Claims)
+        {
+            if (t.Type.Equals("IdUsuarioSlave"))
+                 InputIdUsuarioSlave = t.Value.ExtractLong();
+        }
+    }
     <input type="hidden" id="IdUsuario" name="IdUsuario" value="@Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value" />
+    <input type="hidden" id="InputIdUsuarioSlave" name="InputIdUsuarioSlave" value="@InputIdUsuarioSlave" />
     @*<input type="hidden" id="NumeroDeLinha" name="NumeroDeLinha" value="0" />
         <input type="hidden" id="Limite" name="Limite" value="2712" />*@
     <div class="wrapper">
@@ -167,114 +182,116 @@
 
 
                 ListEntityUsuarioHierarquia = CRMYIA.Business.UsuarioHierarquiaModel.GetAllUsuarioMaster();
-                    @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).OrderBy(y => y.IdUsuarioMaster).FirstOrDefault().IdUsuarioMaster;*@
+                @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).OrderBy(y => y.IdUsuarioMaster).FirstOrDefault().IdUsuarioMaster;*@
                 @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMasterNavigation != null && x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).Select(x => x).ToList();*@
                 if (@ListEntityUsuarioHierarquia != null)
                 {
-                    <div class="col-sm-3 float-right">
+
+                    @Html.AntiForgeryToken()
+                    <div class="col-sm-3 float-right d-block" id="bloco-id-usuario-slave">
                         <div class="input-group input-group-sm">
                             @*<label>Selecione um Usuário</label>*@
                             <select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
                                 <option selected="selected">Selecione um Usuário</option>
                                 @foreach (var Item in @ListEntityUsuarioHierarquia)
-                            {
-                                         @if (Item.IdUsuarioMasterNavigation != null && Item.IdUsuarioSlaveNavigation != null && Item.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong())
-                                            {
-                                                <option value="@Item.IdUsuarioSlaveNavigation.IdUsuario">@(Item.IdUsuarioSlaveNavigation.Nome)</option>
-                                         }
-                                         else
-                                         {
-                                             num++;
-                                         }
+                                {
+                                    @if (Item.IdUsuarioMasterNavigation != null && Item.IdUsuarioSlaveNavigation != null && Item.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong())
+                                    {
+                                        <option value="@Item.IdUsuarioSlaveNavigation.IdUsuario">@(Item.IdUsuarioSlaveNavigation.Nome)</option>
                                     }
+                                }
                             </select>
                         </div>
                     </div>
+
+                    <div class="col-sm-3 float-right d-none" id="bloco-button-id-usuario-slave">
+                        <button class="btn btn-primary" id="desconectar-usuario">Desconectar do Usuário</button>
+                    </div>
+
                 }
-            }
+             }
 
-        <span id="num">@num</span>
-            <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+                        <!-- Right navbar links -->
+                        <ul class="navbar-nav ml-auto">
 
-                <!-- Messages Dropdown Menu -->
-                <li class="nav-item dropdown notificacao-mensagem">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-comments"></i>
-                        <span class="badge badge-danger navbar-badge quantidade-notificacao-mensagem"></span>
-                    </a>
-                    <div id="notificacao-mensagem" class="dropdown-menu dropdown-menu-lg dropdown-menu-right notificacao-mensagem">
-
+                            <!-- Messages Dropdown Menu -->
+                            <li class="nav-item dropdown notificacao-mensagem">
+                                <a class="nav-link" data-toggle="dropdown" href="#">
+                                    <i class="far fa-comments"></i>
+                                    <span class="badge badge-danger navbar-badge quantidade-notificacao-mensagem"></span>
+                                </a>
+                                <div id="notificacao-mensagem" class="dropdown-menu dropdown-menu-lg dropdown-menu-right notificacao-mensagem">
 
 
-                    </div>
-                </li>
-                <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown" id="lista-notificacoes">
-                    @*<a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-bell"></i>
-                    <span class="badge badge-warning navbar-badge">15</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <span class="dropdown-item dropdown-header">15 Notifications</span>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-envelope mr-2"></i> 4 new messages
-                        <span class="float-right text-muted text-sm">3 mins</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-users mr-2"></i> 8 friend requests
-                        <span class="float-right text-muted text-sm">12 hours</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-file mr-2"></i> 3 new reports
-                        <span class="float-right text-muted text-sm">2 days</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                </div>*@
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-user"></i> @Context.User.Identity.Name
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <span class="dropdown-item dropdown-header">Administrador</span>
-                            </div>
-                            <div class="col-md-7">
-                                <span id="status-usuario">
 
-                                    <ul>
-                                        <li>
-                                            <span class="dropdown-item dropdown-header">Status: <a href="javascript:void(0)" title="Ativo" id="status-link"></a></span>
-                                            <ul class="bg-light" style="border-radius: 5px; border: 1px solid #c0c0c0;">
-                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(0)">Ativo<i class="fa fa-circle text-success"></i></a></li>
-                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(1)">Ausente<i class="fa fa-circle text-warning"></i></a></li>
-                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(2)">Não incomodar<i class="fa fa-circle text-danger"></i></a></li>
-                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(3)">Invisível<i class="fa fa-circle text-white"></i></a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fa users-cog mr-2"></i> Minha Conta
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="/Logout" class="dropdown-item">
-                            <i class="fas fa-door-closed mr-2"></i>
-                            Sair
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+                                </div>
+                            </li>
+                            <!-- Notifications Dropdown Menu -->
+                            <li class="nav-item dropdown" id="lista-notificacoes">
+                                @*<a class="nav-link" data-toggle="dropdown" href="#">
+                                <i class="far fa-bell"></i>
+                                <span class="badge badge-warning navbar-badge">15</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                <span class="dropdown-item dropdown-header">15 Notifications</span>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-envelope mr-2"></i> 4 new messages
+                                    <span class="float-right text-muted text-sm">3 mins</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-users mr-2"></i> 8 friend requests
+                                    <span class="float-right text-muted text-sm">12 hours</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-file mr-2"></i> 3 new reports
+                                    <span class="float-right text-muted text-sm">2 days</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                            </div>*@
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" data-toggle="dropdown" href="#">
+                                    <i class="far fa-user"></i> @Context.User.Identity.Name
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <span class="dropdown-item dropdown-header">Administrador</span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <span id="status-usuario">
+
+                                                <ul>
+                                                    <li>
+                                                        <span class="dropdown-item dropdown-header">Status: <a href="javascript:void(0)" title="Ativo" id="status-link"></a></span>
+                                                        <ul class="bg-light" style="border-radius: 5px; border: 1px solid #c0c0c0;">
+                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(0)">Ativo<i class="fa fa-circle text-success"></i></a></li>
+                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(1)">Ausente<i class="fa fa-circle text-warning"></i></a></li>
+                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(2)">Não incomodar<i class="fa fa-circle text-danger"></i></a></li>
+                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(3)">Invisível<i class="fa fa-circle text-white"></i></a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fa users-cog mr-2"></i> Minha Conta
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="/Logout" class="dropdown-item">
+                                        <i class="fas fa-door-closed mr-2"></i>
+                                        Sair
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
         @{
@@ -601,7 +618,6 @@
     <script src="~/js/knockout/knockout-latest.js"></script>
     <!--Geral-->
     <script src="~/js/sistema/geral.js"></script>
-
     <!-- PAGE SCRIPTS -->
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
     {

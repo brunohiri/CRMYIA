@@ -68,6 +68,8 @@ $(document).ready(function () {
 
     let DInicio = new Date(anoC, mesC, 1);
     let DFim = new Date(anoC, mesC + 1, 0);
+
+    
 });
 
 $(document).on('click', '.limpar-pesquisa-dashboard', function () {

@@ -158,6 +158,52 @@ $(document).ready(function () {
 
     ObterStatusUsuario();
 
+    $("#IdUsuarioSlave").change(function () {
+        var id = this.value;
+        console.log(id);
+        console.log($("#IdUsuarioSlave :selected").text());
+
+        LoginSlave(id);
+    });
+
+    $('#desconectar-usuario').on('click', function () {
+        $.ajax({
+            type: "POST",
+            url: "/Index?handler=LogoutSlave",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.status) {
+                    location.href = data.url;
+                } else {
+                    swal("Erro!", data.message, "error");
+                }
+            },
+            failure: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    if ($('#InputIdUsuarioSlave').val() != undefined && $('#InputIdUsuarioSlave').val() != "" && $('#InputIdUsuarioSlave').val() != "0") {
+        $('body').css('border', '10px solid red');
+        $('#bloco-id-usuario-slave').removeClass('d-block');
+        $('#bloco-id-usuario-slave').addClass('d-none');
+
+        $('#bloco-button-id-usuario-slave').removeClass('d-none');
+        $('#bloco-button-id-usuario-slave').addClass('d-block');
+    } else {
+        $('#bloco-id-usuario-slave').removeClass('d-none');
+        $('#bloco-id-usuario-slave').addClass('d-block');
+
+        $('#bloco-button-id-usuario-slave').removeClass('d-block');
+        $('#bloco-button-id-usuario-slave').addClass('d-none');
+    }
+
 });
 
 function InitDatatables() {
@@ -889,4 +935,51 @@ function ObterStatusUsuario() {
             }
         }
     });
+}
+
+function LoginSlave(IdUsuario) {
+    swal({
+        title: "Você tem certeza?",
+        text: "Que deseja se logar como " + $("#IdUsuarioSlave :selected").text(),
+        type: "warning",
+        showCancelButton: !0,
+        confirmButtonText: "Sim, logar agora!",
+        cancelButtonText: "Não, cancelar!",
+        reverseButtons: !0,
+        confirmButtonColor: "#198754",
+        cancelButtonColor: "#DC3545"
+    }).then(function (e) {
+        if (e.value === true) {
+            var form = $('#usuario-slave').serialize();
+            var obj = {};
+            obj.IdUsuario = IdUsuario;
+            $.ajax({
+                type: "POST",
+                url: '/Index?handler=LoginSlave',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: JSON.stringify(obj),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.status === true) {
+                        //swal("Sucesso!", data.message, "success");
+                        location.href = data.url;
+                    } else {
+                        swal("Erro!", data.message, "error");
+                    }
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        } else {
+            e.dismiss;
+        }
+
+    }, function (dismiss) {
+        return false;
+    })
 }
