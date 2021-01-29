@@ -162,136 +162,97 @@
             </ul>
 
             <!-- SEARCH FORM -->
-            @*<form class="form-inline ml-3">
-            <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
+            <form class="form-inline ml-3">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>*@
+            </form>
 
-            @if (UsuarioModel.GetPerfil(@Context.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) != (byte?)EnumeradorModel.Perfil.Corretor)
-            {
-                List<CRMYIA.Data.Entities.UsuarioHierarquia> ListEntityUsuarioHierarquia = null;
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Messages Dropdown Menu -->
+                <li class="nav-item dropdown notificacao-mensagem">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-comments"></i>
+                        <span class="badge badge-danger navbar-badge quantidade-notificacao-mensagem"></span>
+                    </a>
+                    <div id="notificacao-mensagem" class="dropdown-menu dropdown-menu-lg dropdown-menu-right notificacao-mensagem">
 
-                List<CRMYIA.Data.Entities.UsuarioHierarquia> ListEntityUsuarioHierarquia1 = null;
 
 
-
-                ListEntityUsuarioHierarquia = CRMYIA.Business.UsuarioHierarquiaModel.GetAllUsuarioMaster();
-                @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).OrderBy(y => y.IdUsuarioMaster).FirstOrDefault().IdUsuarioMaster;*@
-                @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMasterNavigation != null && x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).Select(x => x).ToList();*@
-                if (@ListEntityUsuarioHierarquia != null)
-                {
-
-                    @Html.AntiForgeryToken()
-                    <div class="col-sm-3 float-right d-block" id="bloco-id-usuario-slave">
-                        <div class="input-group input-group-sm">
-                            @*<label>Selecione um Usuário</label>*@
-                            <select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
-                                <option selected="selected">Selecione um Usuário</option>
-                                @foreach (var Item in @ListEntityUsuarioHierarquia)
-                                {
-                                    @if (Item.IdUsuarioMasterNavigation != null && Item.IdUsuarioSlaveNavigation != null && Item.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong())
-                                    {
-                                        <option value="@Item.IdUsuarioSlaveNavigation.IdUsuario">@(Item.IdUsuarioSlaveNavigation.Nome)</option>
-                                    }
-                                }
-                            </select>
-                        </div>
                     </div>
-
-                    <div class="col-sm-3 float-right d-none" id="bloco-button-id-usuario-slave">
-                        <button class="btn btn-primary" id="desconectar-usuario">Desconectar do Usuário</button>
-                    </div>
-
-                }
-             }
-
-                        <!-- Right navbar links -->
-                        <ul class="navbar-nav ml-auto">
-
-                            <!-- Messages Dropdown Menu -->
-                            <li class="nav-item dropdown notificacao-mensagem">
-                                <a class="nav-link" data-toggle="dropdown" href="#">
-                                    <i class="far fa-comments"></i>
-                                    <span class="badge badge-danger navbar-badge quantidade-notificacao-mensagem"></span>
-                                </a>
-                                <div id="notificacao-mensagem" class="dropdown-menu dropdown-menu-lg dropdown-menu-right notificacao-mensagem">
-
-
-
-                                </div>
-                            </li>
-                            <!-- Notifications Dropdown Menu -->
-                            <li class="nav-item dropdown" id="lista-notificacoes">
-                                @*<a class="nav-link" data-toggle="dropdown" href="#">
-                                <i class="far fa-bell"></i>
-                                <span class="badge badge-warning navbar-badge">15</span>
+                </li>
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown" id="lista-notificacoes">
+                    @*<a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">15</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                                <span class="float-right text-muted text-sm">3 mins</span>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                <span class="dropdown-item dropdown-header">15 Notifications</span>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">
-                                    <i class="fas fa-envelope mr-2"></i> 4 new messages
-                                    <span class="float-right text-muted text-sm">3 mins</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">
-                                    <i class="fas fa-users mr-2"></i> 8 friend requests
-                                    <span class="float-right text-muted text-sm">12 hours</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">
-                                    <i class="fas fa-file mr-2"></i> 3 new reports
-                                    <span class="float-right text-muted text-sm">2 days</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                            </div>*@
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" data-toggle="dropdown" href="#">
-                                    <i class="far fa-user"></i> @Context.User.Identity.Name
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <span class="dropdown-item dropdown-header">Administrador</span>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <span id="status-usuario">
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-users mr-2"></i> 8 friend requests
+                                <span class="float-right text-muted text-sm">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-file mr-2"></i> 3 new reports
+                                <span class="float-right text-muted text-sm">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>*@
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-user"></i> @Context.User.Identity.Name
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <span class="dropdown-item dropdown-header">Administrador</span>
+                            </div>
+                            <div class="col-md-7">
+                                <span id="status-usuario">
 
-                                                <ul>
-                                                    <li>
-                                                        <span class="dropdown-item dropdown-header">Status: <a href="javascript:void(0)" title="Ativo" id="status-link"></a></span>
-                                                        <ul class="bg-light" style="border-radius: 5px; border: 1px solid #c0c0c0;">
-                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(0)">Ativo<i class="fa fa-circle text-success"></i></a></li>
-                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(1)">Ausente<i class="fa fa-circle text-warning"></i></a></li>
-                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(2)">Não incomodar<i class="fa fa-circle text-danger"></i></a></li>
-                                                            <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(3)">Invisível<i class="fa fa-circle text-white"></i></a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fa users-cog mr-2"></i> Minha Conta
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="/Logout" class="dropdown-item">
-                                        <i class="fas fa-door-closed mr-2"></i>
-                                        Sair
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                </nav>
+                                    <ul>
+                                        <li>
+                                            <span class="dropdown-item dropdown-header">Status: <a href="javascript:void(0)" title="Ativo" id="status-link"></a></span>
+                                            <ul class="bg-light" style="border-radius: 5px; border: 1px solid #c0c0c0;">
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(0)">Ativo<i class="fa fa-circle text-success"></i></a></li>
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(1)">Ausente<i class="fa fa-circle text-warning"></i></a></li>
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(2)">Não incomodar<i class="fa fa-circle text-danger"></i></a></li>
+                                                <li class="text-left"><a href="javascript:void(0)" onclick="StatusUsuario(3)">Invisível<i class="fa fa-circle text-white"></i></a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa users-cog mr-2"></i> Minha Conta
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/Logout" class="dropdown-item">
+                            <i class="fas fa-door-closed mr-2"></i>
+                            Sair
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
         @{
@@ -618,6 +579,7 @@
     <script src="~/js/knockout/knockout-latest.js"></script>
     <!--Geral-->
     <script src="~/js/sistema/geral.js"></script>
+
     <!-- PAGE SCRIPTS -->
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
     {
@@ -639,6 +601,10 @@
         <script src="~/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
         <!-- Filterizr-->
         <script src="~/plugins/filterizr/jquery.filterizr.min.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("KPI Meta"))
+    {
+        <script src="~/js/sistema/novaMeta.js"></script>
     }
 
     <script src="../js/main.js"></script>

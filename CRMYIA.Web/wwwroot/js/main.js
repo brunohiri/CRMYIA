@@ -64,6 +64,7 @@ $(document).ready(function () {
     });
 
     $('.money').mask("#.##0,00", { reverse: true });
+    $('.money2').mask('000.000.000.000.000,00', { reverse: true });
 
     $('.quantidade').mask('##0.000', { reverse: true });
 
