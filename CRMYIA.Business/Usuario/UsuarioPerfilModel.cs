@@ -8,6 +8,7 @@ using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
@@ -60,18 +61,23 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<UsuarioPerfil> GetList(byte IdPerfil)
+        public static List<UsuarioViewModel> GetList(byte IdPerfil)
         {
-            List<UsuarioPerfil> ListEntity = null;
+            List<UsuarioViewModel> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.UsuarioPerfil
-                        .Include(y => y.IdUsuario)
+                        .Where(x => x.IdPerfil == IdPerfil && x.Ativo == true)
                         .AsNoTracking()
-                        .Where(z => z.IdPerfil == IdPerfil)
-                        .ToList();
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(z => z.IdUsuarioNavigation.PropostaIdUsuarioCorretorNavigation)
+                        .Select(c => new UsuarioViewModel
+                        {
+                            IdUsuario = c.IdUsuario.Value,
+                            Nome = c.IdUsuarioNavigation.Nome
+                        }).ToList();
                 }
             }
             catch (Exception)
