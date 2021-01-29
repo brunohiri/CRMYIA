@@ -98,7 +98,7 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnGetPesquisaTarefa(string? Nome, string? Descricao, string? Inicio, string? Fim)
         {
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            long IdUsuario = GetIdUsuario();
 
             DateTime? DataInicial;
             DateTime? DataFinal;
@@ -128,6 +128,20 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+        }
+        public long GetIdUsuario()
+        {
+            long IdUsuario = "0".ExtractLong();
+
+            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            {
+                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
+            }
+            else
+            {
+                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            }
+            return IdUsuario;
         }
 
     }

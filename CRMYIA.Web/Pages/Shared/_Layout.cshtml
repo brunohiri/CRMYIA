@@ -1,4 +1,7 @@
-﻿@using CRMYIA.Business.Util;
+﻿@using CRMYIA.Business;
+@using CRMYIA.Business.Util;
+@using System.Security.Claims;
+@{ long InputIdUsuarioSlave = 0;}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,15 +36,21 @@
     <link rel="stylesheet" href="../plugins/fullcalendar-bootstrap/main.min.css">
     <!-- datetimepicker -->
     <link rel="stylesheet" href="../plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
+
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="~/plugins/sweetAlert2_7.2.0/sweetalert2.min.css">
+    <script src="~/plugins/sweetAlert2_7.2.0/sweetalert2.all.min.js"></script>
     <style>
         .tooltip {
             opacity: 1 !important;
         }
+
         .banners:hover {
             background-color: #E9ECEF;
         }
+
         .float-open {
             position: fixed;
             width: 60px;
@@ -54,38 +63,54 @@
             font-size: 30px;
             z-index: 100;
         }
+
         .float-link {
-          
         }
+
         .float-chat {
             position: fixed;
             bottom: 40px;
             right: 40px;
             z-index: 100;
         }
-       /* table {
+        /* table {
             font-size: 1em;
         }*/
 
-       /* .ui-draggable, .ui-droppable {
+        /* .ui-draggable, .ui-droppable {
             background-position: top;
         }*/
 
-    #notificacao-mensagem-tremer {
-    /* apenas para dar um formato a div */
-    /* animacao */
-    animation: tremer .2s;
-    animation-iteration-count:infinite;
-    }
+        #notificacao-mensagem-tremer {
+            /* apenas para dar um formato a div */
+            /* animacao */
+            animation: tremer .2s;
+            animation-iteration-count: infinite;
+        }
 
-    /* keyframe para ajustar até onde treme */
-    @@keyframes tremer {
-        0% {margin-left: 0;}
-        25% {margin-left: 15px;}
-        50% {margin-left: 0;}
-        75% {margin-left: -15px;}
-        100% {margin-left: 0;}
-    }
+        /* keyframe para ajustar até onde treme */
+        @@keyframes tremer {
+            0% {
+                margin-left: 0;
+            }
+
+            25% {
+                margin-left: 15px;
+            }
+
+            50% {
+                margin-left: 0;
+            }
+
+            75% {
+                margin-left: -15px;
+            }
+
+            100% {
+                margin-left: 0;
+            }
+        }
+
         #status-usuario li ul {
             position: absolute;
             top: 25px;
@@ -93,10 +118,11 @@
             background-color: #fff;
             display: none;
         }
-        
+
         #status-usuario li:hover ul, #status-usuario li.over ul {
             display: block;
         }
+
         #status-usuario {
             flex: 1; /* isto é para a nav ocupar a largura toda menos a logo */
             justify-content: center; /* alinha horizontalmente */
@@ -105,7 +131,18 @@
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
+    @{
+
+        var identity = (ClaimsIdentity)User.Identity;
+        IEnumerable<Claim> Claims = identity.Claims;
+        foreach (var t in Claims)
+        {
+            if (t.Type.Equals("IdUsuarioSlave"))
+                 InputIdUsuarioSlave = t.Value.ExtractLong();
+        }
+    }
     <input type="hidden" id="IdUsuario" name="IdUsuario" value="@Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value" />
+    <input type="hidden" id="InputIdUsuarioSlave" name="InputIdUsuarioSlave" value="@InputIdUsuarioSlave" />
     @*<input type="hidden" id="NumeroDeLinha" name="NumeroDeLinha" value="0" />
         <input type="hidden" id="Limite" name="Limite" value="2712" />*@
     <div class="wrapper">
