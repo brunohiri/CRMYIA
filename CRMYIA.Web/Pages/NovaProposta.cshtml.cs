@@ -122,7 +122,7 @@ namespace CRMYIA.Web.Pages
                 Entity.IdUsuarioCorretor = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             #endregion
 
-            Entity.IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            Entity.IdUsuario = GetIdUsuario();
             Entity.DataCadastro = DateTime.Now;
 
             CarregarLists();
@@ -245,6 +245,8 @@ namespace CRMYIA.Web.Pages
             {
                 CarregarLists();
 
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+               
                 if (Entity.IdMotivoDeclinio == 0)
                     Entity.IdMotivoDeclinio = null;
 
@@ -254,7 +256,7 @@ namespace CRMYIA.Web.Pages
 
                 if (Entity.IdProposta == 0)
                 {
-                    long IdUsuario = GetIdUsuario();
+                    //long IdUsuario = GetIdUsuario();
                     PropostaModel.Add(Entity);
 
                     #region Salvar PropostaFaixaEtaria
@@ -357,13 +359,23 @@ namespace CRMYIA.Web.Pages
                 }
 
                 #region Salvar Histórico da Proposta
+                var UsuarioMasterSlave = true;
+                var identity = (ClaimsIdentity)User.Identity;
+                IEnumerable<Claim> Claims = identity.Claims;
+                foreach (var t in Claims)
+                {
+                    if (t.Type.Equals("IdUsuarioSlave"))
+                        UsuarioMasterSlave = false;
+                }
+                
                 HistoricoPropostaModel.Add(new HistoricoProposta()
                 {
                     IdProposta = Entity.IdProposta,
-                    IdUsuario = Entity.IdUsuario,
-                    Observacao = Observacao + (Entity.Observacoes.IsNullOrEmpty() || Entity.Observacoes.Equals(Observacao) ? string.Empty : " " + Observacao),
+                    IdUsuario = IdUsuario,
+                    Observacao = (Entity.Observacoes.IsNullOrEmpty() || Entity.Observacoes.Equals(Observacao) ? string.Empty : " " + Observacao),
                     DataCadastro = DateTime.Now,
-                    Ativo = true
+                    Ativo = true,
+                    UsuarioMasterSlave = UsuarioMasterSlave
                 });
                 #endregion
 
@@ -400,15 +412,14 @@ namespace CRMYIA.Web.Pages
         }
         public long GetIdUsuario()
         {
-            long IdUsuario = "0".ExtractLong();
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> Claims = identity.Claims;
+            foreach (var t in Claims)
             {
-                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
-            }
-            else
-            {
-                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                if (t.Type.Equals("IdUsuarioSlave"))
+                    IdUsuario = t.Value.ExtractLong();
             }
             return IdUsuario;
         }

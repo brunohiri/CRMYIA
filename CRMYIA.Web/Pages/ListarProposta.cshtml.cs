@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,7 +23,8 @@ namespace CRMYIA.Web.Pages
 
         public MensagemModel Mensagem { get; set; }
         [BindProperty]
-        public List<Proposta> ListEntity { get; set; }
+        public List<ListaPropostaViewModel> ListEntity { get; set; }
+        public List<FaseProposta> ListFaseProposta { get; set; }
         #endregion
 
         #region Construtores
@@ -34,7 +37,8 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet()
         {
-            ListEntity = PropostaModel.GetList();
+            ListEntity = PropostaModel.GetList(GetIdUsuario());
+            ListFaseProposta = FasePropostaModel.GetList();
             return Page();
         }
 
@@ -43,5 +47,19 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
+
+        public long GetIdUsuario()
+        {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> Claims = identity.Claims;
+            foreach (var t in Claims)
+            {
+                if (t.Type.Equals("IdUsuarioSlave"))
+                    IdUsuario = t.Value.ExtractLong();
+            }
+            return IdUsuario;
+        }
     }
 }

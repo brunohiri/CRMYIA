@@ -270,15 +270,14 @@ namespace CRMYIA.Web.Pages
 
         public long GetIdUsuario()
         {
-            long IdUsuario = "0".ExtractLong();
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> Claims = identity.Claims;
+            foreach (var t in Claims)
             {
-                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
-            }
-            else
-            {
-                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                if (t.Type.Equals("IdUsuarioSlave"))
+                    IdUsuario = t.Value.ExtractLong();
             }
             return IdUsuario;
         }

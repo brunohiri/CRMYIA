@@ -8,6 +8,7 @@ using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
@@ -42,9 +43,9 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Proposta> GetList()
+        public static List<ListaPropostaViewModel> GetList(long IdUsuario)
         {
-            List<Proposta> ListEntity = null;
+            List<ListaPropostaViewModel> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -56,10 +57,42 @@ namespace CRMYIA.Business
                         .Include(y => y.IdUsuarioCorretorNavigation)
                         .Include(y => y.IdUsuarioNavigation)
                         .Include(y => y.IdClienteNavigation)
+                        .Include(y => y.HistoricoProposta)
+                         .ThenInclude(y => y.IdUsuarioNavigation)
                         .AsNoTracking()
-                        .Where(x => x.Ativo)
+                        .Where(x => x.Ativo && x.IdUsuario == IdUsuario && x.HistoricoProposta != null)
                         .AsNoTracking()
-                        .OrderByDescending(o => o.DataCadastro).ToList();
+                        .OrderByDescending(o => o.DataCadastro)
+                        .Select(x => new ListaPropostaViewModel() {
+                            IdProposta = x.IdProposta,
+                            DescricaoModalidade = x.IdModalidadeNavigation.Descricao,
+                            NomeCliente = x.IdClienteNavigation.Nome,
+                            NomeCorretor = x.IdUsuarioCorretorNavigation.Nome,
+                            DescricaoFaseProposta = x.IdFasePropostaNavigation.Descricao,
+                            ValorPrevisto = x.ValorPrevisto,
+                            NomeUsuario = x.IdUsuarioNavigation.Nome,
+                            DataCadastro = x.DataCadastro,
+                            DescricaoStatusProposta = x.IdStatusPropostaNavigation.Descricao,
+                            NomeHistoricoProposta = x.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().IdUsuarioNavigation.Nome,
+                            UsuarioMasterSlave = x.IdUsuarioNavigation.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().UsuarioMasterSlave
+                        })
+                        .ToList();
+                    /*
+                     <tr class="@classTr">
+                        <td>@(Item.IdModalidadeNavigation.Descricao.Length > 30 ? Item.IdModalidadeNavigation.Descricao.Substring(0,30) + "..." : Item.IdModalidadeNavigation.Descricao)</td>
+                        <td>@(Item.IdClienteNavigation.Nome.Length > 30 ? Item.IdClienteNavigation.Nome.Substring(0,30) + "..." : Item.IdClienteNavigation.Nome)</td>
+                        <td>@(Item.IdUsuarioCorretorNavigation == null ? "":Item.IdUsuarioCorretorNavigation.Nome.Length > 30 ? Item.IdUsuarioCorretorNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioCorretorNavigation.Nome)</td>
+                        <td>@(Item.IdFasePropostaNavigation.Descricao.Length > 30 ? Item.IdFasePropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdFasePropostaNavigation.Descricao)</td>
+                        <td style="text-align:right;">@(string.Format("{0:c2}", Convert.ToDecimal(Item.ValorPrevisto)))</td>
+                        <td>@(Item.IdUsuarioNavigation.Nome.Length > 30 ? Item.IdUsuarioNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioNavigation.Nome)</td>
+                        <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@(Item.IdStatusPropostaNavigation.Descricao.Length > 30 ? Item.IdStatusPropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdStatusPropostaNavigation.Descricao)</td>
+                        <td>@(Item.HistoricoProposta.Where(x => x.UsuarioMasterSlave == false && Item.IdProposta == x.IdProposta))</td>
+                        <td>
+                            <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdProposta.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                     */
                 }
             }
             catch (Exception)

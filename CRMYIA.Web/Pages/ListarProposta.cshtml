@@ -10,47 +10,87 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+                <h3 class="card-title">Legenda</h3>
             </div>
-            <!-- /.card-header -->
             <div class="card-body">
-                <table id="tableListagem" class="table table-bordered table-striped datatable">
-                    <thead>
-                        <tr>
-                            <th width="15%">Modalidade</th>
-                            <th width="15%">Cliente</th>
-                            <th width="10%">Corretor</th>
-                            <th width="10%">Fase</th>
-                            <th width="10%">Valor</th>
-                            <th width="10%">Usuário</th>
-                            <th width="15%">Cadastro</th>
-                            <th width="10%">Status</th>
-                            <th width="5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                <div class="row">
+                    @if (Model.ListFaseProposta != null && Model.ListFaseProposta.Count() > 0)
+                    {
+                        foreach (var Item in Model.ListFaseProposta)
                         {
-                            foreach (var Item in Model.ListEntity)
-                            {
-                        <tr>
-                            <td>@(Item.IdModalidadeNavigation.Descricao.Length > 30 ? Item.IdModalidadeNavigation.Descricao.Substring(0,30) + "..." : Item.IdModalidadeNavigation.Descricao)</td>
-                            <td>@(Item.IdClienteNavigation.Nome.Length > 30 ? Item.IdClienteNavigation.Nome.Substring(0,30) + "..." : Item.IdClienteNavigation.Nome)</td>
-                            <td>@(Item.IdUsuarioCorretorNavigation == null ? "":Item.IdUsuarioCorretorNavigation.Nome.Length > 30 ? Item.IdUsuarioCorretorNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioCorretorNavigation.Nome)</td>
-                            <td>@(Item.IdFasePropostaNavigation.Descricao.Length > 30 ? Item.IdFasePropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdFasePropostaNavigation.Descricao)</td>
-                            <td style="text-align:right;">@(string.Format("{0:c2}", Convert.ToDecimal(Item.ValorPrevisto)))</td>
-                            <td>@(Item.IdUsuarioNavigation.Nome.Length > 30 ? Item.IdUsuarioNavigation.Nome.Substring(0,30) + "..." : Item.IdUsuarioNavigation.Nome)</td>
-                            <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                            <td>@(Item.IdStatusPropostaNavigation.Descricao.Length > 30 ? Item.IdStatusPropostaNavigation.Descricao.Substring(0,30) + "..." : Item.IdStatusPropostaNavigation.Descricao)</td>
-                            <td>
-                                <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdProposta.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                            </td>
-                        </tr>
-                            }
+                            
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>@Item.Descricao</label>
+                                    <button class="btn" style="background-color: @Item.Cor"></button>
+                                </div>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    }
+                        
+                </div>
+            </div>
+        </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive">
+                    <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th width="10%">Mais</th>
+                                <th width="10%">Modalidade</th>
+                                <th width="15%">Cliente</th>
+                                <th width="20%">Corretor</th>
+                                @*<th width="15%">Fase</th>*@
+                                <th width="10%">Valor</th>
+                                <th width="10%">Usuário</th>
+                                @*<th width="10%">Cadastro</th>*@
+                                <th width="5%">Status</th>
+                                <th width="5%">Cadastrado/Alterado</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                            {
+                                var classTr = "";
+
+                                foreach (var Item in Model.ListEntity)
+                                {
+                                    if (Item.UsuarioMasterSlave == false)
+                                    {
+                                        classTr = "table-warning";
+                                        var id = Item.UsuarioMasterSlave;
+
+                                    }
+                                    else
+                                    {
+                                        classTr = "";
+                                    }
+                                    <tr class="@classTr">
+                                        <td></td>
+                                        <td>@(Item.DescricaoModalidade.Length > 30 ? Item.DescricaoModalidade.Substring(0,30) + "..." : Item.DescricaoModalidade)</td>
+                                        <td>@(Item.NomeCliente.Length > 30 ? Item.NomeCliente.Substring(0,30) + "..." : Item.NomeCliente)</td>
+                                        <td>@(Item.NomeCorretor == null ? "":Item.NomeCorretor.Length > 30 ? Item.NomeCorretor.Substring(0,30) + "..." : Item.NomeCorretor)</td>
+                                        @*<td>@(Item.DescricaoFaseProposta.Length > 30 ? Item.DescricaoFaseProposta.Substring(0,30) + "..." : Item.DescricaoFaseProposta)</td>*@
+                                        <td>@(string.Format("{0:c2}", Convert.ToDecimal(Item.ValorPrevisto)))</td>
+                                        <td>@(Item.NomeUsuario.Length > 30 ? Item.NomeUsuario.Substring(0,30) + "..." : Item.NomeUsuario)</td>
+                                        @*<td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>*@
+                                        <td>@(Item.DescricaoStatusProposta.Length > 30 ? Item.DescricaoStatusProposta.Substring(0,30) + "..." : Item.DescricaoStatusProposta)</td>
+                                        <td>Por: @(Item.NomeHistoricoProposta), em @Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                        <td>
+                                            <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdProposta.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
