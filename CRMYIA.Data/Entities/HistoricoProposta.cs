@@ -11,6 +11,7 @@ namespace CRMYIA.Data.Entities
         public string Observacao { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public bool? UsuarioMasterSlave { get; set; }
 
         public virtual Proposta IdPropostaNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }

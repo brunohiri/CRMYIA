@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
-using CRMYIA.Data.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
 {
-    public class MetaModel
+    public class KPIMetaModel
     {
         #region Propriedades
         #endregion
@@ -21,16 +20,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static Meta Get(long IdMeta)
+        public static KPIMeta Get(long IdKPIMeta)
         {
-            Meta Entity = null;
+            KPIMeta Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Meta
+                    Entity = context.KPIMeta
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdMeta == IdMeta)
+                        .Where(x => x.Ativo && x.IdMeta == IdKPIMeta)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -42,14 +41,14 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Meta> GetList()
+        public static List<KPIMeta> GetList()
         {
-            List<Meta> ListEntity = null;
+            List<KPIMeta> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Meta
+                    ListEntity = context.KPIMeta
                         .Where(x => x.Ativo)
                         .AsNoTracking()
                         .OrderBy(o => o.DataMaxima).ToList();
@@ -62,13 +61,13 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(Meta Entity)
+        public static void Add(KPIMeta Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Meta.Add(Entity);
+                    context.KPIMeta.Add(Entity);
                     context.SaveChanges();
                 }
             }
@@ -78,29 +77,13 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(Meta Entity)
+        public static void Update(KPIMeta Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.Meta.Update(Entity);
-                    context.SaveChanges();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public static void Rollback(Meta Entity)
-        {
-            try
-            {
-                using (YiaContext context = new YiaContext())
-                {
-                    context.Meta.Remove(context.Meta.Find(Entity.IdMeta));
+                    context.KPIMeta.Update(Entity);
                     context.SaveChanges();
                 }
             }

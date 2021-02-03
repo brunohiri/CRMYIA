@@ -38,10 +38,12 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual DbSet<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
+        public virtual DbSet<KPIGrupo> KPIGrupo { get; set; }
+        public virtual DbSet<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
+        public virtual DbSet<KPIMeta> KPIMeta { get; set; }
         public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
         public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
-        public virtual DbSet<Meta> Meta { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
         public virtual DbSet<MotivoDeclinio> MotivoDeclinio { get; set; }
@@ -74,16 +76,9 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -722,6 +717,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdFaseProposta).ValueGeneratedOnAdd();
 
+                entity.Property(e => e.Cor)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -864,6 +863,60 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_HistoricoProposta");
             });
 
+            modelBuilder.Entity<KPIGrupo>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIGrupo);
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<KPIGrupoUsuario>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIGrupoUsuario);
+
+                entity.Property(e => e.Inicio).HasColumnType("datetime");
+
+                entity.Property(e => e.Motivo)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Perfil)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Saida).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdKPIGrupoNavigation)
+                    .WithMany(p => p.KPIGrupoUsuario)
+                    .HasForeignKey(d => d.IdKPIGrupo)
+                    .HasConstraintName("KPIGrupo_KPIGrupoUsuario");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.KPIGrupoUsuario)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_KPIGrupoUsuario");
+            });
+
+            modelBuilder.Entity<KPIMeta>(entity =>
+            {
+                entity.HasKey(e => e.IdMeta);
+
+                entity.Property(e => e.DataMaxima).HasColumnType("datetime");
+
+                entity.Property(e => e.DataMinima).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdKPIGrupoUsuarioNavigation)
+                    .WithMany(p => p.KPIMeta)
+                    .HasForeignKey(d => d.IdKPIGrupoUsuario)
+                    .HasConstraintName("KPIGrupoUsuario_KPIMeta");
+            });
+
             modelBuilder.Entity<KPIMetaValor>(entity =>
             {
                 entity.HasKey(e => e.IdKPIMetaValor);
@@ -879,7 +932,7 @@ namespace CRMYIA.Data.Context
                 entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaValor)
                     .HasForeignKey(d => d.IdMeta)
-                    .HasConstraintName("Meta_KPIMetaValor");
+                    .HasConstraintName("KPIMeta_KPIMetaValor");
             });
 
             modelBuilder.Entity<KPIMetaVida>(entity =>
@@ -897,7 +950,7 @@ namespace CRMYIA.Data.Context
                 entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaVida)
                     .HasForeignKey(d => d.IdMeta)
-                    .HasConstraintName("Meta_KPIMetaVida");
+                    .HasConstraintName("KPIMeta_KPIMetaVida");
             });
 
             modelBuilder.Entity<Linha>(entity =>
@@ -914,20 +967,6 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Linha)
                     .HasForeignKey(d => d.IdProduto)
                     .HasConstraintName("Produto_Linha");
-            });
-
-            modelBuilder.Entity<Meta>(entity =>
-            {
-                entity.HasKey(e => e.IdMeta);
-
-                entity.Property(e => e.DataMaxima).HasColumnType("datetime");
-
-                entity.Property(e => e.DataMinima).HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany(p => p.Meta)
-                    .HasForeignKey(d => d.IdUsuario)
-                    .HasConstraintName("Usuario_Meta");
             });
 
             modelBuilder.Entity<Modalidade>(entity =>

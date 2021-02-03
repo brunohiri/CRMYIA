@@ -16,6 +16,7 @@ namespace CRMYIA.Data.Entities
         public int? TempoLimite { get; set; }
         public string Observacao { get; set; }
         public bool Ativo { get; set; }
+        public string Cor { get; set; }
 
         public virtual ICollection<Proposta> Proposta { get; set; }
     }

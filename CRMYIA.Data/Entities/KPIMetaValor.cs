@@ -14,6 +14,6 @@ namespace CRMYIA.Data.Entities
         public int? Ano { get; set; }
         public bool Ativo { get; set; }
 
-        public virtual Meta IdMetaNavigation { get; set; }
+        public virtual KPIMeta IdMetaNavigation { get; set; }
     }
 }

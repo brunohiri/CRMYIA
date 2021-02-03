@@ -22,7 +22,7 @@ namespace CRMYIA.Web.Pages
         public MensagemModel Mensagem { get; set; }
         #region Meta
         [BindProperty]
-        public Meta Entity { get; set; }
+        public KPIMeta Entity { get; set; }
         #endregion
 
         #region KPIMetaValor
@@ -64,7 +64,7 @@ namespace CRMYIA.Web.Pages
 
                 if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
                 {
-                    MetaModel.Add(Entity);
+                    KPIMetaModel.Add(Entity);
                     KPIMetaValorEntity.IdMeta = Entity.IdMeta;
                     KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
 
@@ -74,7 +74,7 @@ namespace CRMYIA.Web.Pages
                 }
                 else
                 {
-                    MetaModel.Update(Entity);
+                    KPIMetaModel.Update(Entity);
                     KPIMetaValorModel.Update(KPIMetaValorEntity);
                     KPIMetaVidaModel.Update(KPIMetaVidaEntity);
                 }
