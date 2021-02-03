@@ -717,9 +717,13 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdFaseProposta).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Cor)
+                entity.Property(e => e.CorPrincipal)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.CorSecundaria)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)

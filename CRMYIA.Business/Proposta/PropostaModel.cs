@@ -74,7 +74,8 @@ namespace CRMYIA.Business
                             DataCadastro = x.DataCadastro,
                             DescricaoStatusProposta = x.IdStatusPropostaNavigation.Descricao,
                             NomeHistoricoProposta = x.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().IdUsuarioNavigation.Nome,
-                            UsuarioMasterSlave = x.IdUsuarioNavigation.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().UsuarioMasterSlave
+                            UsuarioMasterSlave = x.IdUsuarioNavigation.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().UsuarioMasterSlave,
+                            Cor = x.IdFasePropostaNavigation.CorSecundaria
                         })
                         .ToList();
                     /*

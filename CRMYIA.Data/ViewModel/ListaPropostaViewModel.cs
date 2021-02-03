@@ -17,6 +17,7 @@ namespace CRMYIA.Data.ViewModel
         public string DescricaoStatusProposta { get; set; }
         public string NomeHistoricoProposta { get; set; }
         public bool? UsuarioMasterSlave { get; set; }
+        public string Cor { get; set; }
 
         /*
             <td>@(Item.IdModalidadeNavigation.Descricao.Length > 30 ? Item.IdModalidadeNavigation.Descricao.Substring(0,30) + "..." : Item.IdModalidadeNavigation.Descricao)</td>

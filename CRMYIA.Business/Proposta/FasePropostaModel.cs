@@ -77,7 +77,9 @@ namespace CRMYIA.Business
                         .Select(y => new FaseProposta()
                         {
                             IdFaseProposta = y.IdFaseProposta,
-                            Descricao = y.Descricao
+                            Descricao = y.Descricao,
+                            CorPrincipal = y.CorPrincipal,
+                            CorSecundaria = y.CorSecundaria
                         }).OrderBy(o => o.IdFaseProposta).ToList();
                 }
             }
