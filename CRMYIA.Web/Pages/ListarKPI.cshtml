@@ -25,14 +25,12 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Cargos</label>
-                                <select class="form-control select2" style="width: 100%;"
-                                        asp-for="@Model.ListKPICargo"
-                                        id="IdKPICargo" name="IdKPICargo"
-                                        onchange="this.form.submit();">
-                                    <option>Selecione...</option>
-                                    @foreach (var Item in Model.ListKPICargo)
+                                <select class="form-control select2" style="width: 100%;" onchange="this.form.submit()"
+                                        asp-for="@Model.UsuarioIdPerfil" id="UsuarioIdPerfil">
+                                    <option selected="selected">Selecione um Usuário</option>
+                                    @foreach (var Item in Model.ListPerfil)
                                     {
-                                        <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                        <option value="@Item.IdPerfil">@(Item.Descricao)</option>
                                     }
                                 </select>
 
@@ -43,262 +41,261 @@
             </form>
         </div>
     </div>
-</section>
-
-<div class="card card-default">
-    <div class="card-header">
-        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
-    </div>
-    <!-- /.card-header -->
-    <form method="post">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-four-home-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-home" role="tab"
-                                       aria-controls="custom-tabs-four-home"
-                                       aria-selected="true">
-                                        Adesão
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-profile-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-profile"
-                                       role="tab" aria-controls="custom-tabs-four-profile"
-                                       aria-selected="false">
-                                        Corporativo
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-messages-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-messages"
-                                       role="tab" aria-controls="custom-tabs-four-messages"
-                                       aria-selected="false">
-                                        Odonto Individual
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        Odonto PME
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        Pessoa Física
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        PME 2 - 29 Vidas
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        PME 30 - 99 Vidas
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        Previdência Privada
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        Seguro Auto
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-four-settings-tab"
-                                       data-toggle="pill" href="#custom-tabs-four-settings"
-                                       role="tab" aria-controls="custom-tabs-four-settings"
-                                       aria-selected="false">
-                                        Seguro Empresarial
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                                    <table id="tableListagem" class="table table-bordered table-striped datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Cargo</th>
-                                                <th>Meta de valores</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Meta de vidas</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Resultado final</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Gerente Campinas</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 850.00</td>
-                                                <td style="background-color:green; color:snow">85 %</td>
-                                                <td>70</td>
-                                                <td>60</td>
-                                                <td style="background-color:green; color:snow">86 %</td>
-                                                <td style="background-color:green; color:snow">85%</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gerente SP</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 800.00</td>
-                                                <td style="background-color:green; color:snow">80 %</td>
-                                                <td>70</td>
-                                                <td>21</td>
-                                                <td style="background-color: red; color:snow">30 %</td>
-                                                <td style="background-color: yellow;">45%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                                    <table id="tableListagem" class="table table-bordered table-striped datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Cargo</th>
-                                                <th>Meta de valores</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Meta de vidas</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Resultado final</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Gerente Campinas</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 850.00</td>
-                                                <td style="background-color:green; color:snow">85 %</td>
-                                                <td>70</td>
-                                                <td>60</td>
-                                                <td style="background-color:green; color:snow">86 %</td>
-                                                <td style="background-color:green; color:snow">85%</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gerente SP</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 800.00</td>
-                                                <td style="background-color:green; color:snow">80 %</td>
-                                                <td>70</td>
-                                                <td>21</td>
-                                                <td style="background-color: red; color:snow">30 %</td>
-                                                <td style="background-color: yellow;">45%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                                    <table id="tableListagem" class="table table-bordered table-striped datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Cargo</th>
-                                                <th>Meta de valores</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Meta de vidas</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Resultado final</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Gerente Campinas</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 850.00</td>
-                                                <td style="background-color:green; color:snow">85 %</td>
-                                                <td>70</td>
-                                                <td>60</td>
-                                                <td style="background-color:green; color:snow">86 %</td>
-                                                <td style="background-color:green; color:snow">85%</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gerente SP</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 800.00</td>
-                                                <td style="background-color:green; color:snow">80 %</td>
-                                                <td>70</td>
-                                                <td>21</td>
-                                                <td style="background-color: red; color:snow">30 %</td>
-                                                <td style="background-color: yellow;">45%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
-                                    <table id="tableListagem" class="table table-bordered table-striped datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Cargo</th>
-                                                <th>Meta de valores</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Meta de vidas</th>
-                                                <th>Atual</th>
-                                                <th>Final</th>
-                                                <th>Resultado final</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Gerente Campinas</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 850.00</td>
-                                                <td style="background-color:green; color:snow">85 %</td>
-                                                <td>70</td>
-                                                <td>60</td>
-                                                <td style="background-color:green; color:snow">86 %</td>
-                                                <td style="background-color:green; color:snow">85%</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gerente SP</td>
-                                                <td>R$ 1,000.00</td>
-                                                <td>R$ 800.00</td>
-                                                <td style="background-color:green; color:snow">80 %</td>
-                                                <td>70</td>
-                                                <td>21</td>
-                                                <td style="background-color: red; color:snow">30 %</td>
-                                                <td style="background-color: yellow;">45%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+        </div>
+        <!-- /.card-header -->
+        <form method="post">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-home-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-home" role="tab"
+                                           aria-controls="custom-tabs-four-home"
+                                           aria-selected="true">
+                                            Adesão
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-profile-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-profile"
+                                           role="tab" aria-controls="custom-tabs-four-profile"
+                                           aria-selected="false">
+                                            Corporativo
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-messages-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-messages"
+                                           role="tab" aria-controls="custom-tabs-four-messages"
+                                           aria-selected="false">
+                                            Odonto Individual
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            Odonto PME
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            Pessoa Física
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            PME 2 - 29 Vidas
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            PME 30 - 99 Vidas
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            Previdência Privada
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            Seguro Auto
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-four-settings-tab"
+                                           data-toggle="pill" href="#custom-tabs-four-settings"
+                                           role="tab" aria-controls="custom-tabs-four-settings"
+                                           aria-selected="false">
+                                            Seguro Empresarial
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                                        <table id="tableListagem" class="table table-bordered table-striped datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cargo</th>
+                                                    <th>Meta de valores</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Meta de vidas</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Resultado final</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Gerente Campinas</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 850.00</td>
+                                                    <td style="background-color:green; color:snow">85 %</td>
+                                                    <td>70</td>
+                                                    <td>60</td>
+                                                    <td style="background-color:green; color:snow">86 %</td>
+                                                    <td style="background-color:green; color:snow">85%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gerente SP</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 800.00</td>
+                                                    <td style="background-color:green; color:snow">80 %</td>
+                                                    <td>70</td>
+                                                    <td>21</td>
+                                                    <td style="background-color: red; color:snow">30 %</td>
+                                                    <td style="background-color: yellow;">45%</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                                        <table id="tableListagem" class="table table-bordered table-striped datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cargo</th>
+                                                    <th>Meta de valores</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Meta de vidas</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Resultado final</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Gerente Campinas</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 850.00</td>
+                                                    <td style="background-color:green; color:snow">85 %</td>
+                                                    <td>70</td>
+                                                    <td>60</td>
+                                                    <td style="background-color:green; color:snow">86 %</td>
+                                                    <td style="background-color:green; color:snow">85%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gerente SP</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 800.00</td>
+                                                    <td style="background-color:green; color:snow">80 %</td>
+                                                    <td>70</td>
+                                                    <td>21</td>
+                                                    <td style="background-color: red; color:snow">30 %</td>
+                                                    <td style="background-color: yellow;">45%</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
+                                        <table id="tableListagem" class="table table-bordered table-striped datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cargo</th>
+                                                    <th>Meta de valores</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Meta de vidas</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Resultado final</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Gerente Campinas</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 850.00</td>
+                                                    <td style="background-color:green; color:snow">85 %</td>
+                                                    <td>70</td>
+                                                    <td>60</td>
+                                                    <td style="background-color:green; color:snow">86 %</td>
+                                                    <td style="background-color:green; color:snow">85%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gerente SP</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 800.00</td>
+                                                    <td style="background-color:green; color:snow">80 %</td>
+                                                    <td>70</td>
+                                                    <td>21</td>
+                                                    <td style="background-color: red; color:snow">30 %</td>
+                                                    <td style="background-color: yellow;">45%</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
+                                        <table id="tableListagem" class="table table-bordered table-striped datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cargo</th>
+                                                    <th>Meta de valores</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Meta de vidas</th>
+                                                    <th>Atual</th>
+                                                    <th>Final</th>
+                                                    <th>Resultado final</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Gerente Campinas</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 850.00</td>
+                                                    <td style="background-color:green; color:snow">85 %</td>
+                                                    <td>70</td>
+                                                    <td>60</td>
+                                                    <td style="background-color:green; color:snow">86 %</td>
+                                                    <td style="background-color:green; color:snow">85%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gerente SP</td>
+                                                    <td>R$ 1,000.00</td>
+                                                    <td>R$ 800.00</td>
+                                                    <td style="background-color:green; color:snow">80 %</td>
+                                                    <td>70</td>
+                                                    <td>21</td>
+                                                    <td style="background-color: red; color:snow">30 %</td>
+                                                    <td style="background-color: yellow;">45%</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- /.card -->
                         </div>
-                        <!-- /.card -->
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+</section>

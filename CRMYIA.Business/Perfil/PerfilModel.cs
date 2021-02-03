@@ -229,7 +229,7 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-
+        
         public static void Add(Perfil Entity)
         {
             try

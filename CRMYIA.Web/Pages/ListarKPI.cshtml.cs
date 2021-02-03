@@ -29,9 +29,11 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<KPIMetaValor> ListKPIMetaValor { get; set; }
         [BindProperty]
-        public List<UsuarioViewModel> ListKPICargo { get; set; }
-        
-        
+        public List<Perfil> ListPerfil { get; set; }
+        [BindProperty]
+        public int? UsuarioIdPerfil { get; set; }
+
+
         #endregion
 
         #region Construtores
@@ -49,10 +51,10 @@ namespace CRMYIA.Web.Pages
         }
         public void OnPost()
         {
-            int id = int.Parse(Request.Form["IdKPICargo"]);
+            byte id = byte.Parse(Request.Form["UsuarioIdPerfil"]);
 
-
-
+            // lista de usuario apartir do perfil
+            var users = UsuarioPerfilModel.GetList(id);
             CarregarLists();
         }
         #endregion
@@ -63,6 +65,7 @@ namespace CRMYIA.Web.Pages
             
             ListKPIMetaVida = KPIMetaVidaModel.GetList();
             ListKPIMetaValor = KPIMetaValorModel.GetList();
+            ListPerfil = PerfilModel.GetList();
         }
 
     }
