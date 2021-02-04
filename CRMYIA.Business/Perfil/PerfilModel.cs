@@ -205,6 +205,30 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static UsuarioPerfil GetIdentificacaoPerfil(long? IdUsuario)
+        {
+            UsuarioPerfil IdPerfil = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    IdPerfil = context.UsuarioPerfil
+                        .AsNoTracking()
+                        .Where(x => x.IdUsuario == IdUsuario)
+                        .Select(x => new UsuarioPerfil()
+                        {
+                            IdPerfil = x.IdPerfil
+                        })
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return IdPerfil;
+        }
         public static List<Perfil> GetListIdDescricao()
         {
             List<Perfil> ListEntity = null;

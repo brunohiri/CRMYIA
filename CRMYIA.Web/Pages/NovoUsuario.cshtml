@@ -4,7 +4,10 @@
     ViewData["Title"] = "Novo";
     ViewData["Pagina"] = "Usuário";
 }
-
+@using CRMYIA.Business;
+@using CRMYIA.Business.Util;
+@using CRMYIA.Data.Entities;
+@using System.Security.Claims;
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
@@ -52,6 +55,7 @@
                         <label>Perfil</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.UsuarioIdPerfil" id="UsuarioIdPerfil">
                             <option selected="selected">Selecione...</option>
+
                             @foreach (var Item in Model.ListPerfil)
                             {
                                 <option value="@Item.IdPerfil">@(Item.Descricao)</option>
@@ -137,7 +141,7 @@
 
             <div class="row m-2">
                 <div class="col-sm-6">
-                    <img src="/img/fotoCadastro/foto-cadastro.jpeg" id="imagem" width="80px" height="102px" alt="Responsive image">
+                    <img src="/img/fotoCadastro/foto-cadastro.jpeg" onError="this.onerror=null;this.src='/img/fotoCadastro/foto-cadastro.jpeg';" id="imagem" width="80px" height="102px" alt="Responsive image">
                 </div>
             </div>
 

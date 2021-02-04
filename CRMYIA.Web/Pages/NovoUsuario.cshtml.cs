@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
@@ -251,5 +252,19 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
+        public long GetIdUsuario()
+        {
+            long IdUsuario = "0".ExtractLong();
+
+            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            {
+                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
+            }
+            else
+            {
+                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            }
+            return IdUsuario;
+        }
     }
 }
