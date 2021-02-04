@@ -203,6 +203,7 @@ namespace CRMYIA.Business
                         .Where(x => x.Ativo 
                             && x.DataSolicitacao.Value >= DataInicio
                             && x.DataSolicitacao.Value <= DataFim
+                            && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario || x.IdUsuario != IdUsuario)
                          )
                         .AsNoTracking()
                         .AsEnumerable()
@@ -240,6 +241,7 @@ namespace CRMYIA.Business
                         .Where(x => x.Ativo
                             && x.DataSolicitacao.Value >= DataInicio
                             && x.DataSolicitacao.Value <= DataFim
+                            && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioMasterNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
                          )
                         .AsNoTracking()
                         .AsEnumerable()

@@ -56,7 +56,7 @@ namespace CRMYIA.Web.Pages
         {
             List<VisitaViewModel> ListVisita = null;
 
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            long IdUsuario = GetIdUsuario();
 
             ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month).AddMonths(-3), Util.GetLastDayOfMonth(DateTime.Now.Month).AddMonths(3));
 
@@ -69,8 +69,8 @@ namespace CRMYIA.Web.Pages
             DateTime Fim = Convert.ToDateTime(DataFinal);
             List<VisitaViewModel> ListVisita = null;
 
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            if(Nome == "Selecione...")
+            long IdUsuario = GetIdUsuario();
+            if (Nome == "Selecione...")
             {
                 Nome = User.Identity.Name;
             }
@@ -88,7 +88,7 @@ namespace CRMYIA.Web.Pages
         {
             List<VisitaViewModel> ListVisita = null;
 
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            long IdUsuario = GetIdUsuario();
 
             if (Entity.Descricao.IsNullOrEmpty())
                 return new JsonResult(new { status = false, mensagem = "Campo Título obrigatório em branco!" });
@@ -148,7 +148,7 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGetTodosPerfil()
         {
             byte? IdPerfil = 0;
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            long IdUsuario = GetIdUsuario();
             List<PerfilViewModel> ListEntity = null;
             
             ListEntity =  PerfilModel.GetListIdDescricao(IdUsuario, ref IdPerfil);
@@ -158,7 +158,7 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnGetTodosNomes()
         {
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            long IdUsuario = GetIdUsuario();
             List<Usuario> ListEntity = null;
 
             ListEntity = UsuarioModel.GetListIdNome(IdUsuario);
@@ -205,7 +205,24 @@ namespace CRMYIA.Web.Pages
             }           
             return new JsonResult(new { status = status, listVisita = Resultado });
         }
+
+
+        public long GetIdUsuario()
+        {
+            long IdUsuario = "0".ExtractLong();
+
+            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            {
+                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
+            }
+            else
+            {
+                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            }
+            return IdUsuario;
+        }
     }
+
 
         #endregion
 }

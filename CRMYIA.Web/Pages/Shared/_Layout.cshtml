@@ -174,9 +174,6 @@
             {
                 List<CRMYIA.Data.Entities.UsuarioHierarquia> ListEntityUsuarioHierarquia = null;
 
-                List<CRMYIA.Data.Entities.UsuarioHierarquia> ListEntityUsuarioHierarquia1 = null;
-
-
 
                 ListEntityUsuarioHierarquia = CRMYIA.Business.UsuarioHierarquiaModel.GetAllUsuarioMaster();
                 @*@ListEntityUsuarioHierarquia.Where(x => x.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong()).OrderBy(y => y.IdUsuarioMaster).FirstOrDefault().IdUsuarioMaster;*@
