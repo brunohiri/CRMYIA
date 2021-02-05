@@ -19,22 +19,26 @@
             <div class="row">
                 <div class="task-board">
 
-                    <div class="status-card" style="background-color: yellow">
+                    <div class="status-card " style="background-color: yellow">
                         <div class="card-header">
-                            <span class="card-header-text text-center">
-                                <label>Perfis</label>
-                                <select class="form-control select2" style="width: 100%;" onchange="this.form.submit()"
-                                        asp-for="@Model.IdPerfil" id="IdPerfil" name="IdPerfil">
-                                    <option>Selecione um perfil</option>
-                                    <option selected="selected" value="1">Gerente</option>
-                                    <option value="2">Supervisor</option>
-                                    <option value="3">Corretor</option>
-                                </select>
-                            </span>
-                            <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" 
-                               aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
-                            <i class="fas fa-clock bg-gray" data-toggle="modal" data-target="#modal-historico"></i>
-                            </br>
+
+                            
+                                <span class="card-header-text text-center">
+                                    <label>Perfis</label>
+                                    <select class="form-control select2" style="width: 100%;" onchange="this.form.submit()"
+                                            asp-for="@Model.IdPerfil" id="IdPerfil" name="IdPerfil">
+                                        <option>Selecione um perfil</option>
+                                        <option selected="selected" value="1">Gerente</option>
+                                        <option value="2">Supervisor</option>
+                                        <option value="3">Corretor</option>
+                                    </select>
+                                </span>
+                            
+                            <div class="row m-2 text-center">
+                                <label>Novo grupo</label>
+                                <i class="fas fa-plus fa-stack-1x" data-toggle="modal" data-target="#modal-Grupo"></i>
+                            </div>
+
                         </div>
                         <ul class="sortable ui-sortable" id="Pefis" data-status-id="Pefis">
                             @if ((Model.ListCargo != null) && (Model.ListCargo.Count > 0))
@@ -43,8 +47,8 @@
                                 {
                                     <li class="text-row ui-sortable-handle" data-task-id="@Item.IdUsuario" id="@("id-" + @Item.IdUsuario)">
                                         <p><img width="50" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()" /></p>
-                                        <p><strong>Nome:</strong> <span id="">@(Item.Nome)</span></p>
-                                        <p><strong>Cargo:</strong></p>
+                                        <p><strong>Nome: </strong> <span id="">@(Item.Nome)</span></p>
+                                        <p><strong>Cargo: @Item.DescricaoPerfil</strong></p>
                                     </li>
                                 }
                             }
@@ -71,30 +75,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row" id="HistoricoMensagemDiv" style="display: none;">
+                <div class="row" id="GrupoMensagemDiv" style="display: none;">
                     <div class="col-sm-12">
                         <div class="form-group">
                             <div class="alert alert-success alert-dismissible" id="GrupoMensagemDivAlert">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
-                                <i id="HistoricoMensagemIcon" class="icon fas fa-check"></i>
-                                <span id="HistoricoMensagemSpan">Dados salvos com sucesso!</span>
+                                <i id="GrupoMensagemIcon" class="icon fas fa-check"></i>
+                                <span id="GrupoMensagemSpan">Dados salvos com sucesso!</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <form method="post" asp-page="/KPIGrupo" asp-page-handler="KPIGrupo" id="formKPIGrupo">
                     @Html.AntiForgeryToken()
-                    
+
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-10">
                             <div class="form-group">
-                                <label>Preferência Hospitalar</label>
+                                <label>Nome</label>
                                 <input type="text" class="form-control" placeholder="Nome" asp-for="@Model.KPIGrupoEntity.Nome">
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
                             <label>Status *</label>
                             <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                 <input type="checkbox" class="custom-control-input" id="customSwitch3" checked asp-for="@Model.KPIGrupoEntity.Ativo">
@@ -102,6 +104,7 @@
                             </div>
                         </div>
                     </div>
+
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
