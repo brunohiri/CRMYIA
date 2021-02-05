@@ -13,10 +13,11 @@
                 <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
-                <table id="tableListagem" class="table table-bordered table-striped datatable">
+            <div class="card-body table-responsive">
+                <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th width="45%">Descrição</th>
                             <th width="25%">Cadastro</th>
                             <th width="25%">Ativo</th>
@@ -29,6 +30,7 @@
                             foreach (var Item in Model.ListCampanha)
                             {
                                 <tr>
+                                    <td></td>
                                     <td class="text-center">@Item.Descricao.ToUpper()</td>
                                     <td class="text-center">@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                     <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>

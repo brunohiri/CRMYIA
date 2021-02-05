@@ -12,10 +12,11 @@
                 <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
-                <table id="tableListagem" class="table table-bordered table-striped datatable">
+            <div class="card-body table-responsive">
+                    <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th width="40%">Nome</th>
                             <th width="20%">Perfil</th>
                             <th width="20%">Telefone</th>
@@ -27,12 +28,13 @@
                         {
                             foreach (var Item in Model.ListEntity)
                             {
-                        <tr>
-                            <td>@Item.Nome.ToUpper()</td>
-                            <td class="text-center">@Item.UsuarioPerfil.First().IdPerfilNavigation.Descricao.ToUpper()</td>
-                            <td class="text-center">@Html.Raw(string.IsNullOrEmpty(Item.Telefone) ? "<span class=\"badge badge-pill badge-warning\">NÃO INFORMADO</span>" : Item.Telefone)</td>
-                            <td class="text-center">@Item.DataNascimentoAbertura?.ToString("dd/MM")</td>
-                        </tr>
+                            <tr>
+                                <td></td>
+                                <td>@Item.Nome</td>
+                                <td class="text-center">@Item.UsuarioPerfil</td>
+                                <td class="text-center">@Html.Raw(string.IsNullOrEmpty(Item.Telefone) ? "<span class=\"badge badge-pill badge-warning\">NÃO INFORMADO</span>" : Item.Telefone)</td>
+                                <td class="text-center">@Item.DataNascimentoAbertura?.ToString("dd/MM")</td>
+                            </tr>
                             }
                         }
                     </tbody>

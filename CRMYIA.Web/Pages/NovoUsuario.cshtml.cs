@@ -10,6 +10,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -86,7 +87,7 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnGetPerfil(byte idPerfil)
         {
-            List<Usuario> ListUsuario = null;
+            List<ListaCorretorViewModel> ListUsuario = null;
             try
             {
                 if (idPerfil == (byte)EnumeradorModel.Perfil.Corretor)

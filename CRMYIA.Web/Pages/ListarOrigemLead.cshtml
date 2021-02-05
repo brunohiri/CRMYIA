@@ -13,10 +13,11 @@
                 <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
             </div>
             <!-- /.card-header -->
-            <div class="card-body">
-                <table id="tableListagem" class="table table-bordered table-striped datatable">
+            <div class="card-body table-responsive">
+                <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Descrição</th>
                             <th>Leads</th>
                             <th>Status</th>
@@ -29,9 +30,10 @@
                             foreach (var Item in Model.ListEntity)
                             {
                                 <tr>
+                                    <td></td>
                                     <td>@Item.Descricao</td>
                                     <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.Cliente == null ? 0 : Item.Cliente.Count())))</td>
-                                    <td>@(Item.Ativo ? "Ativo" : "Inativo")</td>
+                                    <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
                                     <td>
                                         <a asp-page="/NovoOrigemLead" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdOrigem.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
                                     </td>

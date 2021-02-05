@@ -169,9 +169,9 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Usuario> GetList(byte IdPerfil)
+        public static List<ListaCorretorViewModel> GetList(byte IdPerfil)
         {
-            List<Usuario> ListEntity = null;
+            List<ListaCorretorViewModel> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -184,6 +184,16 @@ namespace CRMYIA.Business
                             .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
                         .AsNoTracking()
                         .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
+                        .Select(x => new ListaCorretorViewModel() {
+                        IdUsuario = x.IdUsuario,
+                        Nome = x.Nome,
+                        Email = x.Email,
+                        Telefone  = x.Telefone,
+                        Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                        DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
+                        DataCadastro = x.DataCadastro, 
+                        Ativo = x.Ativo
+                        })
                         .OrderBy(o => o.Nome)
                         .ToList();
                 }
@@ -195,9 +205,9 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Usuario> GetListAniversariante()
+        public static List<ListaAniversarianteViewModel> GetListAniversariante()
         {
-            List<Usuario> ListEntity = null;
+            List<ListaAniversarianteViewModel> ListEntity = null;
 
             try
             {
@@ -209,7 +219,14 @@ namespace CRMYIA.Business
                                  .ThenInclude(u => u.IdPerfilNavigation)
                                      .ThenInclude(v => v.UsuarioPerfil)
                              .Where(x => x.DataNascimentoAbertura.HasValue ? (x.DataNascimentoAbertura.Value.Month == DateTime.Now.Month) : false)
-                             .OrderBy(o => o.Nome)
+                             .Select(x => new ListaAniversarianteViewModel()
+                             {
+                                 Nome = x.Nome.ToUpper(),
+                                 UsuarioPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao.ToUpper(),
+                                 Telefone = x.Telefone,
+                                 DataNascimentoAbertura = x.DataNascimentoAbertura
+                             })
+                             .OrderBy(o => o.DataNascimentoAbertura)
                              .ToList();
                 }
             }

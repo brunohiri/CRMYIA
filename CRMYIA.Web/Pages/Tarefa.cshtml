@@ -75,7 +75,7 @@
                                         <option selected="selected">Selecione...</option>
                                         @foreach (var Item in Model.ListCorretor)
                                         {
-                                            <option value="@Item.Nome">@(Item.Nome)</option>
+                                            <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
                                         }
                                     </select>
                                 </div>

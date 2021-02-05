@@ -6,6 +6,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,7 +22,7 @@ namespace CRMYIA.Web.Pages
         readonly IConfiguration _configuration;
         public MensagemModel Mensagem { get; set; }
         [BindProperty]
-        public List<Usuario> ListEntity { get; set; }
+        public List<ListaAniversarianteViewModel> ListEntity { get; set; }
         #endregion
 
         #region Construtores
