@@ -125,6 +125,15 @@
             justify-content: center; /* alinha horizontalmente */
             align-items: center; /* alinha verticalmente */
         }
+        .sortable {
+            height: 500px;
+            width: 220px;
+            overflow: auto;
+            margin-bottom: 20px;
+        }
+        .status-card{
+            width: 220px;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -160,15 +169,15 @@
 
             <!-- SEARCH FORM -->
             @*<form class="form-inline ml-3">
-                    <div class="input-group input-group-sm">
-                        <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>*@
+            <div class="input-group input-group-sm">
+                <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>*@
 
             @if (UsuarioModel.GetPerfil(@Context.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) != (byte?)EnumeradorModel.Perfil.Corretor)
             {
@@ -182,10 +191,10 @@
                 {
 
                     @Html.AntiForgeryToken()
-                    <div class="col-sm-3 float-right d-block" id="bloco-id-usuario-slave">
-                        <div class="input-group input-group-sm">
+                    <!--<div class="col-sm-3 float-right d-block" id="bloco-id-usuario-slave">
+                        <div class="input-group input-group-sm">-->
                             @*<label>Selecione um Usuário</label>*@
-                            <select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
+                            <!--<select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
                                 <option selected="selected">Selecione um Usuário</option>
                                 @foreach (var Item in @ListEntityUsuarioHierarquia)
                                 {
@@ -196,7 +205,28 @@
                                 }
                             </select>
                         </div>
-                    </div>
+                    </div>-->
+
+
+                    <form class="form-inline ml-3">
+                        <div class="input-group input-group-sm">
+                            <select class="form-control select2 form-control-navbar" id="IdUsuarioSlave">
+                                <option selected="selected">Selecione um Usuário</option>
+                                @foreach (var Item in @ListEntityUsuarioHierarquia)
+                                {
+                                    @if (Item.IdUsuarioMasterNavigation != null && Item.IdUsuarioSlaveNavigation != null && Item.IdUsuarioMaster == Context.User.FindFirst(System.Security.Claims.ClaimTypes.PrimarySid).Value.ExtractLong())
+                                    {
+                                        <option value="@Item.IdUsuarioSlaveNavigation.IdUsuario">@(Item.IdUsuarioSlaveNavigation.Nome)</option>
+                                    }
+                                }
+                            </select>
+                            @*<div class="input-group-append">
+                                <button class="btn btn-navbar" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>*@
+                        </div>
+                    </form>
 
                     <div class="col-sm-3 float-right d-none" id="bloco-button-id-usuario-slave">
                         <button class="btn btn-primary" id="desconectar-usuario">Desconectar do Usuário</button>
@@ -223,33 +253,33 @@
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown" id="lista-notificacoes">
                     @*<a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">15</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-envelope mr-2"></i> 4 new messages
-                                <span class="float-right text-muted text-sm">3 mins</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-users mr-2"></i> 8 friend requests
-                                <span class="float-right text-muted text-sm">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-file mr-2"></i> 3 new reports
-                                <span class="float-right text-muted text-sm">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                        </div>*@
+                    <i class="far fa-bell"></i>
+                    <span class="badge badge-warning navbar-badge">15</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header">15 Notifications</span>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-envelope mr-2"></i> 4 new messages
+                        <span class="float-right text-muted text-sm">3 mins</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-users mr-2"></i> 8 friend requests
+                        <span class="float-right text-muted text-sm">12 hours</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-file mr-2"></i> 3 new reports
+                        <span class="float-right text-muted text-sm">2 days</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                </div>*@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-user"></i> @Context.User.Identity.Name
+                        <i class="far fa-user"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <div class="row">

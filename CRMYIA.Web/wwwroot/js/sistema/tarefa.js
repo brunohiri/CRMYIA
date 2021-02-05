@@ -9,6 +9,7 @@ $(document).ready(function () {
     $('.sortable').sortable({
         connectWith: ".sortable",
         start: {},
+        scroll: true,
         update: function (event, ui) {},
         change: function (event, ui) {},
         stop: function (event, ui) {
