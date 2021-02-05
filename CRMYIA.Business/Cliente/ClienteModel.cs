@@ -157,9 +157,9 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<Cliente> GetList()
+        public static List<ListaClienteViewModel> GetList()
         {
-            List<Cliente> ListEntity = null;
+            List<ListaClienteViewModel> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -174,6 +174,16 @@ namespace CRMYIA.Business
                         .Include(y => y.UsuarioCliente)
                             .ThenInclude(z => z.IdUsuarioNavigation)
                         .AsNoTracking()
+                        .Select(x => new ListaClienteViewModel() { 
+                           IdCliente = x.IdCliente,
+                           Nome = x.Nome,
+                           OrigemDescricao = x.IdOrigemNavigation.Descricao,
+                           TipoLeadDescricao = x.IdTipoLeadNavigation.Descricao,
+                           CorretorNome = x.UsuarioCliente == null || x.UsuarioCliente.Count == 0 ? "Sem Corretor" : x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation.Nome,
+                           CidadeNome = x.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", x.IdCidadeNavigation.Descricao, x.IdCidadeNavigation.IdEstadoNavigation.Sigla),
+                           DataCadastro = x.DataCadastro,
+                           Ativo = x.Ativo
+                        })
                         .ToList();
                 }
             }

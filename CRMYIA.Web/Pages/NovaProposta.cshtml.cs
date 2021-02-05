@@ -46,7 +46,7 @@ namespace CRMYIA.Web.Pages
 
         #region Lists
         [BindProperty]
-        public List<Usuario> ListCorretor { get; set; }
+        public List<ListaCorretorViewModel> ListCorretor { get; set; }
 
         [BindProperty]
         public List<Cliente> ListCliente { get; set; }
@@ -400,7 +400,7 @@ namespace CRMYIA.Web.Pages
         #region Outros Métodos
         private void CarregarLists()
         {
-            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+           ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
             //ListCliente = ClienteModel.GetListIdNome();
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             ListStatusProposta = StatusPropostaModel.GetListIdDescricao();

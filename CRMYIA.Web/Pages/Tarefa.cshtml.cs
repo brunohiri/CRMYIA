@@ -8,6 +8,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,7 +31,7 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public Proposta Entity { get; set; }
         [BindProperty]
-        public List<Usuario> ListCorretor { get; set; }
+        public List<ListaCorretorViewModel> ListCorretor { get; set; }
         #endregion
 
         #region Construtores
@@ -127,7 +128,7 @@ namespace CRMYIA.Web.Pages
 
         public void CarregarLists()
         {
-            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+           ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
         }
         public long GetIdUsuario()
         {
