@@ -12,7 +12,8 @@ namespace CRMYIA.Data.Entities
 
         public long IdKPIGrupo { get; set; }
         public string Nome { get; set; }
-        public bool? Ativo { get; set; }
+        public DateTime DataCadastro { get; set; }
+        public bool Ativo { get; set; }
 
         public virtual ICollection<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
     }

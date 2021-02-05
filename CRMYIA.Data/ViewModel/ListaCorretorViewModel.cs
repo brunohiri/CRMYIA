@@ -13,6 +13,8 @@ namespace CRMYIA.Data.ViewModel
         public string Corretora { get; set; }
         public string DescricaoPerfil { get; set; }
         public DateTime DataCadastro { get; set; }
+        public string CaminhoFoto { get; set; }
+        public string NomeFoto { get; set; }
         public bool Ativo { get; set; }
     }
 }
