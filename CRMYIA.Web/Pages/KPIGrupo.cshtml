@@ -31,6 +31,9 @@
                                     <option value="3">Corretor</option>
                                 </select>
                             </span>
+                            <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" 
+                               aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
+                            <i class="fas fa-clock bg-gray" data-toggle="modal" data-target="#modal-historico"></i>
                             </br>
                         </div>
                         <ul class="sortable ui-sortable" id="Pefis" data-status-id="Pefis">
@@ -55,4 +58,58 @@
             </div>
         </div>
     </form>
+</div>
+
+<!-- /.modal Cadastro Grupo -->
+<div class="modal fade" id="modal-Grupo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Novo Grupo KPI</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="HistoricoMensagemDiv" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="alert alert-success alert-dismissible" id="GrupoMensagemDivAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                                <i id="HistoricoMensagemIcon" class="icon fas fa-check"></i>
+                                <span id="HistoricoMensagemSpan">Dados salvos com sucesso!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form method="post" asp-page="/KPIGrupo" asp-page-handler="KPIGrupo" id="formKPIGrupo">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Preferência Hospitalar</label>
+                                <input type="text" class="form-control" placeholder="Nome" asp-for="@Model.KPIGrupoEntity.Nome">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Status *</label>
+                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch3" checked asp-for="@Model.KPIGrupoEntity.Ativo">
+                                <label class="custom-control-label" for="customSwitch3">Ativo</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button id="ButtonSalvarKPIGrupo" type="button" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>

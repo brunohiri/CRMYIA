@@ -15,11 +15,11 @@ namespace CRMYIA.Data.Entities
         public long? IdUsuario { get; set; }
         public string Nome { get; set; }
         public string Perfil { get; set; }
-        public DateTime? Inicio { get; set; }
+        public DateTime Inicio { get; set; }
         public DateTime? Saida { get; set; }
         public string Motivo { get; set; }
         public bool? Grupo { get; set; }
-        public bool? Ativo { get; set; }
+        public bool Ativo { get; set; }
 
         public virtual KPIGrupo IdKPIGrupoNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }

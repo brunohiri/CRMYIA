@@ -41,6 +41,7 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet()
         {
             CarregarLists(1);
+            KPIGrupoEntity = new KPIGrupo();
             return Page();
         }
         public IActionResult OnPost()

@@ -722,8 +722,8 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.CorSecundaria)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
@@ -870,6 +870,8 @@ namespace CRMYIA.Data.Context
             modelBuilder.Entity<KPIGrupo>(entity =>
             {
                 entity.HasKey(e => e.IdKPIGrupo);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
