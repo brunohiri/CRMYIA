@@ -189,6 +189,8 @@ namespace CRMYIA.Business
                         Nome = x.Nome,
                         Email = x.Email,
                         Telefone  = x.Telefone,
+                        CaminhoFoto = x.CaminhoFoto,
+                        NomeFoto = x.NomeFoto,
                         Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
                         DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
                         DataCadastro = x.DataCadastro, 

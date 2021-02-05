@@ -8,6 +8,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,7 +26,7 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public KPIGrupo KPIGrupoEntity { get; set; }
         [BindProperty]
-        public List<Usuario> ListCargo { get; set; }
+        public List<ListaCorretorViewModel> ListCargo { get; set; }
         [BindProperty]
         public int? IdPerfil { get; set; }
         #endregion
