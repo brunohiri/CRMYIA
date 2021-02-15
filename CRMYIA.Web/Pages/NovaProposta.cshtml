@@ -354,7 +354,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" style="margin-top:32px;">
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" style="margin-top:32px;" id="ButtonOpenModalAbordagem">
                             Sugestão de Abordagem
                         </button>
                     </div>
@@ -554,35 +554,14 @@
                 <button type="button" class="btn btn-outline-dark">Reembolso</button>
 
                 <p>  </p>
-                <p>Olá, meu nome é (nome e sobrenome) consultor de benefícios da YIA Broker (ou nome de sua empresa), por gentileza o senhor(a) (Nome do Cliente)</p>
-                <p>Sr(a) (nome do cliente) como vai? O motivo do meu contato é para apresentar ao senhor uma oportunidade através de uma consultoria gratuita sobre o plano de saúde atual   </p>
-                <p>(Qual Plano) do senhor(a)! O(a) senhor(a) pode falar por 5 minutos? </p>
-                <p>(se não) qual melhor horário para falarmos? </p>
-                <p>(se sim) Falo em nome da April Broker (ou nome de sua empresa), somos uma Multinacional com mais de 30 anos de mercado e presente em 34 países especializados em identificar </p>
-                <p>oportunidades de Custo x Benefício, através de uma consultoria gratuita em sua atual Apólice da (Operadora/Seguradora), o senhor(a) sabia que todos os anos o plano </p>
-                <p>do senhor passa por reajustes que chegam até 30%?      </p>
-                <p>- Pois é, essa é a minha especialidade, buscar oferecer uma opção de atendimento igual ou superior a que o senhor(a) possui atualmente e com um preço Justo assim reduzindo  </p>
-                <p>seu Custo Mensal e possibilitando o investimento em outros ramos.  </p>
-                <p>Perguntas: (Senhor para uma cotação mais assertiva vou fazer algumas perguntas, ok?)      </p>
-                <p>  </p>
-                <p>1) Atualmente o senhor possui um plano de saúde PF, Adesão ou PME? Como está o Custo x Benefício da sua apólice?  </p>
-                <p>________________________________________________________________________________________________ </p>
-                <p>2) Quantas vidas estão ativas? Quais idades?
-                <p>________________________________________________________________________________________________ </p>
-                <p>3) O senhor possui um CNPJ ativo? Qual ramo de atividade da empresa?                            </p>
-                <p>________________________________________________________________________________________________     </p>
-                <p>4) Qual a profissão ou formação acadêmica do senhor ou sua esposa? (Se cliente for Pessoa Física ou contrato por Adesão)  </p>
-                <p>________________________________________________________________________________________________    </p>
-                <p>5) Qual região você mora? Qual região trabalha? (importante para apresentar alternativas em caso de necessidade)    </p>
-                <p>________________________________________________________________________________________________   </p>
-                <p>6) Qual Hospital costuma utilizar em caso de emergência ou urgência?                                </p>
-                <p>________________________________________________________________________________________________  </p>
-                <p>7) Algumas das pessoas que vou cotar fazem ou está fazendo algum tratamento de saúde?             </p>
-                <p>________________________________________________________________________________________________    </p>
-                <p>8) Com estas informações vou elaborar uma consultoria e volto a ligar para senhor(a).                </p>
+                <p id="AbordagemDescricao"></p>
+                <input id="AbordagemOrdem" type="hidden" />
+                
             </div>
             <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-dark" id="ButtonAbordagemAnterior" data-id="PREV">Anterior</button>
                 <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-outline-dark" id="ButtonAbordagemProximo" data-id="NEXT">Próximo</button>
             </div>
         </div>
         <!-- /.modal-content -->

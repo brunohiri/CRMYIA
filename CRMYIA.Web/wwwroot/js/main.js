@@ -123,6 +123,7 @@ $(document).ready(function () {
         //Cadastro de Propostas
         CadastroPropostas();
         SalvarHistoricoLigacao();
+        CarregarAbordagem();
     }
     if (window.location.href.indexOf('Tarefa') > 0) {
         //Cadastro de Tarefas
@@ -775,6 +776,41 @@ function CalcularQuantidadeVidas() {
                 qtdSoma += parseInt($('.faixaetaria')[i].value);
         }
         $('#PropostaQuantidadeVidas').val(qtdSoma);
+    });
+}
+
+
+function CarregarAbordagem() {
+
+    $('#ButtonAbordagemAnterior,#ButtonAbordagemProximo').click(function () {
+        NavegarAbordagem($(this).data('id'));
+    });
+
+    $('#ButtonOpenModalAbordagem').click(function () {
+        NavegarAbordagem(1);
+    });
+   
+}
+
+function NavegarAbordagem(Direcao) {
+    var IdAbordagemCategoria = 1;
+    var Ordem = 1;
+
+    if ($('#AbordagemOrdem').val() !== '')
+        Ordem = $('#AbordagemOrdem').val();
+
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Abordagem&IdAbordagemCategoria=" + IdAbordagemCategoria + "&Ordem=" + Ordem + "&Direcao=" + Direcao,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            var result = '';
+            if (data.status) {
+                $('#AbordagemDescricao').text(data.entityAbordagem.descricao);
+                $('#AbordagemOrdem').val(data.entityAbordagem.ordem);
+            }
+        }
     });
 }
 
