@@ -168,7 +168,43 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-
+        public static CargoUsuarioViewModel GetCargoUsuario(long IdUsuario)
+        {
+            CargoUsuarioViewModel ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Usuario.Where(x => x.IdUsuario == IdUsuario)
+                        .Include(y => y.UsuarioPerfil)
+                            .ThenInclude(p => p.IdPerfilNavigation)
+                        .Include(c => c.IdCorretoraNavigation)
+                        .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                            .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
+                        .AsNoTracking()
+                        .Select(x => new CargoUsuarioViewModel()
+                        {
+                            IdUsuario = x.IdUsuario,
+                            Nome = x.Nome,
+                            Email = x.Email,
+                            Telefone = x.Telefone,
+                            CaminhoFoto = x.CaminhoFoto,
+                            NomeFoto = x.NomeFoto,
+                            Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                            DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
+                            DataCadastro = x.DataCadastro,
+                            Ativo = x.Ativo
+                        })
+                        .OrderBy(o => o.Nome)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
         public static List<ListaCorretorViewModel> GetList(byte IdPerfil)
         {
             List<ListaCorretorViewModel> ListEntity = null;

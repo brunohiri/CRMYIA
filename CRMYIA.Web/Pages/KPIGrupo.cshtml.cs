@@ -17,10 +17,11 @@ using Microsoft.Extensions.Configuration;
 namespace CRMYIA.Web.Pages
 {
     [Authorize]
-    public class KPIGrupoModel : PageModel
+    public class KPIGruposModel : PageModel
     {
         #region Propriedades
         readonly IConfiguration _configuration;
+
 
         public MensagemModel Mensagem { get; set; }
         [BindProperty]
@@ -28,11 +29,17 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<ListaCorretorViewModel> ListCargo { get; set; }
         [BindProperty]
+        public CargoUsuarioViewModel UsuarioCargo { get; set; }
+        [BindProperty]
+        public List<KPIGrupo> ListKPIGrupo { get; set; }
+        [BindProperty]
+        public List<KPIGrupoUsuario> ListKPIGrupoUsuario { get; set; }
+        [BindProperty]
         public int? IdPerfil { get; set; }
         #endregion
 
         #region Construtores
-        public KPIGrupoModel(IConfiguration configuration)
+        public KPIGruposModel(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -47,15 +54,83 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnPost()
         {
-
-            CarregarLists(int.Parse(Request.Form["IdPerfil"]));
+            int id = 0;
+            id = int.Parse(Request.Form["IdPerfil"]);
+            if (id > 0)
+                CarregarLists(int.Parse(Request.Form["IdPerfil"]));
             return Page();
         }
+        public IActionResult OnGetEdit(string grupoId = null, string usuarioId = null)
+        {
+            if ((!grupoId.IsNullOrEmpty()) && (!usuarioId.IsNullOrEmpty()))
+            {
+                KPIGrupoUsuario EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.Get(usuarioId.ExtractLong());
 
+                if (EntityKPIGrupoUsuario != null)
+                {
+                    EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
+                    EntityKPIGrupoUsuario.IdUsuario = usuarioId.ExtractLong();
+
+                    KPIGrupoUsuarioModel.Update(EntityKPIGrupoUsuario);
+                }
+                else
+                {
+                    UsuarioCargo = UsuarioModel.GetCargoUsuario(usuarioId.ExtractLong());
+                    EntityKPIGrupoUsuario = new KPIGrupoUsuario();
+
+                    EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
+                    EntityKPIGrupoUsuario.IdUsuario = usuarioId.ExtractLong();
+                    EntityKPIGrupoUsuario.Inicio = DateTime.Now;
+                    EntityKPIGrupoUsuario.Nome = UsuarioCargo.Nome;
+                    EntityKPIGrupoUsuario.Perfil = UsuarioCargo.DescricaoPerfil;
+                    EntityKPIGrupoUsuario.Grupo = true;
+                    EntityKPIGrupoUsuario.Ativo = true;
+                    try
+                    {
+                        KPIGrupoUsuarioModel.Add(EntityKPIGrupoUsuario);
+                    }
+                    catch(Exception ex)
+                    {
+                        return new JsonResult(new { status = false });
+                    }
+                }
+            }
+            return new JsonResult(new { status = true });
+        }
+        public IActionResult OnPostKPIGrupo()
+        {
+            try
+            {
+
+                if (KPIGrupoEntity.IdKPIGrupo == 0)
+                {
+                    KPIGrupoEntity.DataCadastro = DateTime.Now;
+                    KPIGrupoModel.Add(KPIGrupoEntity);
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                    ListKPIGrupo = KPIGrupoModel.GetList();
+                }
+                else if (KPIGrupoEntity.Nome.Length <= 0)
+                {
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Verifique os campos!");
+                }
+                else
+                {
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Não foi possivel salvar!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
+            }
+            CarregarLists();
+            return new JsonResult(new { mensagem = Mensagem });
+        }
         #endregion
 
-        public void CarregarLists(int cargo)
+        public void CarregarLists(int cargo = 0)
         {
+            ListKPIGrupo = KPIGrupoModel.GetList();
+            ListKPIGrupoUsuario = KPIGrupoUsuarioModel.GetList();
             if (cargo > 0)
             {
                 if (cargo == 1)

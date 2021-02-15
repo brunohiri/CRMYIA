@@ -112,6 +112,11 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.IdCampanhaReferenciaNavigation)
+                    .WithMany(p => p.InverseIdCampanhaReferenciaNavigation)
+                    .HasForeignKey(d => d.IdCampanhaReferencia)
+                    .HasConstraintName("Campanha_Campanha");
+
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Campanha)
                     .HasForeignKey(d => d.IdUsuario)

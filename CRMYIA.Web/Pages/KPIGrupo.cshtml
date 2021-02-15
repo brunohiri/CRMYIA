@@ -1,5 +1,5 @@
 ﻿@page
-@model CRMYIA.Web.Pages.KPIGrupoModel
+@model CRMYIA.Web.Pages.KPIGruposModel
 @{
     ViewData["Title"] = "";
     ViewData["Pagina"] = "KPIGrupo";
@@ -17,35 +17,35 @@
     <form method="post">
         <div class="card-body">
             <div class="row">
-                <div class="task-board">
+                <div class="task-board" style="background-color: #3949AB">
 
-                    <div class="status-card " style="background-color: yellow">
+                    <div class="status-card " style="background-color: #9FA8DA">
                         <div class="card-header">
 
-                            
-                                <span class="card-header-text text-center">
-                                    <label>Perfis</label>
-                                    <select class="form-control select2" style="width: 100%;" onchange="this.form.submit()"
-                                            asp-for="@Model.IdPerfil" id="IdPerfil" name="IdPerfil">
-                                        <option>Selecione um perfil</option>
-                                        <option selected="selected" value="1">Gerente</option>
-                                        <option value="2">Supervisor</option>
-                                        <option value="3">Corretor</option>
-                                    </select>
-                                </span>
-                            
+
+                            <span class="card-header-text text-center">
+                                <label>Perfis</label>
+                                <select class="form-control select2" style="width: 100%;" onchange="this.form.submit()"
+                                        asp-for="@Model.IdPerfil" id="IdPerfil" name="IdPerfil">
+                                    <option value="0">Selecione um perfil</option>
+                                    <option selected="selected" value="1">Gerente</option>
+                                    <option value="2">Supervisor</option>
+                                    <option value="3">Corretor</option>
+                                </select>
+                            </span>
+
                             <div class="row m-2 text-center">
                                 <label>Novo grupo</label>
-                                <i class="fas fa-plus fa-stack-1x" data-toggle="modal" data-target="#modal-Grupo"></i>
+                                <a href="#"><i title="Novo grupo" class="fas fa-plus fa-stack-1x" data-toggle="modal" data-target="#modal-Grupo"></i></a>
                             </div>
 
                         </div>
-                        <ul class="sortable ui-sortable" id="Pefis" data-status-id="Pefis">
+                        <ul class="sortable ui-sortable" id="Pefis" data-grupo-id="Pefis">
                             @if ((Model.ListCargo != null) && (Model.ListCargo.Count > 0))
                             {
                                 foreach (var Item in Model.ListCargo)
                                 {
-                                    <li class="text-row ui-sortable-handle" data-task-id="@Item.IdUsuario" id="@("id-" + @Item.IdUsuario)">
+                                    <li class="text-row ui-sortable-handle" data-user-id="@Item.IdUsuario" id="@("id-" + @Item.IdUsuario)">
                                         <p><img width="50" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()" /></p>
                                         <p><strong>Nome: </strong> <span id="">@(Item.Nome)</span></p>
                                         <p><strong>Cargo: @Item.DescricaoPerfil</strong></p>
@@ -54,10 +54,56 @@
                             }
                             else
                             {
-                                <li class="text-row-empty div-blocked" data-task-id="0">Nenhum </li>
+                                <li class="text-row-empty div-blocked" data-grupo-id="0">Nenhum </li>
                             }
                         </ul>
                     </div>
+
+                    @if (Model.ListKPIGrupo != null)
+                    {
+                        foreach (var Item in Model.ListKPIGrupo)
+                        {
+                            <div class="status-card" style="background-color: #4DD0E1">
+                                <div class="card-header">
+                                    <span class="card-header-text text-center m-2">
+                                        @Item.Nome
+                                    </span>
+
+                                    <div class="row m-2 text-center">
+                                        <label>Editar Meta</label>
+                                        <a asp-page="/NovaMeta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdKPIGrupo.ToString()))"><i title="Editar Meta" class="fas fa-edit fa-stack-1x"></i></a>
+                                    </div>
+                                    <div class="row m-2 text-center">
+                                        <label>Nova Meta</label>
+                                        <a asp-page="/NovaMeta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdKPIGrupo.ToString()))"><i title="Nova Meta" class="fas fa-plus fa-stack-1x"></i></a>
+                                    </div>
+                                </div>
+                                <ul class="sortable ui-sortable" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo" id="@Item.IdKPIGrupo">
+                                    @if ((Model.ListKPIGrupoUsuario != null) && (Model.ListKPIGrupoUsuario.Count > 0))
+                                    {
+                                        foreach (var ItemListKPIGrupoUsuario in Model.ListKPIGrupoUsuario)
+                                        {
+                                            @if (ItemListKPIGrupoUsuario.IdKPIGrupo == Item.IdKPIGrupo)
+                                            {
+                                                <li class="text-row ui-sortable-handle" data-user-id="@ItemListKPIGrupoUsuario.IdUsuario" id="@("id-" + ItemListKPIGrupoUsuario.IdUsuario)">
+                                                    @*<p><img width="50" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()" /></p>*@
+                                                    <p><img width="50" src="" alt="" /></p>
+                                                    <p><strong>Nome: </strong> <span id="">@(ItemListKPIGrupoUsuario.Nome)</span></p>
+                                                    <p><strong>Cargo: @ItemListKPIGrupoUsuario.Perfil</strong></p>
+                                                </li>
+                                            }
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li class="text-row-empty div-blocked" data-grupo-id="0">Ninguém atribuido ao grupo</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+
                 </div>
             </div>
         </div>
@@ -75,13 +121,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row" id="GrupoMensagemDiv" style="display: none;">
+                <div class="row" id="KPIGrupoMensagemDiv" style="display: none;">
                     <div class="col-sm-12">
+
                         <div class="form-group">
-                            <div class="alert alert-success alert-dismissible" id="GrupoMensagemDivAlert">
+                            <div class="alert alert-success alert-dismissible" id="KPIGrupoMensagemDivAlert">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
-                                <i id="GrupoMensagemIcon" class="icon fas fa-check"></i>
-                                <span id="GrupoMensagemSpan">Dados salvos com sucesso!</span>
+                                <i id="KPIGrupoMensagemIcon" class="icon fas fa-check"></i>
+                                <span id="KPIGrupoMensagemSpan">Dados salvos com sucesso!</span>
                             </div>
                         </div>
                     </div>
@@ -110,6 +157,7 @@
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                 <button id="ButtonSalvarKPIGrupo" type="button" class="btn btn-primary">Salvar</button>
+
             </div>
         </div>
         <!-- /.modal-content -->
