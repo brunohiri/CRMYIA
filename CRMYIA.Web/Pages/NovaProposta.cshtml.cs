@@ -211,23 +211,6 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true, listCategoria = ListCategoria, idLinha = IdLinhaCategoria });
         }
 
-        public IActionResult OnGetAbordagem(string IdAbordagemCategoria = null, string Ordem = null, string Direcao = null)
-        {
-            Abordagem EntityAbordagem = null;
-
-            if ((IdAbordagemCategoria != "undefined") && (IdAbordagemCategoria != "undenfined"))
-            {
-                if (Direcao == "NEXT")
-                    EntityAbordagem = AbordagemModel.GetNext(IdAbordagemCategoria.ExtractByteOrZero(), Ordem.ExtractByteOrZero());
-                else if (Direcao == "PREV")
-                    EntityAbordagem = AbordagemModel.GetPrevious(IdAbordagemCategoria.ExtractByteOrZero(), Ordem.ExtractByteOrZero());
-                else
-                    EntityAbordagem = AbordagemModel.Get(1);
-            }
-
-            return new JsonResult(new { status = true, entityAbordagem = EntityAbordagem });
-        }
-
         public IActionResult OnPostHistoricoLigacao()
         {
             try

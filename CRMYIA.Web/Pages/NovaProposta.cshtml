@@ -352,13 +352,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" style="margin-top:32px;" id="ButtonOpenModalAbordagem">
-                            Sugestão de Abordagem
-                        </button>
-                    </div>
-                </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -536,37 +529,6 @@
             <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
         </div>
     </form>
-</div>
-
-<div class="modal fade" id="modalAbordagem" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-warning">
-            <div class="modal-header">
-                <h4 class="modal-title">Dicas de Abordagem</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <button type="button" class="btn btn-outline-dark">Informações</button>
-                <button type="button" class="btn btn-outline-dark">Comparativo Região</button>
-                <button type="button" class="btn btn-outline-dark">Suporte na Venda</button>
-                <button type="button" class="btn btn-outline-dark">Reembolso</button>
-
-                <p>  </p>
-                <p id="AbordagemDescricao"></p>
-                <input id="AbordagemOrdem" type="hidden" />
-                
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-dark" id="ButtonAbordagemAnterior" data-id="PREV">Anterior</button>
-                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-outline-dark" id="ButtonAbordagemProximo" data-id="NEXT">Próximo</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
 </div>
 
 <!-- /.modal Ligações -->
