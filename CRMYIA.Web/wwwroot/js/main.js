@@ -123,11 +123,11 @@ $(document).ready(function () {
         //Cadastro de Propostas
         CadastroPropostas();
         SalvarHistoricoLigacao();
-        CarregarAbordagem();
     }
     if (window.location.href.indexOf('Tarefa') > 0) {
         //Cadastro de Tarefas
         CadastroTarefas();
+        CarregarAbordagem();
     }
 
 
@@ -801,7 +801,7 @@ function NavegarAbordagem(Direcao) {
 
     $.ajax({
         type: "GET",
-        url: "/NovaProposta?handler=Abordagem&IdAbordagemCategoria=" + IdAbordagemCategoria + "&Ordem=" + Ordem + "&Direcao=" + Direcao,
+        url: "/Tarefa?handler=Abordagem&IdAbordagemCategoria=" + IdAbordagemCategoria + "&Ordem=" + Ordem + "&Direcao=" + Direcao,
         contentType: "application/json",
         dataType: "json",
         success: function (data) {
