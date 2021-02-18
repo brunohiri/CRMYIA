@@ -78,14 +78,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -942,6 +936,10 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdKPIGrupoUsuario);
 
+                entity.Property(e => e.CaminhoFoto)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Inicio).HasColumnType("datetime");
 
                 entity.Property(e => e.Motivo)
@@ -950,6 +948,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeFoto)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Perfil)

@@ -168,9 +168,49 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-        public static CargoUsuarioViewModel GetCargoUsuario(long IdUsuario)
+
+        public static List<ListaCorretorViewModel> GetList(byte IdPerfil)
         {
-            CargoUsuarioViewModel ListEntity = null;
+            List<ListaCorretorViewModel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                            .ThenInclude(p => p.IdPerfilNavigation)
+                        .Include(c => c.IdCorretoraNavigation)
+                        .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                            .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
+                        .Select(x => new ListaCorretorViewModel()
+                        {
+                            IdUsuario = x.IdUsuario,
+                            Nome = x.Nome,
+                            Email = x.Email,
+                            Telefone = x.Telefone,
+                            CaminhoFoto = x.CaminhoFoto,
+                            NomeFoto = x.NomeFoto,
+                            Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                            DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
+                            DataCadastro = x.DataCadastro,
+                            Ativo = x.Ativo
+                        })
+                        .OrderBy(o => o.Nome)
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static KPIUsuarioViewModel GetKPIUsuario(long IdUsuario)
+        {
+            KPIUsuarioViewModel ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -182,12 +222,10 @@ namespace CRMYIA.Business
                         .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
                             .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
                         .AsNoTracking()
-                        .Select(x => new CargoUsuarioViewModel()
+                        .Select(x => new KPIUsuarioViewModel()
                         {
                             IdUsuario = x.IdUsuario,
                             Nome = x.Nome,
-                            Email = x.Email,
-                            Telefone = x.Telefone,
                             CaminhoFoto = x.CaminhoFoto,
                             NomeFoto = x.NomeFoto,
                             Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
@@ -205,13 +243,17 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-        public static List<ListaCorretorViewModel> GetList(byte IdPerfil)
+        public static List<ListaKPIUsuarioViewModel> GetListKPIUsuario(byte IdPerfil, string perfil)
         {
-            List<ListaCorretorViewModel> ListEntity = null;
+            List<ListaKPIUsuarioViewModel> ListEntity = null;
+            List<KPIGrupoUsuario> ListKPIGrupoUsuario = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
+
+                    ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Perfil == perfil).AsNoTracking().ToList();
+                    
                     ListEntity = context.Usuario
                         .Include(y => y.UsuarioPerfil)
                             .ThenInclude(p => p.IdPerfilNavigation)
@@ -220,20 +262,24 @@ namespace CRMYIA.Business
                             .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
                         .AsNoTracking()
                         .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
-                        .Select(x => new ListaCorretorViewModel() {
-                        IdUsuario = x.IdUsuario,
-                        Nome = x.Nome,
-                        Email = x.Email,
-                        Telefone  = x.Telefone,
-                        CaminhoFoto = x.CaminhoFoto,
-                        NomeFoto = x.NomeFoto,
-                        Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
-                        DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
-                        DataCadastro = x.DataCadastro, 
-                        Ativo = x.Ativo
+                        .Select(x => new ListaKPIUsuarioViewModel()
+                        {
+                            IdUsuario = x.IdUsuario,
+                            Nome = x.Nome,
+                            CaminhoFoto = x.CaminhoFoto,
+                            NomeFoto = x.NomeFoto,
+                            Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                            DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
+                            DataCadastro = x.DataCadastro,
+                            Ativo = x.Ativo
                         })
                         .OrderBy(o => o.Nome)
                         .ToList();
+
+                    foreach (var item in ListKPIGrupoUsuario)
+                    {
+                        ListEntity.RemoveAll(us => us.Nome == item.Nome);
+                    }
                 }
             }
             catch (Exception)
@@ -242,14 +288,13 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-
         public static List<ListaAniversarianteViewModel> GetListAniversariante()
         {
             List<ListaAniversarianteViewModel> ListEntity = null;
 
             try
             {
-               
+
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Usuario
@@ -325,7 +370,7 @@ namespace CRMYIA.Business
                         .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario), up => up.IdUsuario, (u, up) => u.Nome)
                         .Select(x => new Usuario()
                         {
-                          Nome = x
+                            Nome = x
                         })
                         .ToList();
                     }
@@ -333,7 +378,7 @@ namespace CRMYIA.Business
                     if (up.IdPerfil == 2)
                     {
                         ListEntity = context.Usuario
-                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario),up => up.IdUsuario,(u, up) =>new{u = u, up = up})
+                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario), up => up.IdUsuario, (u, up) => new { u = u, up = up })
                         .Where(temp0 => ((Int32?)(temp0.up.IdPerfil) != (Int32?)1))
                         .Select(temp0 => temp0.u.Nome)
                         .Select(x => new Usuario()
@@ -426,7 +471,8 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.Usuario
                         .Where(x => x.Nome.Contains(parametro))
-                        .Select(x => new Usuario() { 
+                        .Select(x => new Usuario()
+                        {
                             IdUsuario = x.IdUsuario,
                             Nome = x.Nome,
                             CaminhoFoto = x.CaminhoFoto,

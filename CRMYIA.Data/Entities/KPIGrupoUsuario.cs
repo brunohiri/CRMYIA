@@ -20,6 +20,8 @@ namespace CRMYIA.Data.Entities
         public string Motivo { get; set; }
         public bool? Grupo { get; set; }
         public bool Ativo { get; set; }
+        public string CaminhoFoto { get; set; }
+        public string NomeFoto { get; set; }
 
         public virtual KPIGrupo IdKPIGrupoNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }

@@ -27,9 +27,9 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public KPIGrupo KPIGrupoEntity { get; set; }
         [BindProperty]
-        public List<ListaCorretorViewModel> ListCargo { get; set; }
+        public List<ListaKPIUsuarioViewModel> ListPerfil { get; set; }
         [BindProperty]
-        public CargoUsuarioViewModel UsuarioCargo { get; set; }
+        public KPIUsuarioViewModel UsuarioCargo { get; set; }
         [BindProperty]
         public List<KPIGrupo> ListKPIGrupo { get; set; }
         [BindProperty]
@@ -75,7 +75,7 @@ namespace CRMYIA.Web.Pages
                 }
                 else
                 {
-                    UsuarioCargo = UsuarioModel.GetCargoUsuario(usuarioId.ExtractLong());
+                    UsuarioCargo = UsuarioModel.GetKPIUsuario(usuarioId.ExtractLong());
                     EntityKPIGrupoUsuario = new KPIGrupoUsuario();
 
                     EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
@@ -83,13 +83,15 @@ namespace CRMYIA.Web.Pages
                     EntityKPIGrupoUsuario.Inicio = DateTime.Now;
                     EntityKPIGrupoUsuario.Nome = UsuarioCargo.Nome;
                     EntityKPIGrupoUsuario.Perfil = UsuarioCargo.DescricaoPerfil;
+                    EntityKPIGrupoUsuario.NomeFoto = UsuarioCargo.NomeFoto;
+                    EntityKPIGrupoUsuario.CaminhoFoto = UsuarioCargo.CaminhoFoto;
                     EntityKPIGrupoUsuario.Grupo = true;
                     EntityKPIGrupoUsuario.Ativo = true;
                     try
                     {
                         KPIGrupoUsuarioModel.Add(EntityKPIGrupoUsuario);
                     }
-                    catch(Exception ex)
+                    catch
                     {
                         return new JsonResult(new { status = false });
                     }
@@ -101,7 +103,6 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
-
                 if (KPIGrupoEntity.IdKPIGrupo == 0)
                 {
                     KPIGrupoEntity.DataCadastro = DateTime.Now;
@@ -127,18 +128,18 @@ namespace CRMYIA.Web.Pages
         }
         #endregion
 
-        public void CarregarLists(int cargo = 0)
+        public void CarregarLists(int perfil = 0)
         {
             ListKPIGrupo = KPIGrupoModel.GetList();
             ListKPIGrupoUsuario = KPIGrupoUsuarioModel.GetList();
-            if (cargo > 0)
+            if (perfil > 0)
             {
-                if (cargo == 1)
-                    ListCargo = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Gerente));
-                if (cargo == 2)
-                    ListCargo = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Supervisor));
-                //if (cargo == 3)
-                //    ListCargo = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+                if (perfil == 1)
+                    ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Gerente), "Gerente");
+                if (perfil == 2)
+                    ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Supervisor), "Supervisor");
+                //if (perfil == 3)
+                //    ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Corretor), "Corretor");
             }
 
         }

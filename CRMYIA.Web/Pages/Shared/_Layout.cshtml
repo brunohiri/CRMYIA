@@ -26,7 +26,14 @@
     <link rel="stylesheet" href="../css/style.css">
     <!-- Jquery UI -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="../css/tasks.css">
+    @if (ViewData["Pagina"].ToString().Equals("KPIGrupo"))
+    {
+        <link rel="stylesheet" href="../css/KPIGrupo.css">
+    }
+    else
+    {
+        <link rel="stylesheet" href="../css/tasks.css">
+    }
     <!-- Tempusdominus Bbootstrap 4 -->
     <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- fullCalendar -->
@@ -74,11 +81,11 @@
             z-index: 100;
         }
         /* table {
-            font-size: 1em;
-        }*/
+                font-size: 1em;
+            }*/
         /* .ui-draggable, .ui-droppable {
-            background-position: top;
-        }*/
+                background-position: top;
+            }*/
         #notificacao-mensagem-tremer {
             /* apenas para dar um formato a div */
             /* animacao */
@@ -125,15 +132,7 @@
             justify-content: center; /* alinha horizontalmente */
             align-items: center; /* alinha verticalmente */
         }
-        .sortable {
-            height: 500px;
-            width: 220px;
-            overflow: auto;
-            margin-bottom: 20px;
-        }
-        .status-card{
-            width: 220px;
-        }
+
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -169,15 +168,15 @@
 
             <!-- SEARCH FORM -->
             @*<form class="form-inline ml-3">
-            <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </form>*@
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>*@
 
             @if (UsuarioModel.GetPerfil(@Context.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) != (byte?)EnumeradorModel.Perfil.Corretor)
             {
@@ -193,8 +192,8 @@
                     @Html.AntiForgeryToken()
                     <!--<div class="col-sm-3 float-right d-block" id="bloco-id-usuario-slave">
                         <div class="input-group input-group-sm">-->
-                            @*<label>Selecione um Usuário</label>*@
-                            <!--<select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
+                    @*<label>Selecione um Usuário</label>*@
+                    <!--<select class="form-control select2" style="width: 100%;" id="IdUsuarioSlave">
                                 <option selected="selected">Selecione um Usuário</option>
                                 @foreach (var Item in @ListEntityUsuarioHierarquia)
                                 {
@@ -221,10 +220,10 @@
                                 }
                             </select>
                             @*<div class="input-group-append">
-                                <button class="btn btn-navbar" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>*@
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>*@
                         </div>
                     </form>
 
@@ -253,29 +252,29 @@
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown" id="lista-notificacoes">
                     @*<a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-bell"></i>
-                    <span class="badge badge-warning navbar-badge">15</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <span class="dropdown-item dropdown-header">15 Notifications</span>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-envelope mr-2"></i> 4 new messages
-                        <span class="float-right text-muted text-sm">3 mins</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-users mr-2"></i> 8 friend requests
-                        <span class="float-right text-muted text-sm">12 hours</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-file mr-2"></i> 3 new reports
-                        <span class="float-right text-muted text-sm">2 days</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                </div>*@
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">15</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                                <span class="float-right text-muted text-sm">3 mins</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-users mr-2"></i> 8 friend requests
+                                <span class="float-right text-muted text-sm">12 hours</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-file mr-2"></i> 3 new reports
+                                <span class="float-right text-muted text-sm">2 days</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </div>*@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
