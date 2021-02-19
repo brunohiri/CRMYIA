@@ -16,6 +16,8 @@ namespace CRMYIA.Data.Context
         {
         }
 
+        public virtual DbSet<Abordagem> Abordagem { get; set; }
+        public virtual DbSet<AbordagemCategoria> AbordagemCategoria { get; set; }
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
@@ -83,6 +85,38 @@ namespace CRMYIA.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Abordagem>(entity =>
+            {
+                entity.HasKey(e => e.IdAbordagem);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdAbordagemCategoriaNavigation)
+                    .WithMany(p => p.Abordagem)
+                    .HasForeignKey(d => d.IdAbordagemCategoria)
+                    .HasConstraintName("AbordagemCategoria_Abordagem");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Abordagem)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_Abordagem");
+            });
+
+            modelBuilder.Entity<AbordagemCategoria>(entity =>
+            {
+                entity.HasKey(e => e.IdAbordagemCategoria);
+
+                entity.Property(e => e.IdAbordagemCategoria).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<ArquivoLead>(entity =>
             {
                 entity.HasKey(e => e.IdArquivoLead);
@@ -111,6 +145,15 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Url)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCampanhaReferenciaNavigation)
+                    .WithMany(p => p.InverseIdCampanhaReferenciaNavigation)
+                    .HasForeignKey(d => d.IdCampanhaReferencia)
+                    .HasConstraintName("Campanha_Campanha");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Campanha)
@@ -185,6 +228,12 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdCidade);
 
+                entity.HasIndex(e => new { e.Ativo, e.CodigoIBGE })
+                    .HasName("IX_CODIGOIBGE");
+
+                entity.HasIndex(e => new { e.Ativo, e.IdEstado })
+                    .HasName("IX_IDESTADO");
+
                 entity.Property(e => e.CodigoIBGE)
                     .HasMaxLength(20)
                     .IsUnicode(false);
@@ -213,6 +262,12 @@ namespace CRMYIA.Data.Context
             modelBuilder.Entity<Cliente>(entity =>
             {
                 entity.HasKey(e => e.IdCliente);
+
+                entity.HasIndex(e => e.CPF)
+                    .HasName("IX_CPF");
+
+                entity.HasIndex(e => new { e.IdCliente, e.CPF })
+                    .HasName("IX_IDCLIENTE_CPF");
 
                 entity.Property(e => e.Bairro)
                     .HasMaxLength(200)
@@ -535,6 +590,9 @@ namespace CRMYIA.Data.Context
             modelBuilder.Entity<CorretoresSP>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.HasIndex(e => new { e.CorretorClassificacao, e.Nome, e.Email, e.Assistente, e.Telefone, e.Producao, e.DtNascimento, e.Documento, e.CNAE, e.SUSEP, e.CPFResponsavel, e.Inclusão, e.CEP, e.Endereco, e.Complemento, e.Bairro, e.Cidade, e.EmailResponsavel, e.UltimaProducao, e.Regiao, e.HashId, e.Codigo })
+                    .HasName("IX_CORRETORESP");
 
                 entity.Property(e => e.Assistente)
                     .HasMaxLength(500)
@@ -882,6 +940,10 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdKPIGrupoUsuario);
 
+                entity.Property(e => e.CaminhoFoto)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Inicio).HasColumnType("datetime");
 
                 entity.Property(e => e.Motivo)
@@ -890,6 +952,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeFoto)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Perfil)
@@ -1182,6 +1248,9 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdPerfilModulo);
 
+                entity.HasIndex(e => new { e.Ativo, e.IdPerfil, e.IdModulo })
+                    .HasName("IX_PERFILMODULO");
+
                 entity.HasOne(d => d.IdModuloNavigation)
                     .WithMany(p => p.PerfilModulo)
                     .HasForeignKey(d => d.IdModulo)
@@ -1246,6 +1315,15 @@ namespace CRMYIA.Data.Context
             modelBuilder.Entity<Proposta>(entity =>
             {
                 entity.HasKey(e => e.IdProposta);
+
+                entity.HasIndex(e => e.IdUsuario)
+                    .HasName("IX_IDUSUARIO");
+
+                entity.HasIndex(e => new { e.Ativo, e.IdUsuario })
+                    .HasName("IX_PROPOSTA");
+
+                entity.HasIndex(e => new { e.Ativo, e.IdUsuarioCorretor, e.DataSolicitacao })
+                    .HasName("IX_ATIVO_IDUSUARIOCORRETOR_DATASOLICITACAO");
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
@@ -1422,6 +1500,21 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdUsuario);
 
+                entity.HasIndex(e => e.Ativo)
+                    .HasName("IX_CORRETORESP");
+
+                entity.HasIndex(e => new { e.IdUsuario, e.Ativo })
+                    .HasName("IX_IDUSUARIO_ATIVO");
+
+                entity.HasIndex(e => new { e.IdUsuario, e.Logado })
+                    .HasName("IX_LOGADO");
+
+                entity.HasIndex(e => new { e.Login, e.Senha })
+                    .HasName("IX_LOGIN_SENHA_SEM_ATIVO");
+
+                entity.HasIndex(e => new { e.Ativo, e.Login, e.Senha })
+                    .HasName("IX_LOGIN_SENHA");
+
                 entity.Property(e => e.CaminhoFoto)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -1508,6 +1601,15 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdUsuarioHierarquia);
 
+                entity.HasIndex(e => new { e.Ativo, e.IdUsuarioMaster })
+                    .HasName("IX_IDUSUARIOMASTER");
+
+                entity.HasIndex(e => new { e.Ativo, e.IdUsuarioSlave })
+                    .HasName("IX_IDUSUARIOSLAVE");
+
+                entity.HasIndex(e => new { e.Ativo, e.IdUsuarioMaster, e.IdUsuarioSlave })
+                    .HasName("IX_IDUSUARIOMASTER_IDUSUARIOSLAVE");
+
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdUsuarioMasterNavigation)
@@ -1524,6 +1626,9 @@ namespace CRMYIA.Data.Context
             modelBuilder.Entity<UsuarioPerfil>(entity =>
             {
                 entity.HasKey(e => e.IdUsuarioPerfil);
+
+                entity.HasIndex(e => new { e.Ativo, e.IdUsuario, e.IdPerfil })
+                    .HasName("IX_IDUSUARIO_IDPERFIL");
 
                 entity.HasOne(d => d.IdPerfilNavigation)
                     .WithMany(p => p.UsuarioPerfil)

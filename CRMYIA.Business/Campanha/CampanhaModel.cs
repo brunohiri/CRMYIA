@@ -26,6 +26,9 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Campanha
+                        .Include(x => x.IdCampanhaReferenciaNavigation)
+                        .Include(x => x.InverseIdCampanhaReferenciaNavigation)
+                        .Where(x => x.Ativo)
                         .OrderBy(o => o.Descricao)
                         .AsNoTracking()
                         .ToList();
@@ -45,7 +48,29 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Campanha
+                        .Include(x => x.IdCampanhaReferenciaNavigation)
                         .OrderBy(o => o.IdCampanha)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<Campanha> GetSubCategoria(string IdCampanhaReferencia)
+        {
+            List<Campanha> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Campanha
+                        .Where(x => x.Ativo && x.IdCampanhaReferencia == Convert.ToInt64(IdCampanhaReferencia))
+                        .OrderBy(o => o.Descricao)
                         .AsNoTracking()
                         .ToList();
                 }
@@ -60,14 +85,16 @@ namespace CRMYIA.Business
         public static Campanha Get(long Id)
         {
             Campanha Entity = null;
+           
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     Entity = context.Campanha
+                        .Include(x => x.IdCampanhaReferenciaNavigation)
+                        .Include(x => x.InverseIdCampanhaReferenciaNavigation)
                         .Where(x => x.IdCampanha == Id)
                         .FirstOrDefault();
-                        
                 }
             }
             catch (Exception)

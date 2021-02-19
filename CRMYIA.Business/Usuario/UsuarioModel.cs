@@ -207,6 +207,23 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static Usuario GetUsuarioCorretor(long IdUsuario)
+        {
+            List<Usuario> ListEntity = GetList();
+            Usuario Entity = null;
+            try
+            {
+                Entity = ListEntity
+                    .Where(x => x.Ativo && x.IdUsuario == IdUsuario)
+                    .FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<ListaAniversarianteViewModel> GetListAniversariante()
         {
             List<ListaAniversarianteViewModel> ListEntity = null;

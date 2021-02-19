@@ -89,7 +89,7 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
-                        .Where(x => x.IdCampanha == Id)
+                        .Where(x => x.IdCampanhaArquivo == Id)
                         .OrderBy(o => o.Descricao)
                         .AsNoTracking()
                         .ToList();

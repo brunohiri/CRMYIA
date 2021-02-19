@@ -8,6 +8,7 @@ namespace CRMYIA.Data.Entities
         public Campanha()
         {
             CampanhaArquivo = new HashSet<CampanhaArquivo>();
+            InverseIdCampanhaReferenciaNavigation = new HashSet<Campanha>();
         }
 
         public long IdCampanha { get; set; }
@@ -15,8 +16,12 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public long? IdCampanhaReferencia { get; set; }
+        public string Url { get; set; }
 
+        public virtual Campanha IdCampanhaReferenciaNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
         public virtual ICollection<CampanhaArquivo> CampanhaArquivo { get; set; }
+        public virtual ICollection<Campanha> InverseIdCampanhaReferenciaNavigation { get; set; }
     }
 }

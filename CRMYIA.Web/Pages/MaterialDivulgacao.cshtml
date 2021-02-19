@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{url?}"
 @model CRMYIA.Web.Pages.MaterialDivulgacaoModel
 @{
     ViewData["Title"] = "Material De Divulgação";
@@ -6,7 +6,10 @@
 }
 @using CRMYIA.Business.Util;
 
-<div class="row">
+<div id="campanhas">
+
+</div>
+@*<div class="row">
     <div class="col-12">
         <div class="card">
             @if (Model.ListCampanhaArquivo != null && Model.ListCampanhaArquivo.Count() > 0 && Model.ListCampanha != null && Model.ListCampanha.Count() > 0)
@@ -25,13 +28,15 @@
 
                                         @if (@ItemCampanha.IdCampanha == @ItemCampanhaArquivo.IdCampanha)
                                         {
-
-                                            <div class="filtr-item col-sm-2" style="width: 165px!important; height: 165px!important; padding-bottom: 2px!important;" data-category="1" data-sort="white sample">
-                                                <a href="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-toggle="lightbox" data-title="@ItemCampanhaArquivo.IdCampanhaNavigation?.Descricao">
-                                                    <img src="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-descricao="@ItemCampanhaArquivo.Descricao" data-caminho="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" class="img-fluid mb-2" alt="@ItemCampanhaArquivo.NomeArquivo" />
-                                                </a>
-                                            </div>
-
+                                            string[] NomeArquivo = ItemCampanhaArquivo.NomeArquivo.Split('|');
+                                            foreach (var Item in NomeArquivo)
+                                            {
+                                                <div class="filtr-item col-sm-2" style="width: 165px!important; height: 165px!important; padding-bottom: 2px!important;" data-category="1" data-sort="white sample">
+                                                    <a href="@("ArquivoCampanha/" + Item)" data-toggle="lightbox" data-title="@ItemCampanhaArquivo.IdCampanhaNavigation?.Descricao">
+                                                        <img src="@("ArquivoCampanha/" + Item)" data-descricao="@ItemCampanhaArquivo.Descricao" data-caminho="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" class="img-fluid mb-2" alt="@ItemCampanhaArquivo.NomeArquivo" />
+                                                    </a>
+                                                </div>
+                                            }
                                         }
 
                                     }
@@ -53,13 +58,15 @@
                                 @if (true)
                                     foreach (var ItemCampanhaArquivo in Model.ListCampanhaArquivo)
                                     {
-
-                                        <div class="filtr-item col-sm-2" style="width: 165px!important; height: 165px!important; padding-bottom: 2px!important;" data-category="1" data-sort="white sample">
-                                            <a href="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-toggle="lightbox" data-title="@ItemCampanhaArquivo.IdCampanhaNavigation?.Descricao">
-                                                <img src="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" data-descricao="@ItemCampanhaArquivo.Descricao" data-caminho="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" class="img-fluid mb-2" alt="@ItemCampanhaArquivo.NomeArquivo" />
-                                            </a>
-                                        </div>
-
+                                        string[] NomeArquivo = ItemCampanhaArquivo.NomeArquivo.Split('|');
+                                        foreach (var Item in NomeArquivo)
+                                        {
+                                            <div class="filtr-item col-sm-2" style="width: 165px!important; height: 165px!important; padding-bottom: 2px!important;" data-category="1" data-sort="white sample">
+                                                <a href="@("ArquivoCampanha/" + Item)" data-toggle="lightbox" data-title="@ItemCampanhaArquivo.IdCampanhaNavigation?.Descricao">
+                                                    <img src="@("ArquivoCampanha/" + Item)" data-descricao="@ItemCampanhaArquivo.Descricao" data-caminho="@("ArquivoCampanha/" + ItemCampanhaArquivo.NomeArquivo)" class="img-fluid mb-2" alt="@ItemCampanhaArquivo.NomeArquivo" />
+                                                </a>
+                                            </div>
+                                        }
                                     }
                             </div>
                         </div>
@@ -70,4 +77,4 @@
             }
         </div>
     </div>
-</div>
+</div>*@
