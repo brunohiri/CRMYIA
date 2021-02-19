@@ -98,7 +98,7 @@ namespace CRMYIA.Web.Pages
             else
             {
                 Entity = PropostaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-                if(Entity != null && IdNotificacao != null)
+                if (Entity != null && IdNotificacao != null)
                 {
                     NotificacaoModel.DesativarNotificacao(Criptography.Decrypt(HttpUtility.UrlDecode(IdNotificacao)).ExtractLong());
                 }
@@ -210,11 +210,12 @@ namespace CRMYIA.Web.Pages
 
             return new JsonResult(new { status = true, listCategoria = ListCategoria, idLinha = IdLinhaCategoria });
         }
+
         public IActionResult OnPostHistoricoLigacao()
         {
             try
             {
-                
+
                 if (EntityHistoricoLigacao.IdHistoricoLigacao == 0 && EntityHistoricoLigacao.DataCadastro != null && EntityHistoricoLigacao.Observacao.Length > 0)
                 {
                     EntityHistoricoLigacao.Ativo = true;
@@ -246,7 +247,7 @@ namespace CRMYIA.Web.Pages
                 CarregarLists();
 
                 long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-               
+
                 if (Entity.IdMotivoDeclinio == 0)
                     Entity.IdMotivoDeclinio = null;
 
@@ -367,7 +368,7 @@ namespace CRMYIA.Web.Pages
                     if (t.Type.Equals("IdUsuarioSlave"))
                         UsuarioMasterSlave = false;
                 }
-                
+
                 HistoricoPropostaModel.Add(new HistoricoProposta()
                 {
                     IdProposta = Entity.IdProposta,
@@ -400,7 +401,7 @@ namespace CRMYIA.Web.Pages
         #region Outros Métodos
         private void CarregarLists()
         {
-           ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
             //ListCliente = ClienteModel.GetListIdNome();
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             ListStatusProposta = StatusPropostaModel.GetListIdDescricao();

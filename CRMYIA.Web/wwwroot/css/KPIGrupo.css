@@ -10,7 +10,7 @@
 }
 
 .status-card {
-    width: 200px;
+    width: 300px;
     margin-right: 8px;
     background: #e2e4e6;
     border-radius: 3px;
@@ -54,26 +54,12 @@ ul {
     padding: 0px;
 }
 
-.text-row {
-    padding: 8px 10px;
-    margin: 10px;
-    background: #fff;
-    box-sizing: border-box;
-    border-radius: 3px;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
-    font-size: 0.8em;
-    white-space: normal;
-    line-height: 5px;
-}
-
 .text-row-empty {
-    padding: 8px 10px;
+    padding: 15px 18px;
     margin: 10px;
     background: #fff;
     box-sizing: border-box;
     border-radius: 3px;
-    border-bottom: 1px solid #ccc;
     cursor: pointer;
     font-size: 0.8em;
     white-space: normal;
@@ -87,12 +73,42 @@ ul {
 }
 
 .sortable {
-    height: 500px;
-    width: 220px;
+    height: 520px;
+    width: 300px;
     overflow: auto;
-    margin-bottom: 20px;
+    padding: 10px;
 }
 
 .status-card {
-    width: 220px;
+    width: 300px;
+}
+
+.task-board::-webkit-scrollbar {
+    width: 12px; /* width of the entire scrollbar */
+}
+
+.task-board::-webkit-scrollbar-track {
+    background: rgba(0, 148, 255, 0.35); /* color of the tracking area */
+}
+
+.task-board::-webkit-scrollbar-thumb {
+    background-color: aliceblue; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid rgba(0, 148, 255, 0.35); /* creates padding around scroll thumb */
+    margin: 1px;
+}
+
+.sortable::-webkit-scrollbar {
+    width: 12px; /* width of the entire scrollbar */
+}
+
+.sortable::-webkit-scrollbar-track {
+    background: rgba(0, 148, 255, 0.35); /* color of the tracking area */
+}
+
+.sortable::-webkit-scrollbar-thumb {
+    background-color: aliceblue; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid rgba(0, 148, 255, 0.35); /* creates padding around scroll thumb */
+    margin: 1px;
 }

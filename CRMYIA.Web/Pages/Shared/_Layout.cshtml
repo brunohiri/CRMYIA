@@ -26,7 +26,14 @@
     <link rel="stylesheet" href="../css/style.css">
     <!-- Jquery UI -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="../css/tasks.css">
+    @if (ViewData["Pagina"].ToString().Equals("KPIGrupo"))
+    {
+        <link rel="stylesheet" href="../css/KPIGrupo.css">
+    }
+    else
+    {
+        <link rel="stylesheet" href="../css/tasks.css">
+    }
     <!-- Tempusdominus Bbootstrap 4 -->
     <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- fullCalendar -->
@@ -74,11 +81,11 @@
             z-index: 100;
         }
         /* table {
-            font-size: 1em;
-        }*/
+                font-size: 1em;
+            }*/
         /* .ui-draggable, .ui-droppable {
-            background-position: top;
-        }*/
+                background-position: top;
+            }*/
         #notificacao-mensagem-tremer {
             /* apenas para dar um formato a div */
             /* animacao */

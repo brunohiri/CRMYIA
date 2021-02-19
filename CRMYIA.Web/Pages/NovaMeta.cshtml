@@ -28,18 +28,31 @@
             </div>
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMeta" id="MetaId">
+                <input type="hidden" class="form-control" asp-for="@Model.EntityKPIGrupo.IdKPIGrupo" id="IdKPIGrupo">
 
                 <div class="col-sm-3">
+                    @if (Model.EntityKPIGrupo != null)
+                    {
                     <div class="form-group">
-                        <label>Usuário *</label>
-                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdKPIGrupoUsuario" id="UsuarioId">
-                            <option selected="selected">Selecione...</option>
-                            @foreach (var Item in Model.ListUsuario)
-                            {
-                                <option value="@Item.IdUsuario">@(Item.Nome)</option>
-                            }
-                        </select>
+                        <label>Grupo</label>
+                        <input type="text" class="form-control is-valid" value="@Model.EntityKPIGrupo.Nome" disabled="">
                     </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>Usuário *</label>
+                            <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdKPIGrupoUsuario" id="UsuarioId">
+                                <option selected="selected">Selecione...</option>
+                                @foreach (var Item in Model.ListUsuario)
+                                {
+                                    <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                }
+                            </select>
+                        </div>
+                    }
+
+
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
