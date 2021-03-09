@@ -24,7 +24,8 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public KPIMeta Entity { get; set; }
         [BindProperty]
-        public KPIGrupo EntityKPIGrupo { get; set; }
+        public KPIGrupoUsuario EntityKPIGrupoUsuario { get; set; }
+
         #endregion
 
         #region KPIMetaValor
@@ -41,7 +42,8 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<Usuario> ListUsuario { get; set; }
         #endregion
-
+        public string origem { get; set; }
+        public long idUser { get; set; }
         #endregion
 
         #region Construtores
@@ -61,17 +63,25 @@ namespace CRMYIA.Web.Pages
             }
             else
             {
-                var origem = HttpContext.Request.Headers["Referer"].ToString();
-                var id = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
+                origem = HttpContext.Request.Headers["Referer"].ToString();
+                idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
 
                 if (origem.Contains("KPIGrupo"))
                 {
-                    EntityKPIGrupo = KPIGrupoModel.Get(id);
+                    EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.Get(idUser);
+                    Entity = KPIMetaModel.Get((long)EntityKPIGrupoUsuario.IdKPIGrupoUsuario);
+                    if (Entity != null)
+                    {
+                        KPIMetaValorEntity = KPIMetaValorModel.Get(Entity.IdMeta);
+                        KPIMetaVidaEntity = KPIMetaVidaModel.Get(Entity.IdMeta);
+                    }
+                    else
+                    {
+                        Entity = new KPIMeta();
+                    }
                 }
             }
-
-
-            CarregarLists();
+            //CarregarLists();
             return Page();
         }
 
@@ -79,50 +89,43 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
-                CarregarLists();
-                if (EntityKPIGrupo.IdKPIGrupo > 0)
+                if (Entity.Ativo == false)
                 {
-                    if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
-                    {
-                        KPIGrupoModel.Add(EntityKPIGrupo);
-                        KPIMetaModel.Add(Entity);
-                        KPIMetaValorEntity.IdMeta = Entity.IdMeta;
-                        KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
-
-                        KPIMetaValorModel.Add(KPIMetaValorEntity);
-                        KPIMetaVidaModel.Add(KPIMetaVidaEntity);
-                    }
-                    else
-                    {
-                        KPIGrupoModel.Update(EntityKPIGrupo);
-                        KPIMetaModel.Update(Entity);
-                        KPIMetaValorModel.Update(KPIMetaValorEntity);
-                        KPIMetaVidaModel.Update(KPIMetaVidaEntity);
-                    }
+                    KPIMetaValorEntity.Ativo = false;
+                    KPIMetaVidaEntity.Ativo = false;
                 }
                 else
                 {
-                    if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
-                    {
-                        KPIMetaModel.Add(Entity);
-                        KPIMetaValorEntity.IdMeta = Entity.IdMeta;
-                        KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
-
-                        KPIMetaValorModel.Add(KPIMetaValorEntity);
-                        KPIMetaVidaModel.Add(KPIMetaVidaEntity);
-                    }
-                    else
-                    {
-                        KPIMetaModel.Update(Entity);
-                        KPIMetaValorModel.Update(KPIMetaValorEntity);
-                        KPIMetaVidaModel.Update(KPIMetaVidaEntity);
-                    }
+                    KPIMetaValorEntity.Ativo = true;
+                    KPIMetaVidaEntity.Ativo = true;
                 }
+                if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
+                {
+
+                    Entity.IdKPIGrupoUsuario = EntityKPIGrupoUsuario.IdKPIGrupoUsuario;
+                    KPIMetaModel.Add(Entity);
+                    KPIMetaValorEntity.IdMeta = Entity.IdMeta;
+                    KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
+
+                    KPIMetaValorModel.Add(KPIMetaValorEntity);
+                    KPIMetaVidaModel.Add(KPIMetaVidaEntity);
+                }
+                else
+                {
+                    Entity.IdKPIGrupoUsuario = EntityKPIGrupoUsuario.IdKPIGrupoUsuario;
+                    KPIMetaValorEntity.IdMeta = Entity.IdMeta;
+                    KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
+                    KPIMetaModel.Update(Entity);
+                    KPIMetaValorModel.Update(KPIMetaValorEntity);
+                    KPIMetaVidaModel.Update(KPIMetaVidaEntity);
+                }
+                EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.GetByKPIGrupoUsuario((long)Entity.IdKPIGrupoUsuario);
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
             }
             catch (Exception ex)
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
+                
             }
             return Page();
         }
@@ -130,7 +133,7 @@ namespace CRMYIA.Web.Pages
         #region Outros Métodos
         private void CarregarLists()
         {
-            ListUsuario = UsuarioModel.GetList();
+            //ListUsuario = UsuarioModel.GetList();
 
         }
         #endregion

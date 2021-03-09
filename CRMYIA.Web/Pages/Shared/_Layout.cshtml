@@ -766,6 +766,11 @@
         <script src="../js/sistema/kpiGrupo.js"></script>
         <script src="~/js/sistema/numeral.min.js"></script>
     }
+    @if (ViewData["Pagina"].ToString().Equals("KPI Meta"))
+    {
+        <script src="../js/sistema/novaMeta.js"></script>
+        <script src="~/js/sistema/numeral.min.js"></script>
+    }
     @if (ViewData["Pagina"].ToString().Equals("Campanha Genérica"))
     {
         <script src="~/js/sistema/campanha.js"></script>

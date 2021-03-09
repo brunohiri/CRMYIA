@@ -31,7 +31,7 @@ namespace CRMYIA.Business
                 {
                     Entity = context.Proposta
                         .AsNoTracking()
-                        .Where(x =>x.IdProposta == IdProposta)
+                        .Where(x => x.IdProposta == IdProposta)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -63,7 +63,8 @@ namespace CRMYIA.Business
                         .Where(x => x.Ativo && x.IdUsuario == IdUsuario && x.HistoricoProposta != null)
                         .AsNoTracking()
                         .OrderByDescending(o => o.DataCadastro)
-                        .Select(x => new ListaPropostaViewModel() {
+                        .Select(x => new ListaPropostaViewModel()
+                        {
                             IdProposta = x.IdProposta,
                             DescricaoModalidade = x.IdModalidadeNavigation.Descricao,
                             NomeCliente = x.IdClienteNavigation.Nome,
@@ -111,7 +112,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
-                    
+
                     if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
                     {
                         ListEntity = context.Proposta
@@ -200,7 +201,7 @@ namespace CRMYIA.Business
                                 .ThenInclude(l => l.IdProdutoNavigation)
                                     .ThenInclude(m => m.IdOperadoraNavigation)
                         .Include(y => y.IdClienteNavigation)
-                        .Where(x => x.Ativo 
+                        .Where(x => x.Ativo
                             && x.DataSolicitacao.Value >= DataInicio
                             && x.DataSolicitacao.Value <= DataFim
                             && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario || x.IdUsuario != IdUsuario)
@@ -272,6 +273,38 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<ListKPIRealizadoPropostaViewModel> GetListKPIRealizadoProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim)
+        {
+            List<ListKPIRealizadoPropostaViewModel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
+
+                    ListEntity = context.Proposta
+                        .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario
+                               && x.DataSolicitacao.Value >= DataInicio
+                               && x.DataSolicitacao.Value <= DataFim
+                        )
+                        .AsNoTracking()
+                        .ToList()
+                        .Select(s => new ListKPIRealizadoPropostaViewModel()
+                        {
+                            IdUsuario = (long)s.IdUsuarioCorretor,
+                            DataSolicitacao = s.DataSolicitacao,
+                            ValorPrevisto = s.ValorPrevisto,
+                        }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+            return ListEntity;
+        }
+
         public static void Add(Proposta Entity)
         {
             try
@@ -309,14 +342,15 @@ namespace CRMYIA.Business
             List<Proposta> ListEntity = new List<Proposta>();
             try
             {
-                
-                    byte? IdPerfil = UsuarioModel.GetPerfil((long)IdUsuario);
-                    List<Proposta> listProposta = GetListCardProposta((long)IdUsuario, DataInicial.Value, DataFinal.Value);
+
+                byte? IdPerfil = UsuarioModel.GetPerfil((long)IdUsuario);
+                List<Proposta> listProposta = GetListCardProposta((long)IdUsuario, DataInicial.Value, DataFinal.Value);
 
                 foreach (Proposta item in listProposta)
                 {
-                   
-                    if(Nome != null || Descricao != null){
+
+                    if (Nome != null || Descricao != null)
+                    {
                         if (Nome != null)
                         {
                             if (item.IdUsuarioCorretorNavigation != null)
@@ -329,20 +363,21 @@ namespace CRMYIA.Business
                         {
                             if (item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation != null)
                                 if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao))))
-                            {
-                                ListEntity.Add(item);
-                            }
-                        }else if (Nome != null && Descricao != null)
+                                {
+                                    ListEntity.Add(item);
+                                }
+                        }
+                        else if (Nome != null && Descricao != null)
                         {
                             if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation != null))
                        || (item.IdUsuarioCorretorNavigation != null))
                                 if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao)))
                         || (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
 
-                            {
-                                ListEntity.Add(item);
-                            }
-                            
+                                {
+                                    ListEntity.Add(item);
+                                }
+
                         }
                     }
                     else
@@ -350,7 +385,7 @@ namespace CRMYIA.Business
                         ListEntity.Add(item);
                     }
 
-                    
+
                     //else if (((item.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(Descricao))) || (item.IdUsuarioCorretorNavigation.Nome.Contains(Nome)))
                     //{
                     //    ListEntity.Add(item);
@@ -380,7 +415,7 @@ namespace CRMYIA.Business
                     //}
 
                 }
-               
+
 
             }
             catch (Exception)
