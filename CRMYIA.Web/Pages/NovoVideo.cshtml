@@ -1,0 +1,226 @@
+﻿@page
+@model CRMYIA.Web.Pages.NovoVideo
+@{
+    ViewData["Title"] = "Novos Videos";
+    ViewData["Pagina"] = "Videos";
+}
+@using CRMYIA.Business.Util;
+@{ var caminhoImagem = ""; }
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+    </div>
+    <!-- /.card-header -->
+    <form role="form" id="upload-video" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+
+            <div class="row" id="UploadCampanhaGenericaMensagemDiv" style="display: none;">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="alert alert-success alert-dismissible" id="UploadCampanhaGenericaMensagemDivAlert">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <i id="UploadCampanhaGenericaMensagemIcon" class="icon fas fa-check"></i>
+                            <span id="UploadCampanhaGenericaMensagemSpan">Dados salvos com sucesso!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <input type="hidden" name="IdVideo" id="IdVideo" value="" />
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="IdentificadorVideo">Identificador do Video</label>
+                        <input type="text" class="form-control" name="IdentificadorVideo" id="IdentificadorVideo" required>
+                        <div class="invalid-feedback">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" name="Ativo" id="Ativo" checked>
+                            <label class="custom-control-label" for="Ativo">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="row">
+
+                <span class="btn btn-success fileinput-video dz-clickable my-5">
+                    <i class="fas fa-upload"></i>
+                    <span> Adicionar Imagens...</span>
+                </span>
+
+            </div>
+
+            <div class="row">
+                <div class="table table-striped files" id="videoUpload">
+                    <div id="template" class="file-row dz-image-preview">
+                        <div>
+                            <p class="name" data-dz-name></p>
+                            <strong class="error text-danger" data-dz-errormessage></strong>
+                        </div>
+                        <div>
+                            <p class="size" data-dz-size></p>
+                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                            </div>
+                        </div>
+                        <div>
+                            <button data-dz-remove class="btn btn-danger delete">
+                                <i class="glyphicon glyphicon-trash"></i>
+                                <span>Excluir</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card-footer" id="salvar-alteracao-video">
+            <button type="submit" class="btn btn-success" id="btn-upload-video">Salvar</button>
+            <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
+        </div>
+    </form>
+
+    <div id="tableVideo">
+        <div class="card-body table-responsive">
+            <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
+
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Identificador do Video</th>
+                        <th>Rede Sociais</th>
+                        <th>Local</th>
+                        <th>Nome do Arquivo</th>
+                        <th>Cadastro</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                    {
+                        foreach (var Item in Model.ListEntity)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>@Html.Raw(Item.IdentificadorVideo)</td>
+                                <td>Facebook</td>
+                                <td>Stories</td>
+                                <td>@(Item.NomeVideo)</td>
+                                <td>@Item.DataCadastro</td>
+                                <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                <td>
+                                    <span class="text-info editar-formulario" data-idvideo="@Item.IdVideo" title="Editar"><i class="fas fa-edit"></i></span>
+                                    <span class="alterar-video" title="Editar Video" data-idvideo="@Item.IdVideo" data-nomevideo="@Item.NomeVideo" data-identificadorvideo="@Item.IdentificadorVideo" data-caminhovideo="@caminhoImagem"><i class="fab fa-youtube"></i></span>
+                                    <span class="btn excluir-video" title="Excluir Imagem" data-idvideo="@Item.IdVideo"><i class="fas fa-trash-alt"></i></span>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Modal Alterar Imagem -->
+<div class="modal fade" id="modalAlterarVideo" tabindex="-1" aria-labelledby="modalAlterarVideo" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabelAlterarVideo"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-alterar-upload-video">
+
+                <div class="row" id="ModalAlterarVideoMensagemDiv" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="alert alert-success alert-dismissible" id="ModalAlterarVideoMensagemDivAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i id="ModalAlterarVideoMensagemIcon" class="icon fas fa-check"></i>
+                                <span id="ModalAlterarVideoMensagemSpan">Dados salvos com sucesso!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div id="video">
+
+                    </div>
+                </div>
+
+                <form role="form" id="alterar-upload-video" method="post" enctype="multipart/form-data">
+
+                    <div class="table table-striped files" id="videoUploadAlterar">
+                        <div id="template-alterar" class="file-row dz-image-preview">
+                            <!-- This is used as the file preview template -->
+                            <div>
+                                <span class="preview"><img data-dz-thumbnail></span>
+                            </div>
+                            <div>
+                                <p class="name" data-dz-name></p>
+                                <strong class="error text-danger" data-dz-errormessage></strong>
+                            </div>
+                            <div>
+                                <p class="size" data-dz-size></p>
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                </div>
+                            </div>
+                            <div>
+                                @*<button class="btn btn-primary start">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                        <span>Start</span>
+                                    </button>
+                                    <button data-dz-remove class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Cancel</span>
+                                    </button>*@
+                                <button data-dz-remove class="btn btn-danger delete">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span>Excluir</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+
+                        <span class="btn btn-success fileinput-alterar dz-clickable my-5">
+                            <i class="fas fa-upload"></i>
+                            <span> Adicionar Imagens...</span>
+                        </span>
+
+                        <button type="submit" id="btn-alterar-upload-video" class="btn btn-primary">Alterar</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

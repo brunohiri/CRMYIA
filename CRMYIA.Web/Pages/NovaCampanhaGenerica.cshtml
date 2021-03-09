@@ -2,7 +2,7 @@
 @model CRMYIA.Web.Pages.NovaCampanhaGenerica
 @{
     ViewData["Title"] = "Nova";
-    ViewData["Pagina"] = "Campanha Genérica";
+    ViewData["Pagina"] = "Campanha";
 }
 @{var checkedd = ""; }
 <div class="row">
@@ -13,49 +13,34 @@
             </div>
             <div class="card-body">
 
-                <form class="needs-validation" novalidate>
-                    @*@Html.AntiForgeryToken()*@
+                <form class="needs-validation"  id="salvar-campanha" method="post" novalidate enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
                     <div class="card-body">
-                        <div class="row" id="CampanhaMensagemDiv" style="display: none;">
 
-                            @*<div class="col-sm-12">
+                        <div class="row" id="EmailMensagemDiv" style="display: none;">
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <div class="alert alert-success alert-dismissible" id="CampanhaMensagemDivAlert">
+                                    <div class="alert alert-success alert-dismissible" id="EmailMensagemDivAlert">
                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                        <i id="CampanhaMensagemIcon" class="icon fas fa-check"></i>
-                                        <span id="CampanhaMensagemSpan">Dados salvos com sucesso!</span>
+                                        <i id="EmailMensagemIcon" class="icon fas fa-check"></i>
+                                        <span id="EmailMensagemSpan">Dados salvos com sucesso!</span>
                                     </div>
                                 </div>
-                            </div>*@
+                            </div>
+                        </div>
 
-                            @*<div class="col-sm-12">
-                                <div class="form-group">
-                                    @if ((Model != null) && (Model.Mensagem != null))
-                                    {
-                                        <div class="@Model.Mensagem.CssClass alert-dismissible">
-                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                            <i class="@Model.Mensagem.IconClass"></i>
-                                            @Model.Mensagem.Mensagem
-                                        </div>
-                                    }
-                                </div>
-                            </div>*@
-
+                        <div class="row">
                             <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCampanha" id="IdCampanha">
                             @if (Model.Entity.IdCampanhaReferencia != null)
                             {
                                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdCampanhaReferencia" id="IdCampanhaReferencia" name="IdCampanhaReferencia">
                             }
-                        </div>
-
-                        <div class="row">
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="Descricao">Descrição</label>
                                     <input type="text" class="form-control" placeholder="Descrição" id="Descricao" required asp-for="@Model.Entity.Descricao">
                                     <div class="invalid-feedback">
-                                       * O Campo Descrição é Obrigatório.
+                                        * O Campo Descrição é Obrigatório.
                                     </div>
                                 </div>
                             </div>
@@ -74,31 +59,31 @@
                         <div class="row d-none categoria">
 
                             @*<div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="IdCampanhaReferencia">Campanha</label>
-                                    <select class="form-control select2 IdCampanhaReferencia" style="width: 100%;" data-idcampanhareferencia="@Model.Entity.IdCampanhaReferencia" asp-for="@Model.Entity.IdCampanhaReferencia" id="IdCampanhaReferencia" name="IdCampanhaReferencia" data-idcampanha="@Model.Entity.IdCampanhaReferencia" required>
-                                        <option selected disabled value="">Selecione...</option>
-                                        @foreach (var Item in Model.ListCampanha)
-                                        {
-                                            <option value="@Item.IdCampanha">@(Item.Descricao)</option>
-                                        }
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        * O Campo Campanha é Obrigatório. 
-                                        Caso não deseje informar o campo clique em remover.
-                                    </div>
-                                </div>
-                            </div>
+                <div class="form-group">
+                    <label for="IdCampanhaReferencia">Campanha</label>
+                    <select class="form-control select2 IdCampanhaReferencia" style="width: 100%;" data-idcampanhareferencia="@Model.Entity.IdCampanhaReferencia" asp-for="@Model.Entity.IdCampanhaReferencia" id="IdCampanhaReferencia" name="IdCampanhaReferencia" data-idcampanha="@Model.Entity.IdCampanhaReferencia" required>
+                        <option selected disabled value="">Selecione...</option>
+                        @foreach (var Item in Model.ListCampanha)
+                        {
+                            <option value="@Item.IdCampanha">@(Item.Descricao)</option>
+                        }
+                    </select>
+                    <div class="invalid-feedback">
+                        * O Campo Campanha é Obrigatório.
+                        Caso não deseje informar o campo clique em remover.
+                    </div>
+                </div>
+            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>&emsp;</label>
-                                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                        <input type="checkbox" class="custom-control-input remover" id="categoria" name="categoria">
-                                        <label class="custom-control-label" for="categoria">Remover</label>
-                                    </div>
-                                </div>
-                            </div>*@
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>&emsp;</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input remover" id="categoria" name="categoria">
+                        <label class="custom-control-label" for="categoria">Remover</label>
+                    </div>
+                </div>
+            </div>*@
 
                         </div>
 
@@ -117,31 +102,46 @@
                             @if (Model.Entity.Ativo == false && Model.Entity.IdCampanha == 0)
                             {
                                 checkedd = "checked";
+                                Model.Entity.Ativo = true;
                             }
 
                             @if (Model.Entity.Ativo == true && Model.Entity.IdCampanha > 0)
                             {
                                 checkedd = "checked";
+                                Model.Entity.Ativo = true;
                             }
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label>Status</label>
                                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                        <input type="checkbox" class="custom-control-input" id="Ativo" @checkedd asp-for="@Model.Entity.Ativo">
+                                        <input type="checkbox" class="custom-control-input" id="Ativo" checked asp-for="@Model.Entity.Ativo">
                                         <label class="custom-control-label" for="Ativo">Ativo</label>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="NomeArquivoCampanha">Selecione um Imagem:</label>
+                                    <div class="input-group">
+                                        <input type="file" id="NomeArquivoCampanha" name="NomeArquivoCampanha" asp-for="@Model.NomeArquivoCampanha" name="NomeArquivoCampanha" accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success btn-salvar-campanha">Salvar</button>
-                        <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
-                    </div>
-                </form>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-success btn-salvar-campanha">Salvar</button>
+                            <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
+                        </div>
+                    </form>
 
-            </div>
+</div>
         </div>
     </div>
 </div>

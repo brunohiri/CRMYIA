@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
@@ -39,6 +40,29 @@ namespace CRMYIA.Business
                 throw;
             }
             return Entity;
+        }
+
+        public static bool GetCampanhaId(long IdCampanha)
+        {
+            CampanhaArquivo Entity = null;
+            bool retorno;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.CampanhaArquivo
+                        .Where(x => x.IdCampanha == IdCampanha)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            retorno = Entity == null? false: true ;
+            //return retorno;
+            return retorno;
         }
 
         public static CampanhaArquivo GetLastId()
@@ -102,9 +126,9 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<CampanhaArquivo> GetList()
+        public static List<MaterialDivulgacaoViewModel> GetList()
         {
-            List<CampanhaArquivo> ListEntity = null;
+            List<MaterialDivulgacaoViewModel> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -112,6 +136,20 @@ namespace CRMYIA.Business
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
                         .AsNoTracking()
+                        .Where(x => x.Ativo)
+                        .Select(x => new MaterialDivulgacaoViewModel
+                        {
+                            //Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong()
+                            //System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanhaArquivo.ToString()))
+                            IdCampanhaArquivo = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdCampanhaArquivo.ToString()).ToString()),
+                            IdCampanha = x.IdCampanha.ToString(),
+                            Descricao = x.Descricao,
+                            CaminhoArquivo = x.CaminhoArquivo,
+                            NomeArquivo = x.NomeArquivo,
+                            DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
+                            Ativo = x.Ativo,
+                            IdCampanhaNavigation = x.IdCampanhaNavigation
+                        })
                         .OrderByDescending(o => o.IdCampanha).ToList();
                 }
             }

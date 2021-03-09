@@ -142,21 +142,21 @@ $(document).ready(function () {
     //$('#CaminhoImagem').attr('src');
     $("#imagem").attr("src", $('#CaminhoImagem').val());
 
-    $('input[type="file"]').change(function () {
-        //alert("A file has been selected.");
-        if (this.files && this.files[0]) {
+    //$('input[type="file"]').change(function () {
+    //    //alert("A file has been selected.");
+    //    if (this.files && this.files[0]) {
 
-            var FR = new FileReader();
+    //        var FR = new FileReader();
 
-            FR.addEventListener("load", function (e) {
-                document.getElementById("imagem").src = e.target.result;
-                document.getElementById("imagem").value = e.target.result;
-                var basee = e.target.result;
-            });
+    //        FR.addEventListener("load", function (e) {
+    //            document.getElementById("imagem").src = e.target.result;
+    //            document.getElementById("imagem").value = e.target.result;
+    //            var basee = e.target.result;
+    //        });
 
-            FR.readAsDataURL(this.files[0]);
-        }
-    });
+    //        FR.readAsDataURL(this.files[0]);
+    //    }
+    //});
 
     ObterStatusUsuario();
 
@@ -927,6 +927,10 @@ function displayBusyIndicator() {
     $('.loading').show();
 }
 
+function displayBusyAvailable() {
+    $('.loading').hide();
+}
+
 function StatusUsuario(Status) {
     if (Status != undefined) {
         $.ajax({
@@ -1019,4 +1023,15 @@ function LoginSlave(IdUsuario) {
     }, function (dismiss) {
         return false;
     })
+}
+
+function VerificaNomeArquivo(data) {
+    var nome = data.split('-');
+
+    if (nome.length == 3) {
+        console.log(nome);
+        return true;
+    } else {
+        return false;
+    }
 }

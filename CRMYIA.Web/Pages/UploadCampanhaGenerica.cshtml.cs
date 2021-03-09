@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +38,7 @@ namespace CRMYIA.Web.Pages
         public List<Campanha> ListCampanha { get; set; }
 
         [BindProperty]
-        public List<CampanhaArquivo> ListEntity { get; set; }
+        public List<MaterialDivulgacaoViewModel> ListEntity { get; set; }
         [BindProperty]
         public string ImagemDiferente { get; set; }
         [BindProperty]
@@ -76,122 +78,304 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostUploadCampanhaGenericaAsync([FromForm] List<ICollection<IFormFile>> files, CampanhaArquivo formData) //long IdCampanhaArquivo, long IdCampanha, string Descricao, string Observacao, bool Ativo)
+        public async Task<IActionResult> OnPostUploadCampanhaGenericaAsync([FromForm] List<ICollection<IFormFile>> files, CampanhaArquivo formData)//long IdCampanhaArquivo, long IdCampanha, string Descricao, string Observacao, bool Ativo)
         {
-           var documentFile = Request.Form.Files.ToList();
-            if (!ModelState.IsValid)
+            try
             {
-                Mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Aviso, "Campos Incorretos!");
-            }
-            else
-            {
-                if (Mensagem == null)
-                {
-                    var msg = "";
-                    if (formData.IdCampanhaArquivo == 0)
-                    {
-                        msg = "Carregado";
-                        int i = 0;
-                        string NomeArquivo = string.Empty;
-                        foreach (var Item in documentFile)
-                        {
-                            string NomeArquivoOriginal = Item.FileName;
-                            
-                            NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
-                            var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
 
-                            using (var fileStream = new FileStream(file, FileMode.Create))
-                            {
-                                await Item.CopyToAsync(fileStream);
-                                formData.CaminhoArquivo = "ArquivoCampanha/";
-                                if(i + 1 < documentFile.Count)
-                                {
-                                    formData.NomeArquivo += NomeArquivo + "|";
-                                }
-                                else
-                                {
-                                    formData.NomeArquivo += NomeArquivo;
-                                }
-                                CaminhoImagem = "ArquivoCampanha/";
-                                // CaminhoImagem = "ArquivoCampanhaGenerica/" + NomeArquivo;
-                            }
-                            i++;
-                        }
-                        //msg = "Carregado";
-                        //string NomeArquivoOriginal = NomeArquivoCampanha.FileName;
-                        //string NomeArquivo = string.Empty;
-                        //NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
-                        //var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
-                        //using (var fileStream = new FileStream(file, FileMode.Create))
-                        //{
-                        //    await NomeArquivoCampanha.CopyToAsync(fileStream);
-                        //    Entity.CaminhoArquivo = "ArquivoCampanha/";
-                        //    Entity.NomeArquivo = NomeArquivo;
-                        //    CaminhoImagem = "ArquivoCampanha/" + NomeArquivo;
-                        //}
-                        CampanhaArquivoModel.Add(new CampanhaArquivo()
-                        {
-                            IdCampanha = formData.IdCampanha,
-                            Descricao = formData.Descricao,
-                            CaminhoArquivo = "ArquivoCampanha/",
-                            NomeArquivo = formData.NomeArquivo,
-                            Observacao = formData.Observacao,
-                            DataCadastro = DateTime.Now,
-                            Ativo = formData.Ativo
-                        });
-                        //CampanhaArquivo EntityArquivoLead = CampanhaArquivoModel.GetLastId();
-                        //Mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Sucesso, string.Format("Arquivo de Campanha carregado com sucesso!"));
+                
+                var documentFile = Request.Form.Files.ToList();
+                List<MaterialDivulgacaoViewModel> EntityLista = null;
+                MensagemModel mensagem = null;
+                List<string> FilesNomes = new List<string>();
+                bool status = false;
+                //if (CampanhaArquivoModel.GetCampanhaId(formData.IdCampanha.ToString().ExtractLong()))
+                
+                    foreach (IFormFile Item in documentFile)
+                    {
+                        FilesNomes.Add(Item.FileName);
+                    }
+
+                   
+
+                    if (formData.Descricao == null && documentFile == null)
+                    {
+                        mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Aviso, "Por favor verifique o formulário.");
+                    }
+                    else if (!Util.VerificaNomeArquivo(FilesNomes))
+                    {
+                        mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Aviso, "Nome do arquivo não esta no padrão!");
                     }
                     else
                     {
-                        msg = "Alterado";
-                        string NomeArquivo = string.Empty;
-                        if (!string.IsNullOrEmpty(ImagemDiferente) && NomeArquivoCampanha != null)
+                        if (mensagem == null)
                         {
-                            string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], ImagemDiferente);
-                            if ((System.IO.File.Exists(_imageToBeDeleted)))
+                            var msg = "";
+                            if (formData.IdCampanhaArquivo == 0)
                             {
-                                System.IO.File.Delete(_imageToBeDeleted);
-                            }
-                            string NomeArquivoOriginal = NomeArquivoCampanha.FileName;
+                                msg = "Carregado";
+                                int i = 0;
+                                string NomeArquivo = string.Empty;
+                                int Width = 0;
+                                int Height = 0;
+                                string RedesSociais = string.Empty;
+                                string TipoPostagem = string.Empty;
+                                string[] VetFileName;
+                                string[] VetRedesSociais;
+                                string[] VetTipoPostagem;
+                                foreach (var Item in documentFile)
+                                {
+                                    string NomeArquivoOriginal = Item.FileName;
 
-                            NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
-                            var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
-                            using (var fileStream = new FileStream(file, FileMode.Create))
+                                    NomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
+                                    var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanhaArquivo"], NomeArquivo);
+
+                                    using (var fileStream = new FileStream(file, FileMode.Create))
+                                    {
+                                        await Item.CopyToAsync(fileStream);
+                                        formData.CaminhoArquivo = "ArquivoCampanhaArquivo/";
+                                        if (i + 1 < documentFile.Count)
+                                        {
+                                            formData.NomeArquivo += NomeArquivo + "|";
+                                        }
+                                        else
+                                        {
+                                            formData.NomeArquivo += NomeArquivo;
+                                        }
+                                        CaminhoImagem = "ArquivoCampanhaArquivo/";
+                                        RedesSociais = string.Empty;
+                                        VetFileName = Item.FileName.Split('-');
+                                        RedesSociais = VetFileName[1];
+                                        //foreach (var ItemRedesSociais in VetRedesSociais)
+                                        //{
+                                        //    RedesSociais += ItemRedesSociais + "|";
+                                        //}
+
+                                        TipoPostagem = string.Empty;
+                                        TipoPostagem = VetFileName[2];
+                                        //foreach (var ItemTipoPostagem in VetTipoPostagem)
+                                        //{
+                                        //    TipoPostagem += ItemTipoPostagem + "|";
+                                        //}
+                                    }
+                                    using (var image = Image.FromStream(Item.OpenReadStream()))
+                                    {
+                                        Width = image.Width;
+                                        Height = image.Height;
+                                    }
+
+                                    if (i + 1 < documentFile.Count)
+                                    {
+                                        formData.Width += Width + "|";
+                                        formData.Height += Height + "|";
+                                    }
+                                    else
+                                    {
+                                        formData.Width += Width;
+                                        formData.Height += Height;
+                                    }
+                                    i++;
+
+
+                                }
+                                CampanhaArquivoModel.Add(new CampanhaArquivo()
+                                {
+                                    IdCampanha = formData.IdCampanha,
+                                    Descricao = formData.Descricao,
+                                    CaminhoArquivo = "ArquivoCampanhaArquivo/",
+                                    NomeArquivo = formData.NomeArquivo,
+                                    Width = formData.Width,
+                                    Height = formData.Height,
+                                    RedesSociais = RedesSociais,
+                                    TipoPostagem = TipoPostagem,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = formData.Ativo
+                                });
+
+                                EntityLista = CampanhaArquivoModel.GetList();
+                                status = true;
+                                mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                            }
+                        }
+                    }
+                
+                    return new JsonResult(new
+                    {
+                        entityLista = EntityLista,
+                        mensagem = mensagem,
+                        status = status
+                    });
+                
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+           
+        }
+
+        public async Task<IActionResult> OnPostAlterarImagemAsync()
+        {
+            try
+            {
+                List<MaterialDivulgacaoViewModel> EntityLista = null;
+                bool status = false;
+                MensagemModel mensagem = null;
+
+                var file = Request.Form.Files.FirstOrDefault();
+                string IdCampanhaArquivo = Request.Form["IdCampanhaArquivo"].ToString();
+                string NomeArquivo = Request.Form["NomeArquivo"].ToString();
+                CampanhaArquivo Entity = null;
+                Entity = CampanhaArquivoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCampanhaArquivo)).ExtractLong());
+                string msg = "Alterado";
+
+                List<string> FilesNomes = new List<string>();
+
+                FilesNomes.Add(file.FileName);
+
+                if (Util.VerificaNomeArquivo(FilesNomes))
+                {
+                    if (!string.IsNullOrEmpty(NomeArquivo) && file != null)
+                    {
+                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
+                        if ((System.IO.File.Exists(_imageToBeDeleted)))
+                        {
+                            System.IO.File.Delete(_imageToBeDeleted);
+                        }
+                        string NomeArquivoOriginal = file.FileName;
+
+                        string NovoNomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
+                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NovoNomeArquivo);
+
+                        string[] vetNomeArquivo = Entity.NomeArquivo.Split(";");
+
+                        Entity.NomeArquivo = "";
+                        for (int i = 0; i < vetNomeArquivo.Length; i++)
+                        {
+                            if (vetNomeArquivo[i] == NomeArquivo)
                             {
-                                await NomeArquivoCampanha.CopyToAsync(fileStream);
-                                Entity.CaminhoArquivo = "ArquivoCampanha/";
-                                Entity.NomeArquivo = NomeArquivo;
-                                CaminhoImagem = "ArquivoCampanha/" + NomeArquivo;
-                                ImagemDiferente = NomeArquivo;
+                                vetNomeArquivo[i] = NovoNomeArquivo;
+                            }
+
+                            if (i + 1 < vetNomeArquivo.Length)
+                            {
+                                Entity.NomeArquivo += vetNomeArquivo[i] + "|";
+                            }
+                            else
+                            {
+                                Entity.NomeArquivo += vetNomeArquivo[i];
+                            }
+                        }
+
+                        using (var fileStream = new FileStream(arquivo, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                            Entity.CaminhoArquivo = "ArquivoCampanhaArquivo/";
+                        }
+                    }
+                    else
+                    {
+                        Entity.CaminhoArquivo = "img/fotoCadastro/";
+                        Entity.NomeArquivo = "foto-cadastro.jpeg";
+                    }
+                    CampanhaArquivoModel.Update(new CampanhaArquivo()
+                    {
+                        IdCampanhaArquivo = Entity.IdCampanhaArquivo,
+                        IdCampanha = Entity.IdCampanha,
+                        Descricao = Entity.Descricao,
+                        CaminhoArquivo = Entity.CaminhoArquivo,
+                        NomeArquivo = Entity.NomeArquivo,
+                        DataCadastro = DateTime.Now,
+                        Ativo = Entity.Ativo
+                    });
+                    
+                    EntityLista = CampanhaArquivoModel.GetList();
+                    status = true;
+                    mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
+                }
+                else
+                {
+                    mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Selecione uma Imagem");
+                }
+
+                return new JsonResult(new
+                {
+                    entityLista = EntityLista,
+                    mensagem = mensagem,
+                    status = status
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+        }
+
+        public IActionResult OnGetExcluirImagem(string IdCampanhaArquivo, string NomeArquivo)
+        {
+            try
+            {
+                List<MaterialDivulgacaoViewModel> EntityLista = null;
+                CampanhaArquivo Entity = null;
+                bool status = false;
+                string Mensagem = "";
+                Entity = CampanhaArquivoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCampanhaArquivo)).ExtractLong());
+                var AuxNomeImagem = "";
+                var NomeImagem = Entity.NomeArquivo.Split(";");
+                int Tam = NomeImagem.Length;
+                int i = 0;
+                if (Tam > 1)
+                {
+                    foreach (var Item in NomeImagem)
+                    {
+                        if (Item == NomeArquivo)
+                        {
+                            if (i + 1 < Tam)
+                            {
+                                AuxNomeImagem += "#" + Item + ";";
+                            }
+                            else
+                            {
+                                AuxNomeImagem += "#" + Item;
                             }
                         }
                         else
                         {
-                            Entity.CaminhoArquivo = "img/fotoCadastro/";
-                            Entity.NomeArquivo = "foto-cadastro.jpeg";
-                            ImagemDiferente = "foto-cadastro.jpeg";
+                            if (i + 1 < Tam)
+                            {
+                                AuxNomeImagem += Item + ";";
+                            }
+                            else
+                            {
+                                AuxNomeImagem += Item;
+                            }
+                            
                         }
-
-                        CampanhaArquivoModel.Update(new CampanhaArquivo()
-                        {
-                            IdCampanhaArquivo = Entity.IdCampanhaArquivo,
-                            IdCampanha = Entity.IdCampanha,
-                            Descricao = Entity.Descricao,
-                            CaminhoArquivo = Entity.CaminhoArquivo,
-                            NomeArquivo = Entity.NomeArquivo,
-                            Observacao = Entity.Observacao,
-                            DataCadastro = DateTime.Now,
-                            Ativo = Entity.Ativo
-                        });
-                        //Entity = CampanhaArquivoModel.GetLastId();
-                        CaminhoImagem = Entity.CaminhoArquivo + Entity.NomeArquivo;
-                        Mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Sucesso, string.Format("Arquivo de Campanha " + msg + " com sucesso!"));
+                        i++;
                     }
+
+                    Entity.NomeArquivo = AuxNomeImagem;
+                    CampanhaArquivoModel.Update(Entity);
+                    EntityLista = CampanhaArquivoModel.GetList();
+                    status = true;
+                    Mensagem = "Imagem Excluída com Sucesso!";
                 }
+                else
+                {
+                    Entity.Ativo = false;
+                    CampanhaArquivoModel.Update(Entity);
+                    EntityLista = CampanhaArquivoModel.GetList();
+                    status = true;
+                    Mensagem = "Imagem Excluída com Sucesso!";
+                }
+                return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = Mensagem });
             }
-            CarregarLists();
-            return Page();
+            catch(Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+            
         }
         public void CarregarLists()
         {

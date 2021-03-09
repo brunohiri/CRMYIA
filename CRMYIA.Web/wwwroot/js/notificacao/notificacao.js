@@ -101,7 +101,7 @@ connection.start().then(function () {
 setInterval(function () {
     let id = $("#IdUsuario").val();
     connection.invoke("NotificacaoHub", id).catch(function (err) {
-        return console.log(err.toString());
+        //return console.log(err.toString());
     });
 }, 500);
 

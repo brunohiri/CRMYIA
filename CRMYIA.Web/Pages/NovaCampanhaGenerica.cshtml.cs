@@ -13,15 +13,22 @@ using CRMYIA.Business.Util;
 using System.Web;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace CRMYIA.Web.Pages
 {
     public class NovaCampanhaGenerica : PageModel
     {
         #region Propriedades
-        readonly IConfiguration _configuration;
+        private IHostingEnvironment _environment;
+        private IConfiguration _configuration;
 
         public MensagemModel Mensagem { get; set; }
+
+        [BindProperty]
+        public IFormFile NomeArquivoCampanha { get; set; }
 
         [BindProperty]
         public Campanha Entity { get; set; }
@@ -31,9 +38,10 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Construtores
-        public NovaCampanhaGenerica(IConfiguration configuration)
+        public NovaCampanhaGenerica(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
+            _environment = environment;
         }
         #endregion
 
@@ -61,28 +69,51 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = status, retorno = ListCampanha });
         }
 
-        public IActionResult OnPostSalvar([FromBody] Campanha dados)
+
+        //public IActionResult OnPostSalvar(/*[FromBody] Campanha dados*/)
+        public async Task<IActionResult> OnPostSalvarAsync(IFormFile File, Campanha formData)
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            dados.DataCadastro = DateTime.Now;
+            //dados.DataCadastro = DateTime.Now;
             bool status = false;
-
             try
             {
-                if (dados.IdCampanha == 0)
+                var Files = Request.Form.Files.FirstOrDefault();
+
+                string NomeArquivoOriginal = File.FileName;
+                string NomeArquivo = string.Empty;
+
+                if (Entity.IdCampanha == 0)
                 {
-                    dados.IdUsuario = IdUsuario;
-                    dados.DataCadastro = DateTime.Now; 
-                    dados.Url = Business.Util.Util.GetSlug(dados.Descricao);
-                    Business.CampanhaModel.Add(dados);
+                    NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
+                    var auxFile = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
+                    using (var fileStream = new FileStream(auxFile, FileMode.Create))
+                    {
+                        await File.CopyToAsync(fileStream);
+                    }
+
+                    Entity.IdUsuario = IdUsuario;
+                    Entity.DataCadastro = DateTime.Now;
+                    Entity.Url = Business.Util.Util.GetSlug(Entity.Descricao);
+                    Entity.CaminhoArquivo = "ArquivoCampanha/";
+                    Entity.NomeArquivo = NomeArquivo;
+                    Business.CampanhaModel.Add(Entity);
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     status = true;
                 }
                 else
                 {
-                    dados.IdUsuario = IdUsuario;
-                    dados.DataCadastro = DateTime.Now;
-                    Business.CampanhaModel.Update(dados);
+                    //string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
+                    //if ((System.IO.File.Exists(_imageToBeDeleted)))
+                    //{
+                    //    System.IO.File.Delete(_imageToBeDeleted);
+                    //}
+
+                    Entity.IdUsuario = IdUsuario;
+                    Entity.DataCadastro = DateTime.Now;
+                    Entity.CaminhoArquivo = "ArquivoCampanha/";
+                    Entity.NomeArquivo = NomeArquivo;
+                    Business.CampanhaModel.Update(Entity);
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados atualizado com sucesso!");
                     status = true;
                 }
@@ -91,8 +122,7 @@ namespace CRMYIA.Web.Pages
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
             }
-            return new JsonResult(new { status = status });
-            //return Page();
+            return Page();
         }
 
         public IActionResult OnPostGetSubCategoria([FromBody] Campanha obj)

@@ -21,6 +21,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
+        public virtual DbSet<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual DbSet<Categoria> Categoria { get; set; }
         public virtual DbSet<Chat> Chat { get; set; }
         public virtual DbSet<Cidade> Cidade { get; set; }
@@ -72,20 +73,15 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<UsuarioCliente> UsuarioCliente { get; set; }
         public virtual DbSet<UsuarioHierarquia> UsuarioHierarquia { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual DbSet<Video> Video { get; set; }
         public virtual DbSet<Visita> Visita { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -146,11 +142,17 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdCampanha);
 
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivo).HasColumnType("text");
 
                 entity.Property(e => e.Url)
                     .HasMaxLength(300)
@@ -177,22 +179,46 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(200)
+                entity.Property(e => e.Descricao).HasColumnType("text");
+
+                entity.Property(e => e.Height).HasColumnType("text");
+
+                entity.Property(e => e.NomeArquivo).HasColumnType("text");
+
+                entity.Property(e => e.RedesSociais)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NomeArquivo)
-                    .HasMaxLength(500)
+                entity.Property(e => e.TipoPostagem)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Observacao)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
+                entity.Property(e => e.Width).HasColumnType("text");
 
                 entity.HasOne(d => d.IdCampanhaNavigation)
                     .WithMany(p => p.CampanhaArquivo)
                     .HasForeignKey(d => d.IdCampanha)
                     .HasConstraintName("Campanha_CampanhaArquivo");
+            });
+
+            modelBuilder.Entity<CapaRedeSocial>(entity =>
+            {
+                entity.HasKey(e => e.IdCapaSocial);
+
+                entity.Property(e => e.IdCapaSocial).ValueGeneratedNever();
+
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.NomeArquivo).HasColumnType("text");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.CapaRedeSocial)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_CapaRedeSocial");
             });
 
             modelBuilder.Entity<Categoria>(entity =>
@@ -1645,6 +1671,31 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.UsuarioPerfil)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_UsuarioPerfil");
+            });
+
+            modelBuilder.Entity<Video>(entity =>
+            {
+                entity.HasKey(e => e.IdVideo)
+                    .HasName("PK__Video__54BA87FA4966F1CF");
+
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.IdentificadorVideo)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeVideo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Video)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_Video");
             });
 
             modelBuilder.Entity<Visita>(entity =>

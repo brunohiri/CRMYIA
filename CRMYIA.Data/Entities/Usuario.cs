@@ -9,6 +9,7 @@ namespace CRMYIA.Data.Entities
         {
             Abordagem = new HashSet<Abordagem>();
             Campanha = new HashSet<Campanha>();
+            CapaRedeSocial = new HashSet<CapaRedeSocial>();
             ChatIdUsuarioDeNavigation = new HashSet<Chat>();
             ChatIdUsuarioParaNavigation = new HashSet<Chat>();
             HistoricoAcesso = new HashSet<HistoricoAcesso>();
@@ -25,6 +26,7 @@ namespace CRMYIA.Data.Entities
             UsuarioHierarquiaIdUsuarioMasterNavigation = new HashSet<UsuarioHierarquia>();
             UsuarioHierarquiaIdUsuarioSlaveNavigation = new HashSet<UsuarioHierarquia>();
             UsuarioPerfil = new HashSet<UsuarioPerfil>();
+            Video = new HashSet<Video>();
             Visita = new HashSet<Visita>();
         }
 
@@ -52,6 +54,7 @@ namespace CRMYIA.Data.Entities
         public virtual Producao IdProducaoNavigation { get; set; }
         public virtual ICollection<Abordagem> Abordagem { get; set; }
         public virtual ICollection<Campanha> Campanha { get; set; }
+        public virtual ICollection<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual ICollection<Chat> ChatIdUsuarioDeNavigation { get; set; }
         public virtual ICollection<Chat> ChatIdUsuarioParaNavigation { get; set; }
         public virtual ICollection<HistoricoAcesso> HistoricoAcesso { get; set; }
@@ -68,6 +71,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<UsuarioHierarquia> UsuarioHierarquiaIdUsuarioMasterNavigation { get; set; }
         public virtual ICollection<UsuarioHierarquia> UsuarioHierarquiaIdUsuarioSlaveNavigation { get; set; }
         public virtual ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual ICollection<Video> Video { get; set; }
         public virtual ICollection<Visita> Visita { get; set; }
     }
 }

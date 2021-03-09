@@ -20,13 +20,13 @@ using Microsoft.Extensions.Configuration;
 namespace CRMYIA.Web.Pages
 {
     [Authorize]
-    public class MaterialDivulgacaoModel : PageModel
+    public class CapaRede : PageModel
     {
         private IHostingEnvironment _environment;
         private IConfiguration _configuration;
 
         #region Construtores
-        public MaterialDivulgacaoModel(IConfiguration configuration, IHostingEnvironment environment)
+        public CapaRede(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
             _environment = environment;
@@ -41,7 +41,7 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<CampanhaArquivo> ListCampanhaArquivo { get; set; }
         public List<Campanha> ListCampanha { get; set; }
-        public void OnGet(string Id = null)
+        public void OnGet(string Id = null, string url = null)
         {
             //PublishUrl = Title;
             if (Id.IsNullOrEmpty())

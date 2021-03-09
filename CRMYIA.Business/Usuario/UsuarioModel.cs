@@ -208,14 +208,19 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static Usuario GetUsuarioCorretor(long IdUsuario)
+        public static UsuarioCorretorViewModel GetUsuarioCorretor(long IdUsuario)
         {
             List<Usuario> ListEntity = GetList();
-            Usuario Entity = null;
+            UsuarioCorretorViewModel Entity = null;
             try
             {
                 Entity = ListEntity
                     .Where(x => x.Ativo && x.IdUsuario == IdUsuario)
+                    .Select(x => new UsuarioCorretorViewModel(){ 
+                    Nome = x.Nome,
+                    Email = x.Email,
+                    Telefone = x.Telefone
+                    })
                     .FirstOrDefault();
             }
             catch (Exception)

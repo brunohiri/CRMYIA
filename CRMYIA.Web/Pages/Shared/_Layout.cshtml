@@ -115,15 +115,33 @@
             }
         }
 
-        /*.dropzone {
-            background: white;
-            border-radius: 5px;
-            border: 2px dashed rgb(0, 135, 247);
-            border-image: none;
-            max-width: 750px;
-            margin-left: auto;
-            margin-right: auto;
-        }*/
+        /* Mimic table appearance */
+        div.table {
+            display: table;
+        }
+
+        div.table .file-row {
+            display: table-row;
+        }
+
+        div.table .file-row > div {
+            display: table-cell;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        div.table .file-row:nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+
+
+        /* The total progress gets shown by event listeners */
+        #total-progress {
+            opacity: 0;
+            transition: opacity 0.3s linear;
+        }
 
         /* Hide the progress bar when finished */
         #previews .file-row.dz-success .progress {
@@ -146,14 +164,80 @@
         #previews .file-row.dz-success .delete {
             display: block;
         }
-        .dropzone {
-            background: white;
-            border-radius: 5px;
-            border: 2px dashed rgb(0, 135, 247);
-            border-image: none;
-            max-width: 750px;
-            margin-left: auto;
-            margin-right: auto;
+
+        /*Usuario*/
+        #status-usuario li ul {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            background-color: #fff;
+            display: none;
+        }
+
+        #status-usuario li:hover ul, #status-usuario li.over ul {
+            display: block;
+        }
+
+        #status-usuario {
+            flex: 1; /* isto é para a nav ocupar a largura toda menos a logo */
+            justify-content: center; /* alinha horizontalmente */
+            align-items: center; /* alinha verticalmente */
+        }
+
+        /* Material de Divulgação */
+        .material-divulgacao-imagem canvas {
+            max-width: 300px;
+            height: auto !important;
+            box-shadow: 1px 1px 2px rgb(0, 0 ,0, 30px);
+            display: block !important;
+            margin: 0 auto 10px !important;
+            border-radius: 5px !important;
+        }
+        .btn-filtro-facebook {
+            background-color: #2e569c;
+        }
+        .btn-filtro-whatsapp {
+            background-color: #4caf50;
+        }
+        .btn-filtro-instagram {
+            background: #f09433;
+            background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            background: -webkit-linear-gradient( 45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            background: linear-gradient( 45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+        }
+        .btn-filtro-linkedin {
+            background-color: #0A66C2;
+        }
+        button.botao-rede-social {
+            width: 200px;
+            padding: 10px 20px 10px 20px;
+            text-align: center;
+            margin: 0 10px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            vertical-align: top;
+            text-decoration: none;
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-transition: all 0.3s ease-in-out;
+            -moz-transition: all 0.3s ease-in-out;
+            -o-transition: all 0.3s ease-in-out;
+            -ms-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+        .filtro-banners h3 {
+            font-size: 24px !important;
+            color: #777 !important;
+            width: 100%;
+            height: auto;
+            border-top: 1px dashed #ccc;
+            margin: 20px 0 15px 0 !important;
+            padding: 15px 0 0 0;
         }
     </style>
 </head>
@@ -663,6 +747,8 @@
     <script src="~/js/knockout/knockout-latest.js"></script>
     <!--Geral-->
     <script src="~/js/sistema/geral.js"></script>
+    <!--Dropzone-->
+    <script src="~/plugins/dropzone/dropzone.js"></script>
     <!-- PAGE SCRIPTS -->
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
     {
@@ -683,11 +769,26 @@
     @if (ViewData["Pagina"].ToString().Equals("Campanha Genérica"))
     {
         <script src="~/js/sistema/campanha.js"></script>
-        <script src="~/plugins/dropzone/dropzone.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("Campanha"))
+    {
+        <script src="~/js/sistema/NovaCampanhaGenerica.js"></script>
     }
     @if (ViewData["Title"].ToString().Equals("Material De Divulgação"))
     {
         <script src="~/js/sistema/materialDivulgacao.js"></script>
+    }
+    @if (ViewData["Title"].ToString().Equals("Capa"))
+    {
+        <script src="~/js/sistema/capaRedeSocial.js"></script>
+    }
+    @if (ViewData["Title"].ToString().Equals("Novos Videos"))
+    {
+        <script src="~/js/sistema/novoVideo.js"></script>
+    }
+    @if (ViewData["Title"].ToString().Equals("Videos"))
+    {
+        <script src="~/js/sistema/videos.js"></script>
     }
     @if (ViewData["Pagina"].ToString().Equals("Marketing"))
     {

@@ -18,6 +18,8 @@ namespace CRMYIA.Data.Entities
         public bool Ativo { get; set; }
         public long? IdCampanhaReferencia { get; set; }
         public string Url { get; set; }
+        public string CaminhoArquivo { get; set; }
+        public string NomeArquivo { get; set; }
 
         public virtual Campanha IdCampanhaReferenciaNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }

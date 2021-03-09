@@ -128,10 +128,20 @@ namespace CRMYIA.Business.Util
         #region TratarNomeArquivo
 
         private const string CaracteresInvalidos = @"[\s\.\,\@\\\+\*\?\[\^\]\$\(\)\{\}\=\!\""\'\#\&\/\;\<\>\|\:-]";
+        private const string CaracteresInvalidosSeparadorPipe = @"[\s\.\@\\\+\*\?\[\^\]\$\(\)\{\}\=\!\""\'\&\/\;\<\>\|]";
         public static string TratarNomeArquivo(string FileName, int i)
         {
             return "YIA_" + Regex.Replace(Path.GetFileNameWithoutExtension(FileName).Replace(".", string.Empty),
                     CaracteresInvalidos,
+                    string.Empty, RegexOptions.Singleline) + "_"
+                    + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + i.ToString()
+                    + Path.GetExtension(FileName);
+        }
+
+        public static string TratarNomeArquivoSeparadorPipe(string FileName, int i)
+        {
+            return "YIA_" + Regex.Replace(Path.GetFileNameWithoutExtension(FileName).Replace(".", string.Empty),
+                    CaracteresInvalidosSeparadorPipe,
                     string.Empty, RegexOptions.Singleline) + "_"
                     + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + i.ToString()
                     + Path.GetExtension(FileName);
@@ -388,6 +398,25 @@ namespace CRMYIA.Business.Util
             {
                 return stringBuilder.ToString();
             }
+        }
+
+        public static bool VerificaNomeArquivo(List<string> NomeArquivo)
+        {
+            bool achou = true;
+            int maior = 0;
+            foreach (string Nome in NomeArquivo) {
+                string[] NomeVet = Nome.Split('-');
+
+                if (NomeVet.Length == 3)
+                {
+                    maior++;
+                }
+                else
+                {
+                    achou = false;
+                }
+            }
+            return achou;
         }
 
         /// <summary>
