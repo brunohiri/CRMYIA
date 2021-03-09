@@ -20,7 +20,7 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static KPIMeta Get(long IdKPIMeta)
+        public static KPIMeta Get(long IdKPIUsuario)
         {
             KPIMeta Entity = null;
             try
@@ -29,7 +29,7 @@ namespace CRMYIA.Business
                 {
                     Entity = context.KPIMeta
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdMeta == IdKPIMeta)
+                        .Where(x => x.Ativo && x.IdKPIGrupoUsuario == IdKPIUsuario)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }

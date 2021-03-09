@@ -28,9 +28,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     Entity = context.KPIGrupoUsuario
-                        .AsNoTracking()
                         .Where(x => x.Ativo && x.IdUsuario == IdUsuario)
-                        .AsNoTracking()
                         .FirstOrDefault();
                 }
             }
@@ -40,7 +38,24 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
+        public static KPIGrupoUsuario GetByKPIGrupoUsuario(long IdKPIGrupoUsuario)
+        {
+            KPIGrupoUsuario Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.KPIGrupoUsuario
+                        .Where(x => x.Ativo && x.IdKPIGrupoUsuario == IdKPIGrupoUsuario)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
         public static List<KPIGrupoUsuario> GetList()
         {
             List<KPIGrupoUsuario> ListEntity = null;
@@ -48,9 +63,11 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.KPIGrupoUsuario
-                        .Where(x => x.Ativo)
-                        .AsNoTracking()
+                    ListEntity = context.KPIGrupoUsuario.Where(x => x.Ativo)
+                        .Include(y => y.KPIMeta)
+                        .ThenInclude(z => z.KPIMetaVida)
+                        .Include(y => y.KPIMeta)
+                        .ThenInclude(v => v.KPIMetaValor)
                         .AsNoTracking()
                         .ToList();
                 }

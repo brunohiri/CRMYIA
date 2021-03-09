@@ -260,6 +260,51 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+        public static List<ListaKPIUsuarioViewModel> GetListKPIUsuarioByName(byte IdPerfil, string perfil, string nome)
+        {
+            List<ListaKPIUsuarioViewModel> ListEntity = null;
+            List<KPIGrupoUsuario> ListKPIGrupoUsuario = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+
+                    ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Perfil == perfil).AsNoTracking().ToList();
+
+                    ListEntity = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                            .ThenInclude(p => p.IdPerfilNavigation)
+                        .Include(c => c.IdCorretoraNavigation)
+                        .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                            .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil) && x.Nome.Contains(nome))
+                        .Select(x => new ListaKPIUsuarioViewModel()
+                        {
+                            IdUsuario = x.IdUsuario,
+                            Nome = x.Nome,
+                            CaminhoFoto = x.CaminhoFoto,
+                            NomeFoto = x.NomeFoto,
+                            Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                            DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
+                            DataCadastro = x.DataCadastro,
+                            Ativo = x.Ativo
+                        })
+                        .OrderBy(o => o.Nome)
+                        .ToList();
+
+                    foreach (var item in ListKPIGrupoUsuario)
+                    {
+                        ListEntity.RemoveAll(us => us.Nome == item.Nome);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
         public static List<ListaKPIUsuarioViewModel> GetListKPIUsuario(byte IdPerfil, string perfil)
         {
             List<ListaKPIUsuarioViewModel> ListEntity = null;
