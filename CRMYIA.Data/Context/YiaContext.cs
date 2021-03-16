@@ -19,8 +19,12 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Abordagem> Abordagem { get; set; }
         public virtual DbSet<AbordagemCategoria> AbordagemCategoria { get; set; }
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
+        public virtual DbSet<AssinaturaCartao> AssinaturaCartao { get; set; }
+        public virtual DbSet<Banner> Banner { get; set; }
+        public virtual DbSet<BannerOperadora> BannerOperadora { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
+        public virtual DbSet<Capa> Capa { get; set; }
         public virtual DbSet<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual DbSet<Categoria> Categoria { get; set; }
         public virtual DbSet<Chat> Chat { get; set; }
@@ -64,6 +68,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Produto> Produto { get; set; }
         public virtual DbSet<Proposta> Proposta { get; set; }
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
+        public virtual DbSet<RedeSocial> RedeSocial { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
         public virtual DbSet<StatusVisita> StatusVisita { get; set; }
         public virtual DbSet<Telefone> Telefone { get; set; }
@@ -80,14 +85,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -142,6 +141,69 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.NomeArquivoTratado)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AssinaturaCartao>(entity =>
+            {
+                entity.HasKey(e => e.IdAssinaturaCartao);
+
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Titulo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.AssinaturaCartao)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_AssinaturaCartao");
+            });
+
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.HasKey(e => e.IdBanner);
+
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<BannerOperadora>(entity =>
+            {
+                entity.HasKey(e => e.IdBannerOperadora);
+
+                entity.HasOne(d => d.IdBannerNavigation)
+                    .WithMany(p => p.BannerOperadora)
+                    .HasForeignKey(d => d.IdBanner)
+                    .HasConstraintName("Banner_BannerOperadora");
+
+                entity.HasOne(d => d.IdOperadoraNavigation)
+                    .WithMany(p => p.BannerOperadora)
+                    .HasForeignKey(d => d.IdOperadora)
+                    .HasConstraintName("Operadora_BannerOperadora");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.BannerOperadora)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_BannerOperadora");
             });
 
             modelBuilder.Entity<Campanha>(entity =>
@@ -207,11 +269,9 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Campanha_CampanhaArquivo");
             });
 
-            modelBuilder.Entity<CapaRedeSocial>(entity =>
+            modelBuilder.Entity<Capa>(entity =>
             {
-                entity.HasKey(e => e.IdCapaSocial);
-
-                entity.Property(e => e.IdCapaSocial).ValueGeneratedNever();
+                entity.HasKey(e => e.IdCapa);
 
                 entity.Property(e => e.CaminhoArquivo)
                     .HasMaxLength(500)
@@ -219,7 +279,28 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
-                entity.Property(e => e.NomeArquivo).HasColumnType("text");
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Titulo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<CapaRedeSocial>(entity =>
+            {
+                entity.HasKey(e => e.IdCapaRedeSocial);
+
+                entity.HasOne(d => d.IdCapaNavigation)
+                    .WithMany(p => p.CapaRedeSocial)
+                    .HasForeignKey(d => d.IdCapa)
+                    .HasConstraintName("Capa_CapaRedeSocial");
+
+                entity.HasOne(d => d.IdRedeSocialNavigation)
+                    .WithMany(p => p.CapaRedeSocial)
+                    .HasForeignKey(d => d.IdRedeSocial)
+                    .HasConstraintName("RedeSocial_CapaRedeSocial");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.CapaRedeSocial)
@@ -1184,10 +1265,18 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdOperadora);
 
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
             });
 
@@ -1454,6 +1543,17 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.PropostaFaixaEtaria)
                     .HasForeignKey(d => d.IdProposta)
                     .HasConstraintName("Proposta_PropostaFaixaEtaria");
+            });
+
+            modelBuilder.Entity<RedeSocial>(entity =>
+            {
+                entity.HasKey(e => e.IdRedeSocial);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<StatusProposta>(entity =>

@@ -319,7 +319,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
 
-                    ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Perfil == perfil).AsNoTracking().ToList();
+                    ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Ativo == true && x.Perfil == perfil).AsNoTracking().ToList();
                     
                     ListEntity = context.Usuario
                         .Include(y => y.UsuarioPerfil)

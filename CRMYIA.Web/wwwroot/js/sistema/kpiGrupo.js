@@ -8,18 +8,82 @@ var start = 20;
 $(document).ready(function () {
     SalvarKPIGrupo();
     CadastroGrupos();
-
+    AtualizarRealizado();
     $('.sortable').sortable({
         connectWith: ".sortable",
         start: {},
         update: function (event, ui) { },
-        change: function (event, ui) { },
+        change: function (event, ui) {
+            var url = ui.item.attr("data-url");
+            ui.item.children().children().children().attr("href", url);
+        },
         stop: function (event, ui) {
-
+            AtualizarRealizado();
         },
         remove: function (event, ui) { }
     }).disableSelection();
 });
+$(document).on('keypress', function (e) {
+    if (e.which == 13) {
+        $('.loading').delay(20).queue(function (next) {
+            $(this).hide();
+            next();
+        });
+        CarregarCardsTODO();
+    }
+});
+function AtualizarRealizado() {
+    var grupos = CalcularGrupos();
+    var realizado = 0.00;
+    var valor = 0.00;
+    var vidas = 0;
+    $.each(grupos, function (i, d) {
+        $.each(d.itens, function (i, da) {
+            realizado = realizado + parseFloat(da.realizado);
+            vidas += parseInt(da.vidas);
+            valor += parseFloat(da.valores);
+        });
+        if (realizado != 0)
+            $("#realizado-" + d.grupo).html("");
+        if (valor != 0)
+            $("#valor-" + d.grupo).html("");
+        if (vidas != 0)
+            $("#vidas-" + d.grupo).html("");
+        if (realizado != 0)
+            $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        if (valor != 0)
+            $("#valor-" + d.grupo).append(valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        if (vidas != 0)
+            $("#vidas-" + d.grupo).append(vidas);
+        realizado = 0.00;
+        valor = 0.00;
+        vidas = 0;
+    });
+}
+function CalcularGrupos() {
+    allGrupos = $(".grupo");
+    var grupos = [];
+    $.each(allGrupos, function (i, d) {
+        grupos.push({
+            'grupo': d.className.slice(27),
+            'itens': eachChildren(d.children)
+        })
+    });
+    return grupos;
+}
+function eachChildren(itens) {
+    var result = [];
+
+    $.each(itens, function (i, d) {
+        result.push({
+            'realizado': d.dataset.realizado,
+            'vidas': d.dataset.vidas,
+            'valores': d.dataset.valores
+        }
+        );
+    });
+    return result;
+}
 
 $('.TODO').on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
@@ -293,6 +357,54 @@ $("#searchKPIGrupo").change(function () {
         ht = '';
     }
 });
+function ExcluirKPICard(id) {
+    swal({
+        title: "Você tem certeza?",
+        text: "Que deseja Excluir do grupo.",
+        type: "warning",
+        showCancelButton: !0,
+        confirmButtonText: "Sim!",
+        cancelButtonText: "Não, cancelar!",
+        reverseButtons: !0,
+        confirmButtonColor: "#198754",
+        cancelButtonColor: "#DC3545"
+    }).then(function (e) {
+        if (e.value === true) {
+            formData = new FormData();
+            formData.append('id', id);
+            $.ajax({
+                type: 'POST',
+                url: "/KPIGrupo?handler=ExcluirKPIGrupo",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function (data) {
+                    if (data.status) {
+                        swal("Sucesso!", data.mensagem, "success");
+                        $('#btnRemove-' + id).CardWidget("remove");
+                        location.reload();
+                    }
+                    else {
+                        swal("Erro!", data.mensagem, "Error");
+                    }
+                },
+                error: function () {
+                    alert("Error occurs");
+                }
+            });
+        } else {
+            e.dismiss;
+        }
+
+    }, function (dismiss) {
+        return false;
+    });
+}
 function AtualizarSortable(resultado) {
     resultado.then(function (data) {
         let html = '';

@@ -104,7 +104,7 @@ namespace CRMYIA.Web.Pages
                     }).Skip(start).Take(take).ToList();
                 }
             }
-            
+
             return new JsonResult(new { listPerfil = ListPerfil, start = start == 0 ? 100 : start });
         }
         public IActionResult OnPostCorretores(IFormCollection dados)
@@ -190,6 +190,28 @@ namespace CRMYIA.Web.Pages
             }
             CarregarLists();
             return new JsonResult(new { mensagem = Mensagem });
+        }
+        public IActionResult OnPostExcluirKPIGrupo(IFormCollection dados)
+        {
+            int id = 0;
+            string motivo = "";
+            bool status = false;
+            KPIGrupoUsuario user = new KPIGrupoUsuario();
+
+            id = int.Parse(dados["id"]);
+            motivo = dados["motivo"];
+            user.IdKPIGrupoUsuario = id;
+            user.Motivo = motivo;
+
+            if (id > 0)
+            {
+                KPIGrupoUsuarioModel.Excluir(user);
+                status = true;
+            }
+            if (status == false)
+                return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
+            else
+                return new JsonResult(new { mensagem = "Sucesso", status });
         }
         #endregion
 
