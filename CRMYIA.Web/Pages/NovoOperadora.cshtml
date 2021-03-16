@@ -10,7 +10,7 @@
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
-    <form  method="post">
+    <form  method="post" enctype="multipart/form-data">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -46,6 +46,16 @@
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                             <input type="checkbox" class="custom-control-input" id="customSwitch3" checked asp-for="@Model.Entity.Ativo">
                             <label class="custom-control-label" for="customSwitch3">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="NomeArquivoBanner">Selecione um arquivo:</label>
+                        <div class="input-group">
+                            <input type="file" id="NomeArquivoBanner" name="NomeArquivoBanner" >
                         </div>
                     </div>
                 </div>

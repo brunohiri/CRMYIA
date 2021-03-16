@@ -207,7 +207,7 @@ function Campanhas() {
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('FACEBOOK') > -1) {
                                                         html += '<div class="collapse" id="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
-                                                                <div class="d-flex justify-content-center m-3">';
+                                                                <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('FACEBOOK') > -1) {
@@ -243,7 +243,7 @@ function Campanhas() {
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('WHATSAPP') > -1) {
                                                         html += '<div class="collapse" id="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
-                                                                <div class="d-flex justify-content-center m-3">';
+                                                                <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('WHATSAPP') > -1) {
@@ -279,7 +279,7 @@ function Campanhas() {
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('INSTAGRAM') > -1) {
                                                         html += '<div class="collapse" id="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
-                                                                <div class="d-flex justify-content-center m-3">';
+                                                                <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('INSTAGRAM') > -1) {
@@ -316,7 +316,7 @@ function Campanhas() {
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('LINKEDIN') > -1) {
                                                         html += '<div class="collapse" id="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
-                                                                <div class="d-flex justify-content-center m-3">';
+                                                                <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('LINKEDIN') > -1) {
@@ -550,13 +550,18 @@ function GerarFotoContato(Canvas, Img, usuario) {
     //ctx.fillText(usuario.nome, 30, 1780);
     //ctx.fillText('   ' + usuario.telefone, 30, 1810);
     //ctx.fillText('E-mail: ' + usuario.email, 30, 1840);
-    
-    ctx.fillText('E-mail: ' + usuario.email, 30, (canvas.height - 105));
-    ctx.fillText('   ' + usuario.telefone, 30, (canvas.height - 75));
-    ctx.fillText(usuario.nome, 30, (canvas.height - 45));
+
+    //ctx.fillText('E-mail: ' + usuario.email, 30, (canvas.height - 105));
+    //ctx.fillText('   ' + usuario.telefone, 30, (canvas.height - 75));
+    //ctx.fillText(usuario.nome, 30, (canvas.height - 45));
+
+    ctx.fillText(usuario.nome, 30, (canvas.height - 105));
+    ctx.fillText('E-mail: ' + usuario.email, 30, (canvas.height - 75));
+    ctx.fillText('   ' + usuario.telefone, 30, (canvas.height - 45));
+
     var img = document.getElementById("wpp");
     //ctx.drawImage(img, 20, 1785);
-    ctx.drawImage(img, 26, (canvas.height - 105));
+    ctx.drawImage(img, 26, (canvas.height - 72));
     ctx.stroke();
     //$('#' + canvas.id).css('display', 'block');
     //ctx.fillText($(this).val(), 10, 50);

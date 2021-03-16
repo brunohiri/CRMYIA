@@ -1,7 +1,7 @@
 ﻿@page
-@model CRMYIA.Web.Pages.UploadCapaRedeSocial
+@model CRMYIA.Web.Pages.UploadBannerOperadora
 @{
-    ViewData["Title"] = "Capa Rede Social";
+    ViewData["Title"] = "Banner de Operadora";
     ViewData["Pagina"] = "Upload";
 }
 @using CRMYIA.Business.Util;
@@ -12,8 +12,7 @@
                 <h3 class="card-title">@ViewData["Pagina"] @ViewData["Title"]</h3>
             </div>
             <!-- /.card-header -->
-            <form role="form" id="upload-capa-rede-social" method="post" enctype="multipart/form-data">
-
+            <form role="form" id="upload-banner-operadora" method="post" enctype="multipart/form-data">
                 <div class="card-body">
 
                     <div class="row" id="UploadCapaRedeSoCialMensagemDiv" style="display: none;">
@@ -29,54 +28,44 @@
                     </div>
 
                     <div class="row">
-
+                        <input type="hidden" name="IdBanner" id="IdBanner" value="0" />
+                        
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Titulo</label>
-                                <input class="form-control" placeholder="Titulo" name="Titulo" id="Titulo">
+                                <label>Seguradora/Operadora *</label>
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdOperadora" id="PropostaIdOperadora">
+                                    <option selected="selected" value="0">Selecione...</option>
+                                    @foreach (var Item in Model.ListOperadora)
+                                    {
+                                        <option value="@Item.IdOperadora">@(Item.Descricao)</option>
+                                    }
+                                </select>
+
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Status</label>
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                    <input type="checkbox" class="custom-control-input" name="Ativo" id="Ativo" checked asp-for="@Model.Entity.Ativo">
+                                    <input type="checkbox" class="custom-control-input" name="Ativo" id="Ativo" checked>
                                     <label class="custom-control-label" for="Ativo">Ativo</label>
                                 </div>
                             </div>
                         </div>
 
+
                     </div>
 
                     <div class="row">
-
-                        <div class="col-sm-6 idRedeSocial">
+                        <div class="col-sm-12">
                             <div class="form-group">
-                                <label>Selecione uma Rede</label>
-                                <select class="form-control select2" style="width: 100%;" name="IdRedeSocial" id="IdRedeSocial" required>
-                                    <option selected="selected">Selecione...</option>
-                                    @foreach (var Item in Model.ListRedeSocial)
-                                    {
-                                        <option value="@Item.IdRedeSocial">@(Item.Nome)</option>
-                                    }
-                                </select>
-                                <div class="invalid-feedback">
-                                    * O Campo é Obrigatório.
-                                </div>
+                                <label>Descrição</label>
+                                <textarea rows="3" class="form-control" placeholder="Descrição" name="Descricao" id="Descricao"></textarea>
                             </div>
                         </div>
-
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Cadastrar Rede Social</label>
-                                <div class="input-group">
-                                    <i title="Cadastrar Rede Social" class="fas fa-plus-circle" data-toggle="modal" data-target="#modalCadastrarRedeSocial"></i>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
+
                     <div class="row">
                         <span class="btn btn-success fileinput-button dz-clickable my-5">
                             <i class="fas fa-upload"></i>
@@ -116,16 +105,12 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="card-footer">
-
-
-
-                    <button type="submit" id="btn-upload-capa-rede-social" class="btn btn-success">Salvar</button>
+                    <button type="submit" id="btn-upload-banner-operadora" class="btn btn-success">Salvar</button>
                     <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
                 </div>
+
             </form>
 
             <div id="tableCapaRedeSocial">
@@ -142,81 +127,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var Item in Model.ListCapa)
-                            {
-                                <tr>
-                                    <td></td>
-                                    <td><img src="@Item.CaminhoArquivo@Item.NomeArquivo" style="max-width: 100px!important;" alt="Capa"></td>
-                                    <td>@Item.Titulo</td>
-                                    <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                    <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
-                                    <td>
-                                        <span class="btn alterar-titulo" title="Editar Titulo" data-idcapa="@Item.IdCapa"><i class="icon fas fa-edit"></i></span>
-                                        <span class="btn alterar-imagem" title="Editar Imagem" data-idcapa="@Item.IdCapa" data-nomearquivo="@Item.NomeArquivo" data-caminho="@Item.CaminhoArquivo"><i class="fas fa-images"></i></span>
-                                        <span class="btn excluir-imagem" title="Excluir Imagem" data-idcapa="@Item.IdCapa" data-nomearquivo="@Item.NomeArquivo"><i class="fas fa-trash-alt"></i></span>
-                                    </td>
-                                </tr>
-                            }
+                            @*@foreach (var Item in Model.ListAssinaturaCartao)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td><img src="@Item.CaminhoArquivo@Item.NomeArquivo" style="max-width: 100px!important;" alt="Capa"></td>
+                                        <td>@Item.Titulo</td>
+                                        <td>@Item.DataCadastro</td>
+                                        <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                        <td>
+                                            <span class="btn alterar-titulo" title="Editar Titulo" data-idassinaturacartao="@Item.IdAssinaturaCartao"><i class="icon fas fa-edit"></i></span>
+                                            <span class="btn alterar-imagem" title="Editar Imagem" data-idassinaturacartao="@Item.IdAssinaturaCartao" data-nomearquivo="@Item.NomeArquivo" data-caminho="@Item.CaminhoArquivo"><i class="fas fa-images"></i></span>
+                                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idassinaturacartao="@Item.IdAssinaturaCartao" data-nomearquivo="@Item.NomeArquivo"><i class="fas fa-trash-alt"></i></span>
+                                        </td>
+                                    </tr>
+                                }*@
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal Cadastrar Rede Social -->
-<div class="modal fade" id="modalCadastrarRedeSocial" tabindex="-1" aria-labelledby="modalCadastrarRedeSocial" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabelCadastrarRedeSocial">Cadastrar Rede Social</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body modal-upload-capa-rede-social">
-
-                <div class="row" id="ModalAlterarImagemMensagemDiv" style="display: none;">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <div class="alert alert-success alert-dismissible" id="ModalAlterarImagemMensagemDivAlert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i id="ModalAlterarImagemMensagemIcon" class="icon fas fa-check"></i>
-                                <span id="ModalAlterarImagemMensagemSpan">Dados salvos com sucesso!</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <form role="form" id="cadastrar-upload-capa-rede-social">
-                    <div class="row">
-
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <label>Nome</label>
-                                <input class="form-control" placeholder="Nome" name="NomeRedeSocial" id="NomeRedeSocial">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Status</label>
-                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                    <input type="checkbox" class="custom-control-input" name="RedeSocialAtivo" id="RedeSocialAtivo" checked asp-for="@Model.EntityRedeSocial.Ativo">
-                                    <label class="custom-control-label" for="RedeSocialAtivo">Ativo</label>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" id="btn-rede-social" class="btn btn-success">Salvar</button>
-                    </div>
-                </form>
             </div>
 
         </div>
@@ -233,7 +161,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body modal-alterar-upload-campanha-generica">
+            <div class="modal-body modal-alterar-upload-assinatura-cartao">
 
                 <div class="row" id="ModalAlterarImagemMensagemDiv" style="display: none;">
                     <div class="col-sm-12">
@@ -251,7 +179,7 @@
                     <img src="" id="imagem" style="max-width: 300px;" alt="Alterar Imagem" />
                 </div>
 
-                <form role="form" id="alterar-upload-capa-rede-social" method="post" enctype="multipart/form-data">
+                <form role="form" id="alterar-upload-assinatura-cartao" method="post" enctype="multipart/form-data">
 
                     <div class="table table-striped files" id="imageUploadAlterar">
                         <div id="template-alterar" class="file-row dz-image-preview">
@@ -293,7 +221,7 @@
                             <span> Adicionar Imagens...</span>
                         </span>
 
-                        <button type="submit" id="btn-alterar-upload-capa-rede-social" class="btn btn-primary">Alterar</button>
+                        <button type="submit" id="btn-alterar-upload-assinatura-cartao" class="btn btn-primary">Alterar</button>
                     </div>
                 </form>
 

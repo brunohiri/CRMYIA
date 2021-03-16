@@ -22,7 +22,7 @@ using Microsoft.Extensions.Configuration;
 namespace CRMYIA.Web.Pages
 {
     [Authorize]
-    public class UploadCapaRedeSocial : PageModel
+    public class UploadAssinaturaCartao : PageModel
     {
         #region Propriedades
         private IHostingEnvironment _environment;
@@ -45,7 +45,7 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<RedeSocial> ListRedeSocial { get; set; }
         [BindProperty]
-        public List<CapaViewModel> ListCapa { get; set; }
+        public List<AssinaturaCartaoViewModel> ListAssinaturaCartao { get; set; }
         [BindProperty]
         public string ImagemDiferente { get; set; }
         [BindProperty]
@@ -53,7 +53,7 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Construtores
-        public UploadCapaRedeSocial(IConfiguration configuration, IHostingEnvironment environment)
+        public UploadAssinaturaCartao(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
             _environment = environment;
@@ -78,12 +78,15 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostUploadUploadCapaRedeSocialAsync(/*[FromForm] List<ICollection<IFormFile>> files,*/ EnviarCapaRedeSocialViewModel formData)
+        public async Task<IActionResult> OnPostUploadAssinaturaCartaoAsync(IFormCollection dados)
         {
             try
             {
+                long IdAssinaturaCartao =  dados["IdAssinaturaCartao"].ToString().ExtractLong();
+                string Titulo = dados["Titulo"];
+                bool Ativo = Convert.ToBoolean(dados["Ativo"].Contains("true"));
                 var documentFile = Request.Form.Files.ToList();
-                List<CapaViewModel> EntityLista = null;
+                List<AssinaturaCartaoViewModel> EntityLista = null;
                 MensagemModel mensagem = null;
                 List<string> FilesNomes = new List<string>();
                 bool status = false;
@@ -102,7 +105,7 @@ namespace CRMYIA.Web.Pages
                     if (mensagem == null)
                     {
                         var msg = "";
-                        if (formData.IdCapa == 0 && documentFile != null)
+                        if (IdAssinaturaCartao == 0 && documentFile != null)
                         {
                             msg = "Carregado";
                             int i = 0;
@@ -117,7 +120,7 @@ namespace CRMYIA.Web.Pages
                                 string NomeArquivoOriginal = Item.FileName;
 
                                 NomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
-                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCapaRedeSocial"], NomeArquivo);
+                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoAssinaturaCartao"], NomeArquivo);
 
                                 using (var fileStream = new FileStream(file, FileMode.Create))
                                 {
@@ -129,35 +132,21 @@ namespace CRMYIA.Web.Pages
                                     Height = image.Height;
                                 }
                                 //Grava um registro Capa
-                                var retorno = CapaModel.Add(new Capa()
+                                AssinaturaCartaoModel.Add(new AssinaturaCartao()
                                 {
-                                   Titulo = formData.Titulo,
-                                   CaminhoArquivo = "ArquivoCapaRedeSocial/",
-                                   NomeArquivo = NomeArquivo,
-                                   Width = Width,
-                                   Height = Height,
-                                   DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
-                                   Ativo = formData.Ativo
-                              });
-
-                                //Pega o ultimo valor
-                                EntityCapa = CapaModel.GetLastId();
-
-                                //Grava um registro CapaRedeSocial
-                                if (EntityCapa != null && retorno)
-                                {
-                                    CapaRedeSocialModel.Add(new CapaRedeSocial()
-                                    {
-                                        IdRedeSocial = formData.IdRedeSocial,
-                                        IdCapa = EntityCapa.IdCapa,
-                                        IdUsuario = IdUsuario
-                                    });
-
-                                    EntityLista = CapaModel.GetList();
-                                    status = true;
-                                    mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
-                                }
+                                    IdUsuario = IdUsuario,
+                                    Titulo = Titulo,
+                                    CaminhoArquivo = "ArquivoAssinaturaCartao/",
+                                    NomeArquivo = NomeArquivo,
+                                    Width = Width,
+                                    Height = Height,
+                                    DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                    Ativo = Ativo
+                                });
                             }
+                            EntityLista = AssinaturaCartaoModel.GetList();
+                            status = true;
+                            mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                         }
                     }
                 }
@@ -177,43 +166,18 @@ namespace CRMYIA.Web.Pages
 
         }
 
-        public IActionResult OnPostSalvarRedeSocialAsync(string NomeRedeSocial, bool Ativo)
-        {
-            bool status = false;
-            List<RedeSocial> EntityRetorno = null;
-            try
-            {
-                if (NomeRedeSocial != null)
-                {
-                    RedeSocialModel.Add(new RedeSocial()
-                    { 
-                        Nome = NomeRedeSocial, 
-                        DataCadastro = DateTime.Now, 
-                        Ativo = Ativo
-                    });
-                    EntityRetorno = RedeSocialModel.GetList();
-                    status = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(ex.Message);
-            }
-            return new JsonResult(new { status = status, EntityRetorno = EntityRetorno });
-        }
-
         public async Task<IActionResult> OnPostAlterarImagemAsync()
         {
             try
             {
-                List<CapaViewModel> EntityLista = null;
+                List<AssinaturaCartaoViewModel> EntityLista = null;
                 bool status = false;
                 MensagemModel mensagem = null;
                 var file = Request.Form.Files.FirstOrDefault();
-                string IdCapa = Request.Form["IdCapa"].ToString();
+                string IdAssinaturaCartao = Request.Form["IdAssinaturaCartao"].ToString();
                 string NomeArquivo = Request.Form["NomeArquivo"].ToString();
-                Capa Entity = null;
-                Entity = CapaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCapa)).ExtractLong());
+                AssinaturaCartao Entity = null;
+                Entity = AssinaturaCartaoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdAssinaturaCartao)).ExtractLong());
                 string msg = "Alterado";
 
                 List<string> FilesNomes = new List<string>();
@@ -225,7 +189,7 @@ namespace CRMYIA.Web.Pages
 
                     if (!string.IsNullOrEmpty(NomeArquivo) && file != null)
                     {
-                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCapaRedeSocial"], NomeArquivo);
+                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoAssinaturaCartao"], NomeArquivo);
                         if ((System.IO.File.Exists(_imageToBeDeleted)))
                         {
                             System.IO.File.Delete(_imageToBeDeleted);
@@ -233,12 +197,12 @@ namespace CRMYIA.Web.Pages
                         string NomeArquivoOriginal = file.FileName;
 
                         string NovoNomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
-                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCapaRedeSocial"], NovoNomeArquivo);
+                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoAssinaturaCartao"], NovoNomeArquivo);
 
                         using (var fileStream = new FileStream(arquivo, FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);
-                            Entity.CaminhoArquivo = "ArquivoCapaRedeSocial/";
+                            Entity.CaminhoArquivo = "ArquivoAssinaturaCartao/";
                             Entity.NomeArquivo = NovoNomeArquivo;
                         }
                         int Width = 0;
@@ -248,10 +212,11 @@ namespace CRMYIA.Web.Pages
                             Width = image.Width;
                             Height = image.Height;
                         }
-
-                        CapaModel.Update(new Capa()
+                        long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                        AssinaturaCartaoModel.Update(new AssinaturaCartao()
                         {
-                            IdCapa = Entity.IdCapa,
+                            IdUsuario = IdUsuario,
+                            IdAssinaturaCartao = Entity.IdAssinaturaCartao,
                             Titulo = Entity.Titulo,
                             CaminhoArquivo = Entity.CaminhoArquivo,
                             NomeArquivo = Entity.NomeArquivo,
@@ -262,7 +227,7 @@ namespace CRMYIA.Web.Pages
                         });
                     }
 
-                    EntityLista = CapaModel.GetList();
+                    EntityLista = AssinaturaCartaoModel.GetList();
                     status = true;
                     mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
                 }
@@ -287,60 +252,58 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnPostExcluirImagem(IFormCollection dados)
         {
-            List<CapaViewModel> EntityLista = null;
+            List<AssinaturaCartaoViewModel> EntityLista = null;
             bool status = false;
-            
+            string mensagem = "Erro ao Excluir Imagem";
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             try
             {
-                Capa EntityCapa = null;
-                EntityCapa = CapaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(dados["IdCapa"])).ExtractLong());
-                CapaModel.Update(new Capa()
+                AssinaturaCartao EntityAssinaturaCartao = null;
+                EntityAssinaturaCartao = AssinaturaCartaoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(dados["IdAssinaturaCartao"])).ExtractLong());
+                AssinaturaCartaoModel.Update(new AssinaturaCartao()
                 {
-                    IdCapa = EntityCapa.IdCapa,
-                    Titulo = EntityCapa.Titulo,
-                    CaminhoArquivo = EntityCapa.CaminhoArquivo,
-                    NomeArquivo = EntityCapa.NomeArquivo,
-                    Width = EntityCapa.Width,
-                    Height = EntityCapa.Height,
-                    DataCadastro = EntityCapa.DataCadastro,
+                    IdUsuario = IdUsuario,
+                    IdAssinaturaCartao = EntityAssinaturaCartao.IdAssinaturaCartao,
+                    Titulo = EntityAssinaturaCartao.Titulo,
+                    CaminhoArquivo = EntityAssinaturaCartao.CaminhoArquivo,
+                    NomeArquivo = EntityAssinaturaCartao.NomeArquivo,
+                    Width = EntityAssinaturaCartao.Width,
+                    Height = EntityAssinaturaCartao.Height,
+                    DataCadastro = EntityAssinaturaCartao.DataCadastro,
                     Ativo = false
-                });                
-                EntityLista = CapaModel.GetList();
+                });
+                EntityLista = AssinaturaCartaoModel.GetList();
                 status = true;
-                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Capa Excluída com Sucesso!");
+                mensagem = "Imagem Excluída com Sucesso!";
             }
             catch (Exception ex)
             {
-                return new JsonResult( new {status = status, entityLista = EntityLista,  mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message) });
+                return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
             }
-            return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = Mensagem });
+            return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
         }
 
-        public IActionResult OnPostObter(string IdCapa)
+        public IActionResult OnPostObter(string IdAssinaturaCartao)
         {
-            Capa EntityCapa = null;
-            CapaRedeSocial EntityCapaRedeSocial = null;
-            RedeSocial EntityRedeSocial = null;
+            AssinaturaCartao EntityAssinaturaCartao = null;
             bool status = false;
             try
             {
-                EntityCapa = CapaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCapa)).ExtractLong());
-                EntityCapaRedeSocial = CapaRedeSocialModel.Get(EntityCapa.IdCapa);
-                EntityRedeSocial = RedeSocialModel.Get(EntityCapaRedeSocial.IdRedeSocial.ToString().ExtractLong());
+                EntityAssinaturaCartao = AssinaturaCartaoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdAssinaturaCartao)).ExtractLong());
+               
                 status = true;
             }
             catch (Exception ex)
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message);
-                return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityCapa, entityRedeSocial = EntityRedeSocial });
+                return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityAssinaturaCartao });
             }
-            return new JsonResult(new { status = status, entityCapa = EntityCapa, entityRedeSocial = EntityRedeSocial });
+            return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityAssinaturaCartao });
         }
         public void CarregarLists()
         {
-            ListRedeSocial = RedeSocialModel.GetList();
-            ListCapa = CapaModel.GetList();
+            ListAssinaturaCartao = AssinaturaCartaoModel.GetList();
         }
-    #endregion
-}
+        #endregion
+    }
 }

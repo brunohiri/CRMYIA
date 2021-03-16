@@ -239,6 +239,16 @@
             margin: 20px 0 15px 0 !important;
             padding: 15px 0 0 0;
         }
+        @@media (max-width: 400px) {
+            .banners-das-redes-sociais canvas {
+                max-width: 100%;
+            }
+        }
+        @@media (max-width: 1210px){
+            button.btn-redesocial {
+                margin: 0 5px 10px 5px;
+            }
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -783,9 +793,25 @@
     {
         <script src="~/js/sistema/materialDivulgacao.js"></script>
     }
+    @if (ViewData["Title"].ToString().Equals("Capa Rede Social"))
+    {
+        <script src="~/js/sistema/uploadCapaRedeSocial.js"></script>
+    }
     @if (ViewData["Title"].ToString().Equals("Capa"))
     {
-        <script src="~/js/sistema/capaRedeSocial.js"></script>
+        <script src="~/js/sistema/capasRedeSocial.js"></script>
+    }
+    @if (ViewData["Title"].ToString().Equals("Assinatura E Cartao"))
+    {
+        <script src="~/js/sistema/uploadAssinaturaCartao.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("Assinatura E Cartao"))
+    {
+        <script src="~/js/sistema/assinaturaCartao.js"></script>
+    }
+    @if (ViewData["Title"].ToString().Equals("Banner de Operadora"))
+    {
+        <script src="~/js/sistema/uploadBannerOperadora.js"></script>
     }
     @if (ViewData["Title"].ToString().Equals("Novos Videos"))
     {

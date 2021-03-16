@@ -74,7 +74,7 @@ $(document).ready(function () {
                         //formData.append("Height", file.height);
                     } else {
                         myDropzone.removeAllFiles(true);
-                        swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO,REDES_SOCIAIS,LOCAL_DA_POSTAGEM,.EXTENSAO</span>", "error");
+                        swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO - REDES_SOCIAIS - [LOCAL_DA_POSTAGEM].EXTENSAO</span>", "error");
                     }
                 });
 
@@ -177,9 +177,6 @@ $(document).ready(function () {
         //}
     });
 
-    
-
-       
 });
 
 
@@ -190,8 +187,8 @@ $(document).on('click', '.alterar-imagem', function () {
 
     $('#imagem').attr("src", $(this).data('caminhoimagem'));
 
-    console.log($(this).data('idcampanhaarquivo') + ' | ' + $(this).data('nomearquivo') + ' | ' + $(this).data('caminhoimagem'))
-    idcampanhaarquivo = $(this).data('idcampanhaarquivo');
+/*    console.log($(this).data('idcampanhaarquivo') + ' | ' + $(this).data('nomearquivo') + ' | ' + $(this).data('caminhoimagem'))*/
+    idcampanhaarquivo = $(this).data('idcapa');
     nomearquivo = $(this).data('nomearquivo');
     caminhoimagem = $(this).data('caminhoimagem');
 });

@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public Operadora()
         {
+            BannerOperadora = new HashSet<BannerOperadora>();
             OperadoraDocumento = new HashSet<OperadoraDocumento>();
             Produto = new HashSet<Produto>();
         }
@@ -15,7 +16,10 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public string CaminhoArquivo { get; set; }
+        public string NomeArquivo { get; set; }
 
+        public virtual ICollection<BannerOperadora> BannerOperadora { get; set; }
         public virtual ICollection<OperadoraDocumento> OperadoraDocumento { get; set; }
         public virtual ICollection<Produto> Produto { get; set; }
     }

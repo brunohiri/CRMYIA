@@ -53,6 +53,10 @@
     <Folder Include="wwwroot\audio\" />
     <Folder Include="wwwroot\ArquivoCampanha\" />
     <Folder Include="wwwroot\ArquivoVideo\" />
+    <Folder Include="wwwroot\ArquivoCapaRedeSocial\" />
+    <Folder Include="wwwroot\ArquivoAssinaturaCartao\" />
+    <Folder Include="wwwroot\ArquivoOperadora\" />
+    <Folder Include="wwwroot\ArquivoBannerOperadora\" />
   </ItemGroup>
 
 </Project>

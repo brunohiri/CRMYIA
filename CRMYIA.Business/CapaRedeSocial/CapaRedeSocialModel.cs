@@ -1,43 +1,48 @@
-﻿using CRMYIA.Business.Util;
-using CRMYIA.Data.Context;
-using CRMYIA.Data.ViewModel;
-using Microsoft.EntityFrameworkCore;
+﻿using CRMYIA.Data.Context;
+using CRMYIA.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web;
 
 namespace CRMYIA.Business
 {
     public class CapaRedeSocialModel
     {
-        public static List<CapaRedeSocialViewModel> GetList()
+        
+        public static CapaRedeSocial Get(long IdCapa)
         {
-            List<CapaRedeSocialViewModel> ListEntity = null;
+            CapaRedeSocial Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.CapaRedeSocial
-                        .AsNoTracking()
-                        .Where(x => x.Ativo)
-                        .Select(x => new CapaRedeSocialViewModel
-                        {
-                            IdUsuario = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdUsuario.ToString()).ToString()),
-                            CaminhoArquivo = x.CaminhoArquivo,
-                            NomeArquivo = x.NomeArquivo,
-                            DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
-                            Ativo = x.Ativo
-                        })
-                        .OrderByDescending(o => o.IdUsuario).ToList();
+                    Entity = context.CapaRedeSocial
+                        .Where(x => x.IdCapa == IdCapa)
+                        .FirstOrDefault();
                 }
             }
             catch (Exception)
             {
                 throw;
             }
-            return ListEntity;
+            return Entity;
         }
+        public static void Add(CapaRedeSocial Entity)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    context.CapaRedeSocial.Add(Entity);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }
