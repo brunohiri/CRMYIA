@@ -24,6 +24,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="../css/adminlte.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/toastr.css">
     <!-- Jquery UI -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     @if (ViewData["Pagina"].ToString().Equals("KPIGrupo"))
@@ -120,20 +121,20 @@
             display: table;
         }
 
-        div.table .file-row {
-            display: table-row;
-        }
+            div.table .file-row {
+                display: table-row;
+            }
 
-        div.table .file-row > div {
-            display: table-cell;
-            vertical-align: top;
-            border-top: 1px solid #ddd;
-            padding: 8px;
-        }
+                div.table .file-row > div {
+                    display: table-cell;
+                    vertical-align: top;
+                    border-top: 1px solid #ddd;
+                    padding: 8px;
+                }
 
-        div.table .file-row:nth-child(odd) {
-            background: #f9f9f9;
-        }
+                div.table .file-row:nth-child(odd) {
+                    background: #f9f9f9;
+                }
 
 
 
@@ -188,17 +189,20 @@
         .material-divulgacao-imagem canvas {
             max-width: 300px;
             height: auto !important;
-            box-shadow: 1px 1px 2px rgb(0, 0 ,0, 30px);
+            box-shadow: 1px 1px 2px rgb(0, 0,0, 30px);
             display: block !important;
             margin: 0 auto 10px !important;
             border-radius: 5px !important;
         }
+
         .btn-filtro-facebook {
             background-color: #2e569c;
         }
+
         .btn-filtro-whatsapp {
             background-color: #4caf50;
         }
+
         .btn-filtro-instagram {
             background: #f09433;
             background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
@@ -206,9 +210,11 @@
             background: linear-gradient( 45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
         }
+
         .btn-filtro-linkedin {
             background-color: #0A66C2;
         }
+
         button.botao-rede-social {
             width: 200px;
             padding: 10px 20px 10px 20px;
@@ -230,6 +236,7 @@
             -ms-transition: all 0.3s ease-in-out;
             transition: all 0.3s ease-in-out;
         }
+
         .filtro-banners h3 {
             font-size: 24px !important;
             color: #777 !important;
@@ -239,12 +246,14 @@
             margin: 20px 0 15px 0 !important;
             padding: 15px 0 0 0;
         }
+
         @@media (max-width: 400px) {
             .banners-das-redes-sociais canvas {
                 max-width: 100%;
             }
         }
-        @@media (max-width: 1210px){
+
+        @@media (max-width: 1210px) {
             button.btn-redesocial {
                 margin: 0 5px 10px 5px;
             }
@@ -751,6 +760,7 @@
     <!-- ChartJS -->
     <script src="../plugins/chart.js/Chart.min.js"></script>
     <!--Notificações-->
+    <script src="~/js/toastr/toastr.min.js"></script>
     <script src="~/js/signalr/signalr.min.js"></script>
     <script src="~/js/notificacao/notificacao.js" asp-append-version="true"></script>
     <script src="~/js/notificacao/chat.js" asp-append-version="true"></script>
