@@ -119,89 +119,94 @@
     <form method="post">
         <div class="card-body">
             <div class="row">
-                <div class="task-board">
+                <p class="text-black text-bold"><u>Dica: Use o botão de rolagem do mouse + SHIFT para navegar para direita e esquerda.</u></p>
+                <div class="task-board" style="background-color: #9E2800">
                     @if (Model.ListFaseProposta != null)
                     {
                         foreach (var Item in Model.ListFaseProposta)
                         {
-                            <div class="status-card" style="background-color: @Item.CorSecundaria">
-                                <div class="card-header">
-                                    <span class="card-header-text text-center">
-                                        @Item.Descricao
-                                        <br />
+                            <div class="status-card" style="background-color: @Item.CorSecundaria; border-radius:2px;">
+                               <div class="card" style="background-color: #F15927; color:azure; border-radius:2px;">
+                                   <div class="card-header">
+                                        <div class="card-header-text text-center">
+                                            @Item.Descricao
+                                            <br />
+                                            @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
+                                            {
+                                                if (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0)
+                                                {
+                                                    <div class="text-center" id="total-@Item.IdFaseProposta">@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="text-center" id="total-@Item.IdFaseProposta">@Html.Raw("R$ 0,00")</div>
+                                                }
+
+                                                <div class="text-center" id="percentual-@Item.IdFaseProposta">
+                                                    @if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Oportunidade))
+                                                    {
+                                                        @Html.Raw("5%")
+                                                    }
+                                                    else
+                                                    if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros))
+                                                    {
+                                                        @Html.Raw("10%")
+                                                    }
+                                                    else
+                                                    if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao))
+                                                    {
+                                                        @Html.Raw("11-90%")
+                                                    }
+                                                    else
+                                                    if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao))
+                                                    {
+                                                        @Html.Raw("95%")
+                                                    }
+                                                    else
+                                                    if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Fechamento))
+                                                    {
+                                                        @Html.Raw("100%")
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Raw("0%")
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="status-card" style="background-color: #3E3E3E">
+                                    <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta" data-total="@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
                                         @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
                                         {
                                             if (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0)
                                             {
-                                                <div class="text-center" id="total-@Item.IdFaseProposta">@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
+                                                foreach (var ItemProposta in Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList())
+                                                {
+                                                    <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
+                                                        <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
+                                                            <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0,16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
+                                                            <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
+                                                            <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome ))</p>
+                                                            <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_"+ Item.IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
+                                                            <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                                            <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
+                                                        </a>
+                                                    </li>
+                                                }
                                             }
                                             else
                                             {
-                                                <div class="text-center" id="total-@Item.IdFaseProposta">@Html.Raw("R$ 0,00")</div>
-                                            }
-
-                                            <div class="text-center" id="percentual-@Item.IdFaseProposta">
-                                                @if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Oportunidade))
-                                                {
-                                                    @Html.Raw("5%")
-                                                }
-                                                else
-                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros))
-                                                {
-                                                    @Html.Raw("10%")
-                                                }
-                                                else
-                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao))
-                                                {
-                                                    @Html.Raw("11-90%")
-                                                }
-                                                else
-                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao))
-                                                {
-                                                    @Html.Raw("95%")
-                                                }
-                                                else
-                                      if (Item.IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Fechamento))
-                                                {
-                                                    @Html.Raw("100%")
-                                                }
-                                                else
-                                                {
-                                                    @Html.Raw("0%")
-                                                }
-                                            </div>
-                                        }
-                                    </span>
-                                </div>
-                                <ul class="sortable ui-sortable" id="@("sort" + Item.IdFaseProposta)" data-status-id="@Item.IdFaseProposta" data-total="@Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
-                                    @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
-                                    {
-                                        if (Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList().Count > 0)
-                                        {
-                                            foreach (var ItemProposta in Model.ListEntityProposta.Where(x => x.IdFaseProposta == Item.IdFaseProposta).ToList())
-                                            {
-                                                <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
-                                                    <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
-                                                        <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0,16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
-                                                        <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
-                                                        <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome ))</p>
-                                                        <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_"+ Item.IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
-                                                        <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
-                                                        <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
-                                                    </a>
-                                                </li>
+                                                <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
                                             }
                                         }
                                         else
                                         {
                                             <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
-                                    }
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
                         }
                     }

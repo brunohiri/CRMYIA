@@ -2,7 +2,7 @@
 @model CRMYIA.Web.Pages.KPIGruposModel
 @{ ViewData["Title"] = "";
     ViewData["Pagina"] = "KPIGrupo";
-    }
+}
 @using CRMYIA.Business.Util;
 @using CRMYIA.Business;
 @using System.Security.Claims;
@@ -77,17 +77,17 @@
                                 {
                                     foreach (var Item in Model.ListPerfil)
                                     {
-                                        <li class="text-row ui-sortable-handle" 
+                                        <li class="text-row ui-sortable-handle"
                                             data-realizado="0"
-                                                    data-vidas="0"
-                                                    data-valores="0"
+                                            data-vidas="0"
+                                            data-valores="0"
                                             data-url="/NovaMeta?id=@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))"
                                             data-user-id="@Item.IdUsuario" id="@("id-" + @Item.IdUsuario)">
                                             <div class="card card-color" style="position: relative; left: 0px; top: 0px;">
                                                 <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
                                                     <h3 class="card-title">
                                                         <i class="fas fa-th mr-1"></i>
-                                                        @Item.Nome.ToString().Substring(0, (@Item.Nome.Length > 19) ? 19 : @Item.Nome.Length)
+                                                        @Item.Nome.ToString().Substring(0, (@Item.Nome.Length > 16) ? 16 : @Item.Nome.Length)
                                                     </h3>
 
                                                     <div class="card-tools mr-2 mb-1">
@@ -146,10 +146,6 @@
                                         </li>
                                     }
                                 }
-                                else
-                                {
-                                    <li class="text-row-empty div-blocked" data-grupo-id="0">Nenhum... </li>
-                                }
                             </ul>
 
                         </div>
@@ -174,9 +170,9 @@
                                         <!-- /.card-tools -->
                                     </div>
                                     <!-- /.card-header -->
-                                    <div class="card-body mb-3 mt-3" style="display: block;">
+                                    <div class="card-body" style="display: block;">
                                         <div class="row">
-                                            <div class="col-sm-4 border-right">
+                                            <div class="col-sm-6 border-bottom">
                                                 <div class="description-block">
                                                     <h5 id="realizado-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
                                                     <span class="description-text">Realizado</span>
@@ -184,15 +180,25 @@
                                                 <!-- /.description-block -->
                                             </div>
                                             <!-- /.col -->
-                                            <div class="col-sm-4 border-right">
+                                            <div class="col-sm-6 border-bottom">
                                                 <div class="description-block">
                                                     <h5 id="valor-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Meta Grupo</span>
+                                                    <span class="description-text">Meta R$ Grupo</span>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
                                             <!-- /.col -->
-                                            <div class="col-sm-4">
+                                        </div>
+                                        <div class="row mb-n3">
+                                            <div class="col-sm-6">
+                                                <div class="description-block">
+                                                    <h5 id="realizadoVidas-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
+                                                    <span class="description-text">Realizado</span>
+                                                </div>
+                                                <!-- /.description-block -->
+                                            </div>
+                                            <!-- /.col -->
+                                            <div class="col-sm-6">
                                                 <div class="description-block">
                                                     <h5 id="vidas-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
                                                     <span class="description-text">Vidas Grupo</span>
@@ -201,8 +207,6 @@
                                             </div>
                                             <!-- /.col -->
                                         </div>
-                                        <div class="m-3"></div>
-
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
@@ -213,34 +217,40 @@
                                         {
                                             @if (ItemListKPIGrupoUsuario.IdKPIGrupo == Item.IdKPIGrupo)
                                             {
-                                                @foreach (var itemRealizado in Model.ListKPIRealizadoProposta)
+                                                @foreach (var itemListRealizado in Model.listAllRealizado)
                                                 {
-                                                    @if (itemRealizado.IdUsuario == ItemListKPIGrupoUsuario.IdUsuario)
+                                                    @foreach (var itemRealizado in itemListRealizado)
                                                     {
-                                                        if(itemRealizado.ValorPrevisto != null)
-                                                        realizado = realizado + (decimal)itemRealizado.ValorPrevisto;
+                                                        @if (itemRealizado.IdUsuario == ItemListKPIGrupoUsuario.IdUsuario)
+                                                        {
+                                                            if (itemRealizado.ValorPrevisto != null)
+                                                                realizado = realizado + (decimal)itemRealizado.ValorPrevisto;
+                                                        }
+
+                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
+                                                        {
+                                                            @foreach (var itemValor in itemMeta.KPIMetaValor)
+                                                            {
+                                                                if (@itemValor.ValorMaximo != null)
+                                                                    valores = (decimal)@itemValor.ValorMaximo;
+                                                                else
+                                                                    valores = 0;
+                                                            }
+                                                        }
+                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
+                                                        {
+                                                            @foreach (var itemVida in itemMeta.KPIMetaVida)
+                                                            {
+                                                                if (itemVida.ValorMaximo != null)
+                                                                    vidas = (int)@itemVida.ValorMaximo;
+                                                                else
+                                                                    vidas = 0;
+                                                            }
+                                                        }
                                                     }
+
                                                 }
-                                                @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
-                                                {
-                                                    @foreach (var itemValor in itemMeta.KPIMetaValor)
-                                                    {
-                                                        if (@itemValor.ValorMaximo != null)
-                                                            valores = (decimal)@itemValor.ValorMaximo;
-                                                        else
-                                                            valores = 0;
-                                                    }
-                                                }
-                                                @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
-                                                {
-                                                    @foreach (var itemVida in itemMeta.KPIMetaVida)
-                                                    {
-                                                        if (itemVida.ValorMaximo != null)
-                                                            vidas = (int)@itemVida.ValorMaximo;
-                                                        else
-                                                            vidas = 0;
-                                                    }
-                                                }
+
                                                 <li class="text-row ui-sortable-handle"
                                                     data-realizado="@realizado"
                                                     data-vidas="@vidas"
@@ -250,7 +260,7 @@
                                                         <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
                                                             <h3 class="card-title">
                                                                 <i class="fas fa-th mr-1"></i>
-                                                                @ItemListKPIGrupoUsuario.Nome.ToString().Substring(0, (@ItemListKPIGrupoUsuario.Nome.Length > 20) ? 20 : @ItemListKPIGrupoUsuario.Nome.Length)
+                                                                @ItemListKPIGrupoUsuario.Nome.ToString().Substring(0, (@ItemListKPIGrupoUsuario.Nome.Length > 16) ? 16 : @ItemListKPIGrupoUsuario.Nome.Length)
                                                             </h3>
 
                                                             <div class="card-tools mr-2 mb-1">
@@ -276,7 +286,7 @@
                                                                         <div class="row">
                                                                             <div class="col-sm-4 border-right">
                                                                                 <div class="description-block">
-                                                                                    <h5 class="description-header">@realizado</h5>
+                                                                                    <h5 class="description-header" style="font-size:12px">@realizado.ToString("C2")</h5>
                                                                                     <span class="description-text">Realizado</span>
                                                                                     @if (true)
                                                                                     {
@@ -288,7 +298,7 @@
                                                                             <!-- /.col -->
                                                                             <div class="col-sm-4 border-right">
                                                                                 <div class="description-block">
-                                                                                    <h5 class="description-header">@valores</h5>
+                                                                                    <h5 class="description-header" style="font-size:12px">@valores.ToString("C2")</h5>
                                                                                     <span class="description-text">Meta</span>
                                                                                     @if (true)
                                                                                     {
@@ -322,13 +332,9 @@
                                             }
                                         }
                                     }
-                                    else
-                                    {
-                                        <li class="text-row-empty text-center div-blocked" data-grupo-id="0">Ninguém atribuido ao grupo</li>
-                                    }
 
                                 </ul>
-                                
+
                             </div>
                         }
                     }

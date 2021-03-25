@@ -11,8 +11,12 @@ $(document).ready(function () {
     AtualizarRealizado();
     $('.sortable').sortable({
         connectWith: ".sortable",
-        start: {},
-        update: function (event, ui) { },
+        start: function (event, ui) {
+
+        },
+        update: function (event, ui) {
+            AtualizarRealizado();
+        },
         change: function (event, ui) {
             var url = ui.item.attr("data-url");
             ui.item.children().children().children().attr("href", url);
@@ -20,7 +24,8 @@ $(document).ready(function () {
         stop: function (event, ui) {
             AtualizarRealizado();
         },
-        remove: function (event, ui) { }
+        remove: function (event, ui) {
+        }
     }).disableSelection();
 });
 $(document).on('keypress', function (e) {
@@ -39,22 +44,36 @@ function AtualizarRealizado() {
     var vidas = 0;
     $.each(grupos, function (i, d) {
         $.each(d.itens, function (i, da) {
-            realizado = realizado + parseFloat(da.realizado);
-            vidas += parseInt(da.vidas);
-            valor += parseFloat(da.valores);
+            if (da.realizado == 0 && da.vidas == 0 && da.valores == 0) {
+                $("#realizado-" + d.grupo).html("");
+                $("#realizado-" + d.grupo).append(da.realizado);
+
+                $("#valor-" + d.grupo).html("");
+                $("#valor-" + d.grupo).append(da.valores);
+
+                $("#vidas-" + d.grupo).html("");
+                $("#vidas-" + d.grupo).append(da.vidas);
+            } else {
+                realizado = parseFloat(realizado) + parseFloat(da.realizado);
+                vidas = parseInt(vidas) + parseInt(da.vidas);
+                valor = parseFloat(valor) + parseFloat(da.valores);
+            }
         });
-        if (realizado != 0)
+        if (realizado != 0) {
             $("#realizado-" + d.grupo).html("");
-        if (valor != 0)
-            $("#valor-" + d.grupo).html("");
-        if (vidas != 0)
-            $("#vidas-" + d.grupo).html("");
-        if (realizado != 0)
             $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        if (valor != 0)
+        }
+
+        if (valor != 0) {
+            $("#valor-" + d.grupo).html("");
             $("#valor-" + d.grupo).append(valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        if (vidas != 0)
+        }
+
+        if (vidas != 0) {
+            $("#vidas-" + d.grupo).html("");
             $("#vidas-" + d.grupo).append(vidas);
+        }
+
         realizado = 0.00;
         valor = 0.00;
         vidas = 0;
@@ -73,15 +92,22 @@ function CalcularGrupos() {
 }
 function eachChildren(itens) {
     var result = [];
-
-    $.each(itens, function (i, d) {
+    if (itens.length > 0) {
+        $.each(itens, function (i, d) {
+            result.push({
+                'realizado': d.dataset.realizado,
+                'vidas': d.dataset.vidas,
+                'valores': d.dataset.valores
+            }
+            );
+        });
+    } else {
         result.push({
-            'realizado': d.dataset.realizado,
-            'vidas': d.dataset.vidas,
-            'valores': d.dataset.valores
-        }
-        );
-    });
+            'realizado': 0,
+            'vidas': 0,
+            'valores': 0
+        })
+    }
     return result;
 }
 
@@ -110,17 +136,17 @@ $('.TODO').on('scroll', function () {
                     success: function (result) {
                         $("#IdPerfil option:contains(" + 'Corretor' + ")").attr('selected', true)
                         $.each(result.listPerfil, function (i, d) {
-                            text += '<li class="text-row ui-sortable-handle" data-user-id="' + this.idUsuario + '" id="id-"' + this.idUsuario + '">' +
+                            text += '<li data-realizado="0" data-vidas="0" data-valores="0" class="text-row ui-sortable-handle" data-user-id="' + this.idUsuario + '" id="id-"' + this.idUsuario + '">' +
                                 '<div class="card card-color" style="position: relative; left: 0px; top: 0px;">' +
                                 '<div class="card-header border-0 ui-sortable-handle" style="cursor: move;">' +
                                 '<h3 class="card-title">' +
-                                '<i class="fas fa-th mr-1"></i>' + this.nome.substr(0, 19) +
+                                '<i class="fas fa-th mr-1"></i>' + this.nome.substr(0, 16) +
                                 '</h3>' +
                                 '<div class="card-tools mr-2 mb-1">' +
                                 '<button type="button" class="btn btn-outline-light btn-sm" data-card-widget="collapse">' +
                                 '<i class="fas fa-minus"></i>' +
                                 '</button>' +
-                                '<button type="button" class="btn btn-outline-light btn-sm" data-card-widget="remove">' +
+                                '<button type="button" class="btn btn-outline-light btn-sm" >' +
                                 '<i class="fas fa-times"></i>' +
                                 '</button>' +
                                 '</div>' +
@@ -196,7 +222,7 @@ function CarregarCardsTODO() {
         }
     }
     perfil = $("#IdPerfil").children("option:selected").val();
-    if (termo.length > 4) {
+    if (termo.length > 2) {
         formData.append("termo", termo);
         formData.append("start", startSearch);
         formData.append("perfil", perfil);
@@ -215,6 +241,11 @@ function CarregarCardsTODO() {
             processData: false,
             contentType: false,
             success: function (result) {
+                if (result.listPerfil.length > 0) {
+                    toastr.info("Busca realizada com sucesso!");
+                } else {
+                    toastr.warning("Nada encontrado!");
+                }
                 startSearch = result.start;
                 $("#IdPerfil option:contains(" + 'Corretor' + ")").attr('selected', true)
                 if (startSearch <= 100) {
@@ -222,17 +253,17 @@ function CarregarCardsTODO() {
                         termoAnterior = termo;
                         $(".loader").show(100);
                         $.each(result.listPerfil, function (i, d) {
-                            text += '<li class="text-row ui-sortable-handle" data-user-id="' + this.idUsuario + '" id="id-"' + this.idUsuario + '">' +
+                            text += '<li data-realizado="0" data-vidas="0" data-valores="0" class="text-row ui-sortable-handle" data-user-id="' + this.idUsuario + '" id="id-"' + this.idUsuario + '">' +
                                 '<div class="card card-color" style="position: relative; left: 0px; top: 0px;">' +
                                 '<div class="card-header border-0 ui-sortable-handle" style="cursor: move;">' +
                                 '<h3 class="card-title">' +
-                                '<i class="fas fa-th mr-1"></i>' + this.nome.substr(0, 19) +
+                                '<i class="fas fa-th mr-1"></i>' + this.nome.substr(0, 16) +
                                 '</h3>' +
                                 '<div class="card-tools mr-2 mb-1">' +
                                 '<button type="button" class="btn btn-outline-light btn-sm" data-card-widget="collapse">' +
                                 '<i class="fas fa-minus"></i>' +
                                 '</button>' +
-                                '<button type="button" class="btn btn-outline-light btn-sm" data-card-widget="remove">' +
+                                '<button type="button" class="btn btn-outline-light btn-sm" >' +
                                 '<i class="fas fa-times"></i>' +
                                 '</button>' +
                                 '</div>' +
@@ -279,17 +310,17 @@ function CarregarCardsTODO() {
                     if (result.listPerfil.length > 0) {
                         $(".loader").show(100);
                         $.each(result.listPerfil, function (i, d) {
-                            text += '<li class="text-row ui-sortable-handle" data-user-id="' + this.idUsuario + '" id="id-"' + this.idUsuario + '">' +
+                            text += '<li data-realizado="0" data-vidas="0" data-valores="0" class="text-row ui-sortable-handle" data-user-id="' + this.idUsuario + '" id="id-"' + this.idUsuario + '">' +
                                 '<div class="card card-color" style="position: relative; left: 0px; top: 0px;">' +
                                 '<div class="card-header border-0 ui-sortable-handle" style="cursor: move;">' +
                                 '<h3 class="card-title">' +
-                                '<i class="fas fa-th mr-1"></i>' + this.nome.substr(0, 19) +
+                                '<i class="fas fa-th mr-1"></i>' + this.nome.substr(0, 16) +
                                 '</h3>' +
                                 '<div class="card-tools mr-2 mb-1">' +
                                 '<button type="button" class="btn btn-outline-light btn-sm" data-card-widget="collapse">' +
                                 '<i class="fas fa-minus"></i>' +
                                 '</button>' +
-                                '<button type="button" class="btn btn-outline-light btn-sm" data-card-widget="remove">' +
+                                '<button type="button" class="btn btn-outline-light btn-sm" >' +
                                 '<i class="fas fa-times"></i>' +
                                 '</button>' +
                                 '</div>' +
@@ -329,7 +360,8 @@ function CarregarCardsTODO() {
                                 '</div>' +
                                 '</li>';
                         });
-                        startSearch += startSearch;;
+
+                        startSearch += startSearch;
                     }
                 }
                 $(".loader").hide("fast", function () {
@@ -343,7 +375,7 @@ function CarregarCardsTODO() {
         });
     }
     else {
-
+        toastr.error('Pesquisa deve conter ao menos 3 caracteres!')
     }
 }
 $("#searchKPIGrupo").change(function () {
@@ -405,59 +437,6 @@ function ExcluirKPICard(id) {
         return false;
     });
 }
-function AtualizarSortable(resultado) {
-    resultado.then(function (data) {
-        let html = '';
-        let proximoContatoComCliente
-        let naoAgendado = 'Não agendado';
-        let produto = '';
-        let cliente = '';
-        let corretor = '';
-        let sortable = $('.sortable');
-        for (var k = 0; k < sortable.length; k++) {
-            sortable[k].innerHTML = '';
-        }
-        if (data.faseProposta != undefined) {
-            for (i in data.faseProposta) {
-                for (j in data.proposta) {
-
-                    if (data.proposta[j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-                        proximoContatoComCliente = data.proposta[j].proximoContatoComCliente == undefined ? new Date(data.proposta[j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
-                        produto = data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
-                        cliente = data.proposta[j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.proposta[j].idClienteNavigation.nome, 16) : data.proposta[j].idClienteNavigation.nome;
-                        corretor = data.proposta[j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.proposta[j].idUsuarioCorretorNavigation.nome, 16) : data.proposta[j].idUsuarioCorretorNavigation.nome;
-                        html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.proposta[j].idProposta + '" data-valorprevisto="' + data.proposta[j].valorPrevisto + '">\
-                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.proposta[j].idProposta + ')>\
-                                            <p style="margin-top:10px;" title="' + data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
-                                            <p title="' + data.proposta[j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
-                                            <p title="' + data.proposta[j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
-                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.proposta[j].idProposta + '"' + formatter.format(data.proposta[j].valorPrevisto) + ' "> ' + formatter.format(data.proposta[j].valorPrevisto) + '</p>\
-                                            <p><strong>Data:</strong> ' + new Date(data.proposta[j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.proposta[j].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
-                                            <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
-                                        </a>\
-                                    </li>';
-
-                    }
-                    if (html != '')
-                        $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
-                    html = '';
-                }
-
-            }
-        }
-        AtualizarCardsKPIGrupo();
-    }, function () {
-        console.log("Deu problema na requisição");
-    });
-
-    function AtualizarCardsKPIGrupo() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhum usuário atribuido</li>');
-            }
-        }
-    }
-}
 
 function SalvarKPIGrupo() {
     $('#ButtonSalvarKPIGrupo').on('click', function (evt) {
@@ -471,7 +450,7 @@ function SalvarKPIGrupo() {
             $('#KPIGrupoMensagemIcon').addClass(data.mensagem.iconClass);
             $('#KPIGrupoMensagemSpan').text(data.mensagem.mensagem);
         });
-        AtualizarCardsKPIGrupo();
+
     });
 }
 
@@ -482,10 +461,7 @@ function CadastroGrupos() {
             receive: function (e, ui) {
                 var grupo_id = $(ui.item).parent(".sortable").data(
                     "grupo-id");
-                console.log(grupo_id)
                 var usuario_id = $(ui.item).data("user-id");
-
-                console.log(ui.item)
                 $.ajax({
                     url: '/KPIGrupo?handler=Edit&grupoId=' + grupo_id + '&usuarioId=' + usuario_id,
                     success: function (data) {
@@ -495,19 +471,12 @@ function CadastroGrupos() {
                                     $('#sort' + grupo_id + ' li').eq(i).remove();
                                 }
                             }
-                            AtualizarCardsKPIGrupo();
+                            toastr.success("Salvo com sucesso!");
                         }
                     }
                 });
             }
 
         }).disableSelection();
-
-    function AtualizarCardsKPIGrupo() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhum usuário atribuido</li>');
-            }
-        }
-    }
 }
+

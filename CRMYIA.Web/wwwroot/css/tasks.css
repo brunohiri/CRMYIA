@@ -96,3 +96,32 @@ ul {
 .status-card {
     width: 220px;
 }
+.task-board::-webkit-scrollbar {
+    width: 12px; /* width of the entire scrollbar */
+}
+
+.task-board::-webkit-scrollbar-track {
+    background: #3E3E3E; /* color of the tracking area */
+}
+
+.task-board::-webkit-scrollbar-thumb {
+    background-color: #666; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid RGBA(62,62,62,0.28); /* creates padding around scroll thumb */
+    margin: 1px;
+}
+
+.sortable::-webkit-scrollbar {
+    width: 12px; /* width of the entire scrollbar */
+}
+
+.sortable::-webkit-scrollbar-track {
+    background: #3E3E3E; /* color of the tracking area */
+}
+
+.sortable::-webkit-scrollbar-thumb {
+    background-color: #666; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+    border: 3px solid RGBA(62,62,62,0.28); /* creates padding around scroll thumb */
+    margin: 1px;
+}

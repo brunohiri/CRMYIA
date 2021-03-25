@@ -43,6 +43,7 @@ namespace CRMYIA.Web.Pages
         public List<KPIMetaVida> ListKPIMetaVida { get; set; }
         [BindProperty]
         public List<ListKPIRealizadoPropostaViewModel> ListKPIRealizadoProposta { get; set; }
+        public List<List<ListKPIRealizadoPropostaViewModel>> listAllRealizado { get; set; }
 
         public int? IdPerfil { get; set; }
         public decimal? Total { get; set; }
@@ -215,15 +216,27 @@ namespace CRMYIA.Web.Pages
         }
         #endregion
 
+        //        List<List<ListKPIRealizadoPropostaViewModel>> listR = new List<List<ListKPIRealizadoPropostaViewModel>>();
+
+        //            foreach (var item in ListKPIGrupoUsuario)
+        //            {
+        //                foreach (var item2 in item.KPIMeta)
+        //                {
+        //                    listR.Add(PropostaModel.GetListKPIRealizadoProposta((long) item.IdUsuario, item2.DataMinima, item2.DataMaxima));
+        //                }
+        //}
+
+
         public void CarregarLists(int perfil = 0)
         {
             ListKPIGrupo = KPIGrupoModel.GetList();
             ListKPIGrupoUsuario = KPIGrupoUsuarioModel.GetList();
+            listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
             foreach (var item in ListKPIGrupoUsuario)
             {
                 foreach (var item2 in item.KPIMeta)
                 {
-                    ListKPIRealizadoProposta = PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima);
+                    listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima));
                 }
             }
             if (perfil > 0)
