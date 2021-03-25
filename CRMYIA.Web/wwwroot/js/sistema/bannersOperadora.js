@@ -50,10 +50,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Verdana";
+        ctx.font = "20px Arial";
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 25px Verdana";
+        ctx.font = "bold 25px Arial";
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
