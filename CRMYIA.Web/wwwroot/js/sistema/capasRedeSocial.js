@@ -79,6 +79,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
         const phoneVolume = document.createElement('i');
+        phoneVolume.id = 'phoneVolumeClose';
 
         phoneVolume.setAttribute('class', 'fas fa-phone-volume');
         document.body.appendChild(phoneVolume);
@@ -102,6 +103,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome envelope => Email Unicode => f0e0
         const envelope = document.createElement('i');
+        envelope.id = 'envelopeClose';
 
         envelope.setAttribute('class', 'fas fa-envelope');
         document.body.appendChild(envelope);
@@ -127,6 +129,11 @@ function GerarFotoContato(Canvas, Img, usuario) {
         
         ctx.stroke();
 
+        const phoneVolumeClose = document.getElementById('phoneVolumeClose');
+        phoneVolumeClose.remove();
+        const envelopeClose = document.getElementById('envelopeClose');
+        envelopeClose.remove();
+
         // 1081 x 401 FACEBOOK
     } else if (canvas.width == 1081 && canvas.height == 401){
         var dimensoes = $('#' + Img);
@@ -143,6 +150,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
         const phoneVolume = document.createElement('i');
+        phoneVolume.id = 'phoneVolumeClose';
 
         phoneVolume.setAttribute('class', 'fas fa-phone-volume');
         document.body.appendChild(phoneVolume);
@@ -166,6 +174,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome envelope => Email Unicode => f0e0
         const envelope = document.createElement('i');
+        envelope.id = 'envelopeClose';
 
         envelope.setAttribute('class', 'fas fa-envelope');
         document.body.appendChild(envelope);
@@ -190,6 +199,11 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 480), (canvas.height - 217));
 
         ctx.stroke();
+
+        const phoneVolumeClose = document.getElementById('phoneVolumeClose');
+        phoneVolumeClose.remove();
+        const envelopeClose = document.getElementById('envelopeClose');
+        envelopeClose.remove();
     }
 }
 

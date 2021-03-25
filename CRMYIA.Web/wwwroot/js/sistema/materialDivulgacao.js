@@ -677,7 +677,8 @@ function GerarFotoContato(obj) {
         //################################################################################################################
 
         //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
-        const phoneVolume = document.createElement('i');
+    const phoneVolume = document.createElement('i');
+    phoneVolume.id = 'phoneVolumeClose';
 
         phoneVolume.setAttribute('class', 'fas fa-phone-volume');
         document.body.appendChild(phoneVolume);
@@ -700,7 +701,8 @@ function GerarFotoContato(obj) {
         //################################################################################################################
 
         //Icon Font Awesome envelope => Email Unicode => f0e0
-        const envelope = document.createElement('i');
+    const envelope = document.createElement('i');
+    envelope.id = 'envelopeClose';
 
         envelope.setAttribute('class', 'fas fa-envelope');
         document.body.appendChild(envelope);
@@ -719,16 +721,16 @@ function GerarFotoContato(obj) {
         ctx.font = envelopeCanvasFont;
         ctx.fillStyle = '#303030';
         ctx.textAlign = 'center';
-    //################################################################################################################
 
         ctx.fillText(obj.nome, 130, (canvas.height - 105));
         ctx.fillText(`${iconPhoneVolume}` + obj.telefone, 170, (canvas.height - 75));
         ctx.fillText(`${iconEnvelope}` + " " + obj.email, 210, (canvas.height - 45));
-
-        //var img = document.getElementById("wpp");
-        //ctx.drawImage(img, 26, (canvas.height - 72));
         ctx.stroke();
-    ///}
+
+        const phoneVolumeClose = document.getElementById('phoneVolumeClose');
+        phoneVolumeClose.remove();
+        const envelopeClose = document.getElementById('envelopeClose');
+        envelopeClose.remove();
 }
 
 function download_image(eleCanvas) {

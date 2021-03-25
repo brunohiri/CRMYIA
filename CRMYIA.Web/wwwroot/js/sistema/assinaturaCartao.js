@@ -59,6 +59,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
         const phoneVolume = document.createElement('i');
+        phoneVolume.id = 'phoneVolumeClose';
 
         phoneVolume.setAttribute('class', 'fas fa-phone-volume');
         document.body.appendChild(phoneVolume);
@@ -82,6 +83,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome envelope => Email Unicode => f0e0
         const envelope = document.createElement('i');
+        envelope.id = 'envelopeClose';
 
         envelope.setAttribute('class', 'fas fa-envelope');
         document.body.appendChild(envelope);
@@ -123,6 +125,11 @@ function GerarFotoContato(Canvas, Img, usuario) {
         //var img = document.getElementById("wpp");
         //ctx.drawImage(img, (canvas.width - 655), (canvas.height - 95));
         ctx.stroke();
+
+        const phoneVolumeClose = document.getElementById('phoneVolumeClose');
+        phoneVolumeClose.remove();
+        const envelopeClose = document.getElementById('envelopeClose');
+        envelopeClose.remove();
     }
     else if (canvas.width == 845 && canvas.height == 443) { //845 X 443 Assinatura de Email Sazonais
         var dimensoes = $('#' + Img);
@@ -140,6 +147,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
         const phoneVolume = document.createElement('i');
+        phoneVolume.id = 'phoneVolumeClose';
 
         phoneVolume.setAttribute('class', 'fas fa-phone-volume');
         document.body.appendChild(phoneVolume);
@@ -163,6 +171,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         //Icon Font Awesome envelope => Email Unicode => f0e0
         const envelope = document.createElement('i');
+        envelope.id = 'envelopeClose';
 
         envelope.setAttribute('class', 'fas fa-envelope');
         document.body.appendChild(envelope);
@@ -204,6 +213,11 @@ function GerarFotoContato(Canvas, Img, usuario) {
         //var img = document.getElementById("wpp");
         //ctx.drawImage(img, (canvas.width - 655), (canvas.height - 95));
         ctx.stroke();
+
+        const phoneVolumeClose = document.getElementById('phoneVolumeClose');
+        phoneVolumeClose.remove();
+        const envelopeClose = document.getElementById('envelopeClose');
+        envelopeClose.remove();
        
     } else if (canvas.width == 826 && canvas.height == 1280) { // 826 X 1280 Cartão de de Visita Digital
         var dimensoes = $('#' + Img);

@@ -59,9 +59,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
     //Icon Font Awesome
     const i = document.createElement('i');
+    i.id = 'iClose';
 
     i.setAttribute('class', 'fas fa-phone-square-alt');
-        document.body.appendChild(i);
+    document.body.appendChild(i);
 
     // get the styles for the icon you just made
     const iStyles = window.getComputedStyle(i);
@@ -83,6 +84,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
     //Icon Font Awesome
     const e = document.createElement('i');
+    e.id = 'eClose';
 
     e.setAttribute('class', 'fas fa-envelope-square');
     document.body.appendChild(e);
@@ -115,7 +117,12 @@ function GerarFotoContato(Canvas, Img, usuario) {
     var parte = canvas.width / 4;
     var meio = (parte * 2) - (img.width / 2);
         ctx.drawImage(img, (meio), (canvas.height - 470));
-        ctx.stroke();
+    ctx.stroke();
+
+    const iClose = document.getElementById('iClose');
+    iClose.remove();
+    const eClose = document.getElementById('eClose');
+    eClose.remove();
 }
 
 function download_image(eleCanvas) {
