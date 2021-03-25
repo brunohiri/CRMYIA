@@ -1,6 +1,9 @@
 ﻿/*Adicionado por Hiri*/
-.pull-right{
-    float:right;
+
+@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap);
+
+.pull-right {
+    float: right;
 }
 
 .pull-right-button {
