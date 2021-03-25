@@ -50,6 +50,7 @@ namespace CRMYIA.Data.Entities
         public string CaminhoFoto { get; set; }
         public string NomeFoto { get; set; }
         public string Logado { get; set; }
+        public string NomeApelido { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }

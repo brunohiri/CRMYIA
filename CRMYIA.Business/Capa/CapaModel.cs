@@ -45,22 +45,23 @@ namespace CRMYIA.Business
                         .AsNoTracking()
                         .Where(x => x.IdCapaNavigation.Ativo)
                         .Select(x => new CapaViewModel() {
+                            Id = x.IdCapaNavigation.IdCapa,
                             IdCapa = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdCapa.ToString()).ToString()),
                             Titulo = x.IdCapaNavigation.Titulo,
                             CaminhoArquivo = x.IdCapaNavigation.CaminhoArquivo,
                             NomeArquivo = x.IdCapaNavigation.NomeArquivo,
                             Width = x.IdCapaNavigation.Width.ToString(),
                             Heighgt = x.IdCapaNavigation.Height.ToString(),
-                            DataCadastro = x.IdCapaNavigation.DataCadastro,
+                            DataCadastro = x.IdCapaNavigation.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
                             Ativo = x.IdCapaNavigation.Ativo,
                             IdCapaNavigation = x.IdCapaNavigation,
                             IdRedeSocialNavigation = x.IdRedeSocialNavigation
                         })
-                        .OrderBy(o => o.DataCadastro)
+                        .OrderBy(o => o.Titulo)
                         .ToList();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

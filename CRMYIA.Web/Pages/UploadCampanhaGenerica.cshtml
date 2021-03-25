@@ -46,8 +46,9 @@
 
                     <div class="row">
 
-                        <input type="hidden" class="form-control" name="IdCampanhaArquivo" asp-for="@Model.Entity.IdCampanhaArquivo" id="IdCampanhaArquivo">
-                        <input type="hidden" class="form-control" name="CaminhoImagem" asp-for="@Model.CaminhoImagem" id="CaminhoImagem">
+                        <input type="hidden" class="form-control" name="IdCampanhaArquivo" id="IdCampanhaArquivo" value="0">
+                        <input type="hidden" class="form-control" name="CaminhoImagem"  id="CaminhoImagem" value="0">
+                        <input type="hidden" class="form-control" name="IdInformacao" id="IdInformacao" value="0">
 
                         @if (@Model.Entity.IdCampanhaArquivo! > 0)
                         {
@@ -55,13 +56,13 @@
                         }
 
                         @*<div class="col-sm-4">
-                <div class="form-group">
-                    <label for="NomeArquivoCampanha">Selecione um arquivo:</label>
-                    <div class="input-group">
-                        <input type="file" id="NomeArquivoCampanha" asp-for="@Model.NomeArquivoCampanha" name="NomeArquivoCampanha" accept=".png">
-                    </div>
-                </div>
-            </div>*@
+                            <div class="form-group">
+                                <label for="NomeArquivoCampanha">Selecione um arquivo:</label>
+                                <div class="input-group">
+                                    <input type="file" id="NomeArquivoCampanha" asp-for="@Model.NomeArquivoCampanha" name="NomeArquivoCampanha" accept=".png">
+                                </div>
+                            </div>
+                        </div>*@
 
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -70,28 +71,20 @@
                                     <option selected="selected">Selecione...</option>
                                     @foreach (var Item in Model.ListCampanha)
                                     {
-                                        if (Item.IdCampanhaReferencia == null)
-                                        {
-                                            <option value="@Item.IdCampanha"><strong>Categoria </strong>@(Item.Descricao)</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@Item.IdCampanha"><strong>SubCategoria </strong>@(Item.Descricao)</option>
-                                        }
-
+                                        <option value="@Item.IdCampanha">@(Item.Descricao)</option>
                                     }
                                 </select>
                             </div>
                         </div>
 
-                        @*<div class="col-sm-3">
-                <div class="form-group">
-                    <label>Data de Cadastro</label>
-                    <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataCadastro" readonly>
-                </div>
-            </div>*@
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Data de Cadastro</label>
+                                <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataCadastro" readonly>
+                            </div>
+                        </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Status</label>
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -104,14 +97,14 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Descrição</label>
-                                <textarea rows="3" class="form-control" placeholder="Descrição" name="Descricao" id="Descricao" asp-for="@Model.Entity.Descricao"></textarea>
+                                <textarea rows="3" class="form-control" placeholder="Descrição" name="Descricao" id="Descricao"></textarea>
                             </div>
                         </div>
 
-                        <div class="col-sm-2">
+                        @*<div class="col-sm-2">
                             <div class="form-group">
                                 <label>&emsp;</label>
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -119,43 +112,46 @@
                                     <label class="custom-control-label" for="checkedDescricao">Deseja informar uma Descrição</label>
                                 </div>
                             </div>
+                        </div>*@
+                    </div>
+
+                    <div class="row btn-adicionar-imagem" style="display: block">
+                        <div class="col-sm-12">
+                            <span class="btn btn-success fileinput-button dz-clickable my-5">
+                                <i class="fas fa-upload"></i>
+                                <span> Adicionar Imagens...</span>
+                            </span>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>As imagens devem ter no seu canto inferior esquerdo um espaço em branco.</label>
                         </div>
                     </div>
 
-                    <div class="row">
 
-                        <span class="btn btn-success fileinput-button dz-clickable my-5">
-                            <i class="fas fa-upload"></i>
-                            <span> Adicionar Imagens...</span>
-                        </span>
-                        <label>A imagem deverar ter no seu canto inferior esquerdo um espaço em branco.</label><br />
-                    </div>
-
-
-                    @*<div class="row m-2">
+                        @*<div class="row m-2">
             <div class="col-sm-6">
                 <img src="~/img/fotoCadastro/foto-cadastro.jpeg" id="imagem" width="170px" height="130px" alt="Responsive image">
             </div>
         </div>*@
 
-                    <div class="table table-striped files" id="imageUpload">
-                        <div id="template" class="file-row dz-image-preview">
-                            <!-- This is used as the file preview template -->
-                            <div>
-                                <span class="preview"><img data-dz-thumbnail></span>
-                            </div>
-                            <div>
-                                <p class="name" data-dz-name></p>
-                                <strong class="error text-danger" data-dz-errormessage></strong>
-                            </div>
-                            <div>
-                                <p class="size" data-dz-size></p>
-                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        <div class="table table-striped files" id="imageUpload">
+                            <div id="template" class="file-row dz-image-preview">
+                                <!-- This is used as the file preview template -->
+                                <div>
+                                    <span class="preview"><img data-dz-thumbnail></span>
                                 </div>
-                            </div>
-                            <div>
-                                @*<button class="btn btn-primary start">
+                                <div>
+                                    <p class="name" data-dz-name></p>
+                                    <strong class="error text-danger" data-dz-errormessage></strong>
+                                </div>
+                                <div>
+                                    <p class="size" data-dz-size></p>
+                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    @*<button class="btn btn-primary start">
                         <i class="glyphicon glyphicon-upload"></i>
                         <span>Start</span>
                     </button>
@@ -163,19 +159,23 @@
                         <i class="glyphicon glyphicon-ban-circle"></i>
                         <span>Cancel</span>
                     </button>*@
-                                <button data-dz-remove class="btn btn-danger delete">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                    <span>Excluir</span>
-                                </button>
+                                    <button data-dz-remove class="btn btn-danger delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <span>Excluir</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
 
-
+                <div class="card-footer salvar-texto" style="display: none">
+                    <button type="button" id="btn-salvar-texto" class="btn btn-success">Salvar</button>
                 </div>
-
-                <div class="card-footer">
+                <div class="card-footer upload-campanha-generica" style="display: block">
                     <button type="submit" id="btn-upload-campanha-generica" class="btn btn-success">Salvar</button>
+                    <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
                 </div>
             </form>
             <div  id="tableCamapanhaGenerica">
@@ -187,8 +187,6 @@
                                 <th></th>
                                 <th>Imagem</th>
                                 <th>Campanha</th>
-                                <th>Descrição</th>
-                                <th>Nome do Arquivo</th>
                                 <th>Cadastro</th>
                                 <th>Status</th>
                                 <th></th>
@@ -199,76 +197,26 @@
                             {
                                 foreach (var Item in Model.ListEntity)
                                 {
-
-                                    string[] vetNomeImagem = Item.NomeArquivo.Split('|');
-
-                                    if (vetNomeImagem.Length == 1)
+                                    if (Item.CaminhoArquivo != null && Item.NomeArquivo != null)
                                     {
-                                        if (Item.CaminhoArquivo != null && Item.NomeArquivo != null)
-                                        {
-                                            caminhoImagem = Item.CaminhoArquivo + Item.NomeArquivo;
-                                        }
-                                        else
-                                        {
-                                            caminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
-                                        }
-
-                                        @*<tr>
-                                            <td class="text-center"></td>
-                                            <td class="text-center"> @Html.Raw(!string.IsNullOrEmpty(caminhoImagem) ? "<img src='" + caminhoImagem + "'  style=\"width: 50px!important;\" > " : "Não")</td>
-                                            <td class="text-center">@(Item.IdCampanhaNavigation.Descricao)</td>
-                                            <td class="text-center" title="@Item.Descricao">@Html.Raw(string.IsNullOrEmpty(Item.Descricao) ? "<span class=\"badge badge-pill badge-warning\" title=\"NÃO INFORMADA\">NÃO INFORMADA</span>" : (Item.Descricao.Length > 20 ? Item.Descricao.Substring(0, 16).ToUpper() + "..." : Item.Descricao))</td>
-                                            <td>@(Item.NomeArquivo)</td>
-                                            <td>@Item.DataCadastro</td>
-                                            <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span title=\"ATIVADO\" class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span title=\"DESATIVADO\" class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
-                                            <td class="text-center">
-                                                <a asp-page="/UploadCampanhaGenerica" asp-route-id="@Item.IdCampanhaArquivo" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                                <span class="alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="@Item.IdCampanhaArquivo" data-nomearquivo="@Item.NomeArquivo" data-caminhoimagem="@caminhoImagem"><i class="fas fa-images"></i></span>
-                                                <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="@Item.IdCampanhaArquivo"><i class="fas fa-trash-alt"></i></span>
-                                            </td>
-                                        </tr>*@
+                                        caminhoImagem = Item.CaminhoArquivo + Item.NomeArquivo;
                                     }
-                                    else if (vetNomeImagem.Length > 1)
+                                    else
                                     {
-                                        foreach (var ItemVetNomeImagem in vetNomeImagem)
-                                        {
-                                            string ItemComTralha = "";
-                                            if (ItemVetNomeImagem == "")
-                                            {
-                                                ItemComTralha = "#";
-                                            }
-                                            else
-                                            {
-                                                ItemComTralha = ItemVetNomeImagem.Substring(0, 1);
-                                            }
-
-                                            if (!(ItemComTralha == "#"))
-                                            {
-                                                if (Item.CaminhoArquivo != null && ItemVetNomeImagem != null)
-                                                {
-                                                    caminhoImagem = Item.CaminhoArquivo + ItemVetNomeImagem;
-                                                }
-                                                else
-                                                {
-                                                    caminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
-                                                }
-                                                    <tr>
-                                                        <td class="text-center"></td>
-                                                        <td class="text-center"> @Html.Raw(!string.IsNullOrEmpty(caminhoImagem) ? "<img src='" + caminhoImagem + "'  style=\"width: 50px!important;\" > " : "Não")</td>
-                                                        <td class="text-center">@(Item.IdCampanhaNavigation.IdCampanhaReferencia != null ? "SubCategoria " + Item.IdCampanhaNavigation.Descricao : "Categoria " + Item.IdCampanhaNavigation.Descricao)</td>
-                                                        <td class="text-center" title="@Item.Descricao">@Html.Raw(string.IsNullOrEmpty(Item.Descricao) ? "<span class=\"badge badge-pill badge-warning\" title=\"NÃO INFORMADA\">NÃO INFORMADA</span>" : (Item.Descricao.Length > 20 ? Item.Descricao.Substring(0, 16).ToUpper() + "..." : Item.Descricao))</td>
-                                                        <td>@(ItemVetNomeImagem)</td>
-                                                        <td>@Item.DataCadastro</td>
-                                                        <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span title=\"ATIVADO\" class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span title=\"DESATIVADO\" class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
-                                                        <td class="text-center">
-                                                            <a asp-page="/UploadCampanhaGenerica" asp-route-id="@Item.IdCampanhaArquivo" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                                            <span class="btn alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="@Item.IdCampanhaArquivo" data-nomearquivo="@ItemVetNomeImagem" data-caminhoimagem="@caminhoImagem"><i class="fas fa-images"></i></span>
-                                                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="@Item.IdCampanhaArquivo" data-nomearquivo="@ItemVetNomeImagem"><i class="fas fa-trash-alt"></i></span>
-                                                        </td>
-                                                    </tr>
-                                            }
-                                        }
+                                        caminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
                                     }
+                                    <tr>
+                                        <td class="text-center"></td>
+                                        <td class="text-center"> @Html.Raw(!string.IsNullOrEmpty(caminhoImagem) ? "<img src='" + caminhoImagem + "'  style=\"width: 50px!important;\" > " : "Não")</td>
+                                        <td class="text-center">@Item.IdCampanhaNavigation.Descricao</td>
+                                        <td class="text-center">@Item.DataCadastro</td>
+                                        <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span title=\"ATIVADO\" class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span title=\"DESATIVADO\" class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                        <td class="text-center">
+                                            <span class="btn alterar-titulo" title="Editar Texto" data-idcampanhaarquivo="@Item.IdCampanhaArquivo"><i class="icon fas fa-edit"></i></span>
+                                            <span class="btn alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="@Item.IdCampanhaArquivo" data-nomearquivo="@Item.NomeArquivo" data-caminhoimagem="@caminhoImagem"><i class="fas fa-images"></i></span>
+                                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="@Item.IdCampanhaArquivo" data-nomearquivo="@Item.NomeArquivo"><i class="fas fa-trash-alt"></i></span>
+                                        </td>
+                                    </tr>
                                 }
                             }
                         </tbody>

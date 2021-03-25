@@ -7,13 +7,14 @@ namespace CRMYIA.Data.ViewModel
 {
     public class CapaViewModel
     {
+        public long Id { get; set; }
         public string IdCapa { get; set; }
         public string Titulo { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
         public string Width { get; set; }
         public string Heighgt { get; set; }
-        public DateTime DataCadastro { get; set; }
+        public string DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
         public virtual Capa IdCapaNavigation { get; set; }

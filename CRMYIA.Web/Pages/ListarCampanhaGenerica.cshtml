@@ -35,7 +35,7 @@
                                     <td></td>
                                     <td class="text-center"><img src="@Item.CaminhoArquivo@Item.NomeArquivo" style="width: 50px!important;" /></td>
                                     <td class="text-center">@Item.Descricao.ToUpper()</td>
-                                    <td class="text-center">@Html.Raw(Item.IdCampanhaReferencia == null ? "<span class=\"badge badge-pill badge-success\">CATEGORIA</span>" : "<span class=\"badge badge-pill badge-warning\">SUBCATEGORIA DE " + Item.IdCampanhaReferenciaNavigation.Descricao.ToUpper() + "</span>")</td>
+                                    @*<td class="text-center">@Html.Raw(Item.IdCampanhaReferencia == null ? "<span class=\"badge badge-pill badge-success\">CATEGORIA</span>" : "<span class=\"badge badge-pill badge-warning\">SUBCATEGORIA DE " + Item.IdCampanhaReferenciaNavigation.Descricao.ToUpper() + "</span>")</td>*@
                                     <td class="text-center">@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                     <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
                                     <td class="text-center">

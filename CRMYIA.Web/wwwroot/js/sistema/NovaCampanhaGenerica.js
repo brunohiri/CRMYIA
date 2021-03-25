@@ -61,9 +61,7 @@ $(document).on('click', '.btn-salvar-campanha',function (evt) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function (repo) {
-            if (repo.status == "success") {
-                alert("File : " + repo.filename + " is uploaded successfully");
-            }
+            document.getElementById("salvar-campanha").reset();
         },
         error: function () {
             alert("Error occurs");

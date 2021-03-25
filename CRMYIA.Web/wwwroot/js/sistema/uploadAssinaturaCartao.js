@@ -15,14 +15,14 @@ $(document).ready(function () {
 
     $("#upload-assinatura-cartao").dropzone({
         paramName: "files", // The name that will be used to transfer the file
-        maxFiles: 2000,
+        maxFiles: 1,
         parallelUploads: 128,
         url: "/UploadAssinaturaCartao?handler=UploadAssinaturaCartao",
         previewsContainer: "#imageUpload", // Define the container to display the previews
         //params: JSON.stringify(obj),
         acceptedFiles: '.png,.jpg,.jpeg,.gif',
         autoProcessQueue: false,
-        uploadMultiple: false,
+      /*  uploadMultiple: true,*/
         previewTemplate: previewTemplate,
         clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
         init: function () {
@@ -40,13 +40,13 @@ $(document).ready(function () {
             });
 
             this.on('sending', function (file, xhr, formData) {
-                if (VerificaNomeArquivo(file.name)) {
+                if (VerificaNomeArquivoAssinaturaCartao(file.name)) {
                     //formData.append('IdAssinaturaCartao', $('#IdAssinaturaCartao').val());
                     //formData.append('Titulo', $('#Titulo').val());
                     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
                 } else {
                     myDropzone.removeAllFiles(true);
-                    swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO - REDES_SOCIAIS - [LOCAL_DA_POSTAGEM].EXTENSAO</span>", "error");
+                    swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO - TEMA_DA_ASSINATURA.EXTENSAO</span>", "error");
                 }
             });
 
@@ -179,17 +179,73 @@ $(document).on('click', '.alterar-titulo', function () {
             },
             success: function (data) {
                 if (data.status) {
-                    console.log(data);
+                    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
                     $('#Titulo').val(data.entityLista.titulo);
                     $('#Titulo').focus();
+
+                    $('.salvar-texto').css('display', 'block');
+                    $('.upload-assinatura-cartao').css('display', 'none');
+                    $('.btn-adicionar-imagem').css('display', 'none');
                 }
             },
             error: function () {
-                alert("Error occurs");
+                swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
             }
         });
     }
 
+});
+
+$(document).on('click', '#btn-salvar-texto', function () {
+
+    formData = new FormData();
+    formData.append('IdAssinaturaCartao', $('#IdAssinaturaCartao').val())
+    formData.append('Titulo', $('#Titulo').val());
+    $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
+    if ($("#Titulo").val() != undefined)
+        displayBusyIndicator()
+    $.ajax({
+        type: 'POST',
+        url: "/UploadAssinaturaCartao?handler=UploadAssinaturaCartao",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (data) {
+            if (data.status) {
+
+                $('#tableAssinaturaCartao').html('');
+                CarregarTabela(data.entityLista);
+
+                $('#UploadCapaRedeSoCialMensagemDiv').show();
+                $('#UploadCapaRedeSoCialMensagemDivAlert').removeClass();
+                $('#UploadCapaRedeSoCialMensagemDivAlert').addClass(data.mensagem.cssClass);
+
+                $('#UploadCapaRedeSoCialMensagemIcon').removeClass();
+                $('#UploadCapaRedeSoCialMensagemIcon').addClass(data.mensagem.iconClass);
+                $('#UploadCapaRedeSoCialMensagemSpan').text(data.mensagem.mensagem);
+                document.getElementById("upload-assinatura-cartao").reset();
+                $("#IdCampanha").select2('val', '0');
+                $("#IdCampanha").select2({
+                    placeholder: "Selecione...",
+                    allowClear: true
+                });
+
+                $('.salvar-texto').css('display', 'none');
+                $('.upload-assinatura-cartao').css('display', 'block');
+                $('.btn-adicionar-imagem').css('display', 'block');
+            }
+            setTimeout(function () { $('#UploadCapaRedeSoCialMensagemDiv').css('display', 'none'); }, 5000);
+        },
+        error: function () {
+            swal("Erro!", "Erro ao alterar o registro, contate o Administrador do Sistema.", "error");
+        }
+    });
+    displayBusyAvailable()
 });
 
 $(document).on('click', '.excluir-imagem', function () {
@@ -243,6 +299,7 @@ $(document).on('click', '.excluir-imagem', function () {
 function CarregarTabela(data) {
     var html = '';
     if (data) {
+        $('#tableAssinaturaCartao').html(html);
         html += '<div class="card-body table-responsive">\
                         <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style = "width:100%">\
                             <thead>\
@@ -257,7 +314,7 @@ function CarregarTabela(data) {
                             </thead>\
                             <tbody>';
         $.each(data, function (index, value) {
-            var ativo = this.ativo = 'true' ? '<span class="badge badge-pill badge - success">ATIVO</span>' : '<span class="badge badge-pill badge-warning">DESATIVADO</span>';
+            var ativo = this.ativo = 'true' ? '<span class="badge badge-pill badge-success">ATIVO</span>' : '<span class="badge badge-pill badge-warning">DESATIVADO</span>';
             html += '<tr>\
                         <td></td>\
                         <td><img src="' + this.caminhoArquivo + this.nomeArquivo + '" style="max-width: 100px!important;" alt="Capa"></td>\
@@ -275,7 +332,7 @@ function CarregarTabela(data) {
                     </table>\
                 </div>';
 
-        $('#tableCapaRedeSocial').html(html);
+        $('#tableAssinaturaCartao').html(html);
         InitDatatables();
     }
 }

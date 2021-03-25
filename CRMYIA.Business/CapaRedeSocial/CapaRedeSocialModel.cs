@@ -43,6 +43,21 @@ namespace CRMYIA.Business
                 throw;
             }
         }
+        public static void Update(CapaRedeSocial Entity)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    context.CapaRedeSocial.Update(Entity);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

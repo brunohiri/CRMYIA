@@ -21,30 +21,33 @@
                         <div class="card">
                         
                             <div class="card-header">
-                            
-                                <h4 class="card-title">@Item.IdCapaNavigation.Titulo</h4>
+                                @if (Item.IdRedeSocialNavigation.Nome.ToUpper() == "FACEBOOK")
+                                {
+                                    <h4 class="card-title">Banner Facebook - @Item.IdCapaNavigation.Titulo</h4>
+                                }
+                                else if (Item.IdRedeSocialNavigation.Nome.ToUpper() == "LINKEDIN")
+                                {
+                                    <h4 class="card-title">Banner Linkedin - @Item.IdCapaNavigation.Titulo</h4>
+                                }
                             </div>
                             <div class="card-body filtro-banners">
 
-                                <!--Imagem Inicio-->
-                                @*@if (Item.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('FACEBOOK') > -1)
-        {*@
-                                @if (Item.IdRedeSocialNavigation.Nome.ToUpper() == "FACEBOOK")
+                                       @if (Item.IdRedeSocialNavigation.Nome.ToUpper() == "FACEBOOK")
                                 {
                                     <div style="text-align: center;">
-                                        <button class="btn btn-redesocial btn-filtro-facebook botao-rede-social" type="button" data-canvas="canvas-facebook-@Item.IdRedeSocialNavigation.IdRedeSocial" data-img="img-facebook-@Item.IdRedeSocialNavigation.IdRedeSocial" data-descricao="descricao-facebook-@Item.IdRedeSocialNavigation.IdRedeSocial" data-usuario="@Model.UsuarioEntity.Nome|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#multiCollapseFacebook-@Item.IdRedeSocialNavigation.IdRedeSocial" aria-expanded="false" aria-controls="multiCollapseFacebook-@Item.IdRedeSocialNavigation.IdRedeSocial"><i class="fab fa-facebook-f"></i> &nbsp; Banners Facebook &nbsp; <i class="fas fa-chevron-down"></i></button>
+                                        <button class="btn btn-redesocial btn-filtro-facebook botao-rede-social" type="button" data-canvas="canvas-facebook-@Item.Id" data-img="img-facebook-@Item.Id" data-descricao="descricao-facebook-@Item.Id" data-usuario="@Model.UsuarioEntity.Nome|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#multiCollapseFacebook-@Item.Id" aria-expanded="false" aria-controls="multiCollapseFacebook-@Item.Id"><i class="fab fa-facebook-f"></i> &nbsp; Banners Facebook &nbsp; <i class="fas fa-chevron-down"></i></button>
                                     </div>
-                                    <div class="collapse multi-collapse" id="multiCollapseFacebook-@Item.IdRedeSocialNavigation.IdRedeSocial">
+                                    <div class="collapse multi-collapse" id="multiCollapseFacebook-@Item.Id">
 
                                         <div class="p-2 flex-fill bd-highlight">
 
-                                            <div class="material-divulgacao-imagem">
+                                            <div class="material-divulgacao-imagem-capa">
 
-                                                <canvas style="display:none" width="@Item.Width" height="@Item.Heighgt" id="canvas-facebook-@Item.IdRedeSocialNavigation.IdRedeSocial"> </canvas>
-                                                <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-facebook-@Item.IdRedeSocialNavigation.IdRedeSocial" alt="white sample" />
+                                                <canvas style="display:none" width="@Item.Width" height="@Item.Heighgt" id="canvas-facebook-@Item.Id"> </canvas>
+                                                <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-facebook-@Item.Id" alt="white sample" />
                                                 <div class="text-center m-2">
 
-                                                    <button onclick=download_image("canvas-facebook-@Item.IdRedeSocialNavigation.IdRedeSocial") type="button" class="btn btn-success m-5">Download</button>
+                                                    <button onclick=download_image("canvas-facebook-@Item.Id") type="button" class="btn btn-success m-5">Download</button>
                                                 </div>
                                             </div>
 
@@ -55,19 +58,19 @@
                                 @if(Item.IdRedeSocialNavigation.Nome.ToUpper() == "LINKEDIN")
                                 {
                                     <div style="text-align: center;">
-                                        <button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="canvas-linkedin-@Item.IdRedeSocialNavigation.IdRedeSocial" data-img="img-linkedin-@Item.IdRedeSocialNavigation.IdRedeSocial" data-descricao="descricao-linkedin-@Item.IdRedeSocialNavigation.IdRedeSocial" data-usuario="@Model.UsuarioEntity.Nome|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#multiCollapseLinkedin-@Item.IdRedeSocialNavigation.IdRedeSocial" aria-expanded="false" aria-controls="multiCollapseLinkedin-@Item.IdRedeSocialNavigation.IdRedeSocial"><i class="fab fa-linkedin-f"></i> &nbsp; Banners Linkedin &nbsp; <i class="fas fa-chevron-down"></i></button>
+                                        <button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="canvas-linkedin-@Item.Id" data-img="img-linkedin-@Item.Id" data-descricao="descricao-linkedin-@Item.Id" data-usuario="@Model.UsuarioEntity.Nome|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#multiCollapseLinkedin-@Item.Id" aria-expanded="false" aria-controls="multiCollapseLinkedin-@Item.Id"><i class="fab fa-linkedin-f"></i> &nbsp; Banners Linkedin &nbsp; <i class="fas fa-chevron-down"></i></button>
                                     </div>
-                                    <div class="collapse multi-collapse" id="multiCollapseLinkedin-@Item.IdRedeSocialNavigation.IdRedeSocial">
+                                    <div class="collapse multi-collapse" id="multiCollapseLinkedin-@Item.Id">
 
                                         <div class="p-2 flex-fill bd-highlight">
 
-                                            <div class="material-divulgacao-imagem">
+                                            <div class="material-divulgacao-imagem-capa">
 
-                                                <canvas style="display:none" width="@Item.Width" height="@Item.Heighgt" id="canvas-linkedin-@Item.IdRedeSocialNavigation.IdRedeSocial"> </canvas>
-                                                <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-linkedin-@Item.IdRedeSocialNavigation.IdRedeSocial" alt="white sample" />
+                                                <canvas style="display:none" width="@Item.Width" height="@Item.Heighgt" id="canvas-linkedin-@Item.Id"> </canvas>
+                                                <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-linkedin-@Item.Id" alt="white sample" />
                                                 <div class="text-center m-2">
 
-                                                    <button onclick=download_image("canvas-linkedin-@Item.IdRedeSocialNavigation.IdRedeSocial") type="button" class="btn btn-success m-5">Download</button>
+                                                    <button onclick=download_image("canvas-linkedin-@Item.Id") type="button" class="btn btn-success m-5">Download</button>
                                                 </div>
                                             </div>
 

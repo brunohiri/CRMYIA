@@ -93,6 +93,7 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
+                        .Include(x => x.IdInformacaoNavigation)
                         .OrderBy(o => o.IdCampanha)
                         .AsNoTracking()
                         .ToList();
@@ -113,8 +114,9 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
-                        .Where(x => x.IdCampanhaArquivo == Id)
-                        .OrderBy(o => o.Descricao)
+                        .Include(x => x.IdInformacaoNavigation)
+                        .Where(x => x.IdCampanhaNavigation.IdCampanha == Id)
+                        .OrderBy(o => o.IdCampanhaNavigation.Descricao)
                         .AsNoTracking()
                         .ToList();
                 }
@@ -135,6 +137,7 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
+                        .Include(x => x.IdInformacaoNavigation)
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .Select(x => new MaterialDivulgacaoViewModel
@@ -143,7 +146,7 @@ namespace CRMYIA.Business
                             //System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanhaArquivo.ToString()))
                             IdCampanhaArquivo = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdCampanhaArquivo.ToString()).ToString()),
                             IdCampanha = x.IdCampanha.ToString(),
-                            Descricao = x.Descricao,
+                            Descricao = x.IdInformacaoNavigation.Descricao,
                             CaminhoArquivo = x.CaminhoArquivo,
                             NomeArquivo = x.NomeArquivo,
                             DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),

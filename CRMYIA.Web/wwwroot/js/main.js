@@ -1035,3 +1035,14 @@ function VerificaNomeArquivo(data) {
         return false;
     }
 }
+
+function VerificaNomeArquivoAssinaturaCartao(data) {
+    var nome = data.split('-');
+
+    if (nome.length == 2) {
+        console.log(nome);
+        return true;
+    } else {
+        return false;
+    }
+}

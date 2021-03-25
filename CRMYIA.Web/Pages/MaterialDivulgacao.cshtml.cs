@@ -55,14 +55,86 @@ namespace CRMYIA.Web.Pages
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
+            int i;
+
+            long IdCampanhaArquivo = 0;
+            long? IdCampanha = 0;
+            string Descricao = "";
+            string CaminhoArquivo = "";
+            string NomeArquivo = "";
+            string Width = "";
+            string Height = "";
+            string RedesSociais = "";
+            string TipoPostagem = "";
+            DateTime DataCadastro = DateTime.MinValue;
+            bool Ativo = false;
+            Campanha IdCampanhaNavigation = new Campanha();
+
+            List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
             List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
             List<Campanha> Campanha = CampanhaModel.GetListOrderById();
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-            if (CampanhaArquivo != null && Campanha != null)
+
+            foreach (var ItemCampanha in Campanha)
+            {
+                i = 0;
+                foreach (var ItemCampanhaArquivo in CampanhaArquivo)
+                {
+                    if (ItemCampanha.IdCampanha == ItemCampanhaArquivo.IdCampanha)
+                    {
+
+                        if (i + 1 < CampanhaArquivo.Count)
+                        {
+                            NomeArquivo += ItemCampanhaArquivo.NomeArquivo + "|";
+                            Width += ItemCampanhaArquivo.Width + "|";
+                            Height += ItemCampanhaArquivo.Height + "|";
+                        }
+                        else
+                        {
+                            NomeArquivo += ItemCampanhaArquivo.NomeArquivo;
+                            Width += ItemCampanhaArquivo.Width;
+                            Height += ItemCampanhaArquivo.Height;
+                          
+                        }
+                        IdCampanhaArquivo = ItemCampanhaArquivo.IdCampanhaArquivo;
+                        IdCampanha = ItemCampanhaArquivo.IdCampanha;
+                        Descricao = ItemCampanhaArquivo.IdInformacaoNavigation.Descricao;
+                        CaminhoArquivo = ItemCampanhaArquivo.CaminhoArquivo;
+                        RedesSociais = ItemCampanhaArquivo.RedesSociais;
+                        TipoPostagem = ItemCampanhaArquivo.TipoPostagem;
+                        DataCadastro = ItemCampanhaArquivo.DataCadastro;
+                        Ativo = ItemCampanhaArquivo.Ativo;
+                        IdCampanhaNavigation = ItemCampanhaArquivo.IdCampanhaNavigation;
+
+                    }
+                    i++;
+                }
+
+                AuxCampanhaArquivo.Add(new CampanhaArquivoViewModel()
+                {
+                    IdCampanhaArquivo = IdCampanhaArquivo,
+                    IdCampanha = IdCampanha,
+                    Descricao = Descricao,
+                    CaminhoArquivo = CaminhoArquivo,
+                    NomeArquivo = NomeArquivo,
+                    Width = Width,
+                    Height = Height,
+                    RedesSociais = RedesSociais,
+                    TipoPostagem = TipoPostagem,
+                    DataCadastro = DataCadastro,
+                    Ativo = Ativo,
+                    IdCampanhaNavigation = IdCampanhaNavigation
+                });
+                NomeArquivo = "";
+                Width = "";
+                Height = "";
+
+            }  
+            if (AuxCampanhaArquivo != null && Campanha != null)
             {
                 status = true;
             }
-            return new JsonResult(new { status = status, campanhaArquivo = CampanhaArquivo, campanha = Campanha, usuarioEntity = UsuarioEntity });
+            return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = Campanha, usuarioEntity = UsuarioEntity });
         }
 
         private void ListsCampanhaId(string Id = null)

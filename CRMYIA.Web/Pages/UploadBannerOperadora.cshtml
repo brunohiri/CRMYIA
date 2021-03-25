@@ -29,11 +29,12 @@
 
                     <div class="row">
                         <input type="hidden" name="IdBanner" id="IdBanner" value="0" />
-                        
+                        <input type="hidden" name="IdInformacao" id="IdInformacao" value="0" />
+
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Seguradora/Operadora *</label>
-                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdOperadora" id="PropostaIdOperadora">
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdOperadora" id="IdOperadora">
                                     <option selected="selected" value="0">Selecione...</option>
                                     @foreach (var Item in Model.ListOperadora)
                                     {
@@ -66,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row btnsalvar">
                         <span class="btn btn-success fileinput-button dz-clickable my-5">
                             <i class="fas fa-upload"></i>
                             <span> Adicionar Imagens...</span>
@@ -107,41 +108,42 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" id="btn-upload-banner-operadora" class="btn btn-success">Salvar</button>
-                    <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
+                    <div id="add-btn"></div>
+                    <button type="submit" id="btn-upload-banner-operadora" class="btn btn-success btnsalvar">Salvar</button>
+                    <button type="reset" class="btn btn-default btnsalvar" onclick="javascript:history.go(-1)">Voltar</button>
                 </div>
 
             </form>
 
-            <div id="tableCapaRedeSocial">
+            <div id="tableBannerOperadora">
                 <div class="card-body table-responsive">
                     <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
                         <thead>
                             <tr>
                                 <th></th>
                                 <th>Imagem</th>
-                                <th>Titulo</th>
+                                @*<th>Descrição</th>*@
                                 <th>Cadastro</th>
                                 <th>Status</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (var Item in Model.ListAssinaturaCartao)
+                            @foreach (var Item in Model.ListBannerOperadora)
                                 {
                                     <tr>
                                         <td></td>
                                         <td><img src="@Item.CaminhoArquivo@Item.NomeArquivo" style="max-width: 100px!important;" alt="Capa"></td>
-                                        <td>@Item.Titulo</td>
+                                        @*<td>@Item.Descricao</td>*@
                                         <td>@Item.DataCadastro</td>
                                         <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
                                         <td>
-                                            <span class="btn alterar-titulo" title="Editar Titulo" data-idassinaturacartao="@Item.IdAssinaturaCartao"><i class="icon fas fa-edit"></i></span>
-                                            <span class="btn alterar-imagem" title="Editar Imagem" data-idassinaturacartao="@Item.IdAssinaturaCartao" data-nomearquivo="@Item.NomeArquivo" data-caminho="@Item.CaminhoArquivo"><i class="fas fa-images"></i></span>
-                                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idassinaturacartao="@Item.IdAssinaturaCartao" data-nomearquivo="@Item.NomeArquivo"><i class="fas fa-trash-alt"></i></span>
+                                            <span class="btn alterar-titulo" title="Editar Titulo" data-idbanner="@Item.IdBanner"><i class="icon fas fa-edit"></i></span>
+                                            <span class="btn alterar-imagem" title="Editar Imagem" data-idbanner="@Item.IdBanner" data-nomearquivo="@Item.NomeArquivo" data-caminho="@Item.CaminhoArquivo"><i class="fas fa-images"></i></span>
+                                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idbanner="@Item.IdBanner" data-nomearquivo="@Item.NomeArquivo"><i class="fas fa-trash-alt"></i></span>
                                         </td>
                                     </tr>
-                                }*@
+                                }
                         </tbody>
                     </table>
                 </div>
@@ -161,7 +163,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body modal-alterar-upload-assinatura-cartao">
+            <div class="modal-body modal-alterar-upload-banner-operadora">
 
                 <div class="row" id="ModalAlterarImagemMensagemDiv" style="display: none;">
                     <div class="col-sm-12">
@@ -179,7 +181,7 @@
                     <img src="" id="imagem" style="max-width: 300px;" alt="Alterar Imagem" />
                 </div>
 
-                <form role="form" id="alterar-upload-assinatura-cartao" method="post" enctype="multipart/form-data">
+                <form role="form" id="alterar-upload-banner-operadora" method="post" enctype="multipart/form-data">
 
                     <div class="table table-striped files" id="imageUploadAlterar">
                         <div id="template-alterar" class="file-row dz-image-preview">
@@ -221,7 +223,7 @@
                             <span> Adicionar Imagens...</span>
                         </span>
 
-                        <button type="submit" id="btn-alterar-upload-assinatura-cartao" class="btn btn-primary">Alterar</button>
+                        <button type="submit" id="btn-alterar-upload-banner-operadora" class="btn btn-primary">Alterar</button>
                     </div>
                 </form>
 

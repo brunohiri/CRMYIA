@@ -63,8 +63,8 @@ function GerarFotoContato(Canvas, Img, usuario) {
     var canvas = document.getElementById(Canvas),
     
         ctx = canvas.getContext('2d');
-    //2161X 801
-    if (canvas.width == 2161 && canvas.height == 801) {
+    // 1081 X 274 LINKEDIN
+    if (canvas.width == 1081 && canvas.height == 274) {
         var dimensoes = $('#' + Img);
         canvas.crossOrigin = "Anonymous";
 
@@ -77,14 +77,58 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
-        ctx.fillText(usuario.nome, (canvas.width - 600), (canvas.height - 90));
-        ctx.fillText('E-mail: ' + usuario.email, (canvas.width - 600), (canvas.height - 60));
-        ctx.fillText('   ' + usuario.telefone, (canvas.width - 350), 150);
+        //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
+        const phoneVolume = document.createElement('i');
 
-        //var img = document.getElementById("wpp");
-        //ctx.drawImage(img, 26, (canvas.height - 72));
+        phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+        document.body.appendChild(phoneVolume);
+
+        // get the styles for the icon you just made
+        const phoneVolumeStyles = window.getComputedStyle(phoneVolume);
+        const phoneVolumeBeforeStyles = window.getComputedStyle(phoneVolume, ':before');
+
+        const phoneVolumeFontFamily = phoneVolumeStyles.getPropertyValue('font-family');
+        const phoneVolumeFontWeight = phoneVolumeStyles.getPropertyValue('font-weight');
+        const phoneVolumeFontSize = '15px'; // just to make things a little bigger...
+
+        const phoneVolumeCanvasFont = `${phoneVolumeFontWeight} ${phoneVolumeFontSize} ${phoneVolumeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+        const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+        ctx.font = phoneVolumeCanvasFont;
+        ctx.fillStyle = '#303030';
+        ctx.textAlign = 'center';
+
+        //########################################################
+
+        //Icon Font Awesome envelope => Email Unicode => f0e0
+        const envelope = document.createElement('i');
+
+        envelope.setAttribute('class', 'fas fa-envelope');
+        document.body.appendChild(envelope);
+
+        // get the styles for the icon you just made
+        const envelopeStyles = window.getComputedStyle(envelope);
+        const envelopeBeforeStyles = window.getComputedStyle(envelope, ':before');
+
+        const envelopeFontFamily = envelopeStyles.getPropertyValue('font-family');
+        const envelopeFontWeight = envelopeStyles.getPropertyValue('font-weight');
+        const envelopeFontSize = '15px'; // just to make things a little bigger...
+
+        const envelopeCanvasFont = `${envelopeFontWeight} ${envelopeFontSize} ${envelopeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+        const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+        ctx.font = envelopeCanvasFont;
+        ctx.fillStyle = '#303030';
+        ctx.textAlign = 'center';
+
+        ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 135), (canvas.height - 68));
+        ctx.fillText(usuario.nome, (canvas.width - 105), (canvas.height - 48));
+        ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 110), (canvas.height - 28));
+        
         ctx.stroke();
-    } else if (canvas.width == 2161 && canvas.height == 546){
+
+        // 1081 x 401 FACEBOOK
+    } else if (canvas.width == 1081 && canvas.height == 401){
         var dimensoes = $('#' + Img);
         canvas.crossOrigin = "Anonymous";
 
@@ -97,14 +141,54 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
-        ctx.fillText(usuario.nome, (canvas.width - 600), (canvas.height - 90));
-        ctx.fillStyle = '#000000';
-        ctx.fillText('E-mail: ' + usuario.email, (canvas.width - 600), (canvas.height - 60));
-        ctx.fillStyle = '#4267B2';
-        ctx.fillText('   ' + usuario.telefone, (canvas.width - 350), 150);
+        //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
+        const phoneVolume = document.createElement('i');
 
-        //var img = document.getElementById("wpp");
-        //ctx.drawImage(img, 26, (canvas.height - 72));
+        phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+        document.body.appendChild(phoneVolume);
+
+        // get the styles for the icon you just made
+        const phoneVolumeStyles = window.getComputedStyle(phoneVolume);
+        const phoneVolumeBeforeStyles = window.getComputedStyle(phoneVolume, ':before');
+
+        const phoneVolumeFontFamily = phoneVolumeStyles.getPropertyValue('font-family');
+        const phoneVolumeFontWeight = phoneVolumeStyles.getPropertyValue('font-weight');
+        const phoneVolumeFontSize = '15px'; // just to make things a little bigger...
+
+        const phoneVolumeCanvasFont = `${phoneVolumeFontWeight} ${phoneVolumeFontSize} ${phoneVolumeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+        const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+        ctx.font = phoneVolumeCanvasFont;
+        ctx.fillStyle = '#303030';
+        ctx.textAlign = 'center';
+
+        //########################################################
+
+        //Icon Font Awesome envelope => Email Unicode => f0e0
+        const envelope = document.createElement('i');
+
+        envelope.setAttribute('class', 'fas fa-envelope');
+        document.body.appendChild(envelope);
+
+        // get the styles for the icon you just made
+        const envelopeStyles = window.getComputedStyle(envelope);
+        const envelopeBeforeStyles = window.getComputedStyle(envelope, ':before');
+
+        const envelopeFontFamily = envelopeStyles.getPropertyValue('font-family');
+        const envelopeFontWeight = envelopeStyles.getPropertyValue('font-weight');
+        const envelopeFontSize = '18px'; // just to make things a little bigger...
+
+        const envelopeCanvasFont = `${envelopeFontWeight} ${envelopeFontSize} ${envelopeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+        const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+        ctx.font = envelopeCanvasFont;
+        ctx.fillStyle = '#303030';
+        ctx.textAlign = 'center';
+
+        ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 510), (canvas.height - 269));
+        ctx.fillText(usuario.nome, (canvas.width - 475), (canvas.height - 242));
+        ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 480), (canvas.height - 217));
+
         ctx.stroke();
     }
 }

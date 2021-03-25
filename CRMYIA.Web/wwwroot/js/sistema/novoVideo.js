@@ -84,7 +84,7 @@ $(document).ready(function () {
         //params: JSON.stringify(obj),
         acceptedFiles: '.mp3,.mp4,.avi',
         autoProcessQueue: false,
-        uploadMultiple: true,
+        //uploadMultiple: true,
         previewTemplate: previewTemplate,
         clickable: ".fileinput-alterar", // Define the element that should be used as click trigger to select files.
         init: function () {
@@ -123,7 +123,8 @@ $(document).ready(function () {
                     $('#ModalAlterarVideoMensagemIcon').addClass(data.mensagem.iconClass);
                     $('#ModalAlterarVideoMensagemSpan').text(data.mensagem.mensagem);
                 }
-                setTimeout(function () { $('#modalAlterarVideo').modal('hide'); }, 3000);
+                setTimeout(function () { $('#ModalAlterarVideoMensagemDiv').css('display', 'none'); }, 3000);
+                setTimeout(function () { $('#modalAlterarVideo').modal('hide'); }, 5000);
 
             });
         },
@@ -262,13 +263,12 @@ $(document).on('click', '#btn-salvar-alteracao-video', function () {
                 $('#UploadCampanhaGenericaMensagemIcon').removeClass();
                 $('#UploadCampanhaGenericaMensagemIcon').addClass(data.mensagem.iconClass);
                 $('#UploadCampanhaGenericaMensagemSpan').text(data.mensagem.mensagem);
+
                 $('.fileinput-video').show();
                 $('#btn-salvar-alteracao-video').hide();
                 $('#btn-upload-video').show();
-                myDropzone.removeAllFiles(true);
-
-                setTimeout(function () { $('#UploadCampanhaGenericaMensagemDiv').hide(); }, 3000);
             }
+            setTimeout(function () { $('#UploadCampanhaGenericaMensagemDiv').hide(); }, 3000);
         },
         failure: function (data) {
             console.log(data);
@@ -284,8 +284,6 @@ function CarregarTabela(data) {
                             <tr>\
                                 <th></th>\
                                 <th>Identificador do Video</th >\
-                                <th>Rede Sociais</th>\
-                                <th>Local</th>\
                                 <th>Nome do Arquivo</th>\
                                 <th>Cadastro</th>\
                                 <th>Status</th>\
@@ -298,14 +296,12 @@ function CarregarTabela(data) {
         html += '<tr>\
                     <td></td>\
                     <td>'+ this.identificadorVideo + '</td>\
-                    <td>Facebook</td>\
-                    <td>Stories</td>\
                     <td>'+ this.nomeVideo + '</td>\
                     <td>' + this.dataCadastro + '</td>\
                     <td>'+ ativo +'</td >\
                     <td>\
-                        <span class="text-info editar-formulario"  title="Editar" data-idvideo="' + this.idVideo + '"><i class="fas fa-edit"></i></span>\
-                        <span class="alterar-video" title="Editar Video" data-idvideo="' + this.idVideo + '" data-nomevideo="' + this.nomeVideo + '" data-identificadorvideo="' + this.identificadorVideo + '"><i class="fab fa-youtube"></i></span>\
+                        <span class="btn editar-formulario"  title="Editar Identificador do Video" data-idvideo="' + this.idVideo + '"><i class="fas fa-edit"></i></span>\
+                        <span class="btn alterar-video" title="Editar Video" data-idvideo="' + this.idVideo + '" data-nomevideo="' + this.nomeVideo + '" data-identificadorvideo="' + this.identificadorVideo + '"><i class="fab fa-youtube"></i></span>\
                         <span class="btn excluir-video" title="Excluir Imagem" data-idvideo="' + this.idVideo + '"><i class="fas fa-trash-alt"></i></span>\
                     </td>\
                  </tr>';

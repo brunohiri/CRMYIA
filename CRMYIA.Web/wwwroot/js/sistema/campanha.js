@@ -67,8 +67,9 @@ $(document).ready(function () {
                     if (VerificaNomeArquivo(file.name)) {
                         formData.append("IdCampanhaArquivo", $('#IdCampanhaArquivo').val());
                         formData.append("IdCampanha", $('#IdCampanha').val());
+                        formData.append("IdInformacao", $('#IdInformacao').val())
                         formData.append("Descricao", $('#Descricao').val());
-                        formData.append("Observacao", $('#Observacao').val());
+                        //formData.append("Observacao", $('#Observacao').val());
                         $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
                         //formData.append("Width", file.width);
                         //formData.append("Height", file.height);
@@ -98,8 +99,8 @@ $(document).ready(function () {
                         $('#UploadCampanhaGenericaMensagemIcon').removeClass();
                         $('#UploadCampanhaGenericaMensagemIcon').addClass(data.mensagem.iconClass);
                         $('#UploadCampanhaGenericaMensagemSpan').text(data.mensagem.mensagem);
-                        document.getElementById("upload-campanha-generica").reset();
-                        $("#IdCampanha").select2(); 
+                        document.getElementById("upload-campanha-generica").reset(); 
+                        $("#IdCampanha").select2('val', '0');
                     }
                     setTimeout(function () { $('#UploadCampanhaGenericaMensagemDiv').css('display', 'none'); }, 5000);    
                     
@@ -188,13 +189,107 @@ $(document).on('click', '.alterar-imagem', function () {
     $('#imagem').attr("src", $(this).data('caminhoimagem'));
 
 /*    console.log($(this).data('idcampanhaarquivo') + ' | ' + $(this).data('nomearquivo') + ' | ' + $(this).data('caminhoimagem'))*/
-    idcampanhaarquivo = $(this).data('idcapa');
+    idcampanhaarquivo = $(this).data('idcampanhaarquivo');
     nomearquivo = $(this).data('nomearquivo');
     caminhoimagem = $(this).data('caminhoimagem');
 });
 
+$(document).on('click', '.alterar-titulo', function () {
+    var idcampanhaarquivo = $(this).data('idcampanhaarquivo');
+    formData = new FormData();
+    formData.append('IdCampanhaArquivo', idcampanhaarquivo);
+    if (idcampanhaarquivo != undefined) {
+        displayBusyIndicator()
+        $.ajax({
+            type: 'POST',
+            url: "/UploadCampanhaGenerica?handler=Obter",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (data) {
+                if (data.status) {
+                    console.log(data);
+                    $('#IdCampanhaArquivo').val(data.entityLista.idCampanhaArquivo);
+                    $('#Descricao').val(data.entityInformacao.descricao);
+                    $('#IdInformacao').val(data.entityInformacao.idInformacao);
+                    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
+                    $('#Descricao').focus();
+
+                    $('.salvar-texto').css('display', 'block');
+                    $('.upload-campanha-generica').css('display', 'none');
+                    $('.btn-adicionar-imagem').css('display', 'none');
+                    
+                }
+            },
+            error: function () {
+                swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+            }
+        });
+        displayBusyAvailable()
+    }
+
+});
+
+$(document).on('click', '#btn-salvar-texto', function () {
+
+    formData = new FormData();
+    formData.append('IdCampanhaArquivo', $('#IdCampanhaArquivo').val());
+    formData.append('Descricao', $('#Descricao').val());
+    formData.append('IdCampanha', $("#IdCampanha").val());
+    formData.append('IdInformacao', $("#IdInformacao").val());
+    $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
+    if ($('#IdCampanhaArquivo').val() != undefined && $('#Descricao').val() != undefined && $("#IdInformacao").val() != undefined && $("#IdCampanha").val() != undefined)
+        displayBusyIndicator()
+        $.ajax({
+            type: 'POST',
+            url: "/UploadCampanhaGenerica?handler=UploadCampanhaGenerica",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (data) {
+                if (data.status) {
+
+                    $('#tableCapaRedeSocial').html('');
+                    CarregarTabela(data.entityLista);
+
+                    $('#UploadCampanhaGenericaMensagemDiv').show();
+                    $('#UploadCampanhaGenericaMensagemDivAlert').removeClass();
+                    $('#UploadCampanhaGenericaMensagemDivAlert').addClass(data.mensagem.cssClass);
+
+                    $('#UploadCampanhaGenericaMensagemIcon').removeClass();
+                    $('#UploadCampanhaGenericaMensagemIcon').addClass(data.mensagem.iconClass);
+                    $('#UploadCampanhaGenericaMensagemSpan').text(data.mensagem.mensagem);
+                    document.getElementById("upload-campanha-generica").reset();
+                    $("#IdCampanha").select2('val', '0');
+                    $("#IdCampanha").select2({
+                        placeholder: "Selecione...",
+                        allowClear: true
+                    });
+
+                    $('.salvar-texto').css('display', 'none');
+                    $('.upload-campanha-generica').css('display', 'block');
+                    $('.btn-adicionar-imagem').css('display', 'block');
+                }
+                setTimeout(function () { $('#UploadCampanhaGenericaMensagemDiv').css('display', 'none'); }, 5000);
+            },
+            error: function () {
+                swal("Erro!", "Erro ao alterar o registro, contate o Administrador do Sistema.", "error");
+            }
+        });
+    displayBusyAvailable()
+});
+
 $(document).on('click', '.excluir-imagem', function () {
-    console.log($(this).data('idcampanhaarquivo') + ' | ' + $(this).data('nomearquivo'));
     var idcampanhaarquivo = $(this).data('idcampanhaarquivo');
     var nomearquivo = $(this).data('nomearquivo');
     swal({
@@ -209,18 +304,30 @@ $(document).on('click', '.excluir-imagem', function () {
         cancelButtonColor: "#DC3545"
     }).then(function (e) {
         if (e.value === true) {
+            formData = new FormData();
+            formData.append('IdCampanhaArquivo', idcampanhaarquivo);
             $.ajax({
-                type: "GET",
-                url: "/UploadCampanhaGenerica?handler=ExcluirImagem&IdCampanhaArquivo=" + idcampanhaarquivo + "&NomeArquivo=" + nomearquivo,
-                contentType: "application/json",
-                dataType: "json",
+                type: 'POST',
+                url: "/UploadCampanhaGenerica?handler=ExcluirImagem",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
                 success: function (data) {
                     if (data.status) {
                         swal("Sucesso!", data.mensagem, "success");
                         CarregarTabela(data.entityLista);
                     }
+                },
+                error: function () {
+                    swal("Erro!", "Erro ao excluir o registro, contate o Administrador do Sistema.", "error");
                 }
             });
+
         } else {
             e.dismiss;
         }
@@ -233,29 +340,6 @@ $(document).on('click', '.excluir-imagem', function () {
 
 });
 
-//function createButton(text, cb) {
-//    return $('<button>' + text + '</button>').on('click', cb);
-//}
-
-function VerificaImagem() {
-    var verifica;
-   $.ajax("/UploadCampanhaGenerica?handler=VerificaImagem&id=" + 111).done(function (json) {
-       //console.log(json);
-       verifica = json;
-    });
-
-    //$.ajax({
-    //    type: "GET",
-    //    url: "/UploadCampanhaGenerica?handler=VerificaImagem&Id=" + Id,
-    //    contentType: "application/json",
-    //    dataType: "json",
-    //    success: function (data) {
-           
-    //    }
-    //});
-
-    console.log(verifica.retorno);
-}
 
 $(document).on('change', '.IdCampanhaReferencia', function () {
     var obj = {};
@@ -318,7 +402,6 @@ $(document).on('change', '.IdCampanhaReferencia', function () {
 
 
 $(document).on('change', '.remover', function (e) {
-    //alert(this.name)
     if ($('.remover').is(":checked")) {
         $('.' + this.name).remove();
         var classIdCampanhaReferencia = $('.IdCampanhaReferencia');
@@ -341,96 +424,42 @@ function TiraEspaco(data) {
 }
 
 function CarregarTabela(data) {
-    var html = '<div class="card-body table-responsive">\
-        <table id = "tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style = "width:100%">\
-                        <thead>\
-                            <tr>\
-                                <th></th>\
-                                <th>Imagem</th>\
-                                <th>Campanha</th>\
-                                <th>Descrição</th>\
-                                <th>Nome do Arquivo</th>\
-                                <th>Cadastro</th>\
-                                <th>Status</th>\
-                                <th></th>\
-                            </tr>\
-                        </thead>\
-                        <tbody>';
-    $.each(data, function (index, value) {
-        console.log(this.idCampanhaArquivo)
-
-        var vetNomeImagem = this.nomeArquivo.split('|');
-        var caminhoImagem = "";
-        var categoria = "";
-        var descricao = "";
-        var ativo = "";
-
-        if (vetNomeImagem.length == 1) {
-            if (this.caminhoArquivo != undefined && this.nomeArquivo != undefined) {
-                caminhoImagem = this.caminhoArquivo + this.nomeArquivo;
-            }
-            else {
-                caminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
-            }
-
+    var html = '';
+    if (data) {
+        $('#tableCamapanhaGenerica').html(html);
+        html += '<div class="card-body table-responsive">\
+                        <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style = "width:100%">\
+                            <thead>\
+                                <tr>\
+                                    <th></th>\
+                                    <th>Imagem</th>\
+                                    <th>Campanha</th>\
+                                    <th>Cadastro</th>\
+                                    <th>Status</th>\
+                                    <th></th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>';
+        $.each(data, function (index, value) {
+            var ativo = this.ativo = 'true' ? '<span class="badge badge-pill badge-success">ATIVO</span>' : '<span class="badge badge-pill badge-warning">DESATIVADO</span>';
             html += '<tr>\
                         <td class="text-center"></td>\
-                        <td class="text-center">' + "<img src='" + caminhoImagem + "'  style=\"width: 50px!important;\" >" + '</td>\
-                        <td class="text-center">' + this.idCampanhaNavigation.descricao + '</td>\
-                        <td class="text-center" title="' + this.descricao + '">' + this.descricao == "" ? "<span class=\"badge badge-pill badge-warning\" title=\"NÃO INFORMADA\">NÃO INFORMADA</span>" : this.descricao + '</td>\
-                        <td>' + this.nomeArquivo + '</td>\
-                        <td>' + this.dataCadastro + '</td>\
-                        <td class="text-center">' + this.ativo == true ? "<span title=\"ATIVADO\" class=\"badge badge-pill badge-success\">ATIVADO</span>" : " < span title =\"DESATIVADO\" class=\"badge badge-pill badge-warning\">DESATIVADO</span>" + '</td >\
+                        <td class="text-center"><img src="' + this.caminhoArquivo + this.nomeArquivo + '" style="max-width: 100px!important;" alt=""></td>\
+                        <td class="text-center">'+ this.idCampanhaNavigation.descricao + '</td>\
+                        <td class="text-center">'+ this.dataCadastro + '</td>\
+                        <td class="text-center">'+ ativo + '</td>\
                         <td class="text-center">\
-                            <a href="/UploadCampanhaGenerica?id=' + this.idCampanhaArquivo + '" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>\
-                            <span class="alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + this.nomeArquivo + '" data-caminhoimagem="' + caminhoImagem + '"><i class="fas fa-images"></i></span>\
-                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '"><i class="fas fa-trash-alt"></i></span>\
-                        </td>\
-                      </tr >';
-        }
-        else if (vetNomeImagem.length > 1) {
-            for (var i = 0; i < vetNomeImagem.length; i++) {
+                            <span class="btn alterar-titulo" title="Editar Texto" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '"><i class="icon fas fa-edit"></i></span>\
+                            <span class="btn alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + this.nomeArquivo + '" data-caminho="' + this.caminhoArquivo + '"><i class="fas fa-images"></i></span>\
+                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + this.nomeArquivo + '"><i class="fas fa-trash-alt"></i></span>\
+                        </td >\
+                    </tr>';
+        });
+        html += '</tbody>\
+                    </table>\
+                </div>';
 
-                var itemComTralha = "";
-                if (vetNomeImagem[i] == "") {
-                    itemComTralha = "#";
-                }
-                else {
-                    itemComTralha = vetNomeImagem[i].substring(0, 1);
-                }
-                if (!(itemComTralha == "#")) {
-
-                    if (this.caminhoArquivo != null && vetNomeImagem[i] != null) {
-                        caminhoImagem = this.caminhoArquivo + vetNomeImagem[i];
-                    }
-                    else {
-                        caminhoImagem = "/img/fotoCadastro/foto-cadastro.jpeg";
-                    }
-
-                    categoria = this.idCampanhaNavigation.idCampanhaReferencia != undefined ? "SubCategoria " + this.idCampanhaNavigation.descricao : "Categoria " + this.idCampanhaNavigation.descricao;
-                    descricao = this.descricao == "" ? '<span class="badge badge-pill badge-warning" title="NÃO INFORMADA">NÃO INFORMADA</span>' : this.descricao;
-                    ativo = this.ativo == true ? '<span title="ATIVADO" class="badge badge-pill badge-success">ATIVADO</span>' : '<span title ="DESATIVADO" class="badge badge-pill badge-warning">DESATIVADO</span>';
-                    html += '<tr>\
-                                                <td class="text-center"></td>\
-                                                <td class="text-center"><img src="' + caminhoImagem + '"  style="width: 50px!important;"></td>\
-                                                <td class="text-center">' + categoria + '</td>\
-                                                <td class="text-center" title="' + vetNomeImagem[i].descricao + '">' + descricao + '</td>\
-                                                <td>' + vetNomeImagem[i] + '</td>\
-                                                <td>' + this.dataCadastro + '</td>\
-                                                <td class="text-center">' + ativo + '</td >\
-                                                <td class="text-center">\
-                                                    <a href="/UploadCampanhaGenerica?id=' + this.idCampanhaArquivo + '" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>\
-                                                    <span class="btn alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + vetNomeImagem[i] + '" data-caminhoimagem="' + caminhoImagem + '"><i class="fas fa-images"></i></span>\
-                                                    <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '"><i class="fas fa-trash-alt"></i></span>\
-                                                </td>\
-                                            </tr >';
-                }
-            }//fim for
-        }
-    });
-    html += '</tbody >\
-          </table >\
-        </div >';
-    $('#tableCamapanhaGenerica').html(html);
-    InitDatatables();
+        $('#tableCamapanhaGenerica').html(html);
+        InitDatatables();
+    }
 }

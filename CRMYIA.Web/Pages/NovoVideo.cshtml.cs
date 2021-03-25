@@ -160,6 +160,7 @@ namespace CRMYIA.Web.Pages
                 var file = Request.Form.Files.FirstOrDefault();
                 string IdVideo = Request.Form["IdVideo"].ToString();
                 string NomeVideo = Request.Form["NomeVideo"].ToString();
+                string IdentificadorVideo = Request.Form["ModalIdVideo"].ToString();
                 Video Entity = null;
                 Entity = VideoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdVideo)).ExtractLong());
                 string msg = "Alterado";
@@ -188,7 +189,7 @@ namespace CRMYIA.Web.Pages
                     {
                         IdUsuario = IdUsuario,
                         IdVideo = Entity.IdVideo,
-                        IdentificadorVideo = Entity.IdentificadorVideo,
+                        IdentificadorVideo = IdentificadorVideo,
                         CaminhoArquivo = Entity.CaminhoArquivo,
                         NomeVideo = Entity.NomeVideo,
                         DataCadastro = DateTime.Now,

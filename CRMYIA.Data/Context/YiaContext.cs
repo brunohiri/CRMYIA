@@ -45,6 +45,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual DbSet<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual DbSet<HistoricoProposta> HistoricoProposta { get; set; }
+        public virtual DbSet<Informacao> Informacao { get; set; }
         public virtual DbSet<KPIGrupo> KPIGrupo { get; set; }
         public virtual DbSet<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
         public virtual DbSet<KPIMeta> KPIMeta { get; set; }
@@ -177,13 +178,14 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.NomeArquivo)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdInformacaoNavigation)
+                    .WithMany(p => p.Banner)
+                    .HasForeignKey(d => d.IdInformacao)
+                    .HasConstraintName("Informacao_Banner");
             });
 
             modelBuilder.Entity<BannerOperadora>(entity =>
@@ -220,16 +222,9 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NomeArquivo).HasColumnType("text");
-
-                entity.Property(e => e.Url)
-                    .HasMaxLength(300)
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.IdCampanhaReferenciaNavigation)
-                    .WithMany(p => p.InverseIdCampanhaReferenciaNavigation)
-                    .HasForeignKey(d => d.IdCampanhaReferencia)
-                    .HasConstraintName("Campanha_Campanha");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Campanha)
@@ -247,11 +242,9 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
-                entity.Property(e => e.Descricao).HasColumnType("text");
-
-                entity.Property(e => e.Height).HasColumnType("text");
-
-                entity.Property(e => e.NomeArquivo).HasColumnType("text");
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RedesSociais)
                     .HasMaxLength(300)
@@ -261,12 +254,15 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Width).HasColumnType("text");
-
                 entity.HasOne(d => d.IdCampanhaNavigation)
                     .WithMany(p => p.CampanhaArquivo)
                     .HasForeignKey(d => d.IdCampanha)
                     .HasConstraintName("Campanha_CampanhaArquivo");
+
+                entity.HasOne(d => d.IdInformacaoNavigation)
+                    .WithMany(p => p.CampanhaArquivo)
+                    .HasForeignKey(d => d.IdInformacao)
+                    .HasConstraintName("Informacao_CampanhaArquivo");
             });
 
             modelBuilder.Entity<Capa>(entity =>
@@ -1044,6 +1040,17 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_HistoricoProposta");
             });
 
+            modelBuilder.Entity<Informacao>(entity =>
+            {
+                entity.HasKey(e => e.IdInformacao);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<KPIGrupo>(entity =>
             {
                 entity.HasKey(e => e.IdKPIGrupo);
@@ -1687,6 +1694,10 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.Nome)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeApelido)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 

@@ -94,7 +94,6 @@ namespace CRMYIA.Web.Pages
 
                     Entity.IdUsuario = IdUsuario;
                     Entity.DataCadastro = DateTime.Now;
-                    Entity.Url = Business.Util.Util.GetSlug(Entity.Descricao);
                     Entity.CaminhoArquivo = "ArquivoCampanha/";
                     Entity.NomeArquivo = NomeArquivo;
                     Business.CampanhaModel.Add(Entity);
@@ -125,22 +124,22 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public IActionResult OnPostGetSubCategoria([FromBody] Campanha obj)
-        {
-            List<Campanha> Entity = null;
-            bool status = false;
-            if (obj.IdCampanhaReferencia.ToString() != null)
-            {
-                Entity = Business.CampanhaModel.GetSubCategoria(obj.IdCampanhaReferencia.ToString());
-                if(Entity.Count() > 0)
-                {
-                    status = true;
-                }
+        //public IActionResult OnPostGetSubCategoria([FromBody] Campanha obj)
+        //{
+        //    List<Campanha> Entity = null;
+        //    bool status = false;
+        //    if (obj.IdCampanhaReferencia.ToString() != null)
+        //    {
+        //        Entity = Business.CampanhaModel.GetSubCategoria(obj.IdCampanhaReferencia.ToString());
+        //        if(Entity.Count() > 0)
+        //        {
+        //            status = true;
+        //        }
                 
-            }
-            return new JsonResult(new { status = status, retorno = Entity });
-            //return Page();
-        }
+        //    }
+        //    return new JsonResult(new { status = status, retorno = Entity });
+        //    //return Page();
+        //}
         public void CarregarLists()
         {
             ListCampanha = Business.CampanhaModel.GetList();

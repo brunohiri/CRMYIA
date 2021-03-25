@@ -7,6 +7,7 @@ namespace CRMYIA.Data.ViewModel
     public class UsuarioCorretorViewModel
     {
         public string Nome { get; set; }
+        public string NomeApelido { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
     }

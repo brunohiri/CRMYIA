@@ -419,6 +419,26 @@ namespace CRMYIA.Business.Util
             return achou;
         }
 
+        public static bool VerificaNomeArquivoAssinaturaCartao(List<string> NomeArquivo)
+        {
+            bool achou = true;
+            int maior = 0;
+            foreach (string Nome in NomeArquivo)
+            {
+                string[] NomeVet = Nome.Split('-');
+
+                if (NomeVet.Length == 2)
+                {
+                    maior++;
+                }
+                else
+                {
+                    achou = false;
+                }
+            }
+            return achou;
+        }
+
         /// <summary>
         /// Remaps the international character to their equivalent ASCII characters. See
         /// http://meta.stackexchange.com/questions/7435/non-us-ascii-characters-dropped-from-full-profile-url/7696#7696

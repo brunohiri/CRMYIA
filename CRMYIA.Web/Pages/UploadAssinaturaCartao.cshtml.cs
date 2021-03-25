@@ -86,17 +86,19 @@ namespace CRMYIA.Web.Pages
                 string Titulo = dados["Titulo"];
                 bool Ativo = Convert.ToBoolean(dados["Ativo"].Contains("true"));
                 var documentFile = Request.Form.Files.ToList();
+                AssinaturaCartao Entity = null;
                 List<AssinaturaCartaoViewModel> EntityLista = null;
                 MensagemModel mensagem = null;
                 List<string> FilesNomes = new List<string>();
                 bool status = false;
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
                 //if (CampanhaArquivoModel.GetCampanhaId(formData.IdCampanha.ToString().ExtractLong()))
 
                 foreach (IFormFile Item in documentFile)
                 {
                     FilesNomes.Add(Item.FileName);
                 }
-                if (!Util.VerificaNomeArquivo(FilesNomes))
+                if (!Util.VerificaNomeArquivoAssinaturaCartao(FilesNomes))
                 {
                     mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Aviso, "Nome do arquivo não esta no padrão!");
                 }
@@ -112,11 +114,9 @@ namespace CRMYIA.Web.Pages
                             int Width = 0;
                             int Height = 0;
                             string NomeArquivo = string.Empty;
-                            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                            
                             foreach (var Item in documentFile)
                             {
-                                Capa EntityCapa = null;
-                                Capa Entity = null;
                                 string NomeArquivoOriginal = Item.FileName;
 
                                 NomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
@@ -147,6 +147,28 @@ namespace CRMYIA.Web.Pages
                             EntityLista = AssinaturaCartaoModel.GetList();
                             status = true;
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                        }
+                        else
+                        {
+                            Entity = AssinaturaCartaoModel.Get(IdAssinaturaCartao);
+                           if(Entity != null)
+                            {
+                                AssinaturaCartaoModel.Update(new AssinaturaCartao()
+                                {
+                                    IdAssinaturaCartao = IdAssinaturaCartao,
+                                    IdUsuario = IdUsuario,
+                                    Titulo = Titulo,
+                                    CaminhoArquivo = Entity.CaminhoArquivo,
+                                    NomeArquivo = Entity.NomeArquivo,
+                                    Width = Entity.Width,
+                                    Height = Entity.Height,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = Ativo
+                                });
+                                EntityLista = AssinaturaCartaoModel.GetList();
+                                status = true;
+                                mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
+                            }
                         }
                     }
                 }
@@ -229,7 +251,7 @@ namespace CRMYIA.Web.Pages
 
                     EntityLista = AssinaturaCartaoModel.GetList();
                     status = true;
-                    mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
+                    mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Imagem alterado com sucesso!");
                 }
                 else
                 {

@@ -43,7 +43,7 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<CapaRedeSocialViewModel> ListEntity { get; set; }
         [BindProperty]
-        public List<RedeSocial> ListRedeSocial { get; set; }
+        public List<BannerOperadoraViewModel> ListBannerOperadora { get; set; }
         [BindProperty]
         public List<Operadora> ListOperadora { get; set; }
         public long? IdOperadora { get; set; }
@@ -79,20 +79,24 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostBannerOperadoraAsync(IFormCollection dados)
+        public async Task<IActionResult> OnPostUploadBannerOperadoraAsync(EnviarBannerOperadoraViewModel formData)
         {
             try
             {
-                long IdBanner =  dados["IdBanner"].ToString().ExtractLong();
-                string Descricao = dados["Descricao"];
-                bool Ativo = Convert.ToBoolean(dados["Ativo"].Contains("true"));
+                long IdBanner =  formData.IdBanner.ExtractLong();
+                string Descricao = formData.Descricao;
+                bool Ativo = formData.Ativo;
+                long IdOperadora = formData.IdOperadora.ExtractLong();
+                long IdInformacao = formData.IdInformacao.ExtractLong();
                 var documentFile = Request.Form.Files.ToList();
                 List<BannerOperadoraViewModel> EntityLista = null;
                 MensagemModel mensagem = null;
+                Banner EntityBanner = null;
+                BannerOperadora EntityBannerOperadora = null;
+                Informacao EntityInformacao = null;
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
                 List<string> FilesNomes = new List<string>();
                 bool status = false;
-                //if (CampanhaArquivoModel.GetCampanhaId(formData.IdCampanha.ToString().ExtractLong()))
-
                 foreach (IFormFile Item in documentFile)
                 {
                     FilesNomes.Add(Item.FileName);
@@ -113,15 +117,19 @@ namespace CRMYIA.Web.Pages
                             int Width = 0;
                             int Height = 0;
                             string NomeArquivo = string.Empty;
-                            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                            InformacaoModel.Add(new Informacao
+                            {
+                                Descricao = Descricao,
+                                DataCadastro = DateTime.Now,
+                                Ativo = formData.Ativo
+                            });
                             foreach (var Item in documentFile)
                             {
-                                Capa EntityCapa = null;
-                                Capa Entity = null;
+                                
                                 string NomeArquivoOriginal = Item.FileName;
 
                                 NomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
-                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoAssinaturaCartao"], NomeArquivo);
+                                var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoBannerOperadora"], NomeArquivo);
 
                                 using (var fileStream = new FileStream(file, FileMode.Create))
                                 {
@@ -132,25 +140,77 @@ namespace CRMYIA.Web.Pages
                                     Width = image.Width;
                                     Height = image.Height;
                                 }
-                                //Grava um registro Capa
-                               BannerOperadoraModel.Add(new Banner()
+                                //Grava um registro Banner
+                                EntityInformacao = InformacaoModel.GetLastId();
+                                var retorno = BannerOperadoraModel.AddBool(new Banner()
                                 {
-                                    Descricao = Descricao,
-                                    CaminhoArquivo = "ArquivoAssinaturaCartao/",
+                                    IdInformacao = EntityInformacao.IdInformacao,
+                                    CaminhoArquivo = "ArquivoBannerOperadora/",
                                     NomeArquivo = NomeArquivo,
                                     Width = Width,
                                     Height = Height,
                                     DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
                                     Ativo = Ativo
                                 });
+
+                                EntityBanner = BannerOperadoraModel.GetLastId();
+
+                                if (retorno && EntityBanner != null)
+                                {
+                                    BannerOperadoraModel.Add(new BannerOperadora()
+                                    {
+                                        IdUsuario = IdUsuario,
+                                        IdOperadora = IdOperadora,
+                                        IdBanner = EntityBanner.IdBanner
+                                    });
+                                }
                             }
                             EntityLista = BannerOperadoraModel.GetList();
                             status = true;
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                         }
+                        else
+                        {
+                            //Update Texto
+                            EntityBanner = BannerOperadoraModel.Get(IdBanner);
+                            EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
+                            if (EntityBanner != null && EntityBannerOperadora != null)
+                            {
+                                InformacaoModel.Update(new Informacao()
+                                {
+                                    IdInformacao = IdInformacao,
+                                    Descricao = Descricao,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = Ativo
+                                });
+
+                                BannerOperadoraModel.Update(new Banner()
+                                {
+                                    IdBanner = IdBanner,
+                                    CaminhoArquivo = EntityBanner.CaminhoArquivo,
+                                    NomeArquivo = EntityBanner.NomeArquivo,
+                                    Width = EntityBanner.Width,
+                                    Height = EntityBanner.Height,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = Ativo
+                                });
+                            
+                                BannerOperadoraModel.Update(new BannerOperadora()
+                                {
+                                    IdBannerOperadora = EntityBannerOperadora.IdBannerOperadora,
+                                    IdUsuario = IdUsuario,
+                                    IdOperadora = IdOperadora,
+                                    IdBanner = EntityBanner.IdBanner
+                                });
+                            }
+
+                            mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Registro atualizado com Sucesso!!!");
+                            EntityLista = BannerOperadoraModel.GetList();
+                            status = true;
+                            return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
+                        }
                     }
                 }
-
                 return new JsonResult(new
                 {
                     entityLista = EntityLista,
@@ -170,14 +230,14 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
-                List<AssinaturaCartaoViewModel> EntityLista = null;
+                List<BannerOperadoraViewModel> EntityLista = null;
                 bool status = false;
                 MensagemModel mensagem = null;
                 var file = Request.Form.Files.FirstOrDefault();
-                string IdAssinaturaCartao = Request.Form["IdAssinaturaCartao"].ToString();
+                string IdBanner = Request.Form["IdBanner"].ToString();
                 string NomeArquivo = Request.Form["NomeArquivo"].ToString();
-                AssinaturaCartao Entity = null;
-                Entity = AssinaturaCartaoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdAssinaturaCartao)).ExtractLong());
+                Banner Entity = null;
+                Entity = BannerOperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdBanner)).ExtractLong());
                 string msg = "Alterado";
 
                 List<string> FilesNomes = new List<string>();
@@ -189,7 +249,7 @@ namespace CRMYIA.Web.Pages
 
                     if (!string.IsNullOrEmpty(NomeArquivo) && file != null)
                     {
-                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoAssinaturaCartao"], NomeArquivo);
+                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoBannerOperadora"], NomeArquivo);
                         if ((System.IO.File.Exists(_imageToBeDeleted)))
                         {
                             System.IO.File.Delete(_imageToBeDeleted);
@@ -197,12 +257,12 @@ namespace CRMYIA.Web.Pages
                         string NomeArquivoOriginal = file.FileName;
 
                         string NovoNomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
-                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoAssinaturaCartao"], NovoNomeArquivo);
+                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoBannerOperadora"], NovoNomeArquivo);
 
                         using (var fileStream = new FileStream(arquivo, FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);
-                            Entity.CaminhoArquivo = "ArquivoAssinaturaCartao/";
+                            Entity.CaminhoArquivo = "ArquivoBannerOperadora/";
                             Entity.NomeArquivo = NovoNomeArquivo;
                         }
                         int Width = 0;
@@ -213,11 +273,9 @@ namespace CRMYIA.Web.Pages
                             Height = image.Height;
                         }
                         long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-                        AssinaturaCartaoModel.Update(new AssinaturaCartao()
+                       BannerOperadoraModel.Update(new Banner()
                         {
-                            IdUsuario = IdUsuario,
-                            IdAssinaturaCartao = Entity.IdAssinaturaCartao,
-                            Titulo = Entity.Titulo,
+                           IdBanner = Entity.IdBanner,
                             CaminhoArquivo = Entity.CaminhoArquivo,
                             NomeArquivo = Entity.NomeArquivo,
                             Width = Width,
@@ -227,7 +285,7 @@ namespace CRMYIA.Web.Pages
                         });
                     }
 
-                    EntityLista = AssinaturaCartaoModel.GetList();
+                    EntityLista = BannerOperadoraModel.GetList();
                     status = true;
                     mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
                 }
@@ -250,29 +308,42 @@ namespace CRMYIA.Web.Pages
             }
         }
 
+        //public IActionResult OnPostAlterarTexto(EnviarBannerOperadoraViewModel formData)
+        //{
+        //    bool status = false;
+        //    List<BannerOperadoraViewModel> EntityBanner = null;
+        //    try
+        //    {
+
+
+               
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw;
+        //    }
+        //}
         public IActionResult OnPostExcluirImagem(IFormCollection dados)
         {
-            List<AssinaturaCartaoViewModel> EntityLista = null;
+            List<BannerOperadoraViewModel> EntityLista = null;
             bool status = false;
             string mensagem = "Erro ao Excluir Imagem";
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             try
             {
-                AssinaturaCartao EntityAssinaturaCartao = null;
-                EntityAssinaturaCartao = AssinaturaCartaoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(dados["IdAssinaturaCartao"])).ExtractLong());
-                AssinaturaCartaoModel.Update(new AssinaturaCartao()
+                Banner EntityBannerOperadora = null;
+                EntityBannerOperadora = BannerOperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(dados["IdBanner"])).ExtractLong());
+                BannerOperadoraModel.Update(new Banner()
                 {
-                    IdUsuario = IdUsuario,
-                    IdAssinaturaCartao = EntityAssinaturaCartao.IdAssinaturaCartao,
-                    Titulo = EntityAssinaturaCartao.Titulo,
-                    CaminhoArquivo = EntityAssinaturaCartao.CaminhoArquivo,
-                    NomeArquivo = EntityAssinaturaCartao.NomeArquivo,
-                    Width = EntityAssinaturaCartao.Width,
-                    Height = EntityAssinaturaCartao.Height,
-                    DataCadastro = EntityAssinaturaCartao.DataCadastro,
+                    IdBanner = EntityBannerOperadora.IdBanner,
+                    CaminhoArquivo = EntityBannerOperadora.CaminhoArquivo,
+                    NomeArquivo = EntityBannerOperadora.NomeArquivo,
+                    Width = EntityBannerOperadora.Width,
+                    Height = EntityBannerOperadora.Height,
+                    DataCadastro = EntityBannerOperadora.DataCadastro,
                     Ativo = false
                 });
-                EntityLista = AssinaturaCartaoModel.GetList();
+                EntityLista = BannerOperadoraModel.GetList();
                 status = true;
                 mensagem = "Imagem Excluída com Sucesso!";
             }
@@ -283,26 +354,32 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
         }
 
-        public IActionResult OnPostObter(string IdAssinaturaCartao)
+        public IActionResult OnPostObter(string IdBanner)
         {
-            AssinaturaCartao EntityAssinaturaCartao = null;
+            Banner EntityBanner = null;
+            BannerOperadora EntityBannerOperadora = null;
+            Informacao EntityInformacao = null;
             bool status = false;
+            Mensagem = null;
             try
             {
-                EntityAssinaturaCartao = AssinaturaCartaoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdAssinaturaCartao)).ExtractLong());
-               
+                EntityBanner = BannerOperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdBanner)).ExtractLong());
+                EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
+                EntityInformacao = InformacaoModel.Get(EntityBanner.IdInformacao.ToString().ExtractLong());
+                
                 status = true;
             }
             catch (Exception ex)
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message);
-                return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityAssinaturaCartao });
+                return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityBanner });
             }
-            return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityAssinaturaCartao });
+            return new JsonResult(new { status = status, entityLista = EntityBanner, idOperadora = EntityBannerOperadora.IdOperadora, entityInformacao = EntityInformacao});
         }
         public void CarregarLists()
         {
             ListOperadora = OperadoraModel.GetListIdDescricao();
+            ListBannerOperadora = BannerOperadoraModel.GetList();
         }
         #endregion
     }

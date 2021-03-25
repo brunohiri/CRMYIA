@@ -1,0 +1,146 @@
+﻿@page
+@model CRMYIA.Web.Pages.BannersDeOperadora
+@{
+    ViewData["Title"] = "Banners De Operadora";
+    ViewData["Pagina"] = "Download";
+}
+@using CRMYIA.Business.Util;
+@{ string redeSocial = "";}
+@{ string nomeRede = "";}
+@{ string idOperadora = "";}
+@{ string multi = "";}
+@{ string accordion = "";}
+@{ string fontawesome = "";}
+@{ int i = 0;}
+
+<div id="banner-operadora">
+
+    @if (Model.ListBanner != null)
+    {
+
+        <img src="@Model.ListBanner[0].IdOperadoraNavigation.CaminhoArquivo@Model.ListBanner[0].IdOperadoraNavigation.NomeArquivo" width="150" height="150" id="imagem-operadora-seguradora" name="imagem-operadora-seguradora" style="display: none;" alt="">
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Banners @Model.ListBanner[0].Titulo</h4>
+                            </div>
+                            <div class="card-body filtro-banners">
+                                <h3>Selecione a Rede Social:</h3>
+
+                                @if (Model.ListBanner.Count() >= 1)
+                                {
+
+
+                                    @foreach (var Item in Model.ListBanner)
+                                    {
+                                        idOperadora = Item.IdOperadora;
+
+                                        @if (Item.NomeArquivo.ToLower().Contains("facebook"))
+                                        {
+                                            redeSocial = "facebook";
+                                            nomeRede = "Facebook";
+                                            multi = "multiCollapseFacebook";
+                                            accordion = "accordionExample" + idOperadora;
+                                            fontawesome = "fa-facebook-f";
+                                        }
+                                        else if (Item.NomeArquivo.ToLower().Contains("whatsapp"))
+                                        {
+                                            redeSocial = "whatsapp";
+                                            nomeRede = "WhatsApp";
+                                            multi = "multiCollapseWhatsApp";
+                                            accordion = "accordionExample" + idOperadora;
+                                            fontawesome = "fa-whatsapp";
+                                        }
+                                        else if (Item.NomeArquivo.ToLower().Contains("instagram"))
+                                        {
+                                            redeSocial = "instagram";
+                                            nomeRede = "Instagram";
+                                            multi = "multiCollapseInstagram";
+                                            accordion = "accordionExample" + idOperadora;
+                                            fontawesome = "fa-instagram";
+                                        }
+                                        else if (Item.NomeArquivo.ToLower().Contains("linkedin"))
+                                        {
+                                            redeSocial = "linkedin";
+                                            nomeRede = "Linkedin";
+                                            multi = "multiCollapseLinkedin";
+                                            accordion = "accordionExample" + idOperadora;
+                                            fontawesome = "fa-linkedin-in";
+                                        }
+
+                                        <button class="btn btn-redesocial btn-filtro-@redeSocial botao-rede-social" type="button" data-canvas="canvas-@redeSocial-@i" data-img="img-@redeSocial-@i" data-descricao="descricao-@redeSocial-@i" data-usuario="@Model.UsuarioEntity.NomeApelido|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#@multi-@idOperadora" aria-expanded="false" aria-controls="@multi-@idOperadora"><i class="fab @fontawesome"></i> &nbsp; Banners @nomeRede &nbsp; <i class="fas fa-chevron-down"></i></button>
+                                        @*<button class="btn btn-redesocial btn-filtro-@redeSocial botao-rede-social" type="button" data-canvas="canvas-@redeSocial-@Item.IdBanner-@i" data-img="img--@redeSocial-@Item.IdBanner-@i" data-descricao="descricao-@redeSocial-@Item.IdBanner" data-usuario="Nome|Telefone|Email" data-toggle="collapse" data-target="#multiCollapse + @redeSocial-@Item.IdBanner" aria-expanded="false" aria-controls="multiCollapseFacebook-@redeSocial-@Item.IdBanner"><i class="fab fa-@redeSocial-f"></i> &nbsp; Banners @nomeRede &nbsp; <i class="fas fa-chevron-down"></i></button>*@
+                                        i++;
+                                    }
+
+                            <div class="accordion" id="@accordion">
+                                @if (true)
+                                    i = 0;
+                                @foreach (var Item in Model.ListBanner)
+                                {
+                                    idOperadora = Item.IdOperadora;
+
+                                    @if (Item.NomeArquivo.ToLower().Contains("facebook"))
+                                    {
+                                        redeSocial = "facebook";
+                                        nomeRede = "Facebook";
+                                        multi = "multiCollapseFacebook";
+                                        accordion = "accordionExample" + idOperadora;
+                                    }
+                                    else if (Item.NomeArquivo.ToLower().Contains("whatsapp"))
+                                    {
+                                        redeSocial = "whatsapp";
+                                        nomeRede = "WhatsApp";
+                                        multi = "multiCollapseWhatsApp";
+                                        accordion = "accordionExample" + idOperadora;
+                                    }
+                                    else if (Item.NomeArquivo.ToLower().Contains("instagram"))
+                                    {
+                                        redeSocial = "instagram";
+                                        nomeRede = "Instagram";
+                                        multi = "multiCollapseInstagram";
+                                        accordion = "accordionExample" + idOperadora;
+                                    }
+                                    else if (Item.NomeArquivo.ToLower().Contains("linkedin"))
+                                    {
+                                        redeSocial = "linkedin";
+                                        nomeRede = "Linkedin";
+                                        multi = "multiCollapseLinkedin";
+                                        accordion = "accordionExample" + idOperadora;
+                                    }
+                                    <div class="collapse" id="@multi-@idOperadora" data-parent="#@accordion">
+                                        @*Inicio Bloco de Imagem*@
+                                        <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">
+                                            <div class="material-divulgacao-imagem p-2 flex-fill bd-highlight">
+                                                <canvas style="display:none" width="@Item.Width" height="@Item.Height" id="canvas-@redeSocial-@i"> </canvas>
+                                                <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-@redeSocial-@i" alt="white sample">
+                                                <div class="text-center m-2"><button onclick="download_image(&quot;canvas-@redeSocial-@i&quot;)" type="button" class="btn btn-success">Download</button></div>
+                                            </div>
+                                        </div>
+                                        @*Fim Bloco de Imagem*@
+                                        <div class="form-group text-center descricao" style="display: block; font-size: 20px; color: rgb(119, 119, 119) !important;" id="descricao-@redeSocial-@i">
+                                            <label for="Descricao">Texto para a publicação no Feed</label>
+                                            <textarea class="form-control text-dark font-weight-bold" style="font-size: 16px;" id="copiardescricao-@Item.IdBanner" rows="3">@Item.Descricao</textarea>
+                                            <div class="d-flex justify-content-center m-3"><button class="btn btn-success copiar-descricao" data-copiardescricao="copiardescricao-@Item.IdBanner">COPIAR</button></div>
+                                        </div>
+                                    </div>
+
+                                    i++;
+                                }
+                            </div>
+
+
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+</div>

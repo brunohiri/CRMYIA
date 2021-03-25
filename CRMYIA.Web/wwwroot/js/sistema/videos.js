@@ -37,18 +37,24 @@ function Videos() {
     $.getJSON('/Videos?handler=ListarVideos', function (data) {
         console.log(data)
         var html = '<div class="d-flex justify-content-around">';
+        var frase = "";
         $('#videos').html('');
         if (data.status) {
-            $.each(data.entityVideo, function (index, value) { 
+            $.each(data.entityVideo, function (index, value) {
+                if (this.nomeVideo.toUpperCase().indexOf('FEED') > -1) {
+                    frase = '<span class="font-weight-bold">Vídeo para FEED</span>';
+                } else if (this.nomeVideo.toUpperCase().indexOf('STORES') > -1) {
+                    frase = '<span class="font-weight-bold">Vídeo para Stories</span>';
+                }
                 html += '<div class="card" style="width: 20.5rem;" >\
                             <div class="p-3">\
                                 <iframe src="https://www.youtube.com/embed/'+ this.identificadorVideo + '"?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">\
                                 </iframe>\
                             </div>\
                             <div class="card-body">\
-                                <p class="card-text">Faça o download e publique esse vídeo no <span class="font-weight-bold">feed do seu Facebook/Instagram.</span></p>\
+                                <p class="card-text text-center">'+ frase +'</span></p>\
                             </div >\
-                            <div class="d-flex justify-content-center"><a type="button" class="btn btn-success m-5" href="' + this.caminhoArquivo + this.nomeVideo + '" download>Download do Vídeo</a></div>\
+                            <div class="d-flex justify-content-center"><a type="button" class="btn btn-success mb-4" href="' + this.caminhoArquivo + this.nomeVideo + '" download>Download do Vídeo</a></div>\
                         </div>';
            
             });

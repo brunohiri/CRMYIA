@@ -78,15 +78,18 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostUploadUploadCapaRedeSocialAsync(/*[FromForm] List<ICollection<IFormFile>> files,*/ EnviarCapaRedeSocialViewModel formData)
+        public async Task<IActionResult> OnPostUploadCapaRedeSocialAsync(/*[FromForm] List<ICollection<IFormFile>> files,*/ EnviarCapaRedeSocialViewModel formData)
         {
             try
             {
                 var documentFile = Request.Form.Files.ToList();
                 List<CapaViewModel> EntityLista = null;
+                CapaRedeSocial EntityCapaRedeSocial = null;
+                Capa EntityCapa = null;
                 MensagemModel mensagem = null;
                 List<string> FilesNomes = new List<string>();
                 bool status = false;
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
                 //if (CampanhaArquivoModel.GetCampanhaId(formData.IdCampanha.ToString().ExtractLong()))
 
                 foreach (IFormFile Item in documentFile)
@@ -109,11 +112,9 @@ namespace CRMYIA.Web.Pages
                             int Width = 0;
                             int Height = 0;
                             string NomeArquivo = string.Empty;
-                            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                            
                             foreach (var Item in documentFile)
                             {
-                                Capa EntityCapa = null;
-                                Capa Entity = null;
                                 string NomeArquivoOriginal = Item.FileName;
 
                                 NomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
@@ -157,6 +158,36 @@ namespace CRMYIA.Web.Pages
                                     status = true;
                                     mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                                 }
+                            }
+                        }
+                        else
+                        {
+                            //Update Texto
+                            EntityCapaRedeSocial = CapaRedeSocialModel.Get(formData.IdCapa);
+                            EntityCapa = CapaModel.Get(formData.IdCapa);
+                            if(EntityCapaRedeSocial != null && EntityCapa != null) {
+                                CapaRedeSocialModel.Update(new CapaRedeSocial()
+                                {
+                                    IdCapaRedeSocial = EntityCapaRedeSocial.IdCapaRedeSocial,
+                                    IdRedeSocial = formData.IdRedeSocial,
+                                    IdCapa = formData.IdCapa,
+                                    IdUsuario = IdUsuario
+                                });
+
+                                CapaModel.Update(new Capa()
+                                {
+                                    IdCapa = formData.IdCapa,
+                                    Titulo = formData.Titulo,
+                                    CaminhoArquivo = EntityCapa.CaminhoArquivo,
+                                    NomeArquivo = EntityCapa.NomeArquivo,
+                                    Width = EntityCapa.Width,
+                                    Height = EntityCapa.Height,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = formData.Ativo
+                                });
+                                EntityLista = CapaModel.GetList();
+                                status = true;
+                                mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
                             }
                         }
                     }
@@ -289,6 +320,7 @@ namespace CRMYIA.Web.Pages
         {
             List<CapaViewModel> EntityLista = null;
             bool status = false;
+            string mensagem = "";
             
             try
             {
@@ -307,13 +339,13 @@ namespace CRMYIA.Web.Pages
                 });                
                 EntityLista = CapaModel.GetList();
                 status = true;
-                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Capa Excluída com Sucesso!");
+                mensagem = "Capa Excluída com Sucesso!";
             }
             catch (Exception ex)
             {
-                return new JsonResult( new {status = status, entityLista = EntityLista,  mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message) });
+                return new JsonResult( new {status = status, entityLista = EntityLista,  mensagem = ex.Message });
             }
-            return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = Mensagem });
+            return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
         }
 
         public IActionResult OnPostObter(string IdCapa)

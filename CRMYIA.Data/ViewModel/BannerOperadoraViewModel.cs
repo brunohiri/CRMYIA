@@ -7,7 +7,9 @@ namespace CRMYIA.Data.ViewModel
 {
     public class BannerOperadoraViewModel
     {
+        public string IdOperadora { get; set; }
         public string IdBanner { get; set; }
+        public string Titulo { get; set; }
         public string Descricao { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
@@ -17,5 +19,6 @@ namespace CRMYIA.Data.ViewModel
         public bool Ativo { get; set; }
 
         public virtual ICollection<BannerOperadora> BannerOperadora { get; set; }
+        public virtual Operadora IdOperadoraNavigation { get; set; }
     }
 }

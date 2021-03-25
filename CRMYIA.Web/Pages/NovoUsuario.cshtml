@@ -148,6 +148,15 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
+                        <label>Como poucos nomes, como você deseja ser chamado dentro do Sistema.</label>
+                        <input type="text" class="form-control" placeholder="Exemplo: Pedro Martins" asp-for="@Model.Entity.NomeApelido">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
                         <label for="NomeArquivoFoto">Selecione um Arquivo</label>
                         <div class="input-group">
                             <input type="file" id="NomeArquivoFoto" asp-for="@Model.NomeArquivoFoto" name="NomeArquivoFoto" accept=".png">

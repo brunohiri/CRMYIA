@@ -218,6 +218,7 @@ namespace CRMYIA.Business
                     .Where(x => x.Ativo && x.IdUsuario == IdUsuario)
                     .Select(x => new UsuarioCorretorViewModel(){ 
                     Nome = x.Nome,
+                    NomeApelido = x.NomeApelido,
                     Email = x.Email,
                     Telefone = x.Telefone
                     })

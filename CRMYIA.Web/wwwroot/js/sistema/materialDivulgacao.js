@@ -2,6 +2,8 @@
 var corbutaoredesocial = '';
 var canvas = '';
 var img = '';
+var NomeDoCliente = '';
+
 
 $(document).ready(function () {
 
@@ -31,16 +33,6 @@ $(document).ready(function () {
 });
 
 $(document).on('click', '.copiar-descricao', function () {
-    ///* Pega o texto do textArea */
-    //var copyText = document.getElementById($(this).data('copiardescricao'));
-    ///* Seleciona o textArea */
-    //copyText.select();
-    //copyText.setSelectionRange(0, 99999); /*Para dispositivos móveis*/
-    ///* Copie o texto dentro do campo de texto */
-    //document.execCommand("copy");
-
-
-
     var myCode = document.getElementById($(this).data('copiardescricao')).value;
     var fullLink = document.createElement('textarea');
     document.body.appendChild(fullLink);
@@ -48,47 +40,35 @@ $(document).on('click', '.copiar-descricao', function () {
     fullLink.select();
     document.execCommand("copy", false);
     fullLink.remove();
-    //alert("Copied the text: " + fullLink.value);
-
 });
 
 $(document).on('click', '.btn-redesocial', function () {
-    //var a = this.children;
-    //console.log(a);
-
-    // console.log($(this).data('canvas') + ' ' + $(this).data('img') + ' ' + $(this).data('usuario'));
     var $this = $(this);
     htmlspinner = $this.html();
     corbutaoredesocial = $(this).css("background-color");
     var aria_expanded = $(this).attr('aria-expanded');
     var ativo = aria_expanded == 'true' ? true : false ;
     console.log(corbutaoredesocial)
-    
-
-    var spinner = '<div class="spinner-grow" style="background: #EE5A26;" role="status">\
-                           <span class="sr-only"> Loading...</span>\
-                   </div>\
-                    <div class="spinner-grow" style="background: #494648;" role="status">\
-                           <span class="sr-only"> Loading...</span>\
-                   </div>\
-                    <div class="spinner-grow" style="background: #EE5A26;" role="status">\
-                           <span class="sr-only"> Loading...</span>\
-                   </div>\
-                    <div class="spinner-grow" style="background: #494648;" role="status">\
-                           <span class="sr-only"> Loading...</span>\
-                   </div>';
 
     var eleCanvas = $(this).data('canvas');
     var eleImg = $(this).data('img');
+
+    //aniversario - tipopostagem
+    var eleAniversario = $(this).data('aniversario');
+    var eleTipopostagem = $(this).data('tipopostagem');
+
     var vetUsuario = $(this).data('usuario').split('|');
     var vetDescricao = [];
     var vetEleCanvas = eleCanvas.split('|');
     var vetEleImg = eleImg.split('|');
 
+    //usuario
     var obj = {}
     obj.nome = vetUsuario[0];
     obj.telefone = vetUsuario[1];
     obj.email = vetUsuario[2];
+
+    
 
     //Desativa todos os bloco descrição
     $('.descricao').css('display', 'none');
@@ -108,50 +88,50 @@ $(document).on('click', '.btn-redesocial', function () {
     }
 
     //Indentifica se é  um array de canvas 
-    if ($(this).data('canvas').indexOf('|') > - 1) {
+    if ($(this).data('canvas').indexOf('|') > - 1 && $(this).data('aniversario').indexOf('|') > - 1 && $(this).data('tipopostagem').indexOf('|') > - 1 && ativo) {
+
+        //aniversario - tipopostagem
+        var aniversario = $(this).data('aniversario').split('|');
+        var tipopostagem = $(this).data('tipopostagem').split('|');
+
         var vetEleCanvas = eleCanvas.split('|');
         var vetEleImg = eleImg.split('|');
+        var vetEleAniversario = eleAniversario.split('|');
+        var vetEleTipopostagem = eleTipopostagem.split('|');
         var i = 0;
-        while (i < vetEleCanvas.length) {
-            if ((vetEleCanvas[i] != '' && vetEleCanvas[i] != undefined) && (vetEleImg[i] != '' && vetEleImg[i] != undefined)) {
-                GerarFotoContato(vetEleCanvas[i], vetEleImg[i], obj);
+        while (i < vetEleCanvas.length - 1) {
+            if ((vetEleCanvas[i] != '' && vetEleCanvas[i] != undefined) && (vetEleImg[i] != '' && vetEleImg[i] != undefined) && (vetEleAniversario[i] == 'true')) {
+               
+                obj.img = vetEleImg[i];
+                obj.canvas = vetEleCanvas[i];
+                obj.aniversario = vetEleAniversario[i];
+                obj.tipopostagem = vetEleTipopostagem[i];
+                PegarNomeDoCliente(obj);
+            } else {
+                obj.img = vetEleImg[i];
+                obj.canvas = vetEleCanvas[i];
+                obj.aniversario = vetEleAniversario[i];
+                obj.tipopostagem = vetEleTipopostagem[i];
+                GerarFotoContato(obj);
             }
             i++;
         }
-    } else {
-       GerarFotoContato(eleCanvas, eleImg, obj);
+    } else if (ativo) {
+        if (eleAniversario.toUpperCase().indexOf('true') > - 1) {
+            obj.img = eleCanvas;
+            obj.canvas = eleImg;
+            obj.aniversario = eleAniversario;
+            obj.tipopostagem = eleTipopostagem;
+            PegarNomeDoCliente(obj);      
+        } else {
+            obj.img = eleCanvas;
+            obj.canvas = eleImg;
+            obj.aniversario = eleAniversario;
+            obj.tipopostagem = eleTipopostagem;
+            GerarFotoContato(obj);        
+        }
+        
     }
-
-   
-    //if (vetEleCanvas.length == vetEleImg.length && ativo) {
-    //    var i = 0;
-    //    $this.css("background-color", '#FFFFFF');
-    //    $this.css("border", '2px solid black');
-    //    $this.html(spinner);
-    //    $('.btn-redesocial').attr("disabled", true);
-    //    $('#' + $(this).data('descricao')).css('display', 'block');
-    //    while (i < vetEleCanvas.length - 1) {
-    //        var imgCarregando = vetEleCanvas[i].split('-');
-
-    //        $('#carregando-' + imgCarregando[imgCarregando.length - 1]).css('display', 'block');
-    //        canvas = vetEleCanvas[i];
-    //        img = vetEleImg[i];
-    //        setTimeout(function () {
-    //            GerarFotoContato(canvas, img, obj);
-    //        }, 3000);
-    //        $('#carregando-' + imgCarregando[imgCarregando.length - 1]).css('display', 'none');
-    //        i++;
-    //    }
-    //    setTimeout(function () {
-    //        $this.css("background-color", corbutaoredesocial);
-    //        $this.css('border', '');
-    //        $this.html(htmlspinner);
-    //        $('.btn-redesocial').attr("disabled", false);
-
-    //    }, 3000);
-    //} else {
-    //    $('#' + $(this).data('descricao')).css('display', 'none');
-    //}
 
 });
 
@@ -160,7 +140,7 @@ function Campanhas() {
         console.log(data);
         var html = '';
         if (data.status) {
-
+            $('#campanhas').html('');
             console.log(data.campanhaArquivo);
             console.log(data.campanha);
 
@@ -181,6 +161,8 @@ function Campanhas() {
                 var k = 0;
                 var canvas = '';
                 var img = '';
+                var aniversario = '';
+                var tipopostagem = '';
                       html += '<section class="content">\
                                         <div class="container-fluid">\
                                             <div class="row">\
@@ -204,13 +186,28 @@ function Campanhas() {
                                                     k = 0;
                                                     canvas = '';
                                                     img = '';
+                                                    aniversario = '';
+                                                    tipopostagem = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('FACEBOOK') > -1) {
+
                                                         html += '<div class="collapse" id="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
                                                                 <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('FACEBOOK') > -1) {
+
+                                                                if (vetnome[k].toUpperCase().indexOf('STORIES') > -1) {
+                                                                    tipopostagem += 'STORIES|';
+                                                                } else if (vetnome[k].toUpperCase().indexOf('FEED') > -1) {
+                                                                    tipopostagem += 'FEED|';
+                                                                }
+                                                                if (vetnome[k].toUpperCase().indexOf('ANIVERSARIO') > -1 || vetnome[k].toUpperCase().indexOf('ANIVERSÁRIO') > -1) {
+                                                                    aniversario += 'true|';
+                                                                } else {
+                                                                    aniversario += 'false|';
+                                                                }
+
                                                                 html += '<div class="material-divulgacao-imagem p-2 flex-fill bd-highlight">\
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
@@ -223,7 +220,7 @@ function Campanhas() {
                                                             }
                                                             k++;
                                                         }
-                                                        btnfacebook = '<button class="btn btn-redesocial btn-filtro-facebook botao-rede-social" type="button" data-canvas="' + canvas + '" data-img="' + img + '" data-descricao="descricao-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-facebook-f"></i> &nbsp; Banners Facebook &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btnfacebook = '<button class="btn btn-redesocial btn-filtro-facebook botao-rede-social" type="button" data-canvas="' + canvas + '" data-aniversario="' + aniversario + '" data-tipopostagem="' + tipopostagem + '" data-img="' + img + '" data-descricao="descricao-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-facebook-f"></i> &nbsp; Banners Facebook &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '</div>';
                                                         html += '<!-- Fim Bloco de Imagem -->';
@@ -240,13 +237,28 @@ function Campanhas() {
                                                     k = 0;
                                                     canvas = '';
                                                     img = '';
+                                                    aniversario = '';
+                                                    tipopostagem = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('WHATSAPP') > -1) {
+                                                       
                                                         html += '<div class="collapse" id="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
                                                                 <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('WHATSAPP') > -1) {
+
+                                                                if (vetnome[k].toUpperCase().indexOf('STORIES') > -1) {
+                                                                    tipopostagem += 'STORIES|';
+                                                                } else if (vetnome[k].toUpperCase().indexOf('FEED') > -1) {
+                                                                    tipopostagem += 'FEED|';
+                                                                }
+                                                                if (vetnome[k].toUpperCase().indexOf('ANIVERSARIO') > -1 || vetnome[k].toUpperCase().indexOf('ANIVERSÁRIO') > -1) {
+                                                                    aniversario += 'true|';
+                                                                } else {
+                                                                    aniversario += 'false|';
+                                                                }
+
                                                                 html += '<div class="material-divulgacao-imagem p-2 flex-fill bd-highlight">\
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
@@ -259,7 +271,7 @@ function Campanhas() {
                                                             }
                                                             k++;
                                                         }
-                                                        btnwhatsapp = '<button class="btn btn-redesocial btn-filtro-whatsapp botao-rede-social" type="button" data-canvas="' + canvas + '" data-img="' + img + '" data-descricao="descricao-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-whatsapp"></i> &nbsp; Banners WhatsApp &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btnwhatsapp = '<button class="btn btn-redesocial btn-filtro-whatsapp botao-rede-social" type="button" data-canvas="' + canvas + '" data-aniversario="' + aniversario + '" data-tipopostagem="' + tipopostagem + '" data-img="' + img + '" data-descricao="descricao-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-whatsapp"></i> &nbsp; Banners WhatsApp &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '</div>';
                                                         html += '<!-- Fim Bloco de Imagem -->';
@@ -276,13 +288,28 @@ function Campanhas() {
                                                     k = 0;
                                                     canvas = '';
                                                     img = '';
+                                                    aniversario = ''
+                                                    tipopostagem = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('INSTAGRAM') > -1) {
+                                                       
                                                         html += '<div class="collapse" id="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
                                                                 <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('INSTAGRAM') > -1) {
+
+                                                                if (vetnome[k].toUpperCase().indexOf('STORIES') > -1) {
+                                                                    tipopostagem += 'STORIES|';
+                                                                } else if (vetnome[k].toUpperCase().indexOf('FEED') > -1) {
+                                                                    tipopostagem += 'FEED|';
+                                                                }
+                                                                if (vetnome[k].toUpperCase().indexOf('ANIVERSARIO') > -1 || vetnome[k].toUpperCase().indexOf('ANIVERSÁRIO') > -1) {
+                                                                    aniversario += 'true|';
+                                                                } else {
+                                                                    aniversario += 'false|';
+                                                                }
+
                                                                 html += '<div class="material-divulgacao-imagem p-2 flex-fill bd-highlight">\
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
@@ -295,7 +322,7 @@ function Campanhas() {
                                                             }
                                                             k++;
                                                         }
-                                                        btninstagram = '<button class="btn btn-redesocial btn-filtro-instagram botao-rede-social" type="button" data-canvas="' + canvas + '" data-img="' + img + '" data-descricao="descricao-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-instagram"></i> &nbsp; Banners Instagram &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btninstagram = '<button class="btn btn-redesocial btn-filtro-instagram botao-rede-social" type="button" data-canvas="' + canvas + '" data-aniversario="' + aniversario + '" data-tipopostagem="' + tipopostagem + '" data-img="' + img + '" data-descricao="descricao-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-instagram"></i> &nbsp; Banners Instagram &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '</div>';
                                                         html += '<!-- Fim Bloco de Imagem -->';
@@ -313,13 +340,28 @@ function Campanhas() {
                                                     k = 0;
                                                     canvas = '';
                                                     img = '';
+                                                    aniversario = '';
+                                                    tipopostagem = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('LINKEDIN') > -1) {
+                                                      
                                                         html += '<div class="collapse" id="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-parent="#accordionExample' + data.campanhaArquivo[i].idCampanhaArquivo + '">';
                                                         html += '<!-- Inicio Bloco de Imagem -->\
                                                                 <div class="d-flex justify-content-center m-3 banners-das-redes-sociais">';
 
                                                         while (k < vetnome.length) {
                                                             if (vetnome[k].toUpperCase().indexOf('LINKEDIN') > -1) {
+
+                                                                if (vetnome[k].toUpperCase().indexOf('STORIES') > -1) {
+                                                                    tipopostagem += 'STORIES|';
+                                                                } else if (vetnome[k].toUpperCase().indexOf('FEED') > -1) {
+                                                                    tipopostagem += 'FEED|';
+                                                                }
+                                                                if (vetnome[k].toUpperCase().indexOf('ANIVERSARIO') > -1 || vetnome[k].toUpperCase().indexOf('ANIVERSÁRIO') > -1) {
+                                                                    aniversario += 'true|';
+                                                                } else {
+                                                                    aniversario += 'false|';
+                                                                }
+
                                                                 html += '<div class="material-divulgacao-imagem p-2 flex-fill bd-highlight">\
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
@@ -332,7 +374,7 @@ function Campanhas() {
                                                             }
                                                             k++;
                                                         }
-                                                        btnlinkedin = '<button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="' + canvas + '" data-img="' + img + '" data-descricao="descricao-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-linkedin-in"></i> &nbsp; Banners Linkedin &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btnlinkedin = '<button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="' + canvas + '" data-aniversario="' + aniversario + '" data-tipopostagem="' + tipopostagem + '" data-img="' + img + '" data-descricao="descricao-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-linkedin-in"></i> &nbsp; Banners Linkedin &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '</div>';
                                                         html += '<!-- Fim Bloco de Imagem -->';
@@ -353,7 +395,7 @@ function Campanhas() {
                                                 } else {
                                                     btnfacebook = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('FACEBOOK') > -1) {
-                                                        btnfacebook = '<button class="btn btn-redesocial btn-filtro-facebook botao-rede-social" type="button" data-canvas="canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-facebook-f"></i> &nbsp; Banners Facebook &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btnfacebook = '<button class="btn btn-redesocial btn-filtro-facebook botao-rede-social" type="button" data-canvas="canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-facebook-f"></i> &nbsp; Banners Facebook &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '<div class="collapse multi-collapse" id="multiCollapseFacebook' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
                                                                         <div class="p-2 flex-fill bd-highlight" >\
@@ -377,7 +419,7 @@ function Campanhas() {
 
                                                     btnwhatsapp = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('WHATSAPP') > -1) {
-                                                        btnwhatsapp = '<button class="btn btn-redesocial btn-filtro-whatsapp botao-rede-social" type="button" data-canvas="canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-whatsapp"></i> &nbsp; Banners WhatsApp &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btnwhatsapp = '<button class="btn btn-redesocial btn-filtro-whatsapp botao-rede-social" type="button" data-canvas="canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-whatsapp"></i> &nbsp; Banners WhatsApp &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '<div class="collapse multi-collapse" id="multiCollapseWhatsapp' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
                                                                         <div class="p-2 flex-fill bd-highlight" >\
@@ -401,7 +443,7 @@ function Campanhas() {
 
                                                     btninstagram = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('INSTAGRAM') > -1) {
-                                                        btninstagram = '<button class="btn btn-redesocial btn-filtro-instagram botao-rede-social" type="button" data-canvas="canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-instagram"></i> &nbsp; Banners Instagram &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btninstagram = '<button class="btn btn-redesocial btn-filtro-instagram botao-rede-social" type="button" data-canvas="canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-instagram"></i> &nbsp; Banners Instagram &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '<div class="collapse multi-collapse" id="multiCollapseInstagram' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
                                                                         <div class="p-2 flex-fill bd-highlight" >\
@@ -425,7 +467,7 @@ function Campanhas() {
 
                                                     btnlinkedin = '';
                                                     if (data.campanhaArquivo[i].nomeArquivo.toUpperCase().indexOf('LINKEDIN') > -1) {
-                                                        btnlinkedin = '<button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nome + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-linkedin-in"></i> &nbsp; Banners Linkedin &nbsp; <i class="fas fa-chevron-down"></i></button>';
+                                                        btnlinkedin = '<button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-img="img-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-descricao="descricao-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" data-usuario="' + data.usuarioEntity.nomeApelido + ' | ' + data.usuarioEntity.telefone + ' |' + data.usuarioEntity.email + '" data-toggle="collapse" data-target="#multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" aria-expanded="false" aria-controls="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"><i class="fab fa-linkedin-in"></i> &nbsp; Banners Linkedin &nbsp; <i class="fas fa-chevron-down"></i></button>';
 
                                                         html += '<div class="collapse multi-collapse" id="multiCollapseLinkedin' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
                                                                         <div class="p-2 flex-fill bd-highlight" >\
@@ -521,50 +563,172 @@ function QuantidadeRedeSociais(data) {
 
 }
 
-function GerarFotoContato(Canvas, Img, usuario) {
+function GerarFotoContato(obj) {
+    var Canvas = obj.canvas;
+    var Img = obj.img;
     var canvas = document.getElementById(Canvas),
         ctx = canvas.getContext('2d');
 
-    //var dimensoes = $('#img-whatsapp-31-212-2')
-    var dimensoes = $('#' + Img);
-    //dimensoes[0].height
-    //dimensoes[0].width
+    ////################################################################################################################
 
-    //canvas.width = $('#' + Img).width();
-    //canvas.crossOrigin = "Anonymous";
-    //canvas.height = $('#' + Img).height();
+    ////Icon Font Awesome phone-volume => Telefone Unicode => f2a0
+    //const phoneVolume = document.createElement('i');
 
-    //canvas.width = dimensoes[0].width;
-    canvas.crossOrigin = "Anonymous";
-    //canvas.height = dimensoes[0].height;
+    //phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+    //document.body.appendChild(phoneVolume);
 
-    ctx.drawImage($('#' + Img).get(0), 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "20px Verdana";
-    ctx.drawImage($('#' + Img).get(0), 0, 0);
-    ctx.fillStyle = "white";
-    ctx.font = "bold 30px Verdana";
-    ctx.fillStyle = '#282C34';
-    ctx.drawImage($('#' + Img).get(0), 0, 0);
-    //(canvas.height - 30)
-    //ctx.fillText(usuario.nome, 30, 1780);
-    //ctx.fillText('   ' + usuario.telefone, 30, 1810);
-    //ctx.fillText('E-mail: ' + usuario.email, 30, 1840);
+    //// get the styles for the icon you just made
+    //const phoneVolumeStyles = window.getComputedStyle(phoneVolume);
+    //const phoneVolumeBeforeStyles = window.getComputedStyle(phoneVolume, ':before');
 
-    //ctx.fillText('E-mail: ' + usuario.email, 30, (canvas.height - 105));
-    //ctx.fillText('   ' + usuario.telefone, 30, (canvas.height - 75));
-    //ctx.fillText(usuario.nome, 30, (canvas.height - 45));
+    //const phoneVolumeFontFamily = phoneVolumeStyles.getPropertyValue('font-family');
+    //const phoneVolumeFontWeight = phoneVolumeStyles.getPropertyValue('font-weight');
+    //const phoneVolumeFontSize = '30px'; // just to make things a little bigger...
 
-    ctx.fillText(usuario.nome, 30, (canvas.height - 105));
-    ctx.fillText('E-mail: ' + usuario.email, 30, (canvas.height - 75));
-    ctx.fillText('   ' + usuario.telefone, 30, (canvas.height - 45));
+    //const phoneVolumeCanvasFont = `${phoneVolumeFontWeight} ${phoneVolumeFontSize} ${phoneVolumeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+    //const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
-    var img = document.getElementById("wpp");
-    //ctx.drawImage(img, 20, 1785);
-    ctx.drawImage(img, 26, (canvas.height - 72));
-    ctx.stroke();
-    //$('#' + canvas.id).css('display', 'block');
-    //ctx.fillText($(this).val(), 10, 50);
+    //ctx.font = phoneVolumeCanvasFont;
+    //ctx.fillStyle = '#303030';
+    //ctx.textAlign = 'center';
+
+    ////################################################################################################################
+
+    ////Icon Font Awesome envelope => Email Unicode => f0e0
+    //const envelope = document.createElement('i');
+
+    //envelope.setAttribute('class', 'fas fa-envelope');
+    //document.body.appendChild(envelope);
+
+    //// get the styles for the icon you just made
+    //const envelopeStyles = window.getComputedStyle(envelope);
+    //const envelopeBeforeStyles = window.getComputedStyle(envelope, ':before');
+
+    //const envelopeFontFamily = envelopeStyles.getPropertyValue('font-family');
+    //const envelopeFontWeight = envelopeStyles.getPropertyValue('font-weight');
+    //const envelopeFontSize = '30px'; // just to make things a little bigger...
+
+    //const envelopeCanvasFont = `${envelopeFontWeight} ${envelopeFontSize} ${envelopeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+    //const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+    //ctx.font = envelopeCanvasFont;
+    //ctx.fillStyle = '#303030';
+    //ctx.textAlign = 'center';
+    ////################################################################################################################
+
+    //if (aniversario && tipopostagem == 'FEED') {          
+
+    //    var dimensoes = $('#' + Img);
+    //    canvas.crossOrigin = "Anonymous";
+
+    //    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    //    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //    ctx.font = "20px Verdana";
+    //    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    //    ctx.fillStyle = "white";
+    //    ctx.font = "bold 30px Verdana";
+    //    ctx.fillStyle = '#282C34';
+    //    ctx.drawImage($('#' + Img).get(0), 0, 0);
+
+    //    ctx.fillText(obj.nome, 30, (canvas.height - 105));
+    //    ctx.fillText('E-mail: ' + obj.email, 30, (canvas.height - 75));
+    //    ctx.fillText('   ' + obj.telefone, 30, (canvas.height - 45));
+
+    //    //var img = document.getElementById("wpp");
+    //    //ctx.drawImage(img, 26, (canvas.height - 72));
+    //    ctx.stroke();
+    //} else
+    //    if (aniversario && tipopostagem == 'STORIES') {
+       
+    //    var dimensoes = $('#' + Img);
+    //    canvas.crossOrigin = "Anonymous";
+
+    //    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    //    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //    ctx.font = "20px Verdana";
+    //    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    //    ctx.fillStyle = "white";
+    //    ctx.font = "bold 30px Verdana";
+    //    ctx.fillStyle = '#282C34';
+    //    ctx.drawImage($('#' + Img).get(0), 0, 0);
+
+    //    ctx.fillText(usuario.nome, 30, (canvas.height - 105));
+    //    ctx.fillText(NomeDoCliente, 30, (canvas.height - 75));
+    //    //ctx.fillText('E-mail: ' + usuario.email, 30, (canvas.height - 75));
+    //    //ctx.fillText('   ' + usuario.telefone, 30, (canvas.height - 45));
+
+    //    //var img = document.getElementById("wpp");
+    //    //ctx.drawImage(img, 26, (canvas.height - 72));
+    //    ctx.stroke();
+
+    //}else {
+        var dimensoes = $('#' + Img);
+        canvas.crossOrigin = "Anonymous";
+
+        ctx.drawImage($('#' + Img).get(0), 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "20px Verdana";
+        ctx.drawImage($('#' + Img).get(0), 0, 0);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 30px Verdana";
+        ctx.fillStyle = '#282C34';
+        ctx.drawImage($('#' + Img).get(0), 0, 0);
+
+        //################################################################################################################
+
+        //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
+        const phoneVolume = document.createElement('i');
+
+        phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+        document.body.appendChild(phoneVolume);
+
+        // get the styles for the icon you just made
+        const phoneVolumeStyles = window.getComputedStyle(phoneVolume);
+        const phoneVolumeBeforeStyles = window.getComputedStyle(phoneVolume, ':before');
+
+        const phoneVolumeFontFamily = phoneVolumeStyles.getPropertyValue('font-family');
+        const phoneVolumeFontWeight = phoneVolumeStyles.getPropertyValue('font-weight');
+        const phoneVolumeFontSize = '30px'; // just to make things a little bigger...
+
+        const phoneVolumeCanvasFont = `${phoneVolumeFontWeight} ${phoneVolumeFontSize} ${phoneVolumeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+        const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+        ctx.font = phoneVolumeCanvasFont;
+        ctx.fillStyle = '#303030';
+        ctx.textAlign = 'center';
+
+        //################################################################################################################
+
+        //Icon Font Awesome envelope => Email Unicode => f0e0
+        const envelope = document.createElement('i');
+
+        envelope.setAttribute('class', 'fas fa-envelope');
+        document.body.appendChild(envelope);
+
+        // get the styles for the icon you just made
+        const envelopeStyles = window.getComputedStyle(envelope);
+        const envelopeBeforeStyles = window.getComputedStyle(envelope, ':before');
+
+        const envelopeFontFamily = envelopeStyles.getPropertyValue('font-family');
+        const envelopeFontWeight = envelopeStyles.getPropertyValue('font-weight');
+        const envelopeFontSize = '30px'; // just to make things a little bigger...
+
+        const envelopeCanvasFont = `${envelopeFontWeight} ${envelopeFontSize} ${envelopeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+        const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+
+        ctx.font = envelopeCanvasFont;
+        ctx.fillStyle = '#303030';
+        ctx.textAlign = 'center';
+    //################################################################################################################
+
+        ctx.fillText(obj.nome, 130, (canvas.height - 105));
+        ctx.fillText(`${iconPhoneVolume}` + obj.telefone, 170, (canvas.height - 75));
+        ctx.fillText(`${iconEnvelope}` + " " + obj.email, 210, (canvas.height - 45));
+
+        //var img = document.getElementById("wpp");
+        //ctx.drawImage(img, 26, (canvas.height - 72));
+        ctx.stroke();
+    ///}
 }
 
 function download_image(eleCanvas) {
@@ -574,4 +738,83 @@ function download_image(eleCanvas) {
     link.download = "download.png";
     link.href = image;
     link.click();
+}
+
+async function PegarNomeDoCliente(obj) {
+    swal({
+        title: 'Informe o nome do Cliente.',
+        html: '<p><input id="NomeDoCliente">',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        // ...
+        showCancelButton: true,
+        closeOnConfirm: false,
+        preConfirm: function () {
+            return new Promise((resolve, reject) => {
+                // get your inputs using their placeholder or maybe add IDs to them
+                resolve({
+                    NomeDoCliente: $('#NomeDoCliente').val()
+                });
+
+                // maybe also reject() on some condition
+            });
+        }
+    }).then((data) => {
+        // your input data object will be usable from here
+        var Canvas = obj.canvas;
+        var Img = obj.img;
+
+        if (obj.aniversario == 'true' && obj.tipopostagem.toUpperCase().indexOf('STORIES') > -1 && data.value.NomeDoCliente != undefined && data.value.NomeDoCliente != '') {
+            var canvas = document.getElementById(Canvas),
+                ctx = canvas.getContext('2d');
+
+            var dimensoes = $('#' + Img);
+            canvas.crossOrigin = "Anonymous";
+
+            ctx.drawImage($('#' + Img).get(0), 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+           /* ctx.font = "20px Verdana";*/
+            ctx.drawImage($('#' + Img).get(0), 0, 0);
+            ctx.fillStyle = "white";
+            ctx.font = "bold 60px Yu Gothic Medium";
+            ctx.fillStyle = '#282C34';
+            ctx.drawImage($('#' + Img).get(0), 0, 0);
+
+            ctx.textAlign = 'center';
+            ctx.fillText(data.value.NomeDoCliente, (canvas.width / 2), (canvas.height - 780));
+
+            ctx.font = "bold 55px Yu Gothic Medium";
+            ctx.textAlign = 'center';
+            ctx.fillText(obj.nome, (canvas.width / 2), (canvas.height - 1260));
+
+        ///NomeDoCliente = data.value.NomeDoCliente;
+        }
+        else if (obj.aniversario == 'true' && obj.tipopostagem.toUpperCase().indexOf('FEED') > -1 && data.value.NomeDoCliente != undefined && data.value.NomeDoCliente != '') {
+            var canvas = document.getElementById(Canvas),
+                ctx = canvas.getContext('2d');
+
+            var dimensoes = $('#' + Img);
+            canvas.crossOrigin = "Anonymous";
+
+            ctx.drawImage($('#' + Img).get(0), 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "20px Verdana";
+            ctx.drawImage($('#' + Img).get(0), 0, 0);
+            ctx.fillStyle = "white";
+            ctx.font = "bold 60px Yu Gothic Medium";
+            ctx.fillStyle = '#282C34';
+            ctx.drawImage($('#' + Img).get(0), 0, 0);
+
+            ctx.textAlign = 'center';
+            ctx.fillText(data.value.NomeDoCliente, (canvas.width / 2), (canvas.height - 610));
+
+            //ctx.font = "bold 350px Yu Gothic Medium";
+            //ctx.textAlign = 'center';
+            //ctx.fillText(obj.nome, (canvas.width / 2), (canvas.height - 1260));
+
+            ///NomeDoCliente = data.value.NomeDoCliente;
+        }
+
+        
+    });
 }

@@ -1,5 +1,4 @@
 ﻿var IdRedeSocial = 0;
-
 //Alterar
 var idcapa = '';
 var nomearquivo = '';
@@ -18,12 +17,12 @@ $(document).ready(function () {
         paramName: "files", // The name that will be used to transfer the file
         maxFiles: 2000,
         parallelUploads: 128,
-        url: "/UploadCapaRedeSocial?handler=UploadUploadCapaRedeSocial",
+        url: "/UploadCapaRedeSocial?handler=UploadCapaRedeSocial",
         previewsContainer: "#imageUpload", // Define the container to display the previews
         //params: JSON.stringify(obj),
-        acceptedFiles: '.png,.jpg,.jpge,.gif',
+        acceptedFiles: '.png,.jpg,.jpeg,.gif',
         autoProcessQueue: false,
-        uploadMultiple: true,
+       /* uploadMultiple: true,*/
         previewTemplate: previewTemplate,
         clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
         init: function () {
@@ -139,7 +138,8 @@ $(document).ready(function () {
                     $('#ModalAlterarImagemMensagemIcon').addClass(data.mensagem.iconClass);
                     $('#ModalAlterarImagemMensagemSpan').text(data.mensagem.mensagem);
                 }
-                setTimeout(function () { $('#modalAlterarImagem').modal('hide'); }, 3000);
+                setTimeout(function () { $('#ModalAlterarImagemMensagemDiv').css('display', 'none'); }, 3000);
+                setTimeout(function () { $('#modalAlterarImagem').modal('hide'); }, 5000);
 
             });
         },
@@ -182,9 +182,14 @@ $(document).on('click', '.alterar-titulo', function () {
             success: function (data) {
                 if (data.status) {
                     console.log(data);
+                    $('#IdCapa').val(data.entityCapa.idCapa);
                     $('#Titulo').val(data.entityCapa.titulo);
-                    $('#IdRedeSocial').val(data.idRedeSocial);
+                    $("#IdRedeSocial").val(data.entityRedeSocial.idRedeSocial).trigger('change');
                     $('#Titulo').focus();
+
+                    $('.salvar-texto').css('display', 'block');
+                    $('.upload-capa-rede-social').css('display', 'none');
+                    $('.btn-adicionar-imagem').css('display', 'none');
 
                 }
             },
@@ -194,6 +199,59 @@ $(document).on('click', '.alterar-titulo', function () {
         });
     }
 
+});
+
+$(document).on('click', '#btn-salvar-texto', function () {
+
+    formData = new FormData();
+    formData.append('IdCapa', $('#IdCapa').val());
+    formData.append('Titulo', $('#Titulo').val());
+    formData.append('IdRedeSocial', $("#IdRedeSocial").val());
+    $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
+    if ($('#IdCapa').val() != undefined && $('#Titulo').val() != undefined && $("#IdRedeSocial").val() != undefined)
+        displayBusyIndicator()
+    $.ajax({
+        type: 'POST',
+        url: "/UploadCapaRedeSocial?handler=UploadCapaRedeSocial",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (data) {
+            if (data.status) {
+
+                $('#tableCapaRedeSocial').html('');
+                CarregarTabela(data.entityLista);
+
+                $('#UploadCapaRedeSoCialMensagemDiv').show();
+                $('#UploadCapaRedeSoCialMensagemDivAlert').removeClass();
+                $('#UploadCapaRedeSoCialMensagemDivAlert').addClass(data.mensagem.cssClass);
+
+                $('#UploadCapaRedeSoCialMensagemIcon').removeClass();
+                $('#UploadCapaRedeSoCialMensagemIcon').addClass(data.mensagem.iconClass);
+                $('#UploadCapaRedeSoCialMensagemSpan').text(data.mensagem.mensagem);
+                document.getElementById("upload-capa-rede-social").reset();
+                $("#IdRedeSocial").select2('val', '0');
+                $("#IdRedeSocial").select2({
+                    placeholder: "Selecione...",
+                    allowClear: true
+                });
+
+                $('.salvar-texto').css('display', 'none');
+                $('.upload-capa-rede-social').css('display', 'block');
+                $('.btn-adicionar-imagem').css('display', 'block');
+            }
+            setTimeout(function () { $('#UploadCapaRedeSoCialMensagemDiv').css('display', 'none'); }, 5000);
+        },
+        error: function () {
+            swal("Erro!", "Erro ao alterar o registro, contate o Administrador do Sistema.", "error");
+        }
+    });
+    displayBusyAvailable()
 });
 
 
@@ -332,7 +390,7 @@ function CarregarTabela(data) {
                             </thead>\
                             <tbody>';
         $.each(data, function (index, value) {
-            var ativo = this.ativo = 'true' ? '<span class="badge badge-pill badge - success">ATIVO</span>' : '<span class="badge badge-pill badge-warning">DESATIVADO</span>';
+            var ativo = this.ativo = 'true' ? '<span class="badge badge-pill badge-success">ATIVO</span>' : '<span class="badge badge-pill badge-warning">DESATIVADO</span>';
             html += '<tr>\
                         <td></td>\
                         <td><img src="' + this.caminhoArquivo + this.nomeArquivo + '" style="max-width: 100px!important;" alt="Capa"></td>\
@@ -340,7 +398,7 @@ function CarregarTabela(data) {
                         <td>'+ this.dataCadastro + '</td>\
                         <td>'+ ativo +'</td>\
                         <td>\
-                            <span class="btn alterar-titulo" title="Editar Titulo" data-idcapa="' + this.idCapa + '"><i class="icon fas fa-edit"></i></span>\
+                            <span class="btn alterar-titulo" title="Editar Titulo e Rede Social" data-idcapa="' + this.idCapa + '"><i class="icon fas fa-edit"></i></span>\
                             <span class="btn alterar-imagem" title="Editar Imagem" data-idcapa="' + this.idCapa + '" data-nomearquivo="' + this.nomeArquivo + '" data-caminho="' + this.caminhoArquivo + '"><i class="fas fa-images"></i></span>\
                             <span class="btn excluir-imagem" title="Excluir Imagem" data-idcapa="' + this.idCapa + '" data-nomearquivo="' + this.nomeArquivo + '"><i class="fas fa-trash-alt"></i></span>\
                         </td >\

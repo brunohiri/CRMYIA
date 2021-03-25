@@ -34,7 +34,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="IdentificadorVideo">Identificador do Video</label>
-                        <input type="text" class="form-control" name="IdentificadorVideo" id="IdentificadorVideo" required>
+                        <input type="text" class="form-control"  placeholder="Id Video YouTube. Exemplo: tgbNymZ7vqY" name="IdentificadorVideo" id="IdentificadorVideo" required>
                         <div class="invalid-feedback">
 
                         </div>
@@ -103,8 +103,6 @@
                     <tr>
                         <th></th>
                         <th>Identificador do Video</th>
-                        <th>Rede Sociais</th>
-                        <th>Local</th>
                         <th>Nome do Arquivo</th>
                         <th>Cadastro</th>
                         <th>Status</th>
@@ -120,14 +118,12 @@
                             <tr>
                                 <td></td>
                                 <td>@Html.Raw(Item.IdentificadorVideo)</td>
-                                <td>Facebook</td>
-                                <td>Stories</td>
                                 <td>@(Item.NomeVideo)</td>
                                 <td>@Item.DataCadastro</td>
                                 <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
                                 <td>
-                                    <span class="text-info editar-formulario" data-idvideo="@Item.IdVideo" title="Editar"><i class="fas fa-edit"></i></span>
-                                    <span class="alterar-video" title="Editar Video" data-idvideo="@Item.IdVideo" data-nomevideo="@Item.NomeVideo" data-identificadorvideo="@Item.IdentificadorVideo" data-caminhovideo="@caminhoImagem"><i class="fab fa-youtube"></i></span>
+                                    <span class="btn editar-formulario" data-idvideo="@Item.IdVideo" title="Editar Identificador do Video"><i class="fas fa-edit"></i></span>
+                                    <span class="btn alterar-video" title="Editar Video" data-idvideo="@Item.IdVideo" data-nomevideo="@Item.NomeVideo" data-identificadorvideo="@Item.IdentificadorVideo" data-caminhovideo="@caminhoImagem"><i class="fab fa-youtube"></i></span>
                                     <span class="btn excluir-video" title="Excluir Imagem" data-idvideo="@Item.IdVideo"><i class="fas fa-trash-alt"></i></span>
                                 </td>
                             </tr>
@@ -174,6 +170,15 @@
                 </div>
 
                 <form role="form" id="alterar-upload-video" method="post" enctype="multipart/form-data">
+
+                    <div class="d-flex justify-content-around">
+                        <div class="col-sm-6 text-center">
+                            <div class="form-group">
+                                <label>Identificador do Video</label>
+                                <input class="form-control" placeholder="Id Video YouTube. Exemplo: tgbNymZ7vqY" name="ModalIdVideo" id="ModalIdVideo">
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="table table-striped files" id="videoUploadAlterar">
                         <div id="template-alterar" class="file-row dz-image-preview">

@@ -78,25 +78,22 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostUploadCampanhaGenericaAsync([FromForm] List<ICollection<IFormFile>> files, CampanhaArquivo formData)//long IdCampanhaArquivo, long IdCampanha, string Descricao, string Observacao, bool Ativo)
+        public async Task<IActionResult> OnPostUploadCampanhaGenericaAsync([FromForm] List<ICollection<IFormFile>> files, EnviarCampanhaArquivoViewModel formData)//long IdCampanhaArquivo, long IdCampanha, string Descricao, string Observacao, bool Ativo)
         {
             try
             {
-
-                
                 var documentFile = Request.Form.Files.ToList();
                 List<MaterialDivulgacaoViewModel> EntityLista = null;
+                CampanhaArquivo EntityCampanhaArquivo = null;
+                Informacao EntityInformacao = null;
                 MensagemModel mensagem = null;
                 List<string> FilesNomes = new List<string>();
                 bool status = false;
-                //if (CampanhaArquivoModel.GetCampanhaId(formData.IdCampanha.ToString().ExtractLong()))
                 
                     foreach (IFormFile Item in documentFile)
                     {
                         FilesNomes.Add(Item.FileName);
                     }
-
-                   
 
                     if (formData.Descricao == null && documentFile == null)
                     {
@@ -123,6 +120,15 @@ namespace CRMYIA.Web.Pages
                                 string[] VetFileName;
                                 string[] VetRedesSociais;
                                 string[] VetTipoPostagem;
+
+                                InformacaoModel.Add(new Informacao() { 
+                                    Descricao = formData.Descricao,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = formData.Ativo
+                                });
+
+                                EntityInformacao = InformacaoModel.GetLastId();
+
                                 foreach (var Item in documentFile)
                                 {
                                     string NomeArquivoOriginal = Item.FileName;
@@ -133,68 +139,74 @@ namespace CRMYIA.Web.Pages
                                     using (var fileStream = new FileStream(file, FileMode.Create))
                                     {
                                         await Item.CopyToAsync(fileStream);
-                                        formData.CaminhoArquivo = "ArquivoCampanhaArquivo/";
-                                        if (i + 1 < documentFile.Count)
-                                        {
-                                            formData.NomeArquivo += NomeArquivo + "|";
-                                        }
-                                        else
-                                        {
-                                            formData.NomeArquivo += NomeArquivo;
-                                        }
                                         CaminhoImagem = "ArquivoCampanhaArquivo/";
                                         RedesSociais = string.Empty;
                                         VetFileName = Item.FileName.Split('-');
                                         RedesSociais = VetFileName[1];
-                                        //foreach (var ItemRedesSociais in VetRedesSociais)
-                                        //{
-                                        //    RedesSociais += ItemRedesSociais + "|";
-                                        //}
 
                                         TipoPostagem = string.Empty;
                                         TipoPostagem = VetFileName[2];
-                                        //foreach (var ItemTipoPostagem in VetTipoPostagem)
-                                        //{
-                                        //    TipoPostagem += ItemTipoPostagem + "|";
-                                        //}
                                     }
                                     using (var image = Image.FromStream(Item.OpenReadStream()))
                                     {
                                         Width = image.Width;
                                         Height = image.Height;
                                     }
-
-                                    if (i + 1 < documentFile.Count)
-                                    {
-                                        formData.Width += Width + "|";
-                                        formData.Height += Height + "|";
-                                    }
-                                    else
-                                    {
-                                        formData.Width += Width;
-                                        formData.Height += Height;
-                                    }
                                     i++;
 
-
+                                    CampanhaArquivoModel.Add(new CampanhaArquivo()
+                                    {
+                                        IdCampanha = formData.IdCampanha,
+                                        IdInformacao = EntityInformacao.IdInformacao,
+                                        CaminhoArquivo = "ArquivoCampanhaArquivo/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        RedesSociais = RedesSociais,
+                                        TipoPostagem = TipoPostagem,
+                                        DataCadastro = DateTime.Now,
+                                        Ativo = formData.Ativo
+                                    });
                                 }
-                                CampanhaArquivoModel.Add(new CampanhaArquivo()
-                                {
-                                    IdCampanha = formData.IdCampanha,
-                                    Descricao = formData.Descricao,
-                                    CaminhoArquivo = "ArquivoCampanhaArquivo/",
-                                    NomeArquivo = formData.NomeArquivo,
-                                    Width = formData.Width,
-                                    Height = formData.Height,
-                                    RedesSociais = RedesSociais,
-                                    TipoPostagem = TipoPostagem,
-                                    DataCadastro = DateTime.Now,
-                                    Ativo = formData.Ativo
-                                });
-
                                 EntityLista = CampanhaArquivoModel.GetList();
                                 status = true;
                                 mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                            }else
+                            {
+                            //UpDate Texto Informacao
+                                EntityCampanhaArquivo = CampanhaArquivoModel.Get(formData.IdCampanhaArquivo);
+                                EntityInformacao = InformacaoModel.Get(formData.IdInformacao);
+
+                                if (EntityCampanhaArquivo != null && EntityInformacao != null) {
+
+                                    InformacaoModel.Update(new Informacao() { 
+                                        IdInformacao = formData.IdInformacao,
+                                        Descricao = formData.Descricao,
+                                        DataCadastro = DateTime.Now,
+                                        Ativo = formData.Ativo
+                                    });
+
+                                    CampanhaArquivoModel.Update(new CampanhaArquivo() {
+                                        IdCampanhaArquivo = formData.IdCampanhaArquivo,
+                                        IdCampanha = formData.IdCampanha,
+                                        IdInformacao = formData.IdInformacao,
+                                        CaminhoArquivo = EntityCampanhaArquivo.CaminhoArquivo,
+                                        NomeArquivo = EntityCampanhaArquivo.NomeArquivo,
+                                        Width = EntityCampanhaArquivo.Width,
+                                        Height = EntityCampanhaArquivo.Height,
+                                        RedesSociais = EntityCampanhaArquivo.RedesSociais,
+                                        TipoPostagem = EntityCampanhaArquivo.TipoPostagem,
+                                        DataCadastro = DateTime.Now,
+                                        Ativo = formData.Ativo
+                                    }); 
+
+                                }
+
+                                mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Registro atualizado com Sucesso!!!");
+                                EntityLista = CampanhaArquivoModel.GetList();
+                                status = true;
+                                return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
+
                             }
                         }
                     }
@@ -228,6 +240,12 @@ namespace CRMYIA.Web.Pages
                 CampanhaArquivo Entity = null;
                 Entity = CampanhaArquivoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCampanhaArquivo)).ExtractLong());
                 string msg = "Alterado";
+                int Width = 0;
+                int Height = 0;
+                string RedesSociais = string.Empty;
+                string[] VetFileName;
+                string TipoPostagem = string.Empty;
+                string NovoNomeArquivo = string.Empty;
 
                 List<string> FilesNomes = new List<string>();
 
@@ -237,41 +255,38 @@ namespace CRMYIA.Web.Pages
                 {
                     if (!string.IsNullOrEmpty(NomeArquivo) && file != null)
                     {
-                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
+                        string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanhaArquivo"], NomeArquivo);
                         if ((System.IO.File.Exists(_imageToBeDeleted)))
                         {
                             System.IO.File.Delete(_imageToBeDeleted);
                         }
                         string NomeArquivoOriginal = file.FileName;
 
-                        string NovoNomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
-                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NovoNomeArquivo);
+                        NovoNomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
+                        var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanhaArquivo"], NovoNomeArquivo);
+                       
 
                         string[] vetNomeArquivo = Entity.NomeArquivo.Split(";");
 
                         Entity.NomeArquivo = "";
-                        for (int i = 0; i < vetNomeArquivo.Length; i++)
-                        {
-                            if (vetNomeArquivo[i] == NomeArquivo)
-                            {
-                                vetNomeArquivo[i] = NovoNomeArquivo;
-                            }
-
-                            if (i + 1 < vetNomeArquivo.Length)
-                            {
-                                Entity.NomeArquivo += vetNomeArquivo[i] + "|";
-                            }
-                            else
-                            {
-                                Entity.NomeArquivo += vetNomeArquivo[i];
-                            }
-                        }
-
+                       
                         using (var fileStream = new FileStream(arquivo, FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);
                             Entity.CaminhoArquivo = "ArquivoCampanhaArquivo/";
+                            Entity.NomeArquivo = 
+                            RedesSociais = string.Empty;
+                            VetFileName = file.FileName.Split('-');
+                            RedesSociais = VetFileName[1];
+                            TipoPostagem = string.Empty;
+                            TipoPostagem = VetFileName[2];
                         }
+                        using (var image = Image.FromStream(file.OpenReadStream()))
+                        {
+                            Width = image.Width;
+                            Height = image.Height;
+                        }
+
                     }
                     else
                     {
@@ -282,9 +297,13 @@ namespace CRMYIA.Web.Pages
                     {
                         IdCampanhaArquivo = Entity.IdCampanhaArquivo,
                         IdCampanha = Entity.IdCampanha,
-                        Descricao = Entity.Descricao,
+                        IdInformacao = Entity.IdInformacao,
                         CaminhoArquivo = Entity.CaminhoArquivo,
-                        NomeArquivo = Entity.NomeArquivo,
+                        NomeArquivo = NovoNomeArquivo,
+                        Width = Width,
+                        Height = Height,
+                        RedesSociais = RedesSociais,
+                        TipoPostagem = TipoPostagem,
                         DataCadastro = DateTime.Now,
                         Ativo = Entity.Ativo
                     });
@@ -312,7 +331,7 @@ namespace CRMYIA.Web.Pages
             }
         }
 
-        public IActionResult OnGetExcluirImagem(string IdCampanhaArquivo, string NomeArquivo)
+        public IActionResult OnPostExcluirImagem(string IdCampanhaArquivo)
         {
             try
             {
@@ -321,54 +340,13 @@ namespace CRMYIA.Web.Pages
                 bool status = false;
                 string Mensagem = "";
                 Entity = CampanhaArquivoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCampanhaArquivo)).ExtractLong());
-                var AuxNomeImagem = "";
-                var NomeImagem = Entity.NomeArquivo.Split(";");
-                int Tam = NomeImagem.Length;
-                int i = 0;
-                if (Tam > 1)
-                {
-                    foreach (var Item in NomeImagem)
-                    {
-                        if (Item == NomeArquivo)
-                        {
-                            if (i + 1 < Tam)
-                            {
-                                AuxNomeImagem += "#" + Item + ";";
-                            }
-                            else
-                            {
-                                AuxNomeImagem += "#" + Item;
-                            }
-                        }
-                        else
-                        {
-                            if (i + 1 < Tam)
-                            {
-                                AuxNomeImagem += Item + ";";
-                            }
-                            else
-                            {
-                                AuxNomeImagem += Item;
-                            }
-                            
-                        }
-                        i++;
-                    }
 
-                    Entity.NomeArquivo = AuxNomeImagem;
-                    CampanhaArquivoModel.Update(Entity);
-                    EntityLista = CampanhaArquivoModel.GetList();
-                    status = true;
-                    Mensagem = "Imagem Excluída com Sucesso!";
-                }
-                else
-                {
-                    Entity.Ativo = false;
-                    CampanhaArquivoModel.Update(Entity);
-                    EntityLista = CampanhaArquivoModel.GetList();
-                    status = true;
-                    Mensagem = "Imagem Excluída com Sucesso!";
-                }
+                Entity.Ativo = false;
+                CampanhaArquivoModel.Update(Entity);
+                EntityLista = CampanhaArquivoModel.GetList();
+                status = true;
+                Mensagem = "Imagem Excluída com Sucesso!";
+                
                 return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = Mensagem });
             }
             catch(Exception ex)
@@ -376,6 +354,27 @@ namespace CRMYIA.Web.Pages
                 return new JsonResult(ex.Message);
             }
             
+        }
+        public IActionResult OnPostObter(string IdCampanhaarquivo)
+        {
+
+            CampanhaArquivo EntityCampanhaArquivo = null;
+            Informacao EntityInformacao = null;
+            bool status = false;
+            Mensagem = null;
+            try
+            {
+                EntityCampanhaArquivo = CampanhaArquivoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdCampanhaarquivo)).ExtractLong());
+                EntityInformacao = InformacaoModel.Get(EntityCampanhaArquivo.IdInformacao.ToString().ExtractLong());
+
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message);
+                return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityCampanhaArquivo, entityInformacao = EntityInformacao });
+            }
+            return new JsonResult(new { status = status, entityLista = EntityCampanhaArquivo, entityInformacao = EntityInformacao });
         }
         public void CarregarLists()
         {

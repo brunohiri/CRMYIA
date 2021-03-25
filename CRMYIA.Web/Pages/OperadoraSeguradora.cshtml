@@ -1,0 +1,34 @@
+﻿@page
+@model CRMYIA.Web.Pages.OperadoraSeguradora
+@{
+    ViewData["Title"] = "Banners De Operadora";
+    ViewData["Pagina"] = "Download";
+}
+@using CRMYIA.Business.Util;
+@{ string nomeCaminho = "";}
+
+<div id="capa-rede-social">
+    <div class="d-flex flex-wrap">
+        @foreach (var Item in Model.ListOperadora)
+        {
+            if(@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+            {
+                nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+            }
+            else
+            {
+                nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+            }
+            <div class="card m-2 card-operadora" data-idoperadora="@Item.IdOperadora" style="width: 18rem;">
+                <div class="card-body text-center">
+                    <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    @*<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>*@
+                </div>
+
+                <a asp-page="/BannersDeOperadora" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdOperadora.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link">@Item.Descricao</h5></a>
+            </div>
+        }
+    </div>
+</div>
