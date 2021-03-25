@@ -45,17 +45,20 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx = canvas.getContext('2d');
 
-        var dimensoes = $('#' + Img);
-        canvas.crossOrigin = "Anonymous";
+    var dimensoes = $('#' + Img);
+    canvas.crossOrigin = "Anonymous";
 
-        ctx.drawImage($('#' + Img).get(0), 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Arial";
-        ctx.drawImage($('#' + Img).get(0), 0, 0);
-        ctx.fillStyle = "white";
-        ctx.font = "bold 25px Arial";
-        ctx.fillStyle = '#F05A26';
-        ctx.drawImage($('#' + Img).get(0), 0, 0);
+    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = 'bold 25px "Montserrat"';
+    ctx.fontFamily = 'Montserrat';
+    console.log('font: ' + ctx.font);
+    console.log('fontFamily: ' + ctx.fontFamily);
+    ctx.fillStyle = '#F05A26';
+    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    //ctx.fillStyle = "white";
+    //ctx.font = "bold 25px Verdana";
+    //ctx.drawImage($('#' + Img).get(0), 0, 0);
 
     //Icon Font Awesome
     const i = document.createElement('i');
@@ -75,10 +78,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
     const canvasFont = `${fontWeight} ${fontSize} ${fontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
     const icon = String.fromCodePoint(iBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
-        ctx.font = canvasFont;
-        ctx.fillStyle = '#F05A26';
-        ctx.textAlign = 'center';
-        //ctx.fillText(icon, (canvas.width / 2), (canvas.height - 265));
+    ctx.font = canvasFont;
+    ctx.fillStyle = '#F05A26';
+    ctx.textAlign = 'center';
+    //ctx.fillText(icon, (canvas.width / 2), (canvas.height - 265));
 
     //######################################################################################
 
@@ -105,18 +108,18 @@ function GerarFotoContato(Canvas, Img, usuario) {
     ctx.textAlign = 'center';
     //#########################################################################################
 
-        ctx.textAlign = 'center';
-        ctx.fillText(usuario.nome, (canvas.width / 2), (canvas.height - 330));
-        ctx.textAlign = 'center';
-        ctx.fillText(`${eicon}` + " " + usuario.email, (canvas.width / 2), (canvas.height - 295));
-        ctx.textAlign = 'center';
-        ctx.fillText(`${icon}` + " "+ usuario.telefone.trim(), (canvas.width /2), (canvas.height - 253));
-        
-        //Imagem Operadora/Seguradora Centalizada
+    ctx.textAlign = 'center';
+    ctx.fillText(usuario.nome, (canvas.width / 2), (canvas.height - 330));
+    ctx.textAlign = 'center';
+    ctx.fillText(`${eicon}` + " " + usuario.email, (canvas.width / 2), (canvas.height - 295));
+    ctx.textAlign = 'center';
+    ctx.fillText(`${icon}` + " " + usuario.telefone.trim(), (canvas.width / 2), (canvas.height - 253));
+
+    //Imagem Operadora/Seguradora Centalizada
     var img = document.getElementById("imagem-operadora-seguradora");
     var parte = canvas.width / 4;
     var meio = (parte * 2) - (img.width / 2);
-        ctx.drawImage(img, (meio), (canvas.height - 470));
+    ctx.drawImage(img, (meio), (canvas.height - 470));
     ctx.stroke();
 
     const iClose = document.getElementById('iClose');

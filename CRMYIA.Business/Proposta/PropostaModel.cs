@@ -336,7 +336,7 @@ namespace CRMYIA.Business
                                     .ThenInclude(l => l.IdProdutoNavigation)
                                         .ThenInclude(m => m.IdOperadoraNavigation)
                             .Include(y => y.IdClienteNavigation)
-                            .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                            .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0 || (x.IdUsuario == IdUsuario))
                                     && x.DataSolicitacao.Value >= DataInicio
                                     && x.DataSolicitacao.Value <= DataFim
                                     && x.IdFaseProposta == item.IdFaseProposta
@@ -376,7 +376,7 @@ namespace CRMYIA.Business
                             .Where(x => x.Ativo
                                 && x.DataSolicitacao.Value >= DataInicio
                                 && x.DataSolicitacao.Value <= DataFim
-                                && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario || x.IdUsuario != IdUsuario)
+                                && ((x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0)  || x.IdUsuario == IdUsuario)
                                 && x.IdFaseProposta == item.IdFaseProposta
                             )
                             .AsNoTracking()
@@ -415,7 +415,7 @@ namespace CRMYIA.Business
                             .Where(x => x.Ativo
                                 && x.DataSolicitacao.Value >= DataInicio
                                 && x.DataSolicitacao.Value <= DataFim
-                                && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioMasterNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                                && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioMasterNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0 || (x.IdUsuario == IdUsuario))
                                 && x.IdFaseProposta == item.IdFaseProposta
                             )
                             .AsNoTracking()
