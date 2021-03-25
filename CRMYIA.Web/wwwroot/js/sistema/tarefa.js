@@ -4,18 +4,20 @@ const formatter = new Intl.NumberFormat('pt-BR', {
     currency: 'BRL'
 });
 var hashId = '';
-$(document).ready(function () {
 
+$(document).ready(function () {
     $('.sortable').sortable({
         connectWith: ".sortable",
         start: {},
         scroll: true,
-        update: function (event, ui) {},
-        change: function (event, ui) {},
+        update: function (event, ui) {
+
+        },
+        change: function (event, ui) { },
         stop: function (event, ui) {
             BuscarFasesProposta();
         },
-        remove: function (event, ui) {}
+        remove: function (event, ui) { }
     }).disableSelection();
 
     $('input[name="Data"]').daterangepicker({
@@ -59,7 +61,7 @@ $(document).ready(function () {
     let DFim = new Date(anoC, mesC + 1, 0);
 
     $('#Data').val('');
-    
+
     $('.limpar-pesquisa').click(function () {
         var d = new Date();
         var anoC = d.getFullYear();
@@ -83,12 +85,94 @@ $(document).ready(function () {
 
     CarregarOperadoras();
     CarregarCorretores();
-
 });
 
+$("#sort1").on('scroll', function () {
+    var saltoSort1 = 20;
+    if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+
+        fase = $(this).data('statusId');
+        if (BuscarFasesProposta(fase, saltoSort1))
+            saltoSort1 = saltoSort1 + saltoSort1;
+    }
+});
+$("#sort2").on('scroll', function () {
+    var saltoSort2 = 20;
+    if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+
+        fase = $(this).data('statusId');
+        if (BuscarFasesProposta(fase, saltoSort2))
+            saltoSort2 = saltoSort2 + saltoSort2;
+    }
+});
+$("#sort3").on('scroll', function () {
+    var saltoSort3 = 20;
+    if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+
+        fase = $(this).data('statusId');
+        if (BuscarFasesProposta(fase, saltoSort3))
+            saltoSort3 = saltoSort3 + saltoSort3;
+    }
+});
+$("#sort4").on('scroll', function () {
+    var saltoSort4 = 20;
+    if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+
+        fase = $(this).data('statusId');
+        if (BuscarFasesProposta(fase, saltoSort4))
+            saltoSort4 = saltoSort4 + saltoSort4;
+    }
+});
+$("#sort5").on('scroll', function () {
+    var saltoSort5 = 20;
+    if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+
+        fase = $(this).data('statusId');
+        if (BuscarFasesProposta(fase, saltoSort5))
+            saltoSort5 = saltoSort5 + saltoSort5;
+    }
+});
+$("#sort6").on('scroll', function () {
+    var saltoSort6 = 20;
+    if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+        fase = $(this).data('statusId');
+        if (BuscarFasesProposta(fase, saltoSort6))
+            saltoSort6 = saltoSort6 + saltoSort6;
+    }
+});
+function BuscarFasesProposta(fase, salto) {
+    var formData = new FormData();
+    formData.append('Fase', fase);
+    formData.append('Salto', salto);
+    $.ajax({
+        type: "POST",
+        url: "/Tarefa?handler=BuscarFasesProposta",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        data: formData,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            if (result != null) {
+                AtualizarSortable(resultado);
+                return true;
+            } else {
+                return false;
+            }
+        },
+        failure: function (data) {
+            console.log(response);
+        }
+    });
+
+}
 function Pesquisa() {
     let Data = $('#Data').val();
-
+    var formData = new FormData();
     var d = new Date();
     var anoC = d.getFullYear();
     var mesC = d.getMonth();
@@ -120,31 +204,44 @@ function Pesquisa() {
         Nome = "";
     else
         Nome = $('#corretorMenuItems').val();
-    
 
-    var res = $.ajax({
-        url: '/Tarefa?handler=PesquisaTarefa',
-        method: "GET",
-        data: { Nome: Nome, Descricao: Descricao, Inicio: Inicio, Fim: Fim },
-        dataType: 'json',
-        success: function (data) {
-            return data;
-        },
-        error: function () {
-        }
-    });
+
+    formData.append('Nome', Nome);
+    formData.append('Descricao', Descricao);
+    formData.append('Inicio', Inicio);
+    formData.append('Fim', Fim);
+    var res =
+        $.ajax({
+            type: "POST",
+            url: "/Tarefa?handler=PesquisaTarefa",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: formData,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                return result
+            },
+            failure: function (data) {
+                console.log(response);
+            }
+        });
 
     AtualizarSortable(res);
 }
 
-function RedirecionarProposta(Id)  {
+function RedirecionarProposta(Id) {
     $.ajax({
         type: "GET",
         dataType: "json",
         url: '/Tarefa?handler=ObterHashId',
         data: { Id: Id },
         success: function (data) {
-            window.open("/NovaProposta?id=" + data.hashId , "_blank");
+            window.open("/NovaProposta?id=" + data.hashId, "_blank");
         },
 
     });
@@ -155,19 +252,19 @@ function RedirecionarProposta(Id)  {
 function AtualizarSortable(resultado) {
     resultado.then(function (data) {
         let html = '';
-        let proximoContatoComCliente 
+        let proximoContatoComCliente
         let naoAgendado = 'Não agendado';
         let produto = '';
         let cliente = '';
         let corretor = '';
-        let sortable = $('.sortable'); 
+        let sortable = $('.sortable');
         for (var k = 0; k < sortable.length; k++) {
             sortable[k].innerHTML = '';
         }
         if (data.faseProposta != undefined) {
             for (i in data.faseProposta) {
                 for (j in data.proposta) {
-                   
+
                     if (data.proposta[j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
                         proximoContatoComCliente = data.proposta[j].proximoContatoComCliente == undefined ? new Date(data.proposta[j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
                         produto = data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
@@ -183,13 +280,13 @@ function AtualizarSortable(resultado) {
                                             <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
                                         </a>\
                                     </li>';
-                        
+
                     }
-                    if(html != '')
+                    if (html != '')
                         $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
                     html = '';
                 }
-               
+
             }
         }
         AtualizarCardsPropostas();
@@ -218,7 +315,7 @@ function AtualizarSortable(resultado) {
         }
     }
 
-    
+
 }
 
 function SomarTotalFaseProposta(data, codicao) {
@@ -253,24 +350,25 @@ function BuscarTodosValorPrevisto(data, condicao) {
     return retorno;
 }
 
+//$.ajax({
+//    type: "POST",
+//    url: "/KPIGrupo?handler=Corretores",
+//    beforeSend: function (xhr) {
+//        xhr.setRequestHeader("XSRF-TOKEN",
+//            $('input:hidden[name="__RequestVerificationToken"]').val());
+//    },
+//    data: formData,
+//    contentType: "application/json; charset=utf-8",
+//    dataType: "json",
+//    processData: false,
+//    contentType: false,
+//    success: function (result) {
 
-
-function BuscarFasesProposta() {
-    var resultado = $.ajax({
-        url: '/Tarefa?handler=BuscarFasesProposta',
-        method: "GET",
-        dataType: 'json',
-        success: function (data) {
-            return data;
-        },
-        error: function () {
-        }
-    });
-    //AtualizarSortable(resultado);
-}
-
-
-
+//    },
+//    failure: function (data) {
+//        console.log(response);
+//    }
+//});
 
 function CarregarOperadoras() {
     $.getJSON("/Tarefa?handler=TodasOperadoras", function (data) {

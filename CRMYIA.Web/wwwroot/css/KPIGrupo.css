@@ -75,7 +75,7 @@ ul {
 .sortable {
     height: 520px;
     width: 300px;
-    overflow: auto;
+    overflow-y: overlay;
     padding: 10px;
 }
 
@@ -126,6 +126,7 @@ ul {
     border: 3px solid rgba(0, 148, 255, 0.35); /* creates padding around scroll thumb */
     margin: 1px;
 }
+
 .loader,
 .loader:before,
 .loader:after {
@@ -189,8 +190,8 @@ ul {
         height: 5em;
     }
 }
+
 .containerLoad {
-    
     position: relative;
 }
 
@@ -198,10 +199,10 @@ ul {
 .infoiLoad {
     position: absolute;
     bottom: 0;
-    text-align:center;
+    text-align: center;
     left: 14%;
 }
 
 .infoiLoad {
-    z-index: 10333;
+    /*    z-index: 10333;*/
 }

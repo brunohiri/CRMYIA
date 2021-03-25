@@ -10,6 +10,7 @@ using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
 using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,7 @@ namespace CRMYIA.Web.Pages
         public List<FaseProposta> ListFaseProposta { get; set; }
 
         [BindProperty]
-        public List<Proposta> ListEntityProposta { get; set; }
+        public List<List<Proposta>> ListEntityProposta { get; set; }
         [BindProperty]
         public Proposta Entity { get; set; }
         [BindProperty]
@@ -44,10 +45,11 @@ namespace CRMYIA.Web.Pages
         #region M�todos
         public IActionResult OnGet()
         {
+
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-            ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
+            ListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
 
             CarregarLists();
             return Page();
@@ -66,13 +68,15 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true });
         }
 
-        public IActionResult OnGetBuscarFasesProposta()
+        public IActionResult OnPostBuscarFasesProposta(IFormCollection dados)
         {
+            int Salto = int.Parse(dados["Salto"]);
+            int Fase = int.Parse(dados["Fase"]);
             //public List<FaseProposta> ListFaseProposta { get; set; }
             List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
             DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-            ListEntityProposta = PropostaModel.GetListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
+            ListEntityProposta = PropostaModel.GetListListCardFasesProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Fase, Salto);
 
             return new JsonResult(new { status = true, FaseProposta = FaseProposta, Proposta = ListEntityProposta });
         }
@@ -98,9 +102,15 @@ namespace CRMYIA.Web.Pages
         //}
 
 
-        public IActionResult OnGetPesquisaTarefa(string? Nome, string? Descricao, string? Inicio, string? Fim)
+        public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
         {
+            string Nome, Descricao, Inicio, Fim;
             long IdUsuario = GetIdUsuario();
+
+            Nome = dados["Nome"];
+            Descricao = dados["Descricao"];
+            Inicio = dados["Inicio"];
+            Fim = dados["Fim"];
 
             DateTime? DataInicial;
             DateTime? DataFinal;
@@ -148,7 +158,7 @@ namespace CRMYIA.Web.Pages
 
         public void CarregarLists()
         {
-           ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
         }
         public long GetIdUsuario()
         {

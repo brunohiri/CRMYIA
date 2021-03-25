@@ -11,7 +11,7 @@ $(document).ready(function () {
     AtualizarRealizado();
     $('.sortable').sortable({
         connectWith: ".sortable",
-        start: function (event, ui) {
+        start: {
 
         },
         update: function (event, ui) {
@@ -54,9 +54,9 @@ function AtualizarRealizado() {
                 $("#vidas-" + d.grupo).html("");
                 $("#vidas-" + d.grupo).append(da.vidas);
             } else {
-                realizado = parseFloat(realizado) + parseFloat(da.realizado);
-                vidas = parseInt(vidas) + parseInt(da.vidas);
-                valor = parseFloat(valor) + parseFloat(da.valores);
+                realizado += realizado + parseFloat(da.realizado);
+                vidas += parseInt(da.vidas);
+                valor += parseFloat(da.valores);
             }
         });
         if (realizado != 0) {

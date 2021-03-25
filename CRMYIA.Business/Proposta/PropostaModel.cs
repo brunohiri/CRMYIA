@@ -77,7 +77,7 @@ namespace CRMYIA.Business
                             NomeHistoricoProposta = x.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().IdUsuarioNavigation.Nome,
                             UsuarioMasterSlave = x.IdUsuarioNavigation.HistoricoProposta.OrderByDescending(y => y.DataCadastro).FirstOrDefault().UsuarioMasterSlave,
                             Cor = x.IdFasePropostaNavigation.CorSecundaria
-                        })
+                        }).Take(20)
                         .ToList();
                     /*
                      <tr class="@classTr">
@@ -103,16 +103,357 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-
-        public static List<Proposta> GetListCardProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim)
+        public static List<List<Proposta>> GetListListCardFasesProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim, int Fase, int Salto)
         {
-            List<Proposta> ListEntity = null;
+            List<List<Proposta>> ListEntity = new List<List<Proposta>>();
+            byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
+
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
+                    if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
+                    {
+                        ListEntity.Add(context.Proposta
+                         .Include(y => y.IdModalidadeNavigation)
+                         .Include(y => y.IdFasePropostaNavigation)
+                         .Include(y => y.IdStatusPropostaNavigation)
+                         .Include(y => y.IdUsuarioCorretorNavigation)
+                         .Include(y => y.IdUsuarioNavigation)
+                         .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(m => m.IdOperadoraNavigation)
+                         .Include(y => y.IdClienteNavigation)
+                         .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario
+                                && x.DataSolicitacao.Value >= DataInicio
+                                && x.DataSolicitacao.Value <= DataFim
+                                && x.IdFaseProposta == Fase
+                         )
+                         .AsNoTracking()
+                         .AsEnumerable()
+                         .OrderBy(o => o.DataCadastro)
+                         .ToList()
+                         .Select(s => new Proposta()
+                         {
+                             IdProposta = s.IdProposta,
+                             IdClienteNavigation = s.IdClienteNavigation,
+                             IdFaseProposta = s.IdFaseProposta,
+                             IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                             IdUsuarioCorretor = s.IdUsuarioCorretor,
+                             IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                             IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                 DataCadastro = s.DataCadastro,
+                             ValorPrevisto = s.ValorPrevisto,
+                             QuantidadeVidas = s.QuantidadeVidas,
+                             ProximoContatoComCliente = s.ProximoContatoComCliente
+                         }).Take(20).Skip(Salto).ToList());
+                    }
+                    else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
+                    {
+                        ListEntity.Add(context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                            .ThenInclude(t => t.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(m => m.IdOperadoraNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                                && x.DataSolicitacao.Value >= DataInicio
+                                && x.DataSolicitacao.Value <= DataFim
+                                && x.IdFaseProposta == Fase
+                         )
+                         .AsNoTracking()
+                         .AsEnumerable()
+                        .OrderBy(o => o.DataCadastro)
+                        .ToList()
+                        .Select(s => new Proposta()
+                        {
+                            IdProposta = s.IdProposta,
+                            IdClienteNavigation = s.IdClienteNavigation,
+                            IdFaseProposta = s.IdFaseProposta,
+                            IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                            IdUsuarioCorretor = s.IdUsuarioCorretor,
+                            IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                            IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                DataCadastro = s.DataCadastro,
+                            ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas,
+                            ProximoContatoComCliente = s.ProximoContatoComCliente
+                        }).Take(20).Skip(Salto).ToList());
+                    }
+                    else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
+                    {
+                        ListEntity.Add(context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(m => m.IdOperadoraNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .Where(x => x.Ativo
+                            && x.DataSolicitacao.Value >= DataInicio
+                            && x.DataSolicitacao.Value <= DataFim
+                            && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario || x.IdUsuario != IdUsuario)
+                            && x.IdFaseProposta == Fase
+                        )
+                        .AsNoTracking()
+                        .AsEnumerable()
+                        .OrderBy(o => o.DataCadastro)
+                        .ToList()
+                        .Select(s => new Proposta()
+                        {
+                            IdProposta = s.IdProposta,
+                            IdClienteNavigation = s.IdClienteNavigation,
+                            IdFaseProposta = s.IdFaseProposta,
+                            IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                            IdUsuarioCorretor = s.IdUsuarioCorretor,
+                            IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                            IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                DataCadastro = s.DataCadastro,
+                            ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas,
+                            ProximoContatoComCliente = s.ProximoContatoComCliente
+                        }).Take(20).Skip(Salto).ToList());
+                    }
+                    else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Gerente))
+                    {
+                        ListEntity.Add(context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(m => m.IdOperadoraNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .Where(x => x.Ativo
+                            && x.DataSolicitacao.Value >= DataInicio
+                            && x.DataSolicitacao.Value <= DataFim
+                            && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioMasterNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                            && x.IdFaseProposta == Fase
+                        )
+                        .AsNoTracking()
+                        .AsEnumerable()
+                        .OrderBy(o => o.DataCadastro)
+                        .ToList()
+                        .Select(s => new Proposta()
+                        {
+                            IdProposta = s.IdProposta,
+                            IdClienteNavigation = s.IdClienteNavigation,
+                            IdFaseProposta = s.IdFaseProposta,
+                            IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                            IdUsuarioCorretor = s.IdUsuarioCorretor,
+                            IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                            IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                DataCadastro = s.DataCadastro,
+                            ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas,
+                            ProximoContatoComCliente = s.ProximoContatoComCliente
+                        }).Take(20).Skip(Salto).ToList());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+        public static List<List<Proposta>> GetListListCardProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim)
+        {
+            List<List<Proposta>> ListEntity = new List<List<Proposta>>();
+            List<FaseProposta> faseProposta = null;
+            byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
 
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    faseProposta = context.FaseProposta.ToList();
+
+                    foreach (var item in faseProposta)
+                    {
+                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
+                        {
+                            ListEntity.Add(context.Proposta
+                             .Include(y => y.IdModalidadeNavigation)
+                             .Include(y => y.IdFasePropostaNavigation)
+                             .Include(y => y.IdStatusPropostaNavigation)
+                             .Include(y => y.IdUsuarioCorretorNavigation)
+                             .Include(y => y.IdUsuarioNavigation)
+                             .Include(y => y.IdCategoriaNavigation)
+                                .ThenInclude(k => k.IdLinhaNavigation)
+                                    .ThenInclude(l => l.IdProdutoNavigation)
+                                        .ThenInclude(m => m.IdOperadoraNavigation)
+                             .Include(y => y.IdClienteNavigation)
+                             .Where(x => x.Ativo && x.IdUsuarioCorretor == IdUsuario
+                                    && x.DataSolicitacao.Value >= DataInicio
+                                    && x.DataSolicitacao.Value <= DataFim
+                                    && x.IdFaseProposta == item.IdFaseProposta
+                             )
+                             .AsNoTracking()
+                             .AsEnumerable()
+                             .OrderBy(o => o.DataCadastro)
+                             .ToList()
+                             .Select(s => new Proposta()
+                             {
+                                 IdProposta = s.IdProposta,
+                                 IdClienteNavigation = s.IdClienteNavigation,
+                                 IdFaseProposta = s.IdFaseProposta,
+                                 IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                                 IdUsuarioCorretor = s.IdUsuarioCorretor,
+                                 IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                                 IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                 DataCadastro = s.DataCadastro,
+                                 ValorPrevisto = s.ValorPrevisto,
+                                 QuantidadeVidas = s.QuantidadeVidas,
+                                 ProximoContatoComCliente = s.ProximoContatoComCliente
+                             }).Take(20).ToList());
+                        }
+                        else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
+                        {
+                            ListEntity.Add(context.Proposta
+                            .Include(y => y.IdModalidadeNavigation)
+                            .Include(y => y.IdFasePropostaNavigation)
+                            .Include(y => y.IdStatusPropostaNavigation)
+                            .Include(y => y.IdUsuarioCorretorNavigation)
+                                .ThenInclude(t => t.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                            .Include(y => y.IdUsuarioNavigation)
+                            .Include(y => y.IdCategoriaNavigation)
+                                .ThenInclude(k => k.IdLinhaNavigation)
+                                    .ThenInclude(l => l.IdProdutoNavigation)
+                                        .ThenInclude(m => m.IdOperadoraNavigation)
+                            .Include(y => y.IdClienteNavigation)
+                            .Where(x => x.Ativo && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                                    && x.DataSolicitacao.Value >= DataInicio
+                                    && x.DataSolicitacao.Value <= DataFim
+                                    && x.IdFaseProposta == item.IdFaseProposta
+                             )
+                             .AsNoTracking()
+                             .AsEnumerable()
+                            .OrderBy(o => o.DataCadastro)
+                            .ToList()
+                            .Select(s => new Proposta()
+                            {
+                                IdProposta = s.IdProposta,
+                                IdClienteNavigation = s.IdClienteNavigation,
+                                IdFaseProposta = s.IdFaseProposta,
+                                IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                                IdUsuarioCorretor = s.IdUsuarioCorretor,
+                                IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                                IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                DataCadastro = s.DataCadastro,
+                                ValorPrevisto = s.ValorPrevisto,
+                                QuantidadeVidas = s.QuantidadeVidas,
+                                ProximoContatoComCliente = s.ProximoContatoComCliente
+                            }).Take(20).ToList());
+                        }
+                        else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
+                        {
+                            ListEntity.Add(context.Proposta
+                            .Include(y => y.IdModalidadeNavigation)
+                            .Include(y => y.IdFasePropostaNavigation)
+                            .Include(y => y.IdStatusPropostaNavigation)
+                            .Include(y => y.IdUsuarioCorretorNavigation)
+                            .Include(y => y.IdUsuarioNavigation)
+                            .Include(y => y.IdCategoriaNavigation)
+                                .ThenInclude(k => k.IdLinhaNavigation)
+                                    .ThenInclude(l => l.IdProdutoNavigation)
+                                        .ThenInclude(m => m.IdOperadoraNavigation)
+                            .Include(y => y.IdClienteNavigation)
+                            .Where(x => x.Ativo
+                                && x.DataSolicitacao.Value >= DataInicio
+                                && x.DataSolicitacao.Value <= DataFim
+                                && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario || x.IdUsuario != IdUsuario)
+                                && x.IdFaseProposta == item.IdFaseProposta
+                            )
+                            .AsNoTracking()
+                            .AsEnumerable()
+                            .OrderBy(o => o.DataCadastro)
+                            .ToList()
+                            .Select(s => new Proposta()
+                            {
+                                IdProposta = s.IdProposta,
+                                IdClienteNavigation = s.IdClienteNavigation,
+                                IdFaseProposta = s.IdFaseProposta,
+                                IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                                IdUsuarioCorretor = s.IdUsuarioCorretor,
+                                IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                                IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                DataCadastro = s.DataCadastro,
+                                DataSolicitacao = s.DataSolicitacao,
+                                ValorPrevisto = s.ValorPrevisto,
+                                QuantidadeVidas = s.QuantidadeVidas,
+                                ProximoContatoComCliente = s.ProximoContatoComCliente
+                            }).Take(20).ToList());
+                        }
+                        else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Gerente))
+                        {
+                            ListEntity.Add(context.Proposta
+                            .Include(y => y.IdModalidadeNavigation)
+                            .Include(y => y.IdFasePropostaNavigation)
+                            .Include(y => y.IdStatusPropostaNavigation)
+                            .Include(y => y.IdUsuarioCorretorNavigation)
+                            .Include(y => y.IdUsuarioNavigation)
+                            .Include(y => y.IdCategoriaNavigation)
+                                .ThenInclude(k => k.IdLinhaNavigation)
+                                    .ThenInclude(l => l.IdProdutoNavigation)
+                                        .ThenInclude(m => m.IdOperadoraNavigation)
+                            .Include(y => y.IdClienteNavigation)
+                            .Where(x => x.Ativo
+                                && x.DataSolicitacao.Value >= DataInicio
+                                && x.DataSolicitacao.Value <= DataFim
+                                && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioMasterNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
+                                && x.IdFaseProposta == item.IdFaseProposta
+                            )
+                            .AsNoTracking()
+                            .AsEnumerable()
+                            .OrderBy(o => o.DataCadastro)
+                            .ToList()
+                            .Select(s => new Proposta()
+                            {
+                                IdProposta = s.IdProposta,
+                                IdClienteNavigation = s.IdClienteNavigation,
+                                IdFaseProposta = s.IdFaseProposta,
+                                IdFasePropostaNavigation = s.IdFasePropostaNavigation,
+                                IdUsuarioCorretor = s.IdUsuarioCorretor,
+                                IdUsuarioCorretorNavigation = s.IdUsuarioCorretorNavigation,
+                                IdCategoriaNavigation = s.IdCategoriaNavigation,//.IdLinhaNavigation.IdProdutoNavigation,
+                                DataCadastro = s.DataCadastro,
+                                ValorPrevisto = s.ValorPrevisto,
+                                QuantidadeVidas = s.QuantidadeVidas,
+                                ProximoContatoComCliente = s.ProximoContatoComCliente
+                            }).Take(20).ToList());
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+        public static List<Proposta> GetListCardProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim)
+        {
+            List<Proposta> ListEntity = null;
+            byte? IdPerfil = UsuarioModel.GetPerfil(IdUsuario);
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
                     if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Corretor))
                     {
                         ListEntity = context.Proposta
@@ -149,8 +490,7 @@ namespace CRMYIA.Business
                              ProximoContatoComCliente = s.ProximoContatoComCliente
                          }).ToList();
                     }
-                    else
-                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
+                    else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Supervisor))
                     {
                         ListEntity = context.Proposta
                         .Include(y => y.IdModalidadeNavigation)
@@ -187,8 +527,7 @@ namespace CRMYIA.Business
                             ProximoContatoComCliente = s.ProximoContatoComCliente
                         }).ToList();
                     }
-                    else
-                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
+                    else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Administrador))
                     {
                         ListEntity = context.Proposta
                         .Include(y => y.IdModalidadeNavigation)
@@ -205,7 +544,7 @@ namespace CRMYIA.Business
                             && x.DataSolicitacao.Value >= DataInicio
                             && x.DataSolicitacao.Value <= DataFim
                             && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario || x.IdUsuario != IdUsuario)
-                         )
+                        )
                         .AsNoTracking()
                         .AsEnumerable()
                         .OrderBy(o => o.DataCadastro)
@@ -225,8 +564,7 @@ namespace CRMYIA.Business
                             ProximoContatoComCliente = s.ProximoContatoComCliente
                         }).ToList();
                     }
-                    else
-                        if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Gerente))
+                    else if (IdPerfil == (byte?)(EnumeradorModel.Perfil.Gerente))
                     {
                         ListEntity = context.Proposta
                         .Include(y => y.IdModalidadeNavigation)
@@ -243,7 +581,7 @@ namespace CRMYIA.Business
                             && x.DataSolicitacao.Value >= DataInicio
                             && x.DataSolicitacao.Value <= DataFim
                             && (x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioMasterNavigation.Where(t => t.IdUsuarioMaster == IdUsuario).Count() > 0) || (x.IdUsuario == IdUsuario)
-                         )
+                        )
                         .AsNoTracking()
                         .AsEnumerable()
                         .OrderBy(o => o.DataCadastro)
@@ -263,7 +601,6 @@ namespace CRMYIA.Business
                             ProximoContatoComCliente = s.ProximoContatoComCliente
                         }).ToList();
                     }
-
                 }
             }
             catch (Exception)
@@ -301,7 +638,7 @@ namespace CRMYIA.Business
             {
                 throw;
             }
-            
+
             return ListEntity;
         }
 
