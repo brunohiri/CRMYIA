@@ -158,7 +158,7 @@ function BuscarFasesProposta(fase, salto) {
         contentType: false,
         success: function (result) {
             if (result != null) {
-                AtualizarSortable(resultado);
+                AtualizarSortable(result);
                 return true;
             } else {
                 return false;
