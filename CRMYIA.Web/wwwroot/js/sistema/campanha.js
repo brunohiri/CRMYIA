@@ -68,6 +68,7 @@ $(document).ready(function () {
                         formData.append("IdCampanhaArquivo", $('#IdCampanhaArquivo').val());
                         formData.append("IdCampanha", $('#IdCampanha').val());
                         formData.append("IdInformacao", $('#IdInformacao').val())
+                        formData.append("Titulo", $('#Titulo').val())
                         formData.append("Descricao", $('#Descricao').val());
                         //formData.append("Observacao", $('#Observacao').val());
                         $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
@@ -217,6 +218,7 @@ $(document).on('click', '.alterar-titulo', function () {
                     $('#IdCampanhaArquivo').val(data.entityLista.idCampanhaArquivo);
                     $('#Descricao').val(data.entityInformacao.descricao);
                     $('#IdInformacao').val(data.entityInformacao.idInformacao);
+                    $('#Titulo').val(data.entityInformacao.titulo);
                     $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
                     $('#Descricao').focus();
 
@@ -242,8 +244,9 @@ $(document).on('click', '#btn-salvar-texto', function () {
     formData.append('Descricao', $('#Descricao').val());
     formData.append('IdCampanha', $("#IdCampanha").val());
     formData.append('IdInformacao', $("#IdInformacao").val());
+    formData.append('Titulo', $("#Titulo").val());
     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
-    if ($('#IdCampanhaArquivo').val() != undefined && $('#Descricao').val() != undefined && $("#IdInformacao").val() != undefined && $("#IdCampanha").val() != undefined)
+    if ($('#IdCampanhaArquivo').val() != undefined && $('#Descricao').val() != undefined && $("#IdInformacao").val() != undefined && $("#IdCampanha").val() != undefined && $("#Titulo").val() != undefined)
         displayBusyIndicator()
         $.ajax({
             type: 'POST',

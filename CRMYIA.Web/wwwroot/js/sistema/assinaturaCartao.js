@@ -49,10 +49,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Verdana";
+        ctx.font = "20px Arial";
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 25px Verdana";
+        ctx.font = "bold 25px Arial";
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -137,10 +137,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Verdana";
+        ctx.font = "20px Arial";
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 25px Verdana";
+        ctx.font = "bold 25px Arial";
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -225,10 +225,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Verdana";
+        ctx.font = "20px Arial";
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 106px Verdana";
+        ctx.font = "bold 106px Arial";
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -237,13 +237,13 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillText(nome[0], (canvas.width - 760), (canvas.height - 1050));
 
         ctx.fillStyle = '#F05A26';
-        ctx.font = "106px Didact Gothic";
+        ctx.font = "106px Arial";
         ctx.fillText(nome[1], (canvas.width - 760), (canvas.height - 940));
 
 
         ctx.font = "bold 106px";
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = "34px Montserrat Regular";
+        ctx.font = "34px Arial";
         ctx.fillText(usuario.email, (canvas.width - 550), (canvas.height - 525));
         ctx.fillText(usuario.telefone, (canvas.width - 590), (canvas.height - 460));
 

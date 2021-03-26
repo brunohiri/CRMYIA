@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMYIA.Data", "CRMYIA.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMYIA.Web", "CRMYIA.Web\CRMYIA.Web.csproj", "{4BFA6219-4120-4B81-8CA5-45B51A615709}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMYIA.Landing", "CRMYIA.Landing\CRMYIA.Landing.csproj", "{16CB4F75-B4EE-4BEA-9EFD-AC21FCAA8835}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4BFA6219-4120-4B81-8CA5-45B51A615709}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BFA6219-4120-4B81-8CA5-45B51A615709}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BFA6219-4120-4B81-8CA5-45B51A615709}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16CB4F75-B4EE-4BEA-9EFD-AC21FCAA8835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16CB4F75-B4EE-4BEA-9EFD-AC21FCAA8835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16CB4F75-B4EE-4BEA-9EFD-AC21FCAA8835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16CB4F75-B4EE-4BEA-9EFD-AC21FCAA8835}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

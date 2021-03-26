@@ -80,7 +80,7 @@ namespace CRMYIA.Web.Pages
                 i = 0;
                 foreach (var ItemCampanhaArquivo in CampanhaArquivo)
                 {
-                    if (ItemCampanha.IdCampanha == ItemCampanhaArquivo.IdCampanha)
+                    if (ItemCampanha.IdCampanha == ItemCampanhaArquivo.IdCampanha && ItemCampanhaArquivo.IdInformacao == ItemCampanhaArquivo.IdInformacaoNavigation.IdInformacao)
                     {
 
                         if (i + 1 < CampanhaArquivo.Count)
