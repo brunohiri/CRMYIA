@@ -181,6 +181,7 @@ namespace CRMYIA.Web.Pages
 
                                     InformacaoModel.Update(new Informacao() { 
                                         IdInformacao = formData.IdInformacao,
+                                        Titulo = formData.Titulo,
                                         Descricao = formData.Descricao,
                                         DataCadastro = DateTime.Now,
                                         Ativo = formData.Ativo
