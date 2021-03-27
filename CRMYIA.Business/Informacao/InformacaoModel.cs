@@ -1,5 +1,6 @@
 ﻿using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,24 @@ namespace CRMYIA.Business
     public class InformacaoModel
     {
 
+        public static List<Informacao> Get()
+        {
+            List<Informacao> Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Informacao
+                        .Where(x => x.Ativo)
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
         public static Informacao Get(long IdInformacao)
         {
             Informacao Entity = null;

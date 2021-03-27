@@ -5,17 +5,17 @@ using System.Text;
 
 namespace CRMYIA.Data.ViewModel
 {
-    public class BannerOperadoraViewModel
+    public class BannerOperadoraCanvasViewModel
     {
-        public string IdOperadora { get; set; }
-        public string IdBanner { get; set; }
+        public long? IdOperadora { get; set; }
+        public long? IdBanner { get; set; }
         public string Titulo { get; set; }
         public string Descricao { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
-        public int? Width { get; set; }
-        public int? Height { get; set; }
-        public string DataCadastro { get; set; }
+        public string Width { get; set; }
+        public string Height { get; set; }
+        public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
         public virtual ICollection<BannerOperadora> BannerOperadora { get; set; }

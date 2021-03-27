@@ -115,7 +115,7 @@ namespace CRMYIA.Business
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
                         .Include(x => x.IdInformacaoNavigation)
-                        .Where(x => x.IdCampanhaNavigation.IdCampanha == Id)
+                        .Where(x => x.IdCampanha == Id)
                         .OrderBy(o => o.IdCampanhaNavigation.Descricao)
                         .AsNoTracking()
                         .ToList();
