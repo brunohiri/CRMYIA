@@ -33,10 +33,8 @@ namespace CRMYIA.Web.Pages
         }
         #endregion
 
-        //[BindProperty(SupportsGet = true)]
-        //public string Title { get; set; }
-
-        //public string PublishUrl { get; set; }
+        [BindProperty]
+        public List<CampanhaArquivoViewModel> ListaCampanhaArquivo { get; set; }
 
         [BindProperty]
         public List<CampanhaArquivo> ListCampanhaArquivo { get; set; }
@@ -48,7 +46,8 @@ namespace CRMYIA.Web.Pages
                 ListsCampanhaId();
             else
                 ListsCampanhaId(Id);
-            
+
+            OnGetListarCampanha();
         }
 
         public IActionResult OnGetListarCampanha()
@@ -69,6 +68,7 @@ namespace CRMYIA.Web.Pages
             DateTime DataCadastro = DateTime.MinValue;
             bool Ativo = false;
             Campanha IdCampanhaNavigation = new Campanha();
+            Informacao IdInformacaoNavigation = new Informacao();
 
             List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
             List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
@@ -105,7 +105,7 @@ namespace CRMYIA.Web.Pages
                         DataCadastro = ItemCampanhaArquivo.DataCadastro;
                         Ativo = ItemCampanhaArquivo.Ativo;
                         IdCampanhaNavigation = ItemCampanhaArquivo.IdCampanhaNavigation;
-
+                        IdInformacaoNavigation = ItemCampanhaArquivo.IdInformacaoNavigation;
                     }
                     i++;
                 }
@@ -123,7 +123,8 @@ namespace CRMYIA.Web.Pages
                     TipoPostagem = TipoPostagem,
                     DataCadastro = DataCadastro,
                     Ativo = Ativo,
-                    IdCampanhaNavigation = IdCampanhaNavigation
+                    IdCampanhaNavigation = IdCampanhaNavigation,
+                    IdInformacaoNavigation = IdInformacaoNavigation
                 });
                 NomeArquivo = "";
                 Width = "";
@@ -133,8 +134,10 @@ namespace CRMYIA.Web.Pages
             if (AuxCampanhaArquivo != null && Campanha != null)
             {
                 status = true;
+                ListaCampanhaArquivo = AuxCampanhaArquivo;
             }
-            return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = Campanha, usuarioEntity = UsuarioEntity });
+            return Page();
+            //return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = Campanha, usuarioEntity = UsuarioEntity });
         }
 
         private void ListsCampanhaId(string Id = null)

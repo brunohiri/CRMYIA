@@ -4,7 +4,8 @@
     ViewData["Title"] = "Dashboard";
     ViewData["Pagina"] = "Diretoria";
 }
-
+@using CRMYIA.Business.Util;
+@{ string nomeCaminho = "img/fotoCadastro/imagem_vazia.png";}
 <!-- Info boxes -->
 <div class="row">
     <div class="col-12 col-sm-6 col-md-3">
@@ -234,7 +235,7 @@
     <!-- Left col -->
     <div class="col-md-8">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header border-transparent">
                         <h3 class="card-title">Ranking de Supervisores (Produção e nº de vidas)</h3>
@@ -275,14 +276,14 @@
             </div>
             <!-- /.col -->
 
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <!-- USERS LIST -->
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Campanhas e Marketing</h3>
 
                         <div class="card-tools">
-                            <span class="badge badge-danger">8 novas campanhas</span>
+                            @*<span class="badge badge-danger">8 novas campanhas</span>*@
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -294,62 +295,60 @@
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                         <ul class="users-list clearfix">
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(1)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-midias.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Banners</span>
-                                    <span class="users-list-date"> de Operadoras</span>
+
+                            <li class="banners" style="width:6.5rem !important;">
+                                <a class="users-list-name" href="/OperadoraSeguradora">
+                                    <img src="../@nomeCaminho" alt="Banners de Operadora" style="border-radius:0 !important;">
+
                                 </a>
+                                <span class="users-list-date texto-responsive">Banners de Operadora</span>
                             </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(2)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-dicas-de-saude.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Dicas</span>
-                                    <span class="users-list-date"> de Saúde</span>
+                            <li class="banners" style="width:6.5rem !important;">
+                                <a class="users-list-name" href="/CapasRedeSocial">
+                                    <img src="../@nomeCaminho" alt="Capas de Rede Social" style="border-radius:0 !important;">
+
                                 </a>
+                                <span class="users-list-date">Capas de Rede Social</span>
                             </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(3)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-datas-comemorativas.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Banners</span>
-                                    <span class="users-list-date">Comemorativos</span>
+                            <li class="banners" style="width:6.5rem !important;">
+                                <a class="users-list-name" href="/AssinaturaCartao">
+                                    <img src="../@nomeCaminho" alt="Cartão Digital e Assinatura de Email" style="border-radius:0 !important;">
+
                                 </a>
+                                <span class="users-list-date">Cartão Digital e Assinatura de Email</span>
                             </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(4)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-capas-de-facebook.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Capas</span>
-                                    <span class="users-list-date">de Facebook</span>
+                            <li class="banners" style="width:6.5rem !important;">
+                                <a class="users-list-name" href="/Videos">
+                                    <img src="../@nomeCaminho" alt="Videos" style="border-radius:0 !important;">
+
                                 </a>
+                                <span class="users-list-date">Videos</span>
                             </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(5)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-banners-gerais.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Banners</span>
-                                    <span class="users-list-date">Gerais</span>
-                                </a>
-                            </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(6)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-videos.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Vídeos</span>
-                                    <span class="users-list-date">de Anúncios</span>
-                                </a>
-                            </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(7)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-sendingblue.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Modelos de</span>
-                                    <span class="users-list-date">Email Marketing</span>
-                                </a>
-                            </li>
-                            <li class="banners" style="width:24% !important;" onclick="CarregarCampanha(8)">
-                                <a class="users-list-name" href="#">
-                                    <img src="../img/marketing/icone-midias.svg" alt="User Image" style="border-radius:0 !important;">
-                                    <span class="users-list-date">Outros</span>
-                                    <span class="users-list-date">Banners</span>
-                                </a>
-                            </li>
+
+
+
+                            @foreach (var Item in Model.ListaCampanhaArquivo)
+                            {
+                                if (@Item.IdCampanhaNavigation.CaminhoArquivo != null && @Item.IdCampanhaNavigation.NomeArquivo != null)
+                                {
+                                    nomeCaminho = Item.IdCampanhaNavigation.CaminhoArquivo + Item.IdCampanhaNavigation.NomeArquivo;
+                                }
+                                else
+                                {
+                                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                }
+
+                                <li class="banners" style="width:6.5rem !important;">
+                                    <a asp-page="/Banners" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanhaNavigation.IdCampanha.ToString()))">
+                                        <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
+                                        
+                                    </a>
+                                    <span class="users-list-date">@Item.IdCampanhaNavigation.Descricao</span>
+                                </li>
+
+                            }
+
+
                         </ul>
                         <!-- /.users-list -->
                     </div>

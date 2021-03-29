@@ -137,10 +137,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Arial";
+        ctx.font = '20px "Didact Gothic, Arial"';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 25px Arial";
+        ctx.font = 'bold 25px "Didact Gothic, Arial"';
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -225,10 +225,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Arial";
+        ctx.font = '20px "Montserrat, Arial"';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 106px Arial";
+        ctx.font = 'bold 106px "Montserrat, Arial"';
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -241,9 +241,9 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillText(nome[1], (canvas.width - 760), (canvas.height - 940));
 
 
-        ctx.font = "bold 106px";
+        ctx.font = 'bold 106px';
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = "34px Arial";
+        ctx.font = '34px "Montserrat, Arial"';
         ctx.fillText(usuario.email, (canvas.width - 550), (canvas.height - 525));
         ctx.fillText(usuario.telefone, (canvas.width - 590), (canvas.height - 460));
 

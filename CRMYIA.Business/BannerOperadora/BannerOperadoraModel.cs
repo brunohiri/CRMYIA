@@ -74,6 +74,7 @@ namespace CRMYIA.Business
                             DataCadastro = x.IdBannerNavigation.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
                             Ativo = x.IdBannerNavigation.Ativo,
                             IdOperadoraNavigation = x.IdOperadoraNavigation,
+                            IdInformacaoNavigation = x.IdBannerNavigation.IdInformacaoNavigation
                         })
                         .ToList();
                 }
