@@ -78,13 +78,13 @@ namespace CRMYIA.Web.Pages
             List <BannerOperadoraViewModel> EntityBanners = null;
             List<BannerOperadoraCanvasViewModel> AuxBannerOperadoraCanvas = new List<BannerOperadoraCanvasViewModel>();
 
-            List<BannerOperadora> EntityBannerOperadora = BannerOperadoraModel.GetAllBannerOperadora(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+            //List<BannerOperadora> EntityBannerOperadora = BannerOperadoraModel.GetAllBannerOperadora(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
             List<Informacao> EntityInformacao = InformacaoModel.Get();
 
-            foreach (var Item in EntityBannerOperadora)
-            {
-                IdBanners.Add(Item.IdBanner.ToString().ExtractLong());
-            }
+            //foreach (var Item in EntityBannerOperadora)
+            //{
+            //    IdBanners.Add(Item.IdBanner.ToString().ExtractLong());
+            //}
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
 
             EntityBanners = BannerOperadoraModel.GetAllBanner(IdBanners);

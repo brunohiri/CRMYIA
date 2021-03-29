@@ -5,11 +5,6 @@ namespace CRMYIA.Data.Entities
 {
     public partial class Banner
     {
-        public Banner()
-        {
-            BannerOperadora = new HashSet<BannerOperadora>();
-        }
-
         public long IdBanner { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
@@ -20,6 +15,5 @@ namespace CRMYIA.Data.Entities
         public long? IdInformacao { get; set; }
 
         public virtual Informacao IdInformacaoNavigation { get; set; }
-        public virtual ICollection<BannerOperadora> BannerOperadora { get; set; }
     }
 }

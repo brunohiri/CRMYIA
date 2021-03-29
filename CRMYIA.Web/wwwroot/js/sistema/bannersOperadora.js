@@ -473,7 +473,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
     ctx.font = 'bold 25px "Didact Gothic"';
 /*    ctx.fontFamily = 'Montserrat';*/
     console.log('font: ' + ctx.font);
-    console.log('fontFamily: ' + ctx.fontFamily);
+    //console.log('fontFamily: ' + ctx.fontFamily);
     ctx.fillStyle = '#F05A26';
     ctx.drawImage($('#' + Img).get(0), 0, 0);
     //ctx.fillStyle = "white";
@@ -537,9 +537,17 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
     //Imagem Operadora/Seguradora Centalizada
     var img = document.getElementById("imagem-operadora-seguradora");
+    
     var parte = canvas.width / 4;
+   
+
+    var imgWidth = (img.width * 2 * 0.5) + img.width;
+    var imgHeight = (img.height * 2 * 0.5) + img.height;
+
     var meio = (parte * 2) - (img.width / 2);
-    ctx.drawImage(img, (meio), (canvas.height - 470));
+
+    //ctx.drawImage(img, (meio), (canvas.height - 470));
+    ctx.drawImage(img, (meio), (canvas.height - 470), imgWidth, imgHeight);
     ctx.stroke();
 
     const iClose = document.getElementById('iClose');

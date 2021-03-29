@@ -155,17 +155,17 @@ namespace CRMYIA.Web.Pages
 
                                 EntityBanner = BannerOperadoraModel.GetLastId();
 
-                                if (retorno && EntityBanner != null)
-                                {
-                                    BannerOperadoraModel.Add(new BannerOperadora()
-                                    {
-                                        IdUsuario = IdUsuario,
-                                        IdOperadora = IdOperadora,
-                                        IdBanner = EntityBanner.IdBanner
-                                    });
-                                }
+                                //if (retorno && EntityBanner != null)
+                                //{
+                                //    BannerOperadoraModel.Add(new BannerOperadora()
+                                //    {
+                                //        IdUsuario = IdUsuario,
+                                //        IdOperadora = IdOperadora,
+                                //        IdBanner = EntityBanner.IdBanner
+                                //    });
+                                //}
                             }
-                            EntityLista = BannerOperadoraModel.GetList();
+                            //EntityLista = BannerOperadoraModel.GetList();
                             status = true;
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                         }
@@ -173,7 +173,7 @@ namespace CRMYIA.Web.Pages
                         {
                             //Update Texto
                             EntityBanner = BannerOperadoraModel.Get(IdBanner);
-                            EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
+                            //EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
                             if (EntityBanner != null && EntityBannerOperadora != null)
                             {
                                 InformacaoModel.Update(new Informacao()
@@ -195,17 +195,17 @@ namespace CRMYIA.Web.Pages
                                     Ativo = Ativo
                                 });
                             
-                                BannerOperadoraModel.Update(new BannerOperadora()
-                                {
-                                    IdBannerOperadora = EntityBannerOperadora.IdBannerOperadora,
-                                    IdUsuario = IdUsuario,
-                                    IdOperadora = IdOperadora,
-                                    IdBanner = EntityBanner.IdBanner
-                                });
+                                //BannerOperadoraModel.Update(new BannerOperadora()
+                                //{
+                                //    IdBannerOperadora = EntityBannerOperadora.IdBannerOperadora,
+                                //    IdUsuario = IdUsuario,
+                                //    IdOperadora = IdOperadora,
+                                //    IdBanner = EntityBanner.IdBanner
+                                //});
                             }
 
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Registro atualizado com Sucesso!!!");
-                            EntityLista = BannerOperadoraModel.GetList();
+                            //EntityLista = BannerOperadoraModel.GetList();
                             status = true;
                             return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
                         }
@@ -285,7 +285,7 @@ namespace CRMYIA.Web.Pages
                         });
                     }
 
-                    EntityLista = BannerOperadoraModel.GetList();
+                    //EntityLista = BannerOperadoraModel.GetList();
                     status = true;
                     mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
                 }
@@ -343,7 +343,7 @@ namespace CRMYIA.Web.Pages
                     DataCadastro = EntityBannerOperadora.DataCadastro,
                     Ativo = false
                 });
-                EntityLista = BannerOperadoraModel.GetList();
+                //EntityLista = BannerOperadoraModel.GetList();
                 status = true;
                 mensagem = "Imagem Excluída com Sucesso!";
             }
@@ -364,7 +364,7 @@ namespace CRMYIA.Web.Pages
             try
             {
                 EntityBanner = BannerOperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdBanner)).ExtractLong());
-                EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
+                //EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
                 EntityInformacao = InformacaoModel.Get(EntityBanner.IdInformacao.ToString().ExtractLong());
                 
                 status = true;
@@ -379,7 +379,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListOperadora = OperadoraModel.GetListIdDescricao();
-            ListBannerOperadora = BannerOperadoraModel.GetList();
+            //ListBannerOperadora = BannerOperadoraModel.GetList();
         }
         #endregion
     }
