@@ -68,20 +68,7 @@ $(document).ready(function () {
     $('#Data').val('');
 
     $('.limpar-pesquisa').click(function () {
-        var d = new Date();
-        var anoC = d.getFullYear();
-        var mesC = d.getMonth();
-
-        var DInicio = new Date(anoC, mesC, 1);
-        var DFim = new Date(anoC, mesC + 1, 0);
-
-        $('#Data').val('');
-        $('#corretorMenuItems').val('');
-        $('#operadoraMenuItems').val('');
-
-        $("#corretorMenuItems").select2('val', 'Selecione...');
-        $("#operadoraMenuItems").select2('val', 'Selecione...');
-        Pesquisa();
+        location.reload();
     });
 
     $('#btnPesquisar').click(function () {
@@ -134,6 +121,7 @@ $("#sort6").on('scroll', function () {
     }
 });
 function BuscarFasesProposta(fase, salto) {
+    toastr.info("Pesquisando...");
     let Data = $('#Data').val();
     var formData = new FormData();
     var d = new Date();
@@ -158,10 +146,10 @@ function BuscarFasesProposta(fase, salto) {
         Fim = vetData[1];
     }
 
-    if ($('#operadoraMenuItems').val() != undefined || $('#operadoraMenuItems').val() != "Selecione...")
+    if ($('#operadoraMenuItems').val() != undefined && $('#operadoraMenuItems').val() != "Selecione...")
         Descricao = $('#operadoraMenuItems').val();
 
-    if ($('#corretorMenuItems').val() != undefined || $('#corretorMenuItems').val() != "Selecione...")
+    if ($('#corretorMenuItems').val() != undefined && $('#corretorMenuItems').val() != "Selecione...")
         Nome = $('#corretorMenuItems').val();
 
     formData.append('Inicio', Inicio);
@@ -206,7 +194,7 @@ function BuscarFasesProposta(fase, salto) {
                 if (result.propostas[0].length == 0)
                     toastr.warning("Nada encontrado!");
                 else
-                    toastr.warning("Sucesso!");
+                    toastr.success("Sucesso!");
                 return result;
             }
         },
@@ -217,6 +205,7 @@ function BuscarFasesProposta(fase, salto) {
     AtualizarSortable(res);
 }
 function Pesquisa() {
+    toastr.info("Pesquisando...");
     var formData = new FormData();
     var d = new Date();
     search = true;
@@ -227,7 +216,8 @@ function Pesquisa() {
     var DFim = new Date(anoC, mesC + 1, 0);
     let Inicio = "";
     let Fim = "";
-
+    let Descricao = "";
+    let Nome = "";
     GetDiaMesAno(DInicio);
     GetDiaMesAno(DFim);
 
@@ -239,16 +229,11 @@ function Pesquisa() {
         Inicio = vetData[0];
         Fim = vetData[1];
     }
-    let Descricao = "";
-    let Nome = "";
-    if ($('#operadoraMenuItems').val() == undefined || $('#operadoraMenuItems').val() == "Selecione...")
-        Descricao = "";
-    else
+
+    if ($('#operadoraMenuItems').val() != undefined && $('#operadoraMenuItems').val() != "Selecione...")
         Descricao = $('#operadoraMenuItems').val();
 
-    if ($('#corretorMenuItems').val() == undefined || $('#corretorMenuItems').val() == "Selecione...")
-        Nome = "";
-    else
+    if ($('#corretorMenuItems').val() != undefined && $('#corretorMenuItems').val() != "Selecione...")
         Nome = $('#corretorMenuItems').val();
 
     formData.append('Nome', Nome);
@@ -280,7 +265,7 @@ function Pesquisa() {
                 if (result.propostas[0].length == 0)
                     toastr.warning("Nada encontrado!");
                 else
-                    toastr.warning("Sucesso!");
+                    toastr.success("Sucesso!");
                 return result
             },
             failure: function (data) {
@@ -314,18 +299,45 @@ function AtualizarSortable(resultado) {
             for (var k = 0; k < sortable.length; k++) {
                 sortable[k].innerHTML = '';
             }
+            saltoSort1 = 20;
+            saltoSort2 = 20;
+            saltoSort3 = 20;
+            saltoSort4 = 20;
+            saltoSort5 = 20;
+            saltoSort6 = 20;
             search = false;
         }
         if (data.faseProposta != undefined) {
-            for (i in data.faseProposta) {
-                for (j in data.propostas[i]) {
-
-                    if (data.propostas[i][j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-                        proximoContatoComCliente = data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
-                        produto = data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
-                        cliente = data.propostas[i][j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[i][j].idClienteNavigation.nome, 16) : data.propostas[i][j].idClienteNavigation.nome;
-                        corretor = data.propostas[i][j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[i][j].idUsuarioCorretorNavigation.nome, 16) : data.propostas[i][j].idUsuarioCorretorNavigation.nome;
-                        html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[i][j].idProposta + '" data-valorprevisto="' + data.propostas[i][j].valorPrevisto + '">\
+            if (data.fase > 0) {
+                f = parseInt(data.fase) - 1;
+                for (p in data.propostas[0]) {
+                    proximoContatoComCliente = data.propostas[0][p].proximoContatoComCliente == undefined ? new Date(data.propostas[0][p].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                    produto = data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
+                    cliente = data.propostas[0][p].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[0][p].idClienteNavigation.nome, 16) : data.propostas[0][p].idClienteNavigation.nome;
+                    corretor = data.propostas[0][p].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[0][p].idUsuarioCorretorNavigation.nome, 16) : data.propostas[0][p].idUsuarioCorretorNavigation.nome;
+                    html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[0][p].idProposta + '" data-valorprevisto="' + data.propostas[0][p].valorPrevisto + '">\
+                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.propostas[0][p].idProposta + ')>\
+                                            <p style="margin-top:10px;" title="' + data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
+                                            <p title="' + data.propostas[0][p].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
+                                            <p title="' + data.propostas[0][p].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
+                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.propostas[0][p].idProposta + '"' + formatter.format(data.propostas[0][p].valorPrevisto) + ' "> ' + formatter.format(data.propostas[0][p].valorPrevisto) + '</p>\
+                                            <p><strong>Data:</strong> ' + new Date(data.propostas[0][p].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.propostas[0][p].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
+                                            <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
+                                        </a>\
+                                    </li>';
+                    if (html != '')
+                        $(sortable[f]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
+                    html = '';
+                }
+            } else {
+                for (i in data.faseProposta) {
+                    for (j in data.propostas[i]) {
+                        if (data.propostas[i][j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
+                            proximoContatoComCliente = data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                            produto = data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
+                            cliente = data.propostas[i][j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[i][j].idClienteNavigation.nome, 16) : data.propostas[i][j].idClienteNavigation.nome;
+                            corretor = data.propostas[i][j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[i][j].idUsuarioCorretorNavigation.nome, 16) : data.propostas[i][j].idUsuarioCorretorNavigation.nome;
+                            html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[i][j].idProposta + '" data-valorprevisto="' + data.propostas[i][j].valorPrevisto + '">\
                                         <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.propostas[i][j].idProposta + ')>\
                                             <p style="margin-top:10px;" title="' + data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
                                             <p title="' + data.propostas[i][j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
@@ -335,12 +347,12 @@ function AtualizarSortable(resultado) {
                                             <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
                                         </a>\
                                     </li>';
+                        }
+                        if (html != '')
+                            $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
+                        html = '';
                     }
-                    if (html != '')
-                        $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
-                    html = '';
                 }
-
             }
         }
         AtualizarCardsPropostas();
@@ -401,27 +413,54 @@ function BuscarTodosValorPrevisto(data, condicao) {
     console.log(retorno);
     return retorno;
 }
+function CadastroTarefas() {
+    $('ul[id^="sort"]').sortable(
+        {
+            connectWith: ".sortable",
+            receive: function (e, ui) {
+                var status_id = $(ui.item).parent(".sortable").data(
+                    "status-id");
+                var task_id = $(ui.item).data("task-id");
+                $.ajax({
+                    url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
+                    success: function (data) {
+                        if (data.status) {
+                            toastr.success("Sucesso!");
+                            for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                    $('#sort' + status_id + ' li').eq(i).remove();
+                                }
+                            }
+                            AtualizarCardsPropostas();
+                            AtualizarCardSomaPropostas();
 
-//$.ajax({
-//    type: "POST",
-//    url: "/KPIGrupo?handler=Corretores",
-//    beforeSend: function (xhr) {
-//        xhr.setRequestHeader("XSRF-TOKEN",
-//            $('input:hidden[name="__RequestVerificationToken"]').val());
-//    },
-//    data: formData,
-//    contentType: "application/json; charset=utf-8",
-//    dataType: "json",
-//    processData: false,
-//    contentType: false,
-//    success: function (result) {
+                        }
+                    }
+                });
+            }
 
-//    },
-//    failure: function (data) {
-//        console.log(response);
-//    }
-//});
+        }).disableSelection();
 
+    function AtualizarCardsPropostas() {
+        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
+            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
+                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
+            }
+        }
+    }
+
+    function AtualizarCardSomaPropostas() {
+        var soma = 0;
+        for (var i = 0; i < 6; i++) {
+            soma = 0;
+            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
+                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
+                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
+            }
+            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        }
+    }
+}
 function CarregarOperadoras() {
     $.getJSON("/Tarefa?handler=TodasOperadoras", function (data) {
         let contents = [];
