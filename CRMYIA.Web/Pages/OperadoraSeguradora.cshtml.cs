@@ -33,7 +33,7 @@ namespace CRMYIA.Web.Pages
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
             ListOperadora = OperadoraModel.GetList();
-            ListBannerOperadora = BannerOperadoraModel.GetList();
+            //ListBannerOperadora = BannerOperadoraModel.GetList();
             
             return Page();
         }

@@ -21,7 +21,6 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
         public virtual DbSet<AssinaturaCartao> AssinaturaCartao { get; set; }
         public virtual DbSet<Banner> Banner { get; set; }
-        public virtual DbSet<BannerOperadora> BannerOperadora { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
         public virtual DbSet<Capa> Capa { get; set; }
@@ -186,26 +185,6 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Banner)
                     .HasForeignKey(d => d.IdInformacao)
                     .HasConstraintName("Informacao_Banner");
-            });
-
-            modelBuilder.Entity<BannerOperadora>(entity =>
-            {
-                entity.HasKey(e => e.IdBannerOperadora);
-
-                entity.HasOne(d => d.IdBannerNavigation)
-                    .WithMany(p => p.BannerOperadora)
-                    .HasForeignKey(d => d.IdBanner)
-                    .HasConstraintName("Banner_BannerOperadora");
-
-                entity.HasOne(d => d.IdOperadoraNavigation)
-                    .WithMany(p => p.BannerOperadora)
-                    .HasForeignKey(d => d.IdOperadora)
-                    .HasConstraintName("Operadora_BannerOperadora");
-
-                entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany(p => p.BannerOperadora)
-                    .HasForeignKey(d => d.IdUsuario)
-                    .HasConstraintName("Usuario_BannerOperadora");
             });
 
             modelBuilder.Entity<Campanha>(entity =>

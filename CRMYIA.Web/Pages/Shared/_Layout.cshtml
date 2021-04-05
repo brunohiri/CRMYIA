@@ -51,9 +51,9 @@
     <link rel="stylesheet" href="~/plugins/sweetAlert2_7.2.0/sweetalert2.min.css">
     <script src="~/plugins/sweetAlert2_7.2.0/sweetalert2.all.min.js"></script>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    @*<link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">*@
 
 
     <style>
@@ -273,6 +273,7 @@
                 margin: 0 5px 10px 5px;
             }
         }
+
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -545,7 +546,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>@ViewData["Pagina"]</h1>
+                            <h1 id="nome-da-pagina">@ViewData["Pagina"]</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -566,7 +567,7 @@
             <!-- /.content -->
         </div>
         <div id="float-open" class="bg-primary float-open">
-            <a class="float-link" href="javascript:void(0)"> <i class="far fa-comments"></i></a>
+            <a class="float-link" href="javascript:void(0)"> <i class="far fa-comments" style="margin-top:13px;"></i></a>
         </div>
 
         <!-- DIRECT CHAT -->
@@ -814,7 +815,7 @@
     {
         <script src="~/js/sistema/NovaCampanhaGenerica.js"></script>
     }
-    @if (ViewData["Title"].ToString().Equals("Material De Divulgação"))
+    @if (ViewData["Pagina"].ToString().Equals("Download de Banners"))
     {
         <script src="~/js/sistema/materialDivulgacao.js"></script>
     }
@@ -830,7 +831,7 @@
     {
         <script src="~/js/sistema/uploadAssinaturaCartao.js"></script>
     }
-    @if (ViewData["Pagina"].ToString().Equals("Assinatura E Cartao"))
+    @if (ViewData["Pagina"].ToString().Equals("Cartão de Digital e Assinatura de Email"))
     {
         <script src="~/js/sistema/assinaturaCartao.js"></script>
     }

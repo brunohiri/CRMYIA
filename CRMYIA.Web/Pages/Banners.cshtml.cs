@@ -20,38 +20,41 @@ using Microsoft.Extensions.Configuration;
 namespace CRMYIA.Web.Pages
 {
     [Authorize]
-    public class MaterialDivulgacaoModel : PageModel
+    public class BannersModel : PageModel
     {
         private IHostingEnvironment _environment;
         private IConfiguration _configuration;
 
         #region Construtores
-        public MaterialDivulgacaoModel(IConfiguration configuration, IHostingEnvironment environment)
+        public BannersModel(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
             _environment = environment;
         }
         #endregion
 
-        [BindProperty]
-        public List<CampanhaArquivoViewModel> ListaCampanhaArquivo { get; set; }
+        //[BindProperty]
+        //public List<CampanhaArquivoViewModel> ListaCampanhaArquivo { get; set; }
 
-        [BindProperty]
-        public List<CampanhaArquivo> ListCampanhaArquivo { get; set; }
-        public List<Campanha> ListCampanha { get; set; }
-        public void OnGet(string Id = null)
+        //[BindProperty]
+        //public List<CampanhaArquivo> ListCampanhaArquivo { get; set; }
+        //public List<Campanha> ListCampanha { get; set; }
+        //public void OnGet(string Id = null)
+        //{
+        //    //PublishUrl = Title;
+        //    if (Id.IsNullOrEmpty())
+        //        ListsCampanhaId();
+        //    else
+        //        ListsCampanhaId(Id);
+
+        //    OnGetListarCampanha();
+        //}
+
+        public IActionResult OnPostListarCampanha()
         {
-            //PublishUrl = Title;
-            if (Id.IsNullOrEmpty())
-                ListsCampanhaId();
-            else
-                ListsCampanhaId(Id);
+            string Id = Request.Form["Id"].ToString();
 
-            OnGetListarCampanha();
-        }
-
-        public IActionResult OnGetListarCampanha()
-        {
+            var HashId = HttpUtility.UrlEncode(Criptography.Encrypt(Id));
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
             int i;
@@ -59,6 +62,7 @@ namespace CRMYIA.Web.Pages
             long IdCampanhaArquivo = 0;
             long? IdCampanha = 0;
             string Descricao = "";
+            string Titulo = "";
             string CaminhoArquivo = "";
             string NomeArquivo = "";
             string Width = "";
@@ -71,16 +75,16 @@ namespace CRMYIA.Web.Pages
             Informacao IdInformacaoNavigation = new Informacao();
 
             List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
-            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
-            List<Campanha> Campanha = CampanhaModel.GetListOrderById();
+            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(Id).ExtractLong());
+            List<Informacao> EntityInformacao = InformacaoModel.Get();
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
 
-            foreach (var ItemCampanha in Campanha)
+            foreach (var ItemInformacao in EntityInformacao)
             {
                 i = 0;
                 foreach (var ItemCampanhaArquivo in CampanhaArquivo)
                 {
-                    if (ItemCampanha.IdCampanha == ItemCampanhaArquivo.IdCampanha && ItemCampanhaArquivo.IdInformacao == ItemCampanhaArquivo.IdInformacaoNavigation.IdInformacao)
+                    if (ItemInformacao.IdInformacao == ItemCampanhaArquivo.IdInformacaoNavigation.IdInformacao)
                     {
 
                         if (i + 1 < CampanhaArquivo.Count)
@@ -94,10 +98,11 @@ namespace CRMYIA.Web.Pages
                             NomeArquivo += ItemCampanhaArquivo.NomeArquivo;
                             Width += ItemCampanhaArquivo.Width;
                             Height += ItemCampanhaArquivo.Height;
-                          
+
                         }
                         IdCampanhaArquivo = ItemCampanhaArquivo.IdCampanhaArquivo;
                         IdCampanha = ItemCampanhaArquivo.IdCampanha;
+                        Titulo = ItemCampanhaArquivo.IdInformacaoNavigation.Titulo;
                         Descricao = ItemCampanhaArquivo.IdInformacaoNavigation.Descricao;
                         CaminhoArquivo = ItemCampanhaArquivo.CaminhoArquivo;
                         RedesSociais = ItemCampanhaArquivo.RedesSociais;
@@ -106,49 +111,52 @@ namespace CRMYIA.Web.Pages
                         Ativo = ItemCampanhaArquivo.Ativo;
                         IdCampanhaNavigation = ItemCampanhaArquivo.IdCampanhaNavigation;
                         IdInformacaoNavigation = ItemCampanhaArquivo.IdInformacaoNavigation;
+                        i++;
                     }
-                    i++;
+                   
                 }
 
-                AuxCampanhaArquivo.Add(new CampanhaArquivoViewModel()
+                if (i > 0)
                 {
-                    IdCampanhaArquivo = IdCampanhaArquivo,
-                    IdCampanha = IdCampanha,
-                    Descricao = Descricao,
-                    CaminhoArquivo = CaminhoArquivo,
-                    NomeArquivo = NomeArquivo,
-                    Width = Width,
-                    Height = Height,
-                    RedesSociais = RedesSociais,
-                    TipoPostagem = TipoPostagem,
-                    DataCadastro = DataCadastro,
-                    Ativo = Ativo,
-                    IdCampanhaNavigation = IdCampanhaNavigation,
-                    IdInformacaoNavigation = IdInformacaoNavigation
-                });
+                    AuxCampanhaArquivo.Add(new CampanhaArquivoViewModel()
+                    {
+                        IdCampanhaArquivo = IdCampanhaArquivo,
+                        IdCampanha = IdCampanha,
+                        Titulo = Titulo,
+                        Descricao = Descricao,
+                        CaminhoArquivo = CaminhoArquivo,
+                        NomeArquivo = NomeArquivo,
+                        Width = Width,
+                        Height = Height,
+                        RedesSociais = RedesSociais,
+                        TipoPostagem = TipoPostagem,
+                        DataCadastro = DataCadastro,
+                        Ativo = Ativo,
+                        IdCampanhaNavigation = IdCampanhaNavigation,
+                        IdInformacaoNavigation = IdInformacaoNavigation
+                    });
+                }
                 NomeArquivo = "";
                 Width = "";
                 Height = "";
 
-            }  
-            if (AuxCampanhaArquivo != null && Campanha != null)
+            }
+            if (AuxCampanhaArquivo != null)
             {
                 status = true;
-                ListaCampanhaArquivo = AuxCampanhaArquivo;
             }
-            return Page();
-            //return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = Campanha, usuarioEntity = UsuarioEntity });
+            return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = EntityInformacao, usuarioEntity = UsuarioEntity });
         }
 
-        private void ListsCampanhaId(string Id = null)
-        {
-            ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-        }
+        //private void ListsCampanhaId(string Id = null)
+        //{
+        //    ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+        //}
 
-        private void ListsCampanhaId()
-        {
-            ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
-            ListCampanha = CampanhaModel.GetListOrderById();
-        }
+        //private void ListsCampanhaId()
+        //{
+        //    ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
+        //    ListCampanha = CampanhaModel.GetListOrderById();
+        //}
     }
 }

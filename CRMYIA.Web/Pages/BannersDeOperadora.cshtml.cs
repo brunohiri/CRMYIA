@@ -26,33 +26,134 @@ namespace CRMYIA.Web.Pages
         public List<Operadora> ListOperadora { get; set; }
         [BindProperty]
         public UsuarioCorretorViewModel UsuarioEntity { get; set; }
-        public IActionResult OnGet(string Id)
+        //public IActionResult OnGet(string Id)
+        //{
+
+        //    if (Id.IsNullOrEmpty())
+        //    {
+        //        //
+        //    }
+        //    else
+        //    {
+        //        List<BannerOperadora> EntityBannerOperadora = null;
+        //        List<long> IdBanner = new List<long>();
+        //        EntityBannerOperadora = BannerOperadoraModel.GetAllBannerOperadora(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+        //        long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+        //        foreach (var Item in EntityBannerOperadora)
+        //        {
+        //            IdBanner.Add(Item.IdBanner.ToString().ExtractLong());
+        //        }
+        //        UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
+        //        ListBanner = BannerOperadoraModel.GetAllBanner(IdBanner);
+        //        ListOperadora = OperadoraModel.GetList();
+        //    }
+
+        //    return Page();
+        //}
+
+        public IActionResult OnPostListarBannersOperadora()
         {
-            //long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            //UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-            //ListOperadora = OperadoraModel.GetList();
-            //ListBannerOperadora = BannerOperadoraModel.GetList();
+            string Id = Request.Form["Id"].ToString();
 
-            if (Id.IsNullOrEmpty())
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            bool status = false;
+            int i;
+
+            long? IdBanner = 0;
+            long? IdOperadora = 0;
+            string Descricao = "";
+            string Titulo = "";
+            string CaminhoArquivo = "";
+            string NomeArquivo = "";
+            string Width = "";
+            string Height = "";
+            string RedesSociais = "";
+            string TipoPostagem = "";
+            DateTime DataCadastro = DateTime.MinValue;
+            bool Ativo = false;
+            Operadora IdOperadoraNavigation = new Operadora();
+            Informacao IdInformacaoNavigation = new Informacao();
+
+            List<long> IdBanners = new List<long>();
+            List <BannerOperadoraViewModel> EntityBanners = null;
+            List<BannerOperadoraCanvasViewModel> AuxBannerOperadoraCanvas = new List<BannerOperadoraCanvasViewModel>();
+
+            //List<BannerOperadora> EntityBannerOperadora = BannerOperadoraModel.GetAllBannerOperadora(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+            List<Informacao> EntityInformacao = InformacaoModel.Get();
+
+            //foreach (var Item in EntityBannerOperadora)
+            //{
+            //    IdBanners.Add(Item.IdBanner.ToString().ExtractLong());
+            //}
+            UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
+
+            EntityBanners = BannerOperadoraModel.GetAllBanner(IdBanners);
+
+            foreach (var ItemInformacao in EntityInformacao)
             {
-                //
-            }
-            else
-            {
-                List<BannerOperadora> EntityBannerOperadora = null;
-                List<long> IdBanner = new List<long>();
-                EntityBannerOperadora = BannerOperadoraModel.GetAllBannerOperadora(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-                foreach (var Item in EntityBannerOperadora)
+                i = 0;
+                foreach (var ItemCampanhaArquivo in EntityBanners)
                 {
-                    IdBanner.Add(Item.IdBanner.ToString().ExtractLong());
-                }
-                UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-                ListBanner = BannerOperadoraModel.GetAllBanner(IdBanner);
-                ListOperadora = OperadoraModel.GetList();
-            }
+                    if (ItemInformacao.IdInformacao == ItemCampanhaArquivo.IdInformacaoNavigation.IdInformacao)
+                    {
 
-            return Page();
+                        if (i + 1 < EntityBanners.Count)
+                        {
+                            NomeArquivo += ItemCampanhaArquivo.NomeArquivo + "|";
+                            Width += ItemCampanhaArquivo.Width + "|";
+                            Height += ItemCampanhaArquivo.Height + "|";
+                        }
+                        else
+                        {
+                            NomeArquivo += ItemCampanhaArquivo.NomeArquivo;
+                            Width += ItemCampanhaArquivo.Width;
+                            Height += ItemCampanhaArquivo.Height;
+
+                        }
+                        IdBanner = ItemCampanhaArquivo.IdBanner.ExtractLong();
+                        IdOperadora = ItemCampanhaArquivo.IdOperadora.ExtractLong();
+                        Titulo = ItemCampanhaArquivo.IdInformacaoNavigation.Titulo;
+                        Descricao = ItemCampanhaArquivo.IdInformacaoNavigation.Descricao;
+                        CaminhoArquivo = ItemCampanhaArquivo.CaminhoArquivo;
+                        //RedesSociais = ItemCampanhaArquivo.RedesSociais;
+                        //TipoPostagem = ItemCampanhaArquivo.TipoPostagem;
+                        DataCadastro = Convert.ToDateTime(ItemCampanhaArquivo.DataCadastro);
+                        Ativo = ItemCampanhaArquivo.Ativo;
+                        IdOperadoraNavigation = ItemCampanhaArquivo.IdOperadoraNavigation;
+                        IdInformacaoNavigation = ItemCampanhaArquivo.IdInformacaoNavigation;
+                        i++;
+                    }
+
+                }
+
+                if (i > 0)
+                {
+                    AuxBannerOperadoraCanvas.Add(new BannerOperadoraCanvasViewModel()
+                    {
+                        IdBanner = IdBanner,
+                        IdOperadora = IdOperadora,
+                        Titulo = Titulo,
+                        Descricao = Descricao,
+                        CaminhoArquivo = CaminhoArquivo,
+                        NomeArquivo = NomeArquivo,
+                        Width = Width,
+                        Height = Height,
+                        DataCadastro = DataCadastro,
+                        Ativo = Ativo,
+                        IdOperadoraNavigation = IdOperadoraNavigation,
+                        IdInformacaoNavigation = IdInformacaoNavigation
+                    });
+                }
+                NomeArquivo = "";
+                Width = "";
+                Height = "";
+
+            }
+            if (AuxBannerOperadoraCanvas != null)
+            {
+                status = true;
+            }
+            return new JsonResult(new { status = status, campanhaArquivo = AuxBannerOperadoraCanvas, campanha = EntityInformacao, usuarioEntity = UsuarioEntity });
         }
     }
 }

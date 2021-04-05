@@ -70,10 +70,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Verdana";
+        ctx.font = '20px "Didact Gothic, Arial"';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 30px Verdana";
+        ctx.font = 'bold 30px "Didact Gothic, Arial"';
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -96,7 +96,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
         ctx.font = phoneVolumeCanvasFont;
-        ctx.fillStyle = '#303030';
+        ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
 
         //########################################################
@@ -120,7 +120,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
         ctx.font = envelopeCanvasFont;
-        ctx.fillStyle = '#303030';
+        ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
 
         ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 135), (canvas.height - 68));
@@ -141,10 +141,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "20px Verdana";
+        ctx.font = '20px "Didact Gothic, Arial"';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
         ctx.fillStyle = "white";
-        ctx.font = "bold 30px Verdana";
+        ctx.font = 'bold 30px "Didact Gothic, Arial"';
         ctx.fillStyle = '#F05A26';
         ctx.drawImage($('#' + Img).get(0), 0, 0);
 
@@ -167,7 +167,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
         ctx.font = phoneVolumeCanvasFont;
-        ctx.fillStyle = '#303030';
+        ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
 
         //########################################################
@@ -191,7 +191,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
         ctx.font = envelopeCanvasFont;
-        ctx.fillStyle = '#303030';
+        ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
 
         ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 510), (canvas.height - 269));
