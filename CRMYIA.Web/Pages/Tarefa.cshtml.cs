@@ -28,7 +28,9 @@ namespace CRMYIA.Web.Pages
         public List<FaseProposta> ListFaseProposta { get; set; }
 
         [BindProperty]
-        public List<List<Proposta>> ListEntityProposta { get; set; }
+        public List<List<Proposta>> ListListEntityProposta { get; set; }
+        [BindProperty]
+        public List<Proposta> ListEntityProposta { get; set; }
         [BindProperty]
         public Proposta Entity { get; set; }
         [BindProperty]
@@ -45,11 +47,10 @@ namespace CRMYIA.Web.Pages
         #region M�todos
         public IActionResult OnGet()
         {
-
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-            ListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal);
+            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal,"","", 0, 0);
 
             CarregarLists();
             return Page();
@@ -68,25 +69,37 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true });
         }
 
-        public IActionResult OnPostBuscarFasesProposta(IFormCollection dados)
+                public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
         {
-            int Salto = int.Parse(dados["Salto"]);
-            int Fase = int.Parse(dados["Fase"]);
-            //public List<FaseProposta> ListFaseProposta { get; set; }
+            string Nome, Descricao, Inicio, Fim;
+            DateTime DataInicial, DataFinal;
+            bool status = false;
+            long IdUsuario = GetIdUsuario();
+
+
+            Nome = dados["Nome"];
+            Descricao = dados["Descricao"];
+            Inicio = dados["Inicio"];
+            Fim = dados["Fim"];
+            int.TryParse(dados["Salto"], out int Salto);
+            byte.TryParse(dados["Fase"], out byte Fase);
             List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
-            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
-            DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-            ListEntityProposta = PropostaModel.GetListListCardFasesProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Fase, Salto);
 
-            return new JsonResult(new { status = true, FaseProposta = FaseProposta, Proposta = ListEntityProposta });
+            DataInicial = Inicio == "" ? Util.GetFirstDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Inicio);
+            DataFinal = Fim == "" ? Util.GetLastDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Fim);
+
+            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Nome, Descricao, Fase, Salto);
+            if (ListListEntityProposta[0].Count > 0)
+                status = true;
+            return new JsonResult(new { status, FaseProposta, Propostas = ListListEntityProposta, periodoA = DataInicial.ToString(), periodoB = DataFinal.ToString() });
+
+
         }
-
         public IActionResult OnGetObterHashId(string Id)
         {
             var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
             return new JsonResult(new { hashId = HashId });
         }
-
         public IActionResult OnGetTodasOperadoras()
         {
             List<Operadora> EntityOperadora = OperadoraModel.GetList();
@@ -94,47 +107,6 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true, operadora = EntityOperadora });
         }
 
-        //public IActionResult OnGetTodasCorretores()
-        //{
-        //    List<Corretora> EntityCorretora = CorretoraModel.GetList();
-
-        //    return new JsonResult(new { status = true, corretora = EntityCorretora });
-        //}
-
-
-        public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
-        {
-            string Nome, Descricao, Inicio, Fim;
-            long IdUsuario = GetIdUsuario();
-
-            Nome = dados["Nome"];
-            Descricao = dados["Descricao"];
-            Inicio = dados["Inicio"];
-            Fim = dados["Fim"];
-
-            DateTime? DataInicial;
-            DateTime? DataFinal;
-            bool Data;
-            if (Inicio == null && Fim == null)
-                Data = false;
-            else
-                Data = true;
-            if (Data)
-            {
-                DataInicial = Convert.ToDateTime(Inicio);
-                DataFinal = Convert.ToDateTime(Fim);
-            }
-            else
-            {
-                DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
-                DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-            }
-            Nome = Nome == "" ? null : Nome;
-            Descricao = Descricao == "" ? null : Descricao;
-            List<Proposta> Proposta = PropostaModel.Pesquisa(Nome, Descricao, DataFinal, DataInicial, IdUsuario);
-            List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
-            return new JsonResult(new { status = true, faseProposta = FaseProposta, proposta = Proposta });
-        }
 
         #region Abordagem
         public IActionResult OnGetAbordagem(string IdAbordagemCategoria = null, string Ordem = null, string Direcao = null)

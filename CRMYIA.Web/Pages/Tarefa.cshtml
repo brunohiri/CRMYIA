@@ -29,13 +29,11 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Operadora</label>
-
-                                    <select class="form-control select2 pesquisa-tarefa" style="width: 100%;" id="operadoraMenuItems">
+                                    <select class="form-control select2 " style="width: 100%;" id="operadoraMenuItems">
                                         <option selected="selected">Selecione...</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Data</label>
@@ -46,13 +44,16 @@
                                                 <i class="far fa-calendar-alt"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control float-right daterange pesquisa-tarefa" id="Data" name="Data">
+                                        <input type="text" class="form-control float-right daterange " id="Data" name="Data">
                                     </div>
                                 </div>
                             </div>
-
                             <div class="ml-auto p-2 bd-highlight">
-                                <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
+                                    Sugestão de Abordagem
+                                </button>
+                                <button class="btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                                <button class="btn btn-primary" id="btnPesquisar" type="button">Pesquisar</button>
                             </div>
                         }
                         else
@@ -61,16 +62,15 @@
                                 <div class="form-group">
                                     <label>Operadora</label>
 
-                                    <select class="form-control select2 pesquisa-tarefa" style="width: 100%;" id="operadoraMenuItems">
+                                    <select class="form-control select2 " style="width: 100%;" id="operadoraMenuItems">
                                         <option selected="selected">Selecione...</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Corretor</label>
-                                    <select class="form-control select2  pesquisa-tarefa" style="width: 100%;"
+                                    <select class="form-control select2  " style="width: 100%;"
                                             asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
                                         <option selected="selected">Selecione...</option>
                                         @foreach (var Item in Model.ListCorretor)
@@ -80,7 +80,6 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Data</label>
@@ -91,19 +90,19 @@
                                                 <i class="far fa-calendar-alt"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control float-right daterange pesquisa-tarefa" id="Data" name="Data">
+                                        <input type="text" class="form-control float-right daterange " id="Data" name="Data">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="ml-auto p-2 bd-highlight">
-                                <button type="button" class="btn btn-warning limpar-pesquisa" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
+                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
                                     Sugestão de Abordagem
                                 </button>
-                                <button class="btn btn-primary limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                                <button class="btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                                <button class="btn btn-primary" id="btnPesquisar" type="button">Pesquisar</button>
                             </div>
                         }
-
                     </div>
                 </div>
             </form>
@@ -120,8 +119,9 @@
         <div class="card-body">
             <div class="row">
                 <p class="text-black text-bold"><u>Dica: Use o botão de rolagem do mouse + SHIFT para navegar para direita e esquerda.</u></p>
+                <p id="periodoPesquisa"></p>
                 <div class="task-board" style="background-color: #9E2800">
-                    @if (Model.ListFaseProposta != null && Model.ListEntityProposta != null)
+                    @if (Model.ListFaseProposta != null && Model.ListListEntityProposta != null)
                     {
                         @for (int i = 0; i < Model.ListFaseProposta.Count; i++)
                         {
@@ -131,11 +131,11 @@
                                         <div class="card-header-text text-center">
                                             @Model.ListFaseProposta[i].Descricao
                                             <br />
-                                            @if ((Model.ListEntityProposta != null) && (Model.ListEntityProposta.Count > 0))
+                                            @if ((Model.ListListEntityProposta != null) && (Model.ListListEntityProposta.Count > 0))
                                             {
-                                                if (Model.ListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).ToList().Count > 0)
+                                                if (Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).ToList().Count > 0)
                                                 {
-                                                    <div class="text-center" id="total-@Model.ListFaseProposta[i].IdFaseProposta">@Model.ListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
+                                                    <div class="text-center" id="total-@Model.ListFaseProposta[i].IdFaseProposta">@Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
                                                 }
                                                 else
                                                 {
@@ -176,35 +176,40 @@
                                     </div>
                                 </div>
                                 <div class="status-card" style="background-color: #3E3E3E">
-                                    <ul class="sortable ui-sortable grupo" id="@("sort" + Model.ListFaseProposta[i].IdFaseProposta)" data-status-id="@Model.ListFaseProposta[i].IdFaseProposta" data-total="@Model.ListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
-                                        @if ((Model.ListEntityProposta[i] != null) && (Model.ListEntityProposta[i].Count > 0))
-                                        {
-                                            foreach (var ItemProposta in Model.ListEntityProposta[i])
+                                    <div class="containerLoad">
+                                        <ul class="sortable ui-sortable grupo" id="@("sort" + Model.ListFaseProposta[i].IdFaseProposta)" data-status-id="@Model.ListFaseProposta[i].IdFaseProposta" data-total="@Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
+                                            @if ((Model.ListListEntityProposta[i] != null) && (Model.ListListEntityProposta[i].Count > 0))
                                             {
-                                                if (Model.ListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).ToList().Count > 0)
+                                                foreach (var ItemProposta in Model.ListListEntityProposta[i])
                                                 {
-                                                <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
-                                                    <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
-                                                        <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0, 16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
-                                                        <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
-                                                        <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome))</p>
-                                                        <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_" + Model.ListFaseProposta[i].IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
-                                                        <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
-                                                        <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
-                                                    </a>
-                                                </li>
-                                                }
-                                                else
-                                                {
-                                                <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
+                                                    if (Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).ToList().Count > 0)
+                                                    {
+                                                        <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
+                                                            <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
+                                                                <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0, 16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
+                                                                <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
+                                                                <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome))</p>
+                                                                <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_" + Model.ListFaseProposta[i].IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
+                                                                <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                                                <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
+                                                    }
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
-                                        }
-                                    </ul>
+                                            else
+                                            {
+                                                <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="naviLoad">
+                                        <div style="display: none; " class="loader infoiLoad">Loading...</div>
+                                    </div>
                                 </div>
                             </div>
                         }
