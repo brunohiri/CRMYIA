@@ -50,7 +50,7 @@ namespace CRMYIA.Web.Pages
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal,"","", 0, 0);
+            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, "", "", 0, 0);
 
             CarregarLists();
             return Page();
@@ -69,7 +69,7 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true });
         }
 
-                public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
+        public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
         {
             string Nome, Descricao, Inicio, Fim;
             DateTime DataInicial, DataFinal;
@@ -91,7 +91,7 @@ namespace CRMYIA.Web.Pages
             ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Nome, Descricao, Fase, Salto);
             if (ListListEntityProposta[0].Count > 0)
                 status = true;
-            return new JsonResult(new { status, FaseProposta, Propostas = ListListEntityProposta, periodoA = DataInicial.ToString(), periodoB = DataFinal.ToString() });
+            return new JsonResult(new { status, Fase, FaseProposta, Propostas = ListListEntityProposta, periodoA = DataInicial.ToString(), periodoB = DataFinal.ToString() });
 
 
         }
