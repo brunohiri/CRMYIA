@@ -207,7 +207,19 @@ $(document).ready(function () {
     }
 
 });
+function FormatarData(data) {
+    var date = new Date(data);
+    day = date.getDate() + 1;
+    month = date.getMonth() + 1;
+    year = date.getFullYear();
+    return [day, month, year].join('/');
+};
 
+function FormatarDataIso(data) {
+    data = FormatarData(data);
+    var d = data.split("/");
+    return d[2] + "-" + d[1] + "-" + d[0];
+}
 function InitDatatables() {
     //Datatables
     var uiDatatable = function () {
@@ -814,53 +826,7 @@ function NavegarAbordagem(Direcao) {
     });
 }
 
-function CadastroTarefas() {
-    $('ul[id^="sort"]').sortable(
-        {
-            connectWith: ".sortable",
-            receive: function (e, ui) {
-                var status_id = $(ui.item).parent(".sortable").data(
-                    "status-id");
-                var task_id = $(ui.item).data("task-id");
-                $.ajax({
-                    url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
-                    success: function (data) {
-                        if (data.status) {
-                            for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
-                                if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
-                                    $('#sort' + status_id + ' li').eq(i).remove();
-                                }
-                            }
-                            AtualizarCardsPropostas();
-                            AtualizarCardSomaPropostas();
 
-                        }
-                    }
-                });
-            }
-
-        }).disableSelection();
-
-    function AtualizarCardsPropostas() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
-            }
-        }
-    }
-
-    function AtualizarCardSomaPropostas() {
-        var soma = 0;
-        for (var i = 0; i < 6; i++) {
-            soma = 0;
-            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
-                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
-                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
-            }
-            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        }
-    }
-}
 
 
 function CarregarCampanha(Id) {

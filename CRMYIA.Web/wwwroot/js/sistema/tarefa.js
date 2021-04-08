@@ -4,6 +4,13 @@ const formatter = new Intl.NumberFormat('pt-BR', {
     currency: 'BRL'
 });
 var hashId = '';
+var saltoSort1 = 20;
+var saltoSort2 = 20;
+var saltoSort3 = 20;
+var saltoSort4 = 20;
+var saltoSort5 = 20;
+var saltoSort6 = 20;
+var search = false;
 
 $(document).ready(function () {
     $('.sortable').sortable({
@@ -11,11 +18,9 @@ $(document).ready(function () {
         start: {},
         scroll: true,
         update: function (event, ui) {
-
         },
         change: function (event, ui) { },
         stop: function (event, ui) {
-            BuscarFasesProposta();
         },
         remove: function (event, ui) { }
     }).disableSelection();
@@ -63,114 +68,60 @@ $(document).ready(function () {
     $('#Data').val('');
 
     $('.limpar-pesquisa').click(function () {
-        var d = new Date();
-        var anoC = d.getFullYear();
-        var mesC = d.getMonth();
-
-        var DInicio = new Date(anoC, mesC, 1);
-        var DFim = new Date(anoC, mesC + 1, 0);
-
-        $('#Data').val('');
-        $('#corretorMenuItems').val('');
-        $('#operadoraMenuItems').val('');
-
-        $("#corretorMenuItems").select2('val', 'Selecione...');
-        $("#operadoraMenuItems").select2('val', 'Selecione...');
-        Pesquisa();
+        location.reload();
     });
 
-    $('.pesquisa-tarefa').change(function () {
+    $('#btnPesquisar').click(function () {
         Pesquisa();
     });
 
     CarregarOperadoras();
     CarregarCorretores();
 });
-
 $("#sort1").on('scroll', function () {
-    var saltoSort1 = 20;
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
-
+        $(".loader").show(100);
         fase = $(this).data('statusId');
-        if (BuscarFasesProposta(fase, saltoSort1))
-            saltoSort1 = saltoSort1 + saltoSort1;
+        BuscarFasesProposta(fase, saltoSort1);
     }
 });
 $("#sort2").on('scroll', function () {
-    var saltoSort2 = 20;
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
-
+        $(".loader").show(100);
         fase = $(this).data('statusId');
-        if (BuscarFasesProposta(fase, saltoSort2))
-            saltoSort2 = saltoSort2 + saltoSort2;
+        BuscarFasesProposta(fase, saltoSort2)
     }
 });
 $("#sort3").on('scroll', function () {
-    var saltoSort3 = 20;
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
-
+        $(".loader").show(100);
         fase = $(this).data('statusId');
-        if (BuscarFasesProposta(fase, saltoSort3))
-            saltoSort3 = saltoSort3 + saltoSort3;
+        BuscarFasesProposta(fase, saltoSort3)
     }
 });
 $("#sort4").on('scroll', function () {
-    var saltoSort4 = 20;
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
-
+        $(".loader").show(100);
         fase = $(this).data('statusId');
-        if (BuscarFasesProposta(fase, saltoSort4))
-            saltoSort4 = saltoSort4 + saltoSort4;
+        BuscarFasesProposta(fase, saltoSort4)
     }
 });
 $("#sort5").on('scroll', function () {
-    var saltoSort5 = 20;
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
-
+        $(".loader").show(100);
         fase = $(this).data('statusId');
-        if (BuscarFasesProposta(fase, saltoSort5))
-            saltoSort5 = saltoSort5 + saltoSort5;
+        BuscarFasesProposta(fase, saltoSort5)
     }
 });
 $("#sort6").on('scroll', function () {
-    var saltoSort6 = 20;
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
+        $(".loader").show(100);
         fase = $(this).data('statusId');
-        if (BuscarFasesProposta(fase, saltoSort6))
-            saltoSort6 = saltoSort6 + saltoSort6;
+        BuscarFasesProposta(fase, saltoSort6)
     }
 });
 function BuscarFasesProposta(fase, salto) {
-    var formData = new FormData();
-    formData.append('Fase', fase);
-    formData.append('Salto', salto);
-    $.ajax({
-        type: "POST",
-        url: "/Tarefa?handler=BuscarFasesProposta",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("XSRF-TOKEN",
-                $('input:hidden[name="__RequestVerificationToken"]').val());
-        },
-        data: formData,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        processData: false,
-        contentType: false,
-        success: function (result) {
-            if (result != null) {
-                AtualizarSortable(result);
-                return true;
-            } else {
-                return false;
-            }
-        },
-        failure: function (data) {
-            console.log(response);
-        }
-    });
-
-}
-function Pesquisa() {
+    toastr.info("Pesquisando...");
     let Data = $('#Data').val();
     var formData = new FormData();
     var d = new Date();
@@ -181,7 +132,8 @@ function Pesquisa() {
     var DFim = new Date(anoC, mesC + 1, 0);
     let Inicio = "";
     let Fim = "";
-
+    let Descricao = "";
+    let Nome = "";
     GetDiaMesAno(DInicio);
     GetDiaMesAno(DFim);
 
@@ -193,23 +145,104 @@ function Pesquisa() {
         Inicio = vetData[0];
         Fim = vetData[1];
     }
-    let Descricao = "";
-    let Nome = "";
-    if ($('#operadoraMenuItems').val() == undefined || $('#operadoraMenuItems').val() == "Selecione...")
-        Descricao = "";
-    else
+
+    if ($('#operadoraMenuItems').val() != undefined && $('#operadoraMenuItems').val() != "Selecione...")
         Descricao = $('#operadoraMenuItems').val();
 
-    if ($('#corretorMenuItems').val() == undefined || $('#corretorMenuItems').val() == "Selecione...")
-        Nome = "";
-    else
+    if ($('#corretorMenuItems').val() != undefined && $('#corretorMenuItems').val() != "Selecione...")
         Nome = $('#corretorMenuItems').val();
 
+    formData.append('Inicio', Inicio);
+    formData.append('Fim', Fim);
+    formData.append('Fase', fase);
+    formData.append('Salto', salto);
+    formData.append('Nome', Nome);
+    formData.append('Descricao', Descricao);
+
+    var res = $.ajax({
+        type: "POST",
+        url: "/Tarefa?handler=PesquisaTarefa",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        data: formData,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            console.log(result)
+            $("#periodoPesquisa").remove().html();
+            $("#periodoPesquisa").append("Periodo: " + FormatarData(result.periodoA) + " até " + FormatarData(result.periodoB));
+            if (result != null) {
+                if (fase == 1 && result.status == true)
+                    saltoSort1 = saltoSort1 + saltoSort1;
+                if (fase == 2 && result.status == true)
+                    saltoSort2 = saltoSort2 + saltoSort2;
+                if (fase == 3 && result.status == true)
+                    saltoSort3 = saltoSort3 + saltoSort3;
+                if (fase == 4 && result.status == true)
+                    saltoSort4 = saltoSort4 + saltoSort4;
+                if (fase == 5 && result.status == true)
+                    saltoSort5 = saltoSort5 + saltoSort5;
+                if (fase == 6 && result.status == true)
+                    saltoSort6 = saltoSort6 + saltoSort6;
+                $(".loader").hide("fast", function () {
+                    $(this).prev().hide("fast", arguments.callee);
+                });
+                if (result.propostas[0].length == 0)
+                    toastr.warning("Nada encontrado!");
+                else
+                    toastr.success("Sucesso!");
+                return result;
+            }
+        },
+        failure: function (data) {
+            console.log(response);
+        }
+    });
+    AtualizarSortable(res);
+}
+function Pesquisa() {
+    toastr.info("Pesquisando...");
+    var formData = new FormData();
+    var d = new Date();
+    search = true;
+    var anoC = d.getFullYear();
+    var mesC = d.getMonth();
+
+    var DInicio = new Date(anoC, mesC, 1);
+    var DFim = new Date(anoC, mesC + 1, 0);
+    let Inicio = "";
+    let Fim = "";
+    let Descricao = "";
+    let Nome = "";
+    GetDiaMesAno(DInicio);
+    GetDiaMesAno(DFim);
+
+    let vetData = $("#Data").val().split(' - ');
+    if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
+        Inicio = GetDiaMesAno(DInicio);
+        Fim = GetDiaMesAno(DFim);
+    } else {
+        Inicio = vetData[0];
+        Fim = vetData[1];
+    }
+
+    if ($('#operadoraMenuItems').val() != undefined && $('#operadoraMenuItems').val() != "Selecione...")
+        Descricao = $('#operadoraMenuItems').val();
+
+    if ($('#corretorMenuItems').val() != undefined && $('#corretorMenuItems').val() != "Selecione...")
+        Nome = $('#corretorMenuItems').val();
 
     formData.append('Nome', Nome);
     formData.append('Descricao', Descricao);
+    formData.append('Fase', "");
+    formData.append('Salto', "");
     formData.append('Inicio', Inicio);
     formData.append('Fim', Fim);
+
     var res =
         $.ajax({
             type: "POST",
@@ -224,13 +257,21 @@ function Pesquisa() {
             processData: false,
             contentType: false,
             success: function (result) {
+                $("#periodoPesquisa").remove().html();
+                $("#periodoPesquisa").append("Periodo: " + FormatarData(result.periodoA) + " até " + FormatarData(result.periodoB));
+                $(".loader").hide("fast", function () {
+                    $(this).prev().hide("fast", arguments.callee);
+                });
+                if (result.propostas[0].length == 0)
+                    toastr.warning("Nada encontrado!");
+                else
+                    toastr.success("Sucesso!");
                 return result
             },
             failure: function (data) {
                 console.log(response);
             }
         });
-
     AtualizarSortable(res);
 }
 
@@ -243,12 +284,8 @@ function RedirecionarProposta(Id) {
         success: function (data) {
             window.open("/NovaProposta?id=" + data.hashId, "_blank");
         },
-
     });
-
 }
-
-
 function AtualizarSortable(resultado) {
     resultado.then(function (data) {
         let html = '';
@@ -258,35 +295,64 @@ function AtualizarSortable(resultado) {
         let cliente = '';
         let corretor = '';
         let sortable = $('.sortable');
-        for (var k = 0; k < sortable.length; k++) {
-            sortable[k].innerHTML = '';
+        if (search) {
+            for (var k = 0; k < sortable.length; k++) {
+                sortable[k].innerHTML = '';
+            }
+            saltoSort1 = 20;
+            saltoSort2 = 20;
+            saltoSort3 = 20;
+            saltoSort4 = 20;
+            saltoSort5 = 20;
+            saltoSort6 = 20;
+            search = false;
         }
         if (data.faseProposta != undefined) {
-            for (i in data.faseProposta) {
-                for (j in data.proposta) {
-
-                    if (data.proposta[j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-                        proximoContatoComCliente = data.proposta[j].proximoContatoComCliente == undefined ? new Date(data.proposta[j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
-                        produto = data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
-                        cliente = data.proposta[j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.proposta[j].idClienteNavigation.nome, 16) : data.proposta[j].idClienteNavigation.nome;
-                        corretor = data.proposta[j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.proposta[j].idUsuarioCorretorNavigation.nome, 16) : data.proposta[j].idUsuarioCorretorNavigation.nome;
-                        html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.proposta[j].idProposta + '" data-valorprevisto="' + data.proposta[j].valorPrevisto + '">\
-                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.proposta[j].idProposta + ')>\
-                                            <p style="margin-top:10px;" title="' + data.proposta[j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
-                                            <p title="' + data.proposta[j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
-                                            <p title="' + data.proposta[j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
-                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.proposta[j].idProposta + '"' + formatter.format(data.proposta[j].valorPrevisto) + ' "> ' + formatter.format(data.proposta[j].valorPrevisto) + '</p>\
-                                            <p><strong>Data:</strong> ' + new Date(data.proposta[j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.proposta[j].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
+            if (data.fase > 0) {
+                f = parseInt(data.fase) - 1;
+                for (p in data.propostas[0]) {
+                    proximoContatoComCliente = data.propostas[0][p].proximoContatoComCliente == undefined ? new Date(data.propostas[0][p].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                    produto = data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
+                    cliente = data.propostas[0][p].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[0][p].idClienteNavigation.nome, 16) : data.propostas[0][p].idClienteNavigation.nome;
+                    corretor = data.propostas[0][p].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[0][p].idUsuarioCorretorNavigation.nome, 16) : data.propostas[0][p].idUsuarioCorretorNavigation.nome;
+                    html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[0][p].idProposta + '" data-valorprevisto="' + data.propostas[0][p].valorPrevisto + '">\
+                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.propostas[0][p].idProposta + ')>\
+                                            <p style="margin-top:10px;" title="' + data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
+                                            <p title="' + data.propostas[0][p].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
+                                            <p title="' + data.propostas[0][p].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
+                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.propostas[0][p].idProposta + '"' + formatter.format(data.propostas[0][p].valorPrevisto) + ' "> ' + formatter.format(data.propostas[0][p].valorPrevisto) + '</p>\
+                                            <p><strong>Data:</strong> ' + new Date(data.propostas[0][p].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.propostas[0][p].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
                                             <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
                                         </a>\
                                     </li>';
-
-                    }
                     if (html != '')
-                        $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
+                        $(sortable[f]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
                     html = '';
                 }
-
+            } else {
+                for (i in data.faseProposta) {
+                    for (j in data.propostas[i]) {
+                        if (data.propostas[i][j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
+                            proximoContatoComCliente = data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                            produto = data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
+                            cliente = data.propostas[i][j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[i][j].idClienteNavigation.nome, 16) : data.propostas[i][j].idClienteNavigation.nome;
+                            corretor = data.propostas[i][j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[i][j].idUsuarioCorretorNavigation.nome, 16) : data.propostas[i][j].idUsuarioCorretorNavigation.nome;
+                            html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[i][j].idProposta + '" data-valorprevisto="' + data.propostas[i][j].valorPrevisto + '">\
+                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.propostas[i][j].idProposta + ')>\
+                                            <p style="margin-top:10px;" title="' + data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
+                                            <p title="' + data.propostas[i][j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
+                                            <p title="' + data.propostas[i][j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
+                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.propostas[i][j].idProposta + '"' + formatter.format(data.propostas[i][j].valorPrevisto) + ' "> ' + formatter.format(data.propostas[i][j].valorPrevisto) + '</p>\
+                                            <p><strong>Data:</strong> ' + new Date(data.propostas[i][j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.propostas[i][j].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
+                                            <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
+                                        </a>\
+                                    </li>';
+                        }
+                        if (html != '')
+                            $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
+                        html = '';
+                    }
+                }
             }
         }
         AtualizarCardsPropostas();
@@ -314,8 +380,6 @@ function AtualizarSortable(resultado) {
             $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
         }
     }
-
-
 }
 
 function SomarTotalFaseProposta(data, codicao) {
@@ -349,27 +413,54 @@ function BuscarTodosValorPrevisto(data, condicao) {
     console.log(retorno);
     return retorno;
 }
+function CadastroTarefas() {
+    $('ul[id^="sort"]').sortable(
+        {
+            connectWith: ".sortable",
+            receive: function (e, ui) {
+                var status_id = $(ui.item).parent(".sortable").data(
+                    "status-id");
+                var task_id = $(ui.item).data("task-id");
+                $.ajax({
+                    url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
+                    success: function (data) {
+                        if (data.status) {
+                            toastr.success("Sucesso!");
+                            for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                    $('#sort' + status_id + ' li').eq(i).remove();
+                                }
+                            }
+                            AtualizarCardsPropostas();
+                            AtualizarCardSomaPropostas();
 
-//$.ajax({
-//    type: "POST",
-//    url: "/KPIGrupo?handler=Corretores",
-//    beforeSend: function (xhr) {
-//        xhr.setRequestHeader("XSRF-TOKEN",
-//            $('input:hidden[name="__RequestVerificationToken"]').val());
-//    },
-//    data: formData,
-//    contentType: "application/json; charset=utf-8",
-//    dataType: "json",
-//    processData: false,
-//    contentType: false,
-//    success: function (result) {
+                        }
+                    }
+                });
+            }
 
-//    },
-//    failure: function (data) {
-//        console.log(response);
-//    }
-//});
+        }).disableSelection();
 
+    function AtualizarCardsPropostas() {
+        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
+            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
+                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
+            }
+        }
+    }
+
+    function AtualizarCardSomaPropostas() {
+        var soma = 0;
+        for (var i = 0; i < 6; i++) {
+            soma = 0;
+            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
+                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
+                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
+            }
+            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        }
+    }
+}
 function CarregarOperadoras() {
     $.getJSON("/Tarefa?handler=TodasOperadoras", function (data) {
         let contents = [];

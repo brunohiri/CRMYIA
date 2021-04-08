@@ -3,8 +3,144 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@section CSS {
+    <link href="~/css/landingPage.css" rel="stylesheet" />
+}
+@section Scripts {
+    <script src="~/js/landingPage.js"></script>
+}
+<div id="home">
+    <div class="small-text"><div class="cl-effect-5"><a class="scroll" href="#work"><span data-hover="portfolio">portfolio</span></a> <a class="scroll" href="#contact"><span data-hover="contact">contact</span></a></div></div>
+    <div class="social-top">
+        <ul class="list-social">
+            <li class="icon-soc tipped" data-title="twitter" data-tipper-options='{"direction":"top","follow":"true"}'>
+                <a href="#">&#xf099;</a>
+            </li>
+            <li class="icon-soc tipped" data-title="facebook" data-tipper-options='{"direction":"top","follow":"true"}'>
+                <a href="#">&#xf09a;</a>
+            </li>
+            <li class="icon-soc tipped" data-title="github" data-tipper-options='{"direction":"top","follow":"true"}'>
+                <a href="#">&#xf09b;</a>
+            </li>
+            <li class="icon-soc tipped" data-title="google +" data-tipper-options='{"direction":"top","follow":"true"}'>
+                <a href="#">&#xf0d5;</a>
+            </li>
+        </ul>
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="tp-banner-container">
+        <div class="tp-banner">
+            <ul>
+                <!-- THE FIRST SLIDE -->
+
+                <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                    <img src="~/lib/template/images/1.jpg" alt="" />
+                    <div class="just_pattern"></div>
+                    <!-- THE CAPTIONS IN THIS SLIDE -->
+                    <div class="caption big-text lft ltt"
+                         data-x="center"
+                         data-y="center"
+                         data-speed="500"
+                         data-start="500"
+                         data-easing="easeOutExpo">
+                        <div class="big-text"><span>we are Ananke</span></div>
+                    </div>
+                </li>
+
+                <!-- THE SECOND SLIDE -->
+
+                <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                    <img src="~/lib/template/images/2.jpg" alt="" />
+                    <div class="just_pattern"></div>
+
+                    <div class="caption big-text lft ltt"
+                         data-x="center"
+                         data-y="center"
+                         data-speed="500"
+                         data-start="500"
+                         data-easing="easeOutExpo"><div class="big-text"><span>BORN INTO CREATIVITY</span></div></div>
+
+                </li>
+
+                <!-- THE THIRD SLIDE -->
+
+                <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                    <img src="~/lib/template/images/3.jpg" alt="" />
+                    <div class="just_pattern"></div>
+
+                    <!-- THE CAPTIONS IN THIS SLDIE -->
+                    <div class="caption big-text lft ltt"
+                         data-x="center"
+                         data-y="center"
+                         data-speed="500"
+                         data-start="500"
+                         data-easing="easeOutExpo"><div class="big-text"><span>FOCUSED ON STRATEGY</span></div></div>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <a class="scroll" href="#about"><div class="scroll-btn tipped" data-title="about agency" data-tipper-options='{"direction":"top","follow":"true"}'></div></a>
 </div>
+<div id="contact">
+    <div class="container">
+        <div class="sixteen columns" data-scrollreveal="enter top and move 150px over 1s">
+            <div class="header-text">
+                <div class="header-shadow-text">contact</div>
+                <h1>contact</h1>
+                <p>We create best opportunities for your business.</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <form name="ajax-form" id="ajax-form" action="mail-it.php" method="post">
+            <div class="four columns">
+                <label for="name">
+                    Your Name: *
+                    <span class="error" id="err-name">please enter name</span>
+                </label>
+                <input name="name" id="name" type="text" />
+            </div>
+            <div class="four columns">
+                <label for="email">
+                    E-Mail: *
+                    <span class="error" id="err-email">please enter e-mail</span>
+                    <span class="error" id="err-emailvld">e-mail is not a valid format</span>
+                </label>
+                <input name="email" id="email" type="text" />
+            </div>
+            <div class="five columns">
+                <label for="message">Tell Us Everything:</label>
+                <textarea name="message" id="message"></textarea>
+            </div>
+            <div class="three columns">
+                <div id="button-con"><button class="send_message" id="send">Submit</button></div>
+            </div>
+            <div class="clear"></div>
+            <div class="error text-align-center" id="err-form">There was a problem validating the form please check!</div>
+            <div class="error text-align-center" id="err-timedout">The connection to the server timed out!</div>
+            <div class="error" id="err-state"></div>
+        </form>
+        <div class="clear"></div>
+        <div id="ajaxsuccess">Successfully sent!!</div>
+        <div class="clear"></div>
+        <div class="eight columns" data-scrollreveal="enter left and move 150px over 1s">
+            <div class="contact-wrap">
+                <p><i class="icon-contact1">&#xf095;</i><span>call us:</span> (381) 267-6386 <small><em>Monday–Friday | 9am–5pm (GMT +1)</em></small></p>
+            </div>
+        </div>
+        <div class="eight columns" data-scrollreveal="enter right and move 150px over 1s">
+            <div class="contact-wrap">
+                <p><i class="icon-contact1">&#xf041;</i><span>Visit Us:</span> First Street, Sunrise Avenue, New York, USA</p>
+            </div>
+        </div>
+        <div class="sixteen columns" data-scrollreveal="enter bottom and move 150px over 1s">
+            <a class="button-map close-map"><span>Locate Us on Map</span></a>
+        </div>
+    </div>
+    <div id="google_map"></div>
+</div>
+
+
+
+
