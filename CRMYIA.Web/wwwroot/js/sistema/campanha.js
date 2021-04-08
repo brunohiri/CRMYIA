@@ -70,10 +70,7 @@ $(document).ready(function () {
                         formData.append("IdInformacao", $('#IdInformacao').val())
                         formData.append("Titulo", $('#Titulo').val())
                         formData.append("Descricao", $('#Descricao').val());
-                        //formData.append("Observacao", $('#Observacao').val());
                         $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
-                        //formData.append("Width", file.width);
-                        //formData.append("Height", file.height);
                     } else {
                         myDropzone.removeAllFiles(true);
                         swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO - REDES_SOCIAIS - [LOCAL_DA_POSTAGEM].EXTENSAO</span>", "error");
@@ -220,6 +217,7 @@ $(document).on('click', '.alterar-titulo', function () {
                     $('#IdInformacao').val(data.entityInformacao.idInformacao);
                     $('#Titulo').val(data.entityInformacao.titulo);
                     $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
+                    $('#QuantidadeDownload').val(data.entityLista.quantidadeDownload);
                     $('#Descricao').focus();
 
                     $('.salvar-texto').css('display', 'block');
@@ -243,6 +241,7 @@ $(document).on('click', '#btn-salvar-texto', function () {
     formData.append('IdCampanhaArquivo', $('#IdCampanhaArquivo').val());
     formData.append('Descricao', $('#Descricao').val());
     formData.append('IdCampanha', $("#IdCampanha").val());
+    formData.append('QuantidadeDownload', $("#QuantidadeDownload").val());
     formData.append('IdInformacao', $("#IdInformacao").val());
     formData.append('Titulo', $("#Titulo").val());
     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');

@@ -84,9 +84,65 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<CampanhaArquivo> GetListaCampanhaArquivo()
+        //public static List<Campanha> GetListaCampanhaArquivo()
+        //{
+        //    List<Campanha> ListEntity = null;
+
+        //    //List<CampanhaArquivo> List = null;
+        //    //List<Video> List = null;
+        //    //List<> List = null;
+        //    //List<> List = null;
+        //    //List<> List = null;
+
+        //    try
+        //    {
+        //        using (YiaContext context = new YiaContext())
+        //        {
+        //            ListEntity = context.Campanha.Where(x => x.Ativo)
+        //                .Include(x => x.CampanhaArquivo)
+        //                .Include(x=>x.Video)
+        //                .Include(x=>x.RedeSocial)
+        //                .Include(x=>x.AssinaturaCartao)
+        //                .Include(x=>x.Banner)
+        //                .AsNoTracking()
+        //                .ToList();
+        //        }
+                    
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //    return ListEntity;
+        //}
+
+        //public static List<CampanhaArquivo> GetListaCampanhaArquivo(long Id)
+        //{
+        //    List<CampanhaArquivo> ListEntity = null;
+        //    try
+        //    {
+        //        using (YiaContext context = new YiaContext())
+        //        {
+        //            ListEntity = context.CampanhaArquivo
+        //                .Include(x => x.IdCampanhaNavigation)
+        //                .Include(x => x.IdInformacaoNavigation)
+        //                .Where(x => x.IdCampanha == Id)
+        //                .OrderBy(o => o.IdCampanhaNavigation.Descricao)
+        //                .AsNoTracking()
+        //                .ToList();
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //    return ListEntity;
+        //}
+
+        public static List<CampanhaArquivo> GetListaCampanhaArquivo(long IdCampanha, byte IdGrupoCorretor)
         {
-            List<CampanhaArquivo> ListEntity = null;
+            List<CampanhaArquivo> ListEntity = new List<CampanhaArquivo>();
+            List<GrupoCorretorCampanha> AuxListEntity = null;//GrupoCorretorCampanha
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -94,29 +150,7 @@ namespace CRMYIA.Business
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
                         .Include(x => x.IdInformacaoNavigation)
-                        .OrderBy(o => o.IdCampanha)
-                        .AsNoTracking()
-                        .ToList();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return ListEntity;
-        }
-        public static List<CampanhaArquivo> GetListaCampanhaArquivo(long Id)
-        {
-            List<CampanhaArquivo> ListEntity = null;
-            try
-            {
-                using (YiaContext context = new YiaContext())
-                {
-                    ListEntity = context.CampanhaArquivo
-                        .Include(x => x.IdCampanhaNavigation)
-                        .Include(x => x.IdInformacaoNavigation)
-                        .Where(x => x.IdCampanha == Id)
-                        .OrderBy(o => o.IdCampanhaNavigation.Descricao)
+                        .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
                         .AsNoTracking()
                         .ToList();
                 }

@@ -6,6 +6,9 @@
 }
 @using CRMYIA.Business.Util;
 @{ string nomeCaminho = "img/fotoCadastro/imagem_vazia.png";}
+@{ string url = "";}
+@{ bool fim = false;}
+@{ long? IdCampanha = 0;}
 <!-- Info boxes -->
 <div class="row">
     <div class="col-12 col-sm-6 col-md-3">
@@ -296,55 +299,130 @@
                     <div class="card-body p-0">
                         <ul class="users-list clearfix">
 
-                            <li class="banners" style="width:6.5rem !important;">
-                                <a class="users-list-name" href="/OperadoraSeguradora">
-                                    <img src="../@nomeCaminho" alt="Banners de Operadora" style="border-radius:0 !important;">
-
-                                </a>
-                                <span class="users-list-date texto-responsive">Banners de Operadora</span>
-                            </li>
-                            <li class="banners" style="width:6.5rem !important;">
-                                <a class="users-list-name" href="/CapasRedeSocial">
-                                    <img src="../@nomeCaminho" alt="Capas de Rede Social" style="border-radius:0 !important;">
-
-                                </a>
-                                <span class="users-list-date">Capas de Rede Social</span>
-                            </li>
-                            <li class="banners" style="width:6.5rem !important;">
-                                <a class="users-list-name" href="/AssinaturaCartao">
-                                    <img src="../@nomeCaminho" alt="Cartão Digital e Assinatura de Email" style="border-radius:0 !important;">
-
-                                </a>
-                                <span class="users-list-date">Cartão Digital e Assinatura de Email</span>
-                            </li>
-                            <li class="banners" style="width:6.5rem !important;">
-                                <a class="users-list-name" href="/Videos">
-                                    <img src="../@nomeCaminho" alt="Videos" style="border-radius:0 !important;">
-
-                                </a>
-                                <span class="users-list-date">Videos</span>
-                            </li>
-
-
-
                             @foreach (var Item in Model.ListaCampanhaArquivo)
                             {
-                                if (@Item.IdCampanhaNavigation.CaminhoArquivo != null && @Item.IdCampanhaNavigation.NomeArquivo != null)
+
+                                if (Item.CampanhaArquivo.Count > 0)
                                 {
-                                    nomeCaminho = Item.IdCampanhaNavigation.CaminhoArquivo + Item.IdCampanhaNavigation.NomeArquivo;
+                                    url = "/Banners";
+
+                                    if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                                    {
+                                        nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                                    }
+                                    else
+                                    {
+                                        nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                    }
+
+                                    <li class="banners" style="width:6.5rem !important;">
+                                        <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))">
+                                            <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
+
+                                        </a>
+                                        <span class="users-list-date">@Item.Descricao</span>
+                                    </li>
                                 }
-                                else
+                                else if (Item.Video.Count > 0)
                                 {
-                                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                    url = "/Videos";
+
+                                    if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                                    {
+                                        nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                                    }
+                                    else
+                                    {
+                                        nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                    }
+
+                                    <li class="banners" style="width:6.5rem !important;">
+                                        <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))">
+                                            <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
+
+                                        </a>
+                                        <span class="users-list-date">@Item.Descricao</span>
+                                    </li>
+                                }
+                                else if (Item.CapaRedeSocial.Count > 0)
+                                {
+                                    url = "/CapasRedeSocial";
+
+                                    var RedeSocial = Item.CapaRedeSocial.ToList();
+
+                                    int tam = RedeSocial.Count();
+                                    int i = 0;
+
+                                    foreach (var ItemRedeSocial in RedeSocial)
+                                    {
+
+
+                                        if (IdCampanha != ItemRedeSocial.IdCampanha)
+                                        {
+                                            IdCampanha = ItemRedeSocial.IdCampanha;
+                                            if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                                            {
+                                                nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                                            }
+                                            else
+                                            {
+                                                nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                            }
+
+                                            <li class="banners" style="width:6.5rem !important;">
+                                                <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))">
+                                                    <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
+
+                                                </a>
+                                                <span class="users-list-date">@Item.Descricao</span>
+                                            </li>
+                                        }
+
+                                    }
+                                }
+                                else if (Item.AssinaturaCartao.Count > 0)
+                                {
+                                    url = "/AssinaturaCartao";
+
+                                    if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                                    {
+                                        nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                                    }
+                                    else
+                                    {
+                                        nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                    }
+
+                                    <li class="banners" style="width:6.5rem !important;">
+                                        <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))">
+                                            <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
+
+                                        </a>
+                                        <span class="users-list-date">@Item.Descricao</span>
+                                    </li>
+                                }
+                                else if (Item.Banner.Count > 0)
+                                {
+                                    url = "/OperadoraSeguradora";
+
+                                    if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                                    {
+                                        nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                                    }
+                                    else
+                                    {
+                                        nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                                    }
+
+                                    <li class="banners" style="width:6.5rem !important;">
+                                        <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))">
+                                            <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
+
+                                        </a>
+                                        <span class="users-list-date">@Item.Descricao</span>
+                                    </li>
                                 }
 
-                                <li class="banners" style="width:6.5rem !important;">
-                                    <a asp-page="/Banners" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanhaNavigation.IdCampanha.ToString()))">
-                                        <img src="../@nomeCaminho" alt="Logo - @Item.Descricao" style="border-radius:0 !important;">
-                                        
-                                    </a>
-                                    <span class="users-list-date">@Item.IdCampanhaNavigation.Descricao</span>
-                                </li>
 
                             }
 

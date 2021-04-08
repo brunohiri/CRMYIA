@@ -40,6 +40,7 @@ $(document).ready(function () {
 
                 formData.append("IdentificadorVideo", $('#IdentificadorVideo').val());
                 $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
+                formData.append("IdCampanha", $('#IdCampanha').val());
             });
             this.on("success", function (files, data) {
                 // Gets triggered when the files have successfully been sent.
@@ -58,6 +59,15 @@ $(document).ready(function () {
                     $('#UploadCampanhaGenericaMensagemIcon').removeClass();
                     $('#UploadCampanhaGenericaMensagemIcon').addClass(data.mensagem.iconClass);
                     $('#UploadCampanhaGenericaMensagemSpan').text(data.mensagem.mensagem);
+
+                    document.getElementById("upload-video").reset();
+                    $("#IdCampanha").select2('val', '0');
+                    $("#IdCampanha").select2({
+                        placeholder: "Selecione...",
+                        allowClear: true
+                    });
+
+                    $("#IdCampanha").select2('val', '0');
                 }
                 setTimeout(function () { $('#UploadCampanhaGenericaMensagemDiv').css('display', 'none'); }, 5000);
             });
@@ -214,6 +224,7 @@ $(document).on('click', '.editar-formulario', function () {
                
                 $('#IdVideo').val(data.entity.idVideo);
                 $('#IdentificadorVideo').val(data.entity.identificadorVideo);
+                $("#IdCampanha").val(data.entity.idCampanha).trigger('change');
 
                 if (data.entity.ativo == true) {
                     $('#Ativo').prop('checked', true);
@@ -238,6 +249,7 @@ $(document).on('click', '#btn-salvar-alteracao-video', function () {
     var obj = {};
     obj.IdVideo = $('#IdVideo').val();
     obj.IdentificadorVideo = $('#IdentificadorVideo').val();
+    obj.IdCampanha = $('#IdCampanha').val();
     $('#Ativo').is(":checked") == true ? obj.Ativo = 'true' : obj.Ativo = 'false';
     $.ajax({
         type: "POST",
@@ -263,6 +275,13 @@ $(document).on('click', '#btn-salvar-alteracao-video', function () {
                 $('#UploadCampanhaGenericaMensagemIcon').removeClass();
                 $('#UploadCampanhaGenericaMensagemIcon').addClass(data.mensagem.iconClass);
                 $('#UploadCampanhaGenericaMensagemSpan').text(data.mensagem.mensagem);
+
+                document.getElementById("upload-video").reset();
+                $("#IdCampanha").select2('val', '0');
+                $("#IdCampanha").select2({
+                    placeholder: "Selecione...",
+                    allowClear: true
+                });
 
                 $('.fileinput-video').show();
                 $('#btn-salvar-alteracao-video').hide();

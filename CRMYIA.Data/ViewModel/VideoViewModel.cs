@@ -8,6 +8,7 @@ namespace CRMYIA.Data.ViewModel
     {
         public string IdVideo { get; set; }
         public string IdentificadorVideo { get; set; }
+        public long IdCampanha { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeVideo { get; set; }
         public string DataCadastro { get; set; }

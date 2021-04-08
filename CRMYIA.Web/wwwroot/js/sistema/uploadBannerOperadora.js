@@ -183,7 +183,7 @@ $(document).on('click', '.alterar-titulo', function () {
                     $('#IdInformacao').val(data.entityInformacao.idInformacao);
                     $('#Descricao').val(data.entityInformacao.descricao);
                     $('#IdBanner').val(data.entityLista.idBanner);
-                    $("#IdOperadora").val(data.idOperadora).trigger('change');
+                    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
                     $('#Descricao').focus();
                     $('.btnsalvar').addClass('d-none');
                     $('#add-btn').html('');

@@ -29,6 +29,12 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public IFormFile NomeArquivoCampanha { get; set; }
+        [BindProperty]
+        public List<GrupoCorretor> ListGrupoCorretor { get; set; }
+        [BindProperty]
+        public string NomeDoArquivo {get; set;}
+        [BindProperty]
+        public List<GrupoCorretorCampanha> ListGrupoCorretorCampanha { get; set; }
 
         [BindProperty]
         public Campanha Entity { get; set; }
@@ -49,9 +55,16 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet(string Id = null)
         {
             if (Id.IsNullOrEmpty())
+            {
                 Entity = new Campanha();
+            }
             else
+            {
+                int i = 0;
+                List<GrupoCorretorCampanha> EntityGrupoCorretorCampanha = null;
                 Entity = Business.CampanhaModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                ListGrupoCorretorCampanha = GrupoCorretorCampanhaModel.Get(Entity.IdCampanha);
+            }
 
             Entity.DataCadastro = DateTime.Now;
             CarregarLists();
@@ -74,7 +87,13 @@ namespace CRMYIA.Web.Pages
         public async Task<IActionResult> OnPostSalvarAsync(IFormFile File, Campanha formData)
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            //dados.DataCadastro = DateTime.Now;
+            string[] IdGrupoCorretores = Request.Form["IdGrupoCorretor"];
+            bool gravado = false;
+
+
+            ListGrupoCorretorCampanha = GrupoCorretorCampanhaModel.Get(Entity.IdCampanha);
+          
+           
             bool status = false;
             try
             {
@@ -83,7 +102,7 @@ namespace CRMYIA.Web.Pages
                 string NomeArquivoOriginal = File.FileName;
                 string NomeArquivo = string.Empty;
 
-                if (Entity.IdCampanha == 0)
+                if (Entity.IdCampanha == 0 && NomeArquivoOriginal != null && IdGrupoCorretores != null)
                 {
                     NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
                     var auxFile = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
@@ -96,23 +115,66 @@ namespace CRMYIA.Web.Pages
                     Entity.DataCadastro = DateTime.Now;
                     Entity.CaminhoArquivo = "ArquivoCampanha/";
                     Entity.NomeArquivo = NomeArquivo;
+                    Entity.QuantidadeDownload = 0;
                     Business.CampanhaModel.Add(Entity);
+
+                    foreach (var Item in IdGrupoCorretores) {
+                        if(Item != null)
+                            Business.GrupoCorretorCampanhaModel.Add(new GrupoCorretorCampanha() {
+                                IdGrupoCorretor = (byte)Convert.ToInt32(Item),
+                                IdCampanha = Entity.IdCampanha
+                            }); 
+                    }
+
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     status = true;
                 }
-                else
+                else if (NomeArquivoOriginal != null && Entity.NomeArquivo != null)
                 {
-                    //string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
-                    //if ((System.IO.File.Exists(_imageToBeDeleted)))
-                    //{
-                    //    System.IO.File.Delete(_imageToBeDeleted);
-                    //}
+                    string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], Entity.NomeArquivo);
+                    if ((System.IO.File.Exists(_imageToBeDeleted)))
+                    {
+                        System.IO.File.Delete(_imageToBeDeleted);
+                    }
+
+                    NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
+                    var auxFile = Path.Combine(_environment.WebRootPath, _configuration["ArquivoCampanha"], NomeArquivo);
+                    using (var fileStream = new FileStream(auxFile, FileMode.Create))
+                    {
+                        await File.CopyToAsync(fileStream);
+                    }
 
                     Entity.IdUsuario = IdUsuario;
                     Entity.DataCadastro = DateTime.Now;
                     Entity.CaminhoArquivo = "ArquivoCampanha/";
                     Entity.NomeArquivo = NomeArquivo;
                     Business.CampanhaModel.Update(Entity);
+
+
+                    List<GrupoCorretorCampanha> ListEntityGrupoCorretorCampanha = null;
+                    ListEntityGrupoCorretorCampanha = GrupoCorretorCampanhaModel.Get(Entity.IdCampanha);
+
+                    for(var i = 0; i<IdGrupoCorretores.Length; i++)
+                    {
+                        Business.GrupoCorretorCampanhaModel.Add(new GrupoCorretorCampanha()
+                        {
+                            IdGrupoCorretor = (byte)Convert.ToInt32(IdGrupoCorretores[i]),
+                            IdCampanha = Entity.IdCampanha
+                        });
+                        if (i >= IdGrupoCorretores.Length - 1)
+                        {
+                            gravado = true;
+                        }
+                    }
+
+                    if (gravado)
+                    {
+                        foreach (var Item in ListEntityGrupoCorretorCampanha)
+                        {
+                            Business.GrupoCorretorCampanhaModel.Delete(Item);
+                        }
+                    }
+
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados atualizado com sucesso!");
                     status = true;
                 }
@@ -143,6 +205,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListCampanha = Business.CampanhaModel.GetList();
+            ListGrupoCorretor = Business.GrupoCorretorModel.GetList();
         }
 
         #endregion

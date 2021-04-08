@@ -13,7 +13,11 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public long? IdInformacao { get; set; }
+        public long? IdCampanha { get; set; }
+        public long? IdUsuario { get; set; }
 
+        public virtual Campanha IdCampanhaNavigation { get; set; }
         public virtual Informacao IdInformacaoNavigation { get; set; }
+        public virtual Usuario IdUsuarioNavigation { get; set; }
     }
 }

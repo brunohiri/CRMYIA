@@ -13,64 +13,79 @@
 
     @*<canvas id="canvas" width="300" height="300" />*@
     <!--Inicio do Bloco-->
-    @foreach (var Item in Model.ListAssinaturaCartao)
+    @if (Model.ListAssinaturaCartao.Count() > 0 && Model.ListAssinaturaCartao != null)
     {
-        i++;
-        @if (Item.NomeArquivo.Contains("Assinatura"))
-            nomeBtn = "Assinatura de Email";
-        else
-            nomeBtn = "Cartao de Visitas Digital";
+        @foreach (var Item in Model.ListAssinaturaCartao)
+        {
+            i++;
+            @if (Item.NomeArquivo.Contains("Assinatura"))
+                nomeBtn = "Assinatura de Email";
+            else
+                nomeBtn = "Cartao de Visitas Digital";
 
-        <section class="content">
+            <section class="content">
 
-            <div class="container-fluid">
+                <div class="container-fluid">
 
-                <div class="row">
+                    <div class="row">
 
-                    <div class="col-12">
+                        <div class="col-12">
 
-                        <div class="card">
+                            <div class="card">
 
-                            <div class="card-header">
+                                <div class="card-header">
 
-                                <h4 class="card-title">@Item.Titulo</h4>
-                            </div>
-                            <div class="card-body filtro-banners">
-
-                                <!--Imagem Inicio-->
-
-
-                                <div style="text-align: center;">
-                                    <button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" data-img="img-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" data-descricao="descricao-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" data-usuario="@Model.UsuarioEntity.NomeApelido|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#multiCollapseLinkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" aria-expanded="false" aria-controls="multiCollapseLinkedin-@Item.IdUsuarioNavigation.IdUsuario-@i"> &nbsp; @nomeBtn &nbsp; </button>
+                                    <h4 class="card-title">@Item.Titulo</h4>
                                 </div>
-                                <div class="collapse multi-collapse" id="multiCollapseLinkedin-@Item.IdUsuarioNavigation.IdUsuario-@i">
+                                <div class="card-body filtro-banners">
 
-                                    <div class="p-2 flex-fill bd-highlight">
+                                    <!--Imagem Inicio-->
 
-                                        <div class="material-divulgacao-imagem">
 
-                                            <canvas style="display:none" width="@Item.Width" height="@Item.Height" id="canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i"> </canvas>
-                                            <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" alt="white sample" />
-                                            <div class="text-center m-2">
-
-                                                <button onclick=download_image("canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i") type="button" class="btn btn-success m-5">Download</button>
-                                            </div>
-                                        </div>
-
+                                    <div style="text-align: center;">
+                                        <button class="btn btn-redesocial btn-filtro-linkedin botao-rede-social" type="button" data-canvas="canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" data-img="img-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" data-descricao="descricao-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" data-usuario="@Model.UsuarioEntity.NomeApelido|@Model.UsuarioEntity.Telefone|@Model.UsuarioEntity.Email" data-toggle="collapse" data-target="#multiCollapseLinkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" aria-expanded="false" aria-controls="multiCollapseLinkedin-@Item.IdUsuarioNavigation.IdUsuario-@i"> &nbsp; @nomeBtn &nbsp; </button>
                                     </div>
+                                    <div class="collapse multi-collapse" id="multiCollapseLinkedin-@Item.IdUsuarioNavigation.IdUsuario-@i">
+
+                                        <div class="p-2 flex-fill bd-highlight">
+
+                                            <div class="material-divulgacao-imagem">
+
+                                                <canvas style="display:none" width="@Item.Width" height="@Item.Height" id="canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i"> </canvas>
+                                                <img style="display: none;" src="@Item.CaminhoArquivo@Item.NomeArquivo" class="img-fluid mb-2" id="img-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" alt="white sample" />
+                                                <div class="text-center m-2">
+
+                                                    @*<button onclick=download_image("canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i") type="button" class="btn btn-success m-5">Download</button>*@
+                                                    <button data-idcampanha="@Item.IdCampanha" data-elementocanvas="canvas-linkedin-@Item.IdUsuarioNavigation.IdUsuario-@i" type="button" class="btn btn-success m-5 download">Download</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <!--Imagem Fim-->
+
+
                                 </div>
-
-
-
-                                <!--Imagem Fim-->
-
-
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+        }
+    }
+    else
+    {
+        <div class="jumbotron mt-3">
+            <h1 class="text-center"> <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Não encontramos Cartão de Digital e Assinatura de Email para essa Campanha.</font></font></h1>
+            <p class="lead text-center"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Para mais informações contate o Administrador do Sistema.</font></font></p>
+            <!--<a class="btn btn-lg btn-primary" href="/docs/4.6/components/navbar/" role="button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Voltar para pagina anterior »</font></font></a>-->
+            <div class="d-flex justify-content-around">
+                <button type="reset" class="btn btn-lg btn-primary" onclick="javascript:history.go(-1)">Voltar para pagina anterior »</button>
             </div>
-        </section>
+        </div>
     }
     <!--Fim do Bloco-->
 

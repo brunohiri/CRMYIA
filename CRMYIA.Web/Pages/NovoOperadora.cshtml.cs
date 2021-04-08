@@ -28,6 +28,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public Operadora Entity { get; set; }
+        [BindProperty]
+        public List<GrupoCorretor> ListGrupoCorretor { get; set; }
 
         #endregion
 
@@ -43,12 +45,16 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet(string Id = null)
         {
             if (Id.IsNullOrEmpty())
+            {
                 Entity = new Operadora();
+            }
             else
+            {
                 Entity = OperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-
+            }
             Entity.DataCadastro = DateTime.Now;
 
+            CarregarLists();
             return Page();
         }
 
@@ -56,6 +62,8 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
+                string[] IdGrupoCorretores = Request.Form["IdGrupoCorretor"];
+                bool gravado = false;
                 if (Entity.IdOperadora == 0)
                 {
                     var File = Request.Form.Files.ToList();
@@ -73,10 +81,45 @@ namespace CRMYIA.Web.Pages
                     Entity.NomeArquivo = NomeArquivo;
 
                     OperadoraModel.Add(Entity);
+
+                    Entity = OperadoraModel.GetLastId();
+                    foreach (var Item in IdGrupoCorretores)
+                    {
+                        if (Item != null)
+                            Business.GrupoCorretorCampanhaModel.Add(new GrupoCorretorCampanha()
+                            {
+                                IdGrupoCorretor = (byte)Convert.ToInt32(Item),
+                                IdCampanha = Entity.IdOperadora
+                            });
+                    }
                 }
                 else
                 {
                     OperadoraModel.Update(Entity);
+
+                    List<GrupoCorretorOperadora> ListEntityGrupoCorretorOperadora = null;
+                    ListEntityGrupoCorretorOperadora = GrupoCorretorOperadoraModel.Get(Entity.IdOperadora);
+
+                    for (var i = 0; i < IdGrupoCorretores.Length; i++)
+                    {
+                        Business.GrupoCorretorOperadoraModel.Add(new GrupoCorretorOperadora()
+                        {
+                            IdGrupoCorretor = (byte)Convert.ToInt32(IdGrupoCorretores[i]),
+                            IdOperadora = Entity.IdOperadora
+                        });
+                        if (i >= IdGrupoCorretores.Length - 1)
+                        {
+                            gravado = true;
+                        }
+                    }
+
+                    if (gravado)
+                    {
+                        foreach (var Item in ListEntityGrupoCorretorOperadora)
+                        {
+                            Business.GrupoCorretorOperadoraModel.Delete(Item);
+                        }
+                    }
                 }
 
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
@@ -86,6 +129,11 @@ namespace CRMYIA.Web.Pages
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
             }
             return Page();
+        }
+
+        public void CarregarLists()
+        {
+            ListGrupoCorretor = Business.GrupoCorretorModel.GetList();
         }
         #endregion
     }

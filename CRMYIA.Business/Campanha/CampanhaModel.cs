@@ -58,6 +58,31 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Campanha> GetListaCampanha()
+        {
+            List<Campanha> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Campanha.Where(x => x.Ativo)
+                        .Include(x => x.CampanhaArquivo)
+                        .Include(x => x.CapaRedeSocial)
+                        .Include(x => x.Video)
+                        .Include(x => x.AssinaturaCartao)
+                        .Include(x => x.Banner)
+                        .AsNoTracking()
+                        .ToList();
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static List<Campanha> GetSubCategoria(long IdCampanhaReferencia)
         {
             List<Campanha> ListEntity = null;
@@ -92,6 +117,32 @@ namespace CRMYIA.Business
                 }
             }
             catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static List<Campanha> RankingDeCampanhaMaisBaixadas()
+        {
+            List<Campanha> Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Campanha.Where(x => x.Ativo && x.QuantidadeDownload > 0)
+                        .Include(x => x.CampanhaArquivo)
+                        .Include(x => x.Video)
+                        .Include(x => x.CapaRedeSocial)
+                        .Include(x => x.AssinaturaCartao)
+                        .Include(x => x.Banner)
+                        .OrderByDescending(x => x.QuantidadeDownload)
+                        .Take(10)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
             {
                 throw;
             }

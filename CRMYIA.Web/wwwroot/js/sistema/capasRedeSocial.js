@@ -59,6 +59,39 @@ $(document).on('click', '.btn-redesocial', function () {
 
 });
 
+$(document).on('click', '.download', function () {
+    var canvas = document.getElementById($(this).data('elementocanvas'));
+    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    var link = document.createElement('a');
+    link.download = "download.png";
+    link.href = image;
+    link.click();
+
+    if (link != undefined) {
+        formData = new FormData();
+        formData.append('IdCampanha', $(this).data('idcampanha'));
+        $.ajax({
+            type: 'POST',
+            url: "/Banners?handler=ContadorDownload",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (data) {
+
+
+            },
+            error: function () {
+                alert("Error occurs");
+            }
+        });
+    }
+});
+
 function GerarFotoContato(Canvas, Img, usuario) {
     var canvas = document.getElementById(Canvas),
     
@@ -81,7 +114,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const phoneVolume = document.createElement('i');
         phoneVolume.id = 'phoneVolumeClose';
 
-        phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+        phoneVolume.setAttribute('class', 'fas fa-phone-square-alt');
         document.body.appendChild(phoneVolume);
 
         // get the styles for the icon you just made
@@ -105,7 +138,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const envelope = document.createElement('i');
         envelope.id = 'envelopeClose';
 
-        envelope.setAttribute('class', 'fas fa-envelope');
+        envelope.setAttribute('class', 'fas fa-envelope-square');
         document.body.appendChild(envelope);
 
         // get the styles for the icon you just made
@@ -123,9 +156,10 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
 
-        ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 135), (canvas.height - 68));
-        ctx.fillText(usuario.nome, (canvas.width - 105), (canvas.height - 48));
-        ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 110), (canvas.height - 28));
+       
+        ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 265), (canvas.height - 40));
+        ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 290), (canvas.height - 10));
+        ctx.fillText(usuario.nome, (canvas.width - 260), (canvas.height - 65));
         
         ctx.stroke();
 
@@ -152,7 +186,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const phoneVolume = document.createElement('i');
         phoneVolume.id = 'phoneVolumeClose';
 
-        phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+        phoneVolume.setAttribute('class', 'fas fa-phone-square-alt');
         document.body.appendChild(phoneVolume);
 
         // get the styles for the icon you just made
@@ -176,7 +210,7 @@ function GerarFotoContato(Canvas, Img, usuario) {
         const envelope = document.createElement('i');
         envelope.id = 'envelopeClose';
 
-        envelope.setAttribute('class', 'fas fa-envelope');
+        envelope.setAttribute('class', 'fas fa-envelope-square');
         document.body.appendChild(envelope);
 
         // get the styles for the icon you just made
@@ -194,9 +228,9 @@ function GerarFotoContato(Canvas, Img, usuario) {
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
 
-        ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 510), (canvas.height - 269));
-        ctx.fillText(usuario.nome, (canvas.width - 475), (canvas.height - 242));
-        ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 480), (canvas.height - 217));
+        ctx.fillText(usuario.nome, (canvas.width - 530), (canvas.height - 269));
+        ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 535), (canvas.height - 242));
+        ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 563), (canvas.height - 217));
 
         ctx.stroke();
 
@@ -207,11 +241,11 @@ function GerarFotoContato(Canvas, Img, usuario) {
     }
 }
 
-function download_image(eleCanvas) {
-    var canvas = document.getElementById(eleCanvas);
-    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    var link = document.createElement('a');
-    link.download = "download.png";
-    link.href = image;
-    link.click();
-}
+//function download_image(eleCanvas) {
+//    var canvas = document.getElementById(eleCanvas);
+//    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+//    var link = document.createElement('a');
+//    link.download = "download.png";
+//    link.href = image;
+//    link.click();
+//}

@@ -9,6 +9,7 @@ namespace CRMYIA.Data.Entities
         {
             Abordagem = new HashSet<Abordagem>();
             AssinaturaCartao = new HashSet<AssinaturaCartao>();
+            Banner = new HashSet<Banner>();
             Campanha = new HashSet<Campanha>();
             CapaRedeSocial = new HashSet<CapaRedeSocial>();
             ChatIdUsuarioDeNavigation = new HashSet<Chat>();
@@ -50,12 +51,15 @@ namespace CRMYIA.Data.Entities
         public string NomeFoto { get; set; }
         public string Logado { get; set; }
         public string NomeApelido { get; set; }
+        public byte? IdGrupoCorretor { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }
+        public virtual GrupoCorretor IdGrupoCorretorNavigation { get; set; }
         public virtual Producao IdProducaoNavigation { get; set; }
         public virtual ICollection<Abordagem> Abordagem { get; set; }
         public virtual ICollection<AssinaturaCartao> AssinaturaCartao { get; set; }
+        public virtual ICollection<Banner> Banner { get; set; }
         public virtual ICollection<Campanha> Campanha { get; set; }
         public virtual ICollection<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual ICollection<Chat> ChatIdUsuarioDeNavigation { get; set; }

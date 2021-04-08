@@ -122,6 +122,7 @@ namespace CRMYIA.Web.Pages
                                 string[] VetTipoPostagem;
 
                                 InformacaoModel.Add(new Informacao() { 
+                                    Titulo = formData.Titulo,
                                     Descricao = formData.Descricao,
                                     DataCadastro = DateTime.Now,
                                     Ativo = formData.Ativo
@@ -377,6 +378,7 @@ namespace CRMYIA.Web.Pages
             }
             return new JsonResult(new { status = status, entityLista = EntityCampanhaArquivo, entityInformacao = EntityInformacao });
         }
+
         public void CarregarLists()
         {
             ListEntity = CampanhaArquivoModel.GetList();

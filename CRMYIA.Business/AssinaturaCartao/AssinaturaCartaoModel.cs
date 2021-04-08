@@ -63,6 +63,42 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+
+        public static List<AssinaturaCartaoViewModel> GetListaAssinatura(long IdCampanha, byte IdGrupoCorretor)
+        {
+            //List<AssinaturaCartaoViewModel> ListEntity = new List<CapaViewModel>();
+            List<AssinaturaCartaoViewModel> ListAssinaturaCartao = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListAssinaturaCartao = context.AssinaturaCartao
+                    .Include(x => x.IdCampanhaNavigation)
+                        .ThenInclude(x => x.GrupoCorretorCampanha)
+                    .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                    .Select(x => new AssinaturaCartaoViewModel()
+                        {
+                            IdAssinaturaCartao = x.IdAssinaturaCartao.ToString(),
+                            IdCampanha = x.IdCampanhaNavigation.IdCampanha.ToString(),
+                            Titulo = x.Titulo,
+                            CaminhoArquivo = x.CaminhoArquivo,
+                            NomeArquivo = x.NomeArquivo,
+                            Width = x.Width,
+                            Height = x.Height,
+                            DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
+                            Ativo = x.Ativo,
+                            IdUsuarioNavigation = x.IdUsuarioNavigation
+                        })
+                    .AsNoTracking()
+                    .ToList();
+            }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return ListAssinaturaCartao;
+        }
         public static void Add(AssinaturaCartao Entity)
         {
 

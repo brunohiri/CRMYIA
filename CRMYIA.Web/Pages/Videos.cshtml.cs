@@ -39,21 +39,48 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region Métodos
-        public IActionResult OnGet()
-        {
+        //public IActionResult OnGet()
+        //{
            
-            return Page();
-        }
+        //    return Page();
+        //}
 
-        public IActionResult OnGetListarVideos()
+        public IActionResult OnPostListarVideos()
         {
+            string Id = Request.Form["Id"].ToString();
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            Usuario EntityUsuario = null;
+            EntityUsuario = UsuarioModel.Get(IdUsuario);
+
             bool status = false;
-            List<Video> EntityVideo = VideoModel.GetListaVideos();
-            if (EntityVideo != null)
+            List<Video> EntityVideo = VideoModel.GetListaVideos(Criptography.Decrypt(Id).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
+            if (EntityVideo.Count > 0)
             {
                 status = true;
             }
             return new JsonResult(new { status = status, entityVideo = EntityVideo });
+        }
+
+        public IActionResult OnPostContadorDownload(Campanha fromData)
+        {
+            bool status = false;
+            try
+            {
+                if (fromData.IdCampanha > 0 && fromData.IdCampanha.ToString() != null)
+                {
+                    Campanha EntityCampanha = CampanhaModel.Get(fromData.IdCampanha);
+                    EntityCampanha.QuantidadeDownload = (EntityCampanha.QuantidadeDownload + 1);
+                    CampanhaModel.Update(EntityCampanha);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+            return new JsonResult(new
+            {
+                status = status
+            });
         }
         #endregion
     }

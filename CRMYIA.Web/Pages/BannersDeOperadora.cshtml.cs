@@ -57,12 +57,16 @@ namespace CRMYIA.Web.Pages
 
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
+            Usuario EntityUsuario = null;
+            EntityUsuario = UsuarioModel.Get(IdUsuario);
             int i;
 
             long? IdBanner = 0;
-            long? IdOperadora = 0;
+            //long? IdOperadora = 0;
+            string IdCampanha = "";
             string Descricao = "";
             string Titulo = "";
+            string NomeCampanha = "";
             string CaminhoArquivo = "";
             string NomeArquivo = "";
             string Width = "";
@@ -71,14 +75,14 @@ namespace CRMYIA.Web.Pages
             string TipoPostagem = "";
             DateTime DataCadastro = DateTime.MinValue;
             bool Ativo = false;
-            Operadora IdOperadoraNavigation = new Operadora();
+            //Operadora IdOperadoraNavigation = new Operadora();
             Informacao IdInformacaoNavigation = new Informacao();
 
             List<long> IdBanners = new List<long>();
             List <BannerOperadoraViewModel> EntityBanners = null;
             List<BannerOperadoraCanvasViewModel> AuxBannerOperadoraCanvas = new List<BannerOperadoraCanvasViewModel>();
 
-            //List<BannerOperadora> EntityBannerOperadora = BannerOperadoraModel.GetAllBannerOperadora(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+            Operadora EntityBannerOperadora = OperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
             List<Informacao> EntityInformacao = InformacaoModel.Get();
 
             //foreach (var Item in EntityBannerOperadora)
@@ -87,7 +91,7 @@ namespace CRMYIA.Web.Pages
             //}
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
 
-            EntityBanners = BannerOperadoraModel.GetAllBanner(IdBanners);
+            EntityBanners = BannerOperadoraModel.GetAllBanner(IdBanners, (byte)EntityUsuario.IdGrupoCorretor);
 
             foreach (var ItemInformacao in EntityInformacao)
             {
@@ -111,15 +115,15 @@ namespace CRMYIA.Web.Pages
 
                         }
                         IdBanner = ItemCampanhaArquivo.IdBanner.ExtractLong();
-                        IdOperadora = ItemCampanhaArquivo.IdOperadora.ExtractLong();
+                        IdCampanha = ItemCampanhaArquivo.IdCampanha;
                         Titulo = ItemCampanhaArquivo.IdInformacaoNavigation.Titulo;
                         Descricao = ItemCampanhaArquivo.IdInformacaoNavigation.Descricao;
                         CaminhoArquivo = ItemCampanhaArquivo.CaminhoArquivo;
+                        NomeCampanha = ItemCampanhaArquivo.NomeCampanha;
                         //RedesSociais = ItemCampanhaArquivo.RedesSociais;
                         //TipoPostagem = ItemCampanhaArquivo.TipoPostagem;
                         DataCadastro = Convert.ToDateTime(ItemCampanhaArquivo.DataCadastro);
                         Ativo = ItemCampanhaArquivo.Ativo;
-                        IdOperadoraNavigation = ItemCampanhaArquivo.IdOperadoraNavigation;
                         IdInformacaoNavigation = ItemCampanhaArquivo.IdInformacaoNavigation;
                         i++;
                     }
@@ -130,17 +134,21 @@ namespace CRMYIA.Web.Pages
                 {
                     AuxBannerOperadoraCanvas.Add(new BannerOperadoraCanvasViewModel()
                     {
+                        IdOperadora = EntityBannerOperadora.IdOperadora,
+                        IdCampanha = IdCampanha,
+                        NomeOperadora = EntityBannerOperadora.Descricao,
+                        NomeCampanha = NomeCampanha,
                         IdBanner = IdBanner,
-                        IdOperadora = IdOperadora,
                         Titulo = Titulo,
                         Descricao = Descricao,
                         CaminhoArquivo = CaminhoArquivo,
                         NomeArquivo = NomeArquivo,
+                        CaminhoArquivoOperadora = EntityBannerOperadora.CaminhoArquivo,
+                        NomeArquivoOperadora = EntityBannerOperadora.NomeArquivo,
                         Width = Width,
                         Height = Height,
                         DataCadastro = DataCadastro,
                         Ativo = Ativo,
-                        IdOperadoraNavigation = IdOperadoraNavigation,
                         IdInformacaoNavigation = IdInformacaoNavigation
                     });
                 }
@@ -149,7 +157,7 @@ namespace CRMYIA.Web.Pages
                 Height = "";
 
             }
-            if (AuxBannerOperadoraCanvas != null)
+            if (AuxBannerOperadoraCanvas.Count() > 0)
             {
                 status = true;
             }

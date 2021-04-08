@@ -38,7 +38,7 @@
                     <input type="hidden" class="form-control" asp-for="@Model.ImagemDiferente" id="ImagemDiferente">
                     <input type="hidden" class="form-control" asp-for="@Model.Entity.Logado" id="Logado">
                 }
-                <div class="col-sm-2">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>CPF/CNPJ</label>
                         <input type="text" class="form-control cpf-cnpj" placeholder="CPF/CNPJ" required asp-for="@Model.Entity.Documento">
@@ -50,7 +50,9 @@
                         <input type="text" class="form-control" placeholder="Nome" required asp-for="@Model.Entity.Nome">
                     </div>
                 </div>
-                <div class="col-sm-2">
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label>Perfil</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.UsuarioIdPerfil" id="UsuarioIdPerfil">
@@ -63,12 +65,26 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label>Vincular</label>
                         <input type="hidden" class="form-control" asp-for="@Model.IdUsuarioHierarquia" id="IdUsuarioHierarquiaHidden">
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdUsuarioHierarquia" id="IdUsuarioHierarquia">
                             <option selected="selected">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Grupo de Corretores</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdGrupoCorretor" id="IdGrupoCorretor">
+                            <option selected="selected">Selecione...</option>
+
+                            @foreach (var Item in Model.ListGrupoCorretor)
+                            {
+                                <option value="@Item.IdGrupoCorretor">@(Item.Descricao)</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -139,18 +155,18 @@
                 </div>
             </div>
 
-            <div class="row m-2">
-                <div class="col-sm-6">
-                    <img src="/img/fotoCadastro/foto-cadastro.jpeg" onError="this.onerror=null;this.src='/img/fotoCadastro/foto-cadastro.jpeg';" id="imagem" width="80px" height="102px" alt="Responsive image">
-                </div>
-            </div>
-
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
                         <label>Como poucos nomes, como você deseja ser chamado dentro do Sistema.</label>
                         <input type="text" class="form-control" placeholder="Exemplo: Pedro Martins" asp-for="@Model.Entity.NomeApelido">
                     </div>
+                </div>
+            </div>
+
+            <div class="row m-2">
+                <div class="col-sm-6">
+                    <img src="/img/fotoCadastro/foto-cadastro.jpeg" onError="this.onerror=null;this.src='/img/fotoCadastro/foto-cadastro.jpeg';" id="imagem" width="80px" height="102px" alt="Responsive image">
                 </div>
             </div>
 
