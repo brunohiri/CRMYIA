@@ -69,7 +69,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Porte> Porte { get; set; }
         public virtual DbSet<Producao> Producao { get; set; }
         public virtual DbSet<Produto> Produto { get; set; }
-        public virtual DbSet<Proposta> Proposta { get; set; }
+        public virtual DbSet<Proposta> Proposta { get; set; }                                                                
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual DbSet<RedeSocial> RedeSocial { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
