@@ -27,72 +27,17 @@
     @RenderSection("CSS", required: false)
 </head>
 <body class="royal_loader">
-    <header>
-        @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">CRMYIA.Landing</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>*@
 
-        <!-- Primary Page Layout
-        ================================================== -->
-        <div id="menu-wrap" class="menu-back cbp-af-header">
-            <div class="container">
-                <div class="sixteen columns">
-                    <div class="logo"></div>
-                    <ul class="slimmenu">
-                        <li>
-                            <a class="scroll" href="#home">home</a>
-                        </li>
-                        <li>
-                            <a class="scroll" href="#about">about</a>
-                        </li>
-                        <li>
-                            <a class="scroll" href="#work">work</a>
-                        </li>
-                        <li>
-                            <a class="scroll" href="#services">services</a>
-                        </li>
-                        <li>
-                            <a class="scroll" href="#blog">jurnal</a>
-                        </li>
-                        <li>
-                            <a class="scroll" href="#contact">contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @RenderBody()
 
-    <footer id="footer">
+    <div id="footer">
         <a class="scroll" href="#home"><div class="back-top">&#xf102;</div></a>
         <div class="container">
             <div class="sixteen columns">
-                <p>Made with<i class="icon-footer">&#xf004;</i>and<i class="icon-footer">&#xf0f4;</i>in serbia</p>
-                <p><small>Template: Ananke by ig design</small></p>
+                <p class="text-white"><small>YIA - Your Insurance Anywhere - 2021</small></p>
             </div>
         </div>
-    </footer>
+    </div>
 
     <script type="text/javascript" src="~/lib/template/js/jquery.js"></script>
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
@@ -108,7 +53,7 @@
             "use strict";
             Royal_Preloader.config({
                 mode: 'text', // 'number', "text" or "logo"
-                text: 'Ananke',
+                text: 'YIA - Your Insurance Anywhere',
                 timeout: 0,
                 showInfo: true,
                 opacity: 1,
@@ -150,19 +95,17 @@
     <script type="text/javascript" src="~/lib/template/js/jquery.easing.js"></script>
     <script type="text/javascript" src="~/lib/template/js/jquery.fitvids.js"></script>
     <script type="text/javascript" src="~/lib/template/js/tiltSlider.js"></script>
-    <script>
-        (function ($) {
-            "use strict";
-            new TiltSlider(document.getElementById('slideshow'));
-        })(jQuery);
-    </script>
+
     <script type="text/javascript" src="~/lib/template/js/jquery.parallax-1.1.3.js"></script>
     <script type="text/javascript" src="~/lib/template/js/jquery.localscroll-1.2.7-min.js"></script>
     <script type="text/javascript" src="~/lib/template/js/jquery.scrollTo-1.4.2-min.js"></script>
     <script type="text/javascript" src="~/lib/template/js/jquery.fancybox.js"></script>
     <script type="text/javascript" src="~/lib/template/js/svg_inject_flat_icons_filled.js"></script><!--Inject SVG and Toggle CSS Styles-->
     <script type="text/javascript" src="~/lib/template/js/contact.js"></script>
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
+
+    @*<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>*@
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe2mchZRVQkAtNfobkof8tJYujLAH8w00"></script>
+
     <script type="text/javascript" src="~/lib/template/js/plugins.js"></script>
     <script type="text/javascript" src="~/lib/template/js/template.js"></script>
     <!-- End Document

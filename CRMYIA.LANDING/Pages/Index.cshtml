@@ -7,8 +7,25 @@
     <link href="~/css/landingPage.css" rel="stylesheet" />
 }
 @section Scripts {
+    
     <script src="~/js/landingPage.js"></script>
 }
+<div id="menu-wrap" class="menu-back cbp-af-header">
+    <div class="container">
+        <div class="sixteen columns">
+            <div class="logo"></div>
+            <ul class="slimmenu">
+                <li>
+                    <a class="scroll" href="#home">Principal</a>
+                </li>
+                <li>
+                    <a class="scroll" href="#contact">Contato</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div id="home">
     <div class="small-text"><div class="cl-effect-5"><a class="scroll" href="#work"><span data-hover="portfolio">portfolio</span></a> <a class="scroll" href="#contact"><span data-hover="contact">contact</span></a></div></div>
     <div class="social-top">
@@ -36,6 +53,7 @@
                 <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
                     <img src="~/lib/template/images/1.jpg" alt="" />
                     <div class="just_pattern"></div>
+
                     <!-- THE CAPTIONS IN THIS SLIDE -->
                     <div class="caption big-text lft ltt"
                          data-x="center"
@@ -43,7 +61,7 @@
                          data-speed="500"
                          data-start="500"
                          data-easing="easeOutExpo">
-                        <div class="big-text"><span>we are Ananke</span></div>
+                        <div class="big-text"><span>we are YIA</span></div>
                     </div>
                 </li>
 
@@ -52,7 +70,6 @@
                 <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
                     <img src="~/lib/template/images/2.jpg" alt="" />
                     <div class="just_pattern"></div>
-
                     <div class="caption big-text lft ltt"
                          data-x="center"
                          data-y="center"
@@ -80,67 +97,282 @@
             </ul>
         </div>
     </div>
-    <a class="scroll" href="#about"><div class="scroll-btn tipped" data-title="about agency" data-tipper-options='{"direction":"top","follow":"true"}'></div></a>
+    <a class="scroll" href="#contact"><div class="scroll-btn tipped" data-title="Entre em contato" data-tipper-options='{"direction":"top","follow":"true"}'></div></a>
 </div>
+
 <div id="contact">
     <div class="container">
         <div class="sixteen columns" data-scrollreveal="enter top and move 150px over 1s">
             <div class="header-text">
-                <div class="header-shadow-text">contact</div>
-                <h1>contact</h1>
-                <p>We create best opportunities for your business.</p>
+                <div class="header-shadow-text">Contato</div>
+                <h1 style="color:#EE5C25">Contato</h1>
+                <p>Encontre o melhor Plano de Saúde para você, sua família ou sua empresa.</p>
             </div>
         </div>
     </div>
     <div class="container">
-        <form name="ajax-form" id="ajax-form" action="mail-it.php" method="post">
-            <div class="four columns">
-                <label for="name">
-                    Your Name: *
-                    <span class="error" id="err-name">please enter name</span>
-                </label>
-                <input name="name" id="name" type="text" />
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    @if ((Model != null) && (Model.Mensagem != null))
+                    {
+                        <div class="@Model.Mensagem.CssClass alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <i class="@Model.Mensagem.IconClass"></i>
+                            @Model.Mensagem.Mensagem
+                        </div>}
+                </div>
             </div>
-            <div class="four columns">
-                <label for="email">
-                    E-Mail: *
-                    <span class="error" id="err-email">please enter e-mail</span>
-                    <span class="error" id="err-emailvld">e-mail is not a valid format</span>
-                </label>
-                <input name="email" id="email" type="text" />
+        </div>
+        <form action="" method="post">
+            <div class="row">
+                <p>Como podemos te ajudar?</p>
             </div>
-            <div class="five columns">
-                <label for="message">Tell Us Everything:</label>
-                <textarea name="message" id="message"></textarea>
+            <div class="row text-align-center">
+                <div class="col-sm-2">
+                    <label><input type="checkbox" id="seguroAuto"><span class="label">Seguro Auto</span></label>
+                </div>
+                <div class="col-sm-2">
+                    <label><input type="checkbox" id="seguroVida"><span class="label">Seguro de Vida</span></label>
+                </div>
+                <div class="col-sm-2">
+                    <label><input type="checkbox" id="planoSaude"><span class="label">Plano de Saúde</span></label>
+                </div>
+                <div class="col-sm-2">
+                    <label><input type="checkbox" id="seguroResidencial"><span class="label">Seguro Residencial</span></label>
+                </div>
+                <div class="col-sm-2">
+                    <label><input type="checkbox" checked id="outrosSeguros"><span class="label">Outros Seguros</span></label>
+                </div>
             </div>
-            <div class="three columns">
-                <div id="button-con"><button class="send_message" id="send">Submit</button></div>
+            <div id="rowTipo" class="row d-none">
+                <div id="divTipo1" class="col-sm-4 selecionado">
+                    <label for="switchVoce">Para você</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchVoce" checked asp-for="@Model.Entity.Individual">
+                        <label class="custom-control-label" for="switchVoce">Individual</label>
+                    </div>
+                </div>
+                <div id="divTipo2" class="col-sm-4">
+                    <label for="switchFamilia">Para sua Família</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchFamilia" asp-for="@Model.Entity.Familiar">
+                        <label class="custom-control-label" for="switchFamilia">Familiar</label>
+                    </div>
+                </div>
+                <div id="divTipo3" class="col-sm-4">
+                    <div class="form-group">
+                        <label for="switchEmpresa">Para sua Empresa</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="switchEmpresa" asp-for="@Model.Entity.Empresarial">
+                            <label class="custom-control-label" for="switchEmpresa">Empresarial</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="clear"></div>
-            <div class="error text-align-center" id="err-form">There was a problem validating the form please check!</div>
-            <div class="error text-align-center" id="err-timedout">The connection to the server timed out!</div>
-            <div class="error" id="err-state"></div>
+            <div id="rowResidencial" class="row d-none">
+                <div id="divResidencialVoce" class="col-sm-6 selecionado">
+                    <label for="switchResidencialVoce">Para você</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchResidencialVoce" checked asp-for="@Model.Entity.Individual">
+                        <label class="custom-control-label" for="switchResidencialVoce">Individual</label>
+                    </div>
+                </div>
+                <div id="divResidencialEmpresa" class="col-sm-6">
+                    <div class="form-group">
+                        <label for="switchResidencialEmpresa">Para sua Empresa</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="switchResidencialEmpresa" asp-for="@Model.Entity.Empresarial">
+                            <label class="custom-control-label" for="switchResidencialEmpresa">Empresarial</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="rowPlanoLabel" class="row d-none">
+                <p>Tem plano de saúde atualmente?</p>
+            </div>
+            <div id="rowPlano" class="row d-none">
+                <div id="divPlanoSim" class="col-sm-3">
+                    <label for="switchSimPlano">Sim</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchSimPlano" asp-for="@Model.Entity.PossuiPlano">
+                        <label class="custom-control-label" for="switchSimPlano">Sim</label>
+                    </div>
+                </div>
+                <div id="divPlanoNao" class="col-sm-3 selecionado">
+                    <label for="switchNaoPlano">Não</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchNaoPlano" checked asp-for="@Model.Entity.PossuiPlano">
+                        <label class="custom-control-label" for="switchNaoPlano">Não</label>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Qual o numero de pessoas?</label>
+                        <input type="text" class="form-control" id="txtVidas" placeholder="0" asp-for="@Model.Entity.Vidas">
+                    </div>
+                </div>
+            </div>
+            <div id="rowPossuiCarroLabel" class="row d-none">
+                <p>Possui veiculo atualmente?</p>
+            </div>
+            <div id="rowPossuiCarro" class="row d-none">
+                <div id="divPossuiCarroSim" class="col-sm-6">
+                    <label for="switchSimCarro">Sim</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchSimCarro" asp-for="@Model.Entity.PossuiVeiculo">
+                        <label class="custom-control-label" for="switchSimCarro">Sim</label>
+                    </div>
+                </div>
+                <div id="divPossuiCarroNao" class="col-sm-6 selecionado">
+                    <label for="switchNaoCarro">Não</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchNaoCarro" checked asp-for="@Model.Entity.PossuiVeiculo">
+                        <label class="custom-control-label" for="switchNaoCarro">Não</label>
+                    </div>
+                </div>
+            </div>
+            <div id="rowBuscaCarroLabel" class="row d-none">
+                <p>Busca ou pesquisa sobre veiculo atualmente?</p>
+            </div>
+            <div id="rowBuscaCarro" class="row d-none">
+                <div id="divBuscaCarroSim" class="col-sm-6">
+                    <label for="switchSimBuscaCarro">Sim</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchSimBuscaCarro" asp-for="@Model.Entity.BuscaVeiculo">
+                        <label class="custom-control-label" for="switchSimBuscaCarro">Sim</label>
+                    </div>
+                </div>
+                <div id="divBuscaCarroNao" class="col-sm-6 selecionado">
+                    <label for="switchNaoBuscaCarro">Não</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchNaoBuscaCarro" checked asp-for="@Model.Entity.BuscaVeiculo">
+                        <label class="custom-control-label" for="switchNaoBuscaCarro">Não</label>
+                    </div>
+                </div>
+            </div>
+            <div id="rowProfLabel" class="row d-none">
+                <p>Qual sua profissão atualmente?</p>
+            </div>
+            <div id="rowProf" class="row d-none">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Sua profissão</label>
+                        <input type="text" class="form-control" id="txtProfissao" placeholder="Profissão" asp-for="@Model.Entity.Profissao">
+                    </div>
+                </div>
+            </div>
+            <div id="rowCnpjLabel" class="row d-none">
+                <p>Você ou alguém da família tem um CNPJ ativo?</p>
+            </div>
+            <div id="rowCnpj" class="row d-none">
+                <div id="divCnpjSim" class="col-sm-6">
+                    <label for="switchSimCnpj">Sim</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchSimCnpj" asp-for="@Model.Entity.PossuiCNPJ">
+                        <label class="custom-control-label" for="switchSimCnpj">Sim</label>
+                    </div>
+                </div>
+                <div id="divCnpjNao" class="col-sm-6 selecionado">
+                    <label for="switchNaoCnpj">Não</label>
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" class="custom-control-input" id="switchNaoCnpj" checked asp-for="@Model.Entity.PossuiCNPJ">
+                        <label class="custom-control-label" for="switchNaoCnpj">Não</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p>Agora precisamos dos seus dados de contato para enviar a cotação:</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" class="form-control" id="minValor" placeholder="Nome..." asp-for="@Model.Entity.Nome">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="minValor" placeholder="exemplo@email.com" asp-for="@Model.Entity.Email">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="text" class="form-control" id="minValor" placeholder="11 9 9999 - 8888" asp-for="@Model.Entity.Telefone">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn text-center btn-edited">Enviar Simulação</button>
+            </div>
         </form>
-        <div class="clear"></div>
-        <div id="ajaxsuccess">Successfully sent!!</div>
-        <div class="clear"></div>
-        <div class="eight columns" data-scrollreveal="enter left and move 150px over 1s">
-            <div class="contact-wrap">
-                <p><i class="icon-contact1">&#xf095;</i><span>call us:</span> (381) 267-6386 <small><em>Monday–Friday | 9am–5pm (GMT +1)</em></small></p>
+    </div>
+    <div id="logos">
+        <div class="container text-align-center">
+            <div class="container">
+                <div class="sixteen columns" data-scrollreveal="enter top and move 150px over 1s">
+                    <div class="header-text">
+                        <div class="header-shadow-text">Parceiros</div>
+                        <h1 style="color:#EE5C25">Parceiros</h1>
+                        <p style="color:#EE5C25; font-weight:bold; font-size:22px;">Empresas consagradas no mercado que confiam na YIA para tornar SEGUROS acessíveis a todos.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="eight columns" data-scrollreveal="enter right and move 150px over 1s">
-            <div class="contact-wrap">
-                <p><i class="icon-contact1">&#xf041;</i><span>Visit Us:</span> First Street, Sunrise Avenue, New York, USA</p>
-            </div>
-        </div>
-        <div class="sixteen columns" data-scrollreveal="enter bottom and move 150px over 1s">
-            <a class="button-map close-map"><span>Locate Us on Map</span></a>
         </div>
     </div>
+    <div id="contact">
+        <div class="container text-align-center">
+            <div class="row" style="background-color:#ffffff">
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/1.png" alt="" />
+                </div>
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/2.png" alt="" />
+                </div>
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/3.png" alt="" />
+                </div>
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/4.png" alt="" />
+                </div>
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/5.png" alt="" />
+                </div>
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/6.png" alt="" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/7.png" alt="" />
+                </div>
+                <div class="col-sm-2 tumb-parceiro">
+                    <img class="responsive" src="/lib/template/images/logos/8.png" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="eight columns" data-scrollreveal="enter left and move 150px over 1s">
+        <div class="contact-wrap">
+            <p><span style="color:#EE5C25">Corretor:</span> @Model.Corretor.Nome </p>
+            <p><span style="color:#EE5C25">Email:</span> @Model.Corretor.Email </p>
+            <p><i class="icon-contact1">&#xf095;</i><span style="color:#EE5C25">Entre em contato:</span> @Model.Corretor.Telefone <small><em>Segunda à Sexta | 09:00–18:00</em></small></p>
+        </div>
+    </div>
+    <div class="eight columns" data-scrollreveal="enter right and move 150px over 1s">
+        <div class="contact-wrap">
+            <p><i class="icon-contact1">&#xf041;</i><span style="color:#EE5C25">Nos encontre em:</span> R. Barão de Itapetininga, 125 - 6 andar - Centro Histórico de São Paulo, São Paulo - SP, 01042-001</p>
+        </div>
+    </div>
+    <div class="sixteen columns" data-scrollreveal="enter bottom and move 150px over 1s">
+        <a class="button-map close-map"><span style="color:#EE5C25">Nos localize no mapa</span></a>
+    </div>
+
     <div id="google_map"></div>
 </div>
-
 
 
 

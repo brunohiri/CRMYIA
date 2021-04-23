@@ -1,1 +1,51 @@
-﻿
+﻿.selecionado {
+    background-color: #EE5C25;
+    border: 1px solid #ccc !important;
+    border-radius: 16px;
+    color: aliceblue;
+}
+.btn-edited {
+    background-color: #EE5C25;
+    color:aliceblue;
+}
+    .btn-edited:hover {
+        background-color: #C73B0B;
+        color: aliceblue;
+        border-color: gray
+    }
+
+input[type=checkbox] {
+    display: none;
+    
+}
+
+.label {
+    border: 1px solid #ccc !important;
+    border-radius: 5px;
+    color: black;
+    font-weight:bold;
+    display: inline-block;
+    padding: 3px;
+    height: 50px;
+    width: 150px;
+    /* background: url("unchecked.png") no-repeat left center; */
+    /* padding-left: 15px; */
+}
+
+input[type=checkbox]:checked + .label {
+    background: #EE5C25;
+    border: 1px solid #ccc !important;
+    border-radius: 5px;
+    color: aliceblue;
+    height: 50px;
+    width: 150px;
+    /* background-image: url("checked.png"); */
+}
+.tumb-parceiro {
+    display: flex;
+    align-items: center;
+}
+.responsive {
+    max-width: 100%;
+    height: auto;
+}

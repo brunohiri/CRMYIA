@@ -9,6 +9,7 @@ namespace CRMYIA.Data.Entities
         {
             Abordagem = new HashSet<Abordagem>();
             AssinaturaCartao = new HashSet<AssinaturaCartao>();
+            Banner = new HashSet<Banner>();
             Campanha = new HashSet<Campanha>();
             CapaRedeSocial = new HashSet<CapaRedeSocial>();
             ChatIdUsuarioDeNavigation = new HashSet<Chat>();
@@ -17,6 +18,7 @@ namespace CRMYIA.Data.Entities
             HistoricoLigacao = new HashSet<HistoricoLigacao>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
             KPIGrupoUsuario = new HashSet<KPIGrupoUsuario>();
+            LandingPage = new HashSet<LandingPage>();
             NotificacaoIdUsuarioCadastroNavigation = new HashSet<Notificacao>();
             NotificacaoIdUsuarioVisualizarNavigation = new HashSet<Notificacao>();
             NotificacaoMensagemIdUsuarioDeNavigation = new HashSet<NotificacaoMensagem>();
@@ -50,12 +52,15 @@ namespace CRMYIA.Data.Entities
         public string NomeFoto { get; set; }
         public string Logado { get; set; }
         public string NomeApelido { get; set; }
+        public byte? IdGrupoCorretor { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }
+        public virtual GrupoCorretor IdGrupoCorretorNavigation { get; set; }
         public virtual Producao IdProducaoNavigation { get; set; }
         public virtual ICollection<Abordagem> Abordagem { get; set; }
         public virtual ICollection<AssinaturaCartao> AssinaturaCartao { get; set; }
+        public virtual ICollection<Banner> Banner { get; set; }
         public virtual ICollection<Campanha> Campanha { get; set; }
         public virtual ICollection<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual ICollection<Chat> ChatIdUsuarioDeNavigation { get; set; }
@@ -64,6 +69,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual ICollection<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
+        public virtual ICollection<LandingPage> LandingPage { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioCadastroNavigation { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioVisualizarNavigation { get; set; }
         public virtual ICollection<NotificacaoMensagem> NotificacaoMensagemIdUsuarioDeNavigation { get; set; }

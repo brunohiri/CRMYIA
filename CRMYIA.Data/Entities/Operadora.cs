@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public Operadora()
         {
+            GrupoCorretorOperadora = new HashSet<GrupoCorretorOperadora>();
             OperadoraDocumento = new HashSet<OperadoraDocumento>();
             Produto = new HashSet<Produto>();
         }
@@ -18,6 +19,7 @@ namespace CRMYIA.Data.Entities
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
 
+        public virtual ICollection<GrupoCorretorOperadora> GrupoCorretorOperadora { get; set; }
         public virtual ICollection<OperadoraDocumento> OperadoraDocumento { get; set; }
         public virtual ICollection<Produto> Produto { get; set; }
     }
