@@ -13,7 +13,10 @@ namespace CRMYIA.Data.Entities
             CapaRedeSocial = new HashSet<CapaRedeSocial>();
             GrupoCorretorCampanha = new HashSet<GrupoCorretorCampanha>();
             Video = new HashSet<Video>();
+<<<<<<< HEAD
             VisitaCampanha = new HashSet<VisitaCampanha>();
+=======
+>>>>>>> 5ca9325396fce66d6cb3f26d00a74f74602c8241
         }
 
         public long IdCampanha { get; set; }
@@ -24,7 +27,10 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public long? QuantidadeDownload { get; set; }
+<<<<<<< HEAD
         public long? IdCalendarioSazonal { get; set; }
+=======
+>>>>>>> 5ca9325396fce66d6cb3f26d00a74f74602c8241
 
         public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
@@ -34,6 +40,9 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual ICollection<GrupoCorretorCampanha> GrupoCorretorCampanha { get; set; }
         public virtual ICollection<Video> Video { get; set; }
+<<<<<<< HEAD
         public virtual ICollection<VisitaCampanha> VisitaCampanha { get; set; }
+=======
+>>>>>>> 5ca9325396fce66d6cb3f26d00a74f74602c8241
     }
 }

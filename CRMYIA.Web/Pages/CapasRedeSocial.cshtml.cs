@@ -23,14 +23,23 @@ namespace CRMYIA.Web.Pages
     public class CapasRedeSocial : PageModel
     {
         [BindProperty]
-        public List<CapaViewModel> ListCapa { get; set; }
+        public List<CapaViewModel> ListCapa { get; set; }//CapaViewModel
         [BindProperty]
         public UsuarioCorretorViewModel UsuarioEntity { get; set; }
-        public IActionResult OnGet()
+        public IActionResult OnGet(string Id)
         {
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-            ListCapa = CapaModel.GetList();
+            if (Id.IsNullOrEmpty())
+            {
+            }
+            else
+            {
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
+                Usuario EntityUsuario = null;
+                EntityUsuario = UsuarioModel.Get(IdUsuario);
+                ListCapa = CapaModel.GetListaCapa(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
+            }
+               
             return Page();
         }
     }

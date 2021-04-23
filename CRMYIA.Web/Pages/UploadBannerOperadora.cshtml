@@ -31,21 +31,34 @@
                         <input type="hidden" name="IdBanner" id="IdBanner" value="0" />
                         <input type="hidden" name="IdInformacao" id="IdInformacao" value="0" />
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <div class="form-group">
-                                <label>Seguradora/Operadora *</label>
-                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdOperadora" id="IdOperadora">
-                                    <option selected="selected" value="0">Selecione...</option>
-                                    @foreach (var Item in Model.ListOperadora)
+                                <label>Campanha</label>
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCampanha" name="IdCampanha" id="IdCampanha">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListCampanha)
                                     {
-                                        <option value="@Item.IdOperadora">@(Item.Descricao)</option>
+                                        <option value="@Item.IdCampanha">@(Item.Descricao)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        @*<div class="col-sm-5">
+                            <div class="form-group">
+                                <label>Campanha</label>
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.IdCampanha" id="IdCampanha">
+                                    <option selected="selected" value="0">Selecione...</option>
+                                    @foreach (var Item in Model.ListCampanha)
+                                    {
+                                        <option value="@Item.IdGrupoCorretor">@(Item.Descricao)</option>
                                     }
                                 </select>
 
                             </div>
-                        </div>
+                        </div>*@
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
                             <div class="form-group">
                                 <label>Status</label>
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">

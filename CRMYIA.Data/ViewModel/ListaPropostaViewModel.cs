@@ -12,7 +12,7 @@ namespace CRMYIA.Data.ViewModel
         public string NomeCorretor { get; set; }
         public string DescricaoFaseProposta { get; set; }
         public decimal? ValorPrevisto { get; set; }
-        public string NomeUsuario { get; set; }
+        public string NomeUsuario { get; set; }                                                                            
         public DateTime DataCadastro { get; set; }
         public string DescricaoStatusProposta { get; set; }
         public string NomeHistoricoProposta { get; set; }

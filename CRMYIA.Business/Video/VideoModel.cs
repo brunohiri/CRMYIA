@@ -62,18 +62,18 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<Video> GetListaVideos()
+        public static List<Video> GetListaVideos(long IdCampanha, byte IdGrupoCorretor)
         {
-            List<Video> ListEntity = null;
+            List<Video> ListEntity = new List<Video>();
+            List<Video> AuxListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Video
-                        .Where(x => x.Ativo)
-                        .OrderBy(o => o.IdVideo)
-                        .AsNoTracking()
-                        .ToList();
+                    .Where(x => x.IdCampanha == IdCampanha)
+                    .AsNoTracking()
+                    .ToList();
                 }
             }
             catch (Exception)

@@ -121,8 +121,9 @@ namespace CRMYIA.Web.Pages
                             VideoModel.Add(new Video()
                             {
                                 IdUsuario = IdUsuario,
-                                CaminhoArquivo = "ArquivoVideo/",
+                                IdCampanha = formData.IdCampanha,
                                 IdentificadorVideo = formData.IdentificadorVideo,
+                                CaminhoArquivo = "ArquivoVideo/",
                                 NomeVideo = NomeArquivo,
                                 DataCadastro = DateTime.Now,
                                 Ativo = formData.Ativo
@@ -187,8 +188,9 @@ namespace CRMYIA.Web.Pages
                 
                     VideoModel.Update(new Video()
                     {
-                        IdUsuario = IdUsuario,
                         IdVideo = Entity.IdVideo,
+                        IdUsuario = IdUsuario,
+                        IdCampanha = Entity.IdCampanha,
                         IdentificadorVideo = IdentificadorVideo,
                         CaminhoArquivo = Entity.CaminhoArquivo,
                         NomeVideo = Entity.NomeVideo,
@@ -255,7 +257,7 @@ namespace CRMYIA.Web.Pages
                     VideoModel.Update(Entity);
                     status = true;
                 }
-                return new JsonResult(new { status = status, entity = new VideoViewModel{IdVideo = HttpUtility.UrlEncode(Criptography.Encrypt(Entity.IdVideo.ToString()).ToString()), IdentificadorVideo = Entity.IdentificadorVideo, Ativo = Entity.Ativo} });
+                return new JsonResult(new { status = status, entity = new VideoViewModel{IdCampanha = Entity.IdCampanha.ToString().ExtractLong(), IdVideo = HttpUtility.UrlEncode(Criptography.Encrypt(Entity.IdVideo.ToString()).ToString()), IdentificadorVideo = Entity.IdentificadorVideo, Ativo = Entity.Ativo} });
             }
             catch (Exception ex)
             {
@@ -270,6 +272,7 @@ namespace CRMYIA.Web.Pages
             {
                 List<VideoViewModel> EntityLista = null;
                 Video Entity = null;
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
                 bool status = false;
                 Mensagem = null;
                 if (obj.IdVideo.ToString() != null)
@@ -278,10 +281,12 @@ namespace CRMYIA.Web.Pages
                     VideoModel.Update(new Video()
                     {
                         IdVideo = Criptography.Decrypt(HttpUtility.UrlDecode(obj.IdVideo)).ExtractLong(),
+                        IdUsuario = IdUsuario,
+                        IdCampanha = obj.IdCampanha,
                         IdentificadorVideo  = obj.IdentificadorVideo,
                         CaminhoArquivo = Entity.CaminhoArquivo,
                         NomeVideo = Entity.NomeVideo,
-                        DataCadastro = Entity.DataCadastro,
+                        DataCadastro = DateTime.Now,
                         Ativo = obj.Ativo
                     });
                     EntityLista = VideoModel.GetList();
@@ -299,7 +304,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListEntity = VideoModel.GetList();
-            //ListCampanha = Business.CampanhaModel.GetList();
+            ListCampanha = Business.CampanhaModel.GetList();
         }
         #endregion
     }

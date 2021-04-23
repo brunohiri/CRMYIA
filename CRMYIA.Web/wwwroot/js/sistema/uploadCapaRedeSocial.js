@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     $("#upload-capa-rede-social").dropzone({
         paramName: "files", // The name that will be used to transfer the file
-        maxFiles: 2000,
+        maxFiles: 1,
         parallelUploads: 128,
         url: "/UploadCapaRedeSocial?handler=UploadCapaRedeSocial",
         previewsContainer: "#imageUpload", // Define the container to display the previews
@@ -71,6 +71,18 @@ $(document).ready(function () {
                     $('#UploadCapaRedeSoCialMensagemIcon').addClass(data.mensagem.iconClass);
                     $('#UploadCapaRedeSoCialMensagemSpan').text(data.mensagem.mensagem);
                     document.getElementById("upload-capa-rede-social").reset();
+                    $("#IdRedeSocial").select2('val', '0');
+                    $("#IdRedeSocial").select2({
+                        placeholder: "Selecione...",
+                        allowClear: true
+                    });
+
+                    $("#IdCampanha").select2('val', '0');
+                    $("#IdCampanha").select2({
+                        placeholder: "Selecione...",
+                        allowClear: true
+                    });
+
                     $("#IdRedeSocial").select2();
                 }
                 setTimeout(function () { $('#UploadCapaRedeSoCialMensagemDiv').css('display', 'none'); }, 5000);
@@ -185,6 +197,7 @@ $(document).on('click', '.alterar-titulo', function () {
                     $('#IdCapa').val(data.entityCapa.idCapa);
                     $('#Titulo').val(data.entityCapa.titulo);
                     $("#IdRedeSocial").val(data.entityRedeSocial.idRedeSocial).trigger('change');
+                    $("#IdCampanha").val(data.idCampanha).trigger('change');
                     $('#Titulo').focus();
 
                     $('.salvar-texto').css('display', 'block');
@@ -237,6 +250,12 @@ $(document).on('click', '#btn-salvar-texto', function () {
                 document.getElementById("upload-capa-rede-social").reset();
                 $("#IdRedeSocial").select2('val', '0');
                 $("#IdRedeSocial").select2({
+                    placeholder: "Selecione...",
+                    allowClear: true
+                });
+
+                $("#IdCampanha").select2('val', '0');
+                $("#IdCampanha").select2({
                     placeholder: "Selecione...",
                     allowClear: true
                 });

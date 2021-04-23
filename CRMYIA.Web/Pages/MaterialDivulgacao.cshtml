@@ -7,72 +7,144 @@
 }
 @using CRMYIA.Business.Util;
 @{ string nomeCaminho = "";}
+@{ string url = "";}
+@{ bool fim = false;}
+@{ long? IdCampanha = 0;}
 
 <span style="font-family: 'Montserrat', cursive;">&nbsp;</span>
-@*<div id="campanhas">
-
-   
-</div>*@
 
 <div>
     <div class="d-flex flex-wrap">
 
-        <div class="card m-2 card-operadora" style="width: 14rem;">
-            <div class="card-body text-center">
-                <img src="../img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo-">
-
-            </div>
-
-            <a href="/OperadoraSeguradora" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link card-link"><strong>Banners de Operadora</strong></h5></a>
-        </div>
-
-        <div class="card m-2 card-operadora" style="width: 14rem;">
-            <div class="card-body text-center">
-                <img src="../img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo-">
-
-            </div>
-
-            <a href="/CapasRedeSocial" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Capas de Rede Social</strong></h5></a>
-        </div>
-
-        <div class="card m-2 card-operadora" style="width: 14rem;">
-            <div class="card-body text-center">
-                <img src="../img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo-">
-
-            </div>
-
-            <a href="/AssinaturaCartao" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Cartão de Digital e Assinatura de Email</strong></h5></a>
-        </div>
-
-        <div class="card m-2 card-operadora" style="width: 14rem;">
-            <div class="card-body text-center">
-                <img src="../img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo-">
-
-            </div>
-
-            <a href="/Videos" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Videos</strong></h5></a>
-        </div>
-
         @foreach (var Item in Model.ListaCampanhaArquivo)
         {
-            if (@Item.IdCampanhaNavigation.CaminhoArquivo != null && @Item.IdCampanhaNavigation.NomeArquivo != null)
-            {
-                nomeCaminho = Item.IdCampanhaNavigation.CaminhoArquivo + Item.IdCampanhaNavigation.NomeArquivo;
-            }
-            else
-            {
-                nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
-            }
-            <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanhaNavigation.IdCampanha" style="width: 14rem;">
-                <div class="card-body text-center">
-                    <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
 
-                    @*<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>*@
+            if (Item.CampanhaArquivo.Count > 0)
+            {
+                url = "/Banners";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
                 </div>
+            }
+            else if (Item.Video.Count > 0)
+            {
+                url = "/Videos";
 
-                <a asp-page="/Banners" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanhaNavigation.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.IdCampanhaNavigation.Descricao</strong></h5></a>
-            </div>
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                </div>
+            }
+            else if (Item.CapaRedeSocial.Count > 0)
+            {
+                url = "/CapasRedeSocial";
+
+                var RedeSocial = Item.CapaRedeSocial.ToList();
+
+                int tam = RedeSocial.Count();
+                int i = 0;
+
+                foreach (var ItemRedeSocial in RedeSocial)
+                {
+
+
+                    if (IdCampanha != ItemRedeSocial.IdCampanha)
+                    {
+                        IdCampanha = ItemRedeSocial.IdCampanha;
+                        if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                        {
+                            nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                        }
+                        else
+                        {
+                            nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                        }
+
+                        <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                            <div class="card-body text-center">
+                                <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                            </div>
+
+                            <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                        </div>
+                    }
+
+                }
+            }
+            else if (Item.AssinaturaCartao.Count > 0)
+            {
+                url = "/AssinaturaCartao";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                </div>
+            }
+            else if (Item.Banner.Count > 0)
+            {
+                url = "/OperadoraSeguradora";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                </div>
+            }
         }
+
     </div>
 </div>

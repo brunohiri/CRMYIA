@@ -68,6 +68,49 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<CapaViewModel> GetListaCapa(long IdCampanha, byte IdGrupoCorretor)
+        {
+            List<CapaViewModel> ListEntity = new List<CapaViewModel>();
+            List<Capa> ListCapa = null; 
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListCapa = context.Capa
+                        .Include(x => x.CapaRedeSocial)
+                            .ThenInclude(x => x.IdCampanhaNavigation)
+                                .ThenInclude(x => x.GrupoCorretorCampanha)
+                       .Where(x => x.CapaRedeSocial.Where(x => x.IdCampanha == IdCampanha).Count() > 0 && x.CapaRedeSocial.Where(x => x.IdCampanhaNavigation.GrupoCorretorCampanha.Any(x => x.IdGrupoCorretor == IdGrupoCorretor)).Count() > 0 )
+                       .AsNoTracking()
+                       .ToList();
+
+                    foreach (var Item in ListCapa)
+                    {
+                        ListEntity.Add(new CapaViewModel()
+                        {
+                            Id = Item.CapaRedeSocial.Select(x => x.IdCapaNavigation.IdCapa).First(),
+                            IdCapa = Item.IdCapa.ToString(),
+                            IdCampanha = Item.CapaRedeSocial.Select(x => x.IdCampanhaNavigation.IdCampanha).First().ToString(),
+                            Titulo = Item.Titulo,
+                            CaminhoArquivo = Item.CaminhoArquivo,
+                            NomeArquivo = Item.NomeArquivo,
+                            Heighgt = Item.Height.ToString(),
+                            Width = Item.Width.ToString(),
+                            DataCadastro = Item.DataCadastro.ToString(),
+                            Ativo = Item.Ativo,
+                            IdCapaNavigation = Item.CapaRedeSocial.Select(x => x.IdCapaNavigation).First(),
+                            IdRedeSocialNavigation = Item.CapaRedeSocial.Select(x => x.IdRedeSocialNavigation).First(),
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static void Update(Capa Entity)
         {
             try

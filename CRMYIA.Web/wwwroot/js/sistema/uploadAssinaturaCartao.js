@@ -43,6 +43,7 @@ $(document).ready(function () {
                 if (VerificaNomeArquivoAssinaturaCartao(file.name)) {
                     //formData.append('IdAssinaturaCartao', $('#IdAssinaturaCartao').val());
                     //formData.append('Titulo', $('#Titulo').val());
+                    //formData.append("IdCampanha", $('#IdCampanha').val());
                     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
                 } else {
                     myDropzone.removeAllFiles(true);
@@ -119,6 +120,7 @@ $(document).ready(function () {
             this.on('sending', function (file, xhr, formData) {
                 formData.append("IdAssinaturaCartao", idassinaturacartao);
                 formData.append("NomeArquivo", nomearquivo);
+                formData.append("IdCampanha", $('#IdCampanha').val());
                 $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
             });
             this.on("success", function (files, data) {
@@ -181,6 +183,7 @@ $(document).on('click', '.alterar-titulo', function () {
                 if (data.status) {
                     $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
                     $('#Titulo').val(data.entityLista.titulo);
+                    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
                     $('#Titulo').focus();
 
                     $('.salvar-texto').css('display', 'block');

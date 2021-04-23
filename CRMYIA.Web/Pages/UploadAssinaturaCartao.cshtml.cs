@@ -33,17 +33,10 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public IFormFile NomeArquivoCampanha { get; set; }
         [BindProperty]
-        public RedeSocial Entity { get; set; }
+        public AssinaturaCartao Entity { get; set; }
         [BindProperty]
-        public RedeSocial EntityRedeSocial { get; set; }
-
-        [BindProperty]
-        public List<CapaRedeSocial> ListCapaRedeSocial { get; set; }
-
-        [BindProperty]
-        public List<CapaRedeSocialViewModel> ListEntity { get; set; }
-        [BindProperty]
-        public List<RedeSocial> ListRedeSocial { get; set; }
+        public List<Campanha> ListCampanha { get; set; }
+        
         [BindProperty]
         public List<AssinaturaCartaoViewModel> ListAssinaturaCartao { get; set; }
         [BindProperty]
@@ -65,7 +58,7 @@ namespace CRMYIA.Web.Pages
         {
             if (Id.IsNullOrEmpty())
             {
-                Entity = new RedeSocial();
+                Entity = new AssinaturaCartao();
                 Entity.DataCadastro = DateTime.Now;
             }
             //else
@@ -85,6 +78,7 @@ namespace CRMYIA.Web.Pages
                 long IdAssinaturaCartao =  dados["IdAssinaturaCartao"].ToString().ExtractLong();
                 string Titulo = dados["Titulo"];
                 bool Ativo = Convert.ToBoolean(dados["Ativo"].Contains("true"));
+                string IdCampanha = dados["IdCampanha"].ToString();
                 var documentFile = Request.Form.Files.ToList();
                 AssinaturaCartao Entity = null;
                 List<AssinaturaCartaoViewModel> EntityLista = null;
@@ -135,6 +129,7 @@ namespace CRMYIA.Web.Pages
                                 AssinaturaCartaoModel.Add(new AssinaturaCartao()
                                 {
                                     IdUsuario = IdUsuario,
+                                    IdCampanha = IdCampanha.ExtractLong(),
                                     Titulo = Titulo,
                                     CaminhoArquivo = "ArquivoAssinaturaCartao/",
                                     NomeArquivo = NomeArquivo,
@@ -157,6 +152,7 @@ namespace CRMYIA.Web.Pages
                                 {
                                     IdAssinaturaCartao = IdAssinaturaCartao,
                                     IdUsuario = IdUsuario,
+                                    IdCampanha = IdCampanha.ExtractLong(),
                                     Titulo = Titulo,
                                     CaminhoArquivo = Entity.CaminhoArquivo,
                                     NomeArquivo = Entity.NomeArquivo,
@@ -325,6 +321,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListAssinaturaCartao = AssinaturaCartaoModel.GetList();
+            ListCampanha = Business.CampanhaModel.GetList();
         }
         #endregion
     }

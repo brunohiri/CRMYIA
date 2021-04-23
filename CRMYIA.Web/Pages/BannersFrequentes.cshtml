@@ -1,0 +1,187 @@
+﻿@page
+@model CRMYIA.Web.Pages.BannersFrequentes
+@{
+    ViewData["Title"] = "Ranking";
+    ViewData["Pagina"] = "Banners Frequentes";
+}
+@using CRMYIA.Business.Util;
+@{ string nomeCaminho = "";}
+@{ string url = "";}
+@{ bool fim = false;}
+@{ long? IdCampanha = 0;}
+
+<div>
+    <div class="d-flex flex-wrap">
+
+        @foreach (var Item in Model.ListaCampanhaArquivo)
+        {
+
+            if (Item.CampanhaArquivo.Count > 0)
+            {
+                url = "/Banners";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                    <div class="card-footer text-center">
+                        <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Downloads</span>
+                            <span class="info-box-number">@Item.QuantidadeDownload</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </div>
+            }
+            else if (Item.Video.Count > 0)
+            {
+                url = "/Videos";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+            <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                <div class="card-body text-center">
+                    <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                </div>
+
+                <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                <div class="card-footer text-center">
+                    <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Downloads</span>
+                        <span class="info-box-number">@Item.QuantidadeDownload</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+            }
+            else if (Item.CapaRedeSocial.Count > 0)
+            {
+                url = "/CapasRedeSocial";
+
+                var RedeSocial = Item.CapaRedeSocial.ToList();
+
+                int tam = RedeSocial.Count();
+                int i = 0;
+
+                foreach (var ItemRedeSocial in RedeSocial)
+                {
+
+
+                    if (IdCampanha != ItemRedeSocial.IdCampanha)
+                    {
+                        IdCampanha = ItemRedeSocial.IdCampanha;
+                        if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                        {
+                            nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                        }
+                        else
+                        {
+                            nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                        }
+
+                        <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                            <div class="card-body text-center">
+                                <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                            </div>
+
+                            <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                            <div class="card-footer text-center">
+                                <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Downloads</span>
+                                    <span class="info-box-number">@Item.QuantidadeDownload</span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                    }
+
+                }
+            }
+            else if (Item.AssinaturaCartao.Count > 0)
+            {
+                url = "/AssinaturaCartao";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                    <div class="card-footer text-center">
+                        <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Downloads</span>
+                            <span class="info-box-number">@Item.QuantidadeDownload</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </div>
+            }
+            else if (Item.Banner.Count > 0)
+            {
+                url = "/OperadoraSeguradora";
+
+                if (@Item.CaminhoArquivo != null && @Item.NomeArquivo != null)
+                {
+                    nomeCaminho = Item.CaminhoArquivo + Item.NomeArquivo;
+                }
+                else
+                {
+                    nomeCaminho = "img/fotoCadastro/imagem_vazia.png";
+                }
+
+                <div class="card m-2 card-operadora" data-idoperadora="@Item.IdCampanha" style="width: 14rem;">
+                    <div class="card-body text-center">
+                        <img src="../@nomeCaminho" class="img-fluid" alt="Logo - @Item.Descricao">
+
+                    </div>
+
+                    <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
+                    <div class="card-footer text-center">
+                        <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Downloads</span>
+                            <span class="info-box-number">@Item.QuantidadeDownload</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

@@ -10,6 +10,7 @@ using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRMYIA.Business
@@ -66,6 +67,29 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Banner> GetListaOperadora(long IdCampanha, byte IdGrupoCorretor)
+        {
+            //List<AssinaturaCartaoViewModel> ListEntity = new List<CapaViewModel>();
+            List<Banner> ListBanner = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListBanner = context.Banner
+                    .Include(x => x.IdCampanhaNavigation)
+                        .ThenInclude(x => x.GrupoCorretorCampanha)
+                    .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                    .AsNoTracking()
+                    .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return ListBanner;
+        }
+
         public static List<Operadora> GetListIdDescricao()
         {
             List<Operadora> ListEntity = null;
@@ -91,6 +115,24 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static Operadora GetLastId()
+        {
+            Operadora Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Operadora
+                        .ToList()
+                        .LastOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
         public static void Add(Operadora Entity)
         {
             try

@@ -26,11 +26,19 @@ namespace CRMYIA.Web.Pages
         public List<AssinaturaCartaoViewModel> ListAssinaturaCartao { get; set; }
         [BindProperty]
         public UsuarioCorretorViewModel UsuarioEntity { get; set; }
-        public IActionResult OnGet()
+        public IActionResult OnGet(string Id)
         {
-            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
-            UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-            ListAssinaturaCartao = AssinaturaCartaoModel.GetList();
+            if (Id.IsNullOrEmpty()) 
+            {
+            } 
+            else
+            {
+                long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+                Usuario UsuarioCorretor = UsuarioModel.Get(IdUsuario);
+                UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
+                ListAssinaturaCartao = AssinaturaCartaoModel.GetListaAssinatura(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(), (byte)UsuarioCorretor.IdGrupoCorretor);
+            }
+          
             return Page();
         }
     }

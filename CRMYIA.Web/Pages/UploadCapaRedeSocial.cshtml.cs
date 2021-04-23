@@ -39,6 +39,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<CapaRedeSocial> ListCapaRedeSocial { get; set; }
+        [BindProperty]
+        public List<Campanha> ListCampanha { get; set; }
 
         [BindProperty]
         public List<CapaRedeSocialViewModel> ListEntity { get; set; }
@@ -151,7 +153,8 @@ namespace CRMYIA.Web.Pages
                                     {
                                         IdRedeSocial = formData.IdRedeSocial,
                                         IdCapa = EntityCapa.IdCapa,
-                                        IdUsuario = IdUsuario
+                                        IdUsuario = IdUsuario,
+                                        IdCampanha = formData.IdCampanha
                                     });
 
                                     EntityLista = CapaModel.GetList();
@@ -171,7 +174,8 @@ namespace CRMYIA.Web.Pages
                                     IdCapaRedeSocial = EntityCapaRedeSocial.IdCapaRedeSocial,
                                     IdRedeSocial = formData.IdRedeSocial,
                                     IdCapa = formData.IdCapa,
-                                    IdUsuario = IdUsuario
+                                    IdUsuario = IdUsuario,
+                                    IdCampanha = formData.IdCampanha
                                 });
 
                                 CapaModel.Update(new Capa()
@@ -366,12 +370,13 @@ namespace CRMYIA.Web.Pages
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message);
                 return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityCapa, entityRedeSocial = EntityRedeSocial });
             }
-            return new JsonResult(new { status = status, entityCapa = EntityCapa, entityRedeSocial = EntityRedeSocial });
+            return new JsonResult(new { status = status, entityCapa = EntityCapa, entityRedeSocial = EntityRedeSocial, idCampanha = EntityCapaRedeSocial.IdCampanha });
         }
         public void CarregarLists()
         {
             ListRedeSocial = RedeSocialModel.GetList();
             ListCapa = CapaModel.GetList();
+            ListCampanha = Business.CampanhaModel.GetList();
         }
     #endregion
 }

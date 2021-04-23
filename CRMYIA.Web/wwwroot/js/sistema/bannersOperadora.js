@@ -40,6 +40,39 @@ $(document).on('click', '.btn-redesocial', function () {
 
 });
 
+$(document).on('click', '.download', function () {
+    var canvas = document.getElementById($(this).data('elementocanvas'));
+    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    var link = document.createElement('a');
+    link.download = "download.png";
+    link.href = image;
+    link.click();
+
+    if (link != undefined) {
+        formData = new FormData();
+        formData.append('IdCampanha', $(this).data('idcampanha'));
+        $.ajax({
+            type: 'POST',
+            url: "/Banners?handler=ContadorDownload",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (data) {
+
+
+            },
+            error: function () {
+                alert("Error occurs");
+            }
+        });
+    }
+});
+
 function BannersOperadora() {
 
     var urlString = window.location.href;
@@ -65,7 +98,7 @@ function BannersOperadora() {
                 var html = '';
                 if (data.status) {
                     $('#nome-da-pagina').html('');
-                    $('#nome-da-pagina').html(data.campanhaArquivo[0].idOperadoraNavigation.descricao);
+                    $('#nome-da-pagina').html(data.campanhaArquivo[0].nomeCampanha);
 
                     $('#banner-operadora').html('');
                     console.log(data.campanhaArquivo);
@@ -87,14 +120,14 @@ function BannersOperadora() {
                         var aniversario = '';
                         var tipopostagem = '';
 
-                        html += '<img src="' + data.campanhaArquivo[0].idOperadoraNavigation.caminhoArquivo + data.campanhaArquivo[0].idOperadoraNavigation.nomeArquivo + '" id="imagem-operadora-seguradora" name="imagem-operadora-seguradora" style="width:100%; display: none;" alt="">';
+                        html += '<img src="' + data.campanhaArquivo[0].caminhoArquivoOperadora + data.campanhaArquivo[0].nomeArquivoOperadora + '" id="imagem-operadora-seguradora" name="imagem-operadora-seguradora" style="width:100%; display: none;" alt="">';
                         html += '<section class="content">\
                                         <div class="container-fluid">\
                                             <div class="row">\
                                                 <div class="col-12">\
                                                     <div class="card">\
                                                          <div class="card-header">\
-                                                            <h4 class="card-title">' + data.campanhaArquivo[0].idOperadoraNavigation.descricao + '</h4>\
+                                                            <h4 class="card-title">Operadora - ' + data.campanhaArquivo[0].nomeOperadora + '</h4>\
                                                         </div>\
                                                         <div class="card-body filtro-banners"><h3>Selecione a Rede Social:</h3>';
                         html += 'btnfacebook' + 'btnwhatsapp' + 'btninstagram' + 'btnlinkedin';
@@ -137,7 +170,7 @@ function BannersOperadora() {
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
                                                                             <div class="text-center m-2">\
-                                                                                <button onclick=download_image("' + 'canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '") type="button" class="btn btn-success">Download</button>\
+                                                                                <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                             </div>\
                                                                        </div>';
                                         canvas += 'canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '|';
@@ -188,7 +221,7 @@ function BannersOperadora() {
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
                                                                             <div class="text-center m-2">\
-                                                                                <button onclick=download_image("' + 'canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '") type="button" class="btn btn-success">Download</button>\
+                                                                                <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                             </div>\
                                                                        </div>';
                                         canvas += 'canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '|';
@@ -239,7 +272,7 @@ function BannersOperadora() {
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
                                                                             <div class="text-center m-2">\
-                                                                                <button onclick=download_image("' + 'canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '") type="button" class="btn btn-success">Download</button>\
+                                                                                <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                             </div>\
                                                                        </div>';
                                         canvas += 'canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '|';
@@ -291,7 +324,7 @@ function BannersOperadora() {
                                                                             <canvas style="display:none" width="' + vetwidth[k] + '" height="' + vetheight[k] + '" id="canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '"> </canvas>\
                                                                             <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + vetnome[k] + '" class="img-fluid mb-2" id="img-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '" alt="white sample"/>\
                                                                             <div class="text-center m-2">\
-                                                                                <button onclick=download_image("' + 'canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '") type="button" class="btn btn-success">Download</button>\
+                                                                                <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                             </div>\
                                                                        </div>';
                                         canvas += 'canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k + '|';
@@ -328,7 +361,7 @@ function BannersOperadora() {
                                                                                 <canvas style="display:none" width="' + data.campanhaArquivo[i].width + '" height="' + data.campanhaArquivo[i].height + '" id="canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"> </canvas>\
                                                                                 <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + data.campanhaArquivo[i].nomeArquivo + '" class="img-fluid mb-2" id="img-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" alt="white sample" />\
                                                                                 <div class="text-center m-2">\
-                                                                                    <button onclick=download_image("'+ 'canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '") type="button" class="btn btn-success">Download</button>\
+                                                                                    <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                                 </div>\
                                                                             </div>\
                                                                             <div class="form-group text-center descricao" style="display: none; font-size: 20px; color: #777 !important;" id="descricao-facebook-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
@@ -352,7 +385,7 @@ function BannersOperadora() {
                                                                                 <canvas style="display:none" width="' + data.campanhaArquivo[i].width + '" height="' + data.campanhaArquivo[i].height + '" id="canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"> </canvas>\
                                                                                 <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + data.campanhaArquivo[i].nomeArquivo + '" class="img-fluid mb-2" id="img-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" alt="white sample" />\
                                                                                 <div class="text-center m-2">\
-                                                                                    <button onclick=download_image("'+ 'canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '") type="button" class="btn btn-success">Download</button>\
+                                                                                    <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                                 </div>\
                                                                             </div>\
                                                                             <div class="form-group text-center descricao" style="display: none; font-size: 20px; color: #777 !important;" id="descricao-whatsapp-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
@@ -376,7 +409,7 @@ function BannersOperadora() {
                                                                                 <canvas style="display:none" width="' + data.campanhaArquivo[i].width + '" height="' + data.campanhaArquivo[i].height + '" id="canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"> </canvas>\
                                                                                 <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + data.campanhaArquivo[i].nomeArquivo + '" class="img-fluid mb-2" id="img-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" alt="white sample" />\
                                                                                 <div class="text-center m-2">\
-                                                                                    <button onclick=download_image("'+ 'canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '") type="button" class="btn btn-success">Download</button>\
+                                                                                    <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                                 </div>\
                                                                             </div>\
                                                                             <div class="form-group text-center descricao" style="display: none; font-size: 20px; color: #777 !important;" id="descricao-instagram-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
@@ -400,7 +433,7 @@ function BannersOperadora() {
                                                                                 <canvas style="display:none" width="' + data.campanhaArquivo[i].width + '" height="' + data.campanhaArquivo[i].height + '" id="canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '"> </canvas>\
                                                                                 <img style="display: none;" src="' + data.campanhaArquivo[i].caminhoArquivo + data.campanhaArquivo[i].nomeArquivo + '" class="img-fluid mb-2" id="img-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '" alt="white sample" />\
                                                                                 <div class="text-center m-2">\
-                                                                                    <button onclick=download_image("'+ 'canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '") type="button" class="btn btn-success">Download</button>\
+                                                                                    <button data-idcampanha="'+ data.campanhaArquivo[i].idCampanha + '" data-elementocanvas="' + 'canvas-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '-' + k +'" type="button" class="btn btn-success download">Download</button>\
                                                                                 </div>\
                                                                             </div>\
                                                                             <div class="form-group text-center descricao" style="display: none; font-size: 20px; color: #777 !important;" id="descricao-linkedin-' + data.campanhaArquivo[i].idCampanha + '-' + data.campanhaArquivo[i].idCampanhaArquivo + '">\
@@ -447,10 +480,20 @@ function BannersOperadora() {
 
                     //html = html.replace('htmlfacebook', htmlfacebook);
                     //html = html.replace('htmllinkedin', htmllinkedin);
-
-                    $('#banner-operadora').append(html);
+                   
                     displayBusyAvailable();
                 }
+                if (html == '') {
+                    html = '<div class="jumbotron mt-3">\
+                                <h1 class="text-center"> <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Não encontramos banners para essa Campanha.</font></font></h1 >\
+                                <p class="lead text-center"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Para mais informações contate o Administrador do Sistema.</font></font></p>\
+                                <!--<a class="btn btn-lg btn-primary" href="/docs/4.6/components/navbar/" role="button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Voltar para pagina anterior »</font></font></a>-->\
+                                <div class="d-flex justify-content-around">\
+                                    <button type="reset" class="btn btn-lg btn-primary" onclick="javascript:history.go(-1)">Voltar para pagina anterior »</button>\
+                                </div>\
+                            </div >';
+                }
+                $('#banner-operadora').append(html);
             },
             error: function () {
                 swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
@@ -470,97 +513,82 @@ function GerarFotoContato(Canvas, Img, usuario) {
 
     ctx.drawImage($('#' + Img).get(0), 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 25px "Didact Gothic"';
-/*    ctx.fontFamily = 'Montserrat';*/
-    console.log('font: ' + ctx.font);
-    //console.log('fontFamily: ' + ctx.fontFamily);
+    ctx.font = "20px Arial";
+    ctx.drawImage($('#' + Img).get(0), 0, 0);
+    ctx.fillStyle = "white";
+    ctx.font = "bold 25px Arial";
     ctx.fillStyle = '#F05A26';
     ctx.drawImage($('#' + Img).get(0), 0, 0);
-    //ctx.fillStyle = "white";
-    //ctx.font = "bold 25px Verdana";
-    //ctx.drawImage($('#' + Img).get(0), 0, 0);
 
-    //Icon Font Awesome
-    const i = document.createElement('i');
-    i.id = 'iClose';
 
-    i.setAttribute('class', 'fas fa-phone-square-alt');
-    document.body.appendChild(i);
+    //Icon Font Awesome phone-volume => Telefone Unicode => f2a0
+    const phoneVolume = document.createElement('i');
+    phoneVolume.id = 'phoneVolumeClose';
+
+    phoneVolume.setAttribute('class', 'fas fa-phone-volume');
+    document.body.appendChild(phoneVolume);
 
     // get the styles for the icon you just made
-    const iStyles = window.getComputedStyle(i);
-    const iBeforeStyles = window.getComputedStyle(i, ':before');
+    const phoneVolumeStyles = window.getComputedStyle(phoneVolume);
+    const phoneVolumeBeforeStyles = window.getComputedStyle(phoneVolume, ':before');
 
-    const fontFamily = iStyles.getPropertyValue('font-family');
-    const fontWeight = iStyles.getPropertyValue('font-weight');
-    const fontSize = '40px'; // just to make things a little bigger...
+    const phoneVolumeFontFamily = phoneVolumeStyles.getPropertyValue('font-family');
+    const phoneVolumeFontWeight = phoneVolumeStyles.getPropertyValue('font-weight');
+    const phoneVolumeFontSize = '30px'; // just to make things a little bigger...
 
-    const canvasFont = `${fontWeight} ${fontSize} ${fontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
-    const icon = String.fromCodePoint(iBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+    const phoneVolumeCanvasFont = `${phoneVolumeFontWeight} ${phoneVolumeFontSize} ${phoneVolumeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+    const iconPhoneVolume = String.fromCodePoint(phoneVolumeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
-    ctx.font = canvasFont;
-    ctx.fillStyle = '#F05A26';
+    ctx.font = phoneVolumeCanvasFont;
+    ctx.fillStyle = '#303030';
     ctx.textAlign = 'center';
-    //ctx.fillText(icon, (canvas.width / 2), (canvas.height - 265));
 
-    //######################################################################################
+    //########################################################
 
-    //Icon Font Awesome
-    const e = document.createElement('i');
-    e.id = 'eClose';
+    //Icon Font Awesome envelope => Email Unicode => f0e0
+    const envelope = document.createElement('i');
+    envelope.id = 'envelopeClose';
 
-    e.setAttribute('class', 'fas fa-envelope-square');
-    document.body.appendChild(e);
+    envelope.setAttribute('class', 'fas fa-envelope');
+    document.body.appendChild(envelope);
 
     // get the styles for the icon you just made
-    const eiStyles = window.getComputedStyle(e);
-    const eiBeforeStyles = window.getComputedStyle(e, ':before');
+    const envelopeStyles = window.getComputedStyle(envelope);
+    const envelopeBeforeStyles = window.getComputedStyle(envelope, ':before');
 
-    const efontFamily = eiStyles.getPropertyValue('font-family');
-    const efontWeight = eiStyles.getPropertyValue('font-weight');
-    const efontSize = '40px'; // just to make things a little bigger...
+    const envelopeFontFamily = envelopeStyles.getPropertyValue('font-family');
+    const envelopeFontWeight = envelopeStyles.getPropertyValue('font-weight');
+    const envelopeFontSize = '30px'; // just to make things a little bigger...
 
-    const ecanvasFont = `${efontWeight} ${efontSize} ${efontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
-    const eicon = String.fromCodePoint(eiBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
+    const envelopeCanvasFont = `${envelopeFontWeight} ${envelopeFontSize} ${envelopeFontFamily}`; // should be something like: '900 40px "Font Awesome 5 Pro"'
+    const iconEnvelope = String.fromCodePoint(envelopeBeforeStyles.getPropertyValue('content').codePointAt(1)); // codePointAt(1) because the first character is a double quote
 
-    ctx.font = ecanvasFont;
+    ctx.font = envelopeCanvasFont;
+    var nome = usuario.nome.split(' ');
     ctx.fillStyle = '#F05A26';
     ctx.textAlign = 'center';
-    //#########################################################################################
-    ctx.font = 'bold 25px "Didact Gothic"';
-    ctx.textAlign = 'center';
-    ctx.fillText(usuario.nome, (canvas.width / 2), (canvas.height - 330));
-    ctx.textAlign = 'center';
-    ctx.fillText(`${eicon}` + " " + usuario.email, (canvas.width / 2), (canvas.height - 295));
-    ctx.textAlign = 'center';
-    ctx.fillText(`${icon}` + " " + usuario.telefone.trim(), (canvas.width / 2), (canvas.height - 253));
+    ctx.fillText(usuario.nome.trim(), (canvas.width - 570), (canvas.height - 128));
+    ctx.fillText(`${iconPhoneVolume}` + " " + usuario.telefone, (canvas.width - 530), (canvas.height - 88));
+    ctx.fillText(`${iconEnvelope}` + " " + usuario.email, (canvas.width - 485), (canvas.height - 48));
 
     //Imagem Operadora/Seguradora Centalizada
     var img = document.getElementById("imagem-operadora-seguradora");
-    
     var parte = canvas.width / 4;
-   
-
-    var imgWidth = (img.width * 2 * 0.5) + img.width;
-    var imgHeight = (img.height * 2 * 0.5) + img.height;
-
     var meio = (parte * 2) - (img.width / 2);
-
-    //ctx.drawImage(img, (meio), (canvas.height - 470));
-    ctx.drawImage(img, (meio), (canvas.height - 470), imgWidth, imgHeight);
+    ctx.drawImage(img, (meio), (canvas.height - 470));
     ctx.stroke();
 
-    const iClose = document.getElementById('iClose');
-    iClose.remove();
-    const eClose = document.getElementById('eClose');
-    eClose.remove();
+    const phoneVolumeClose = document.getElementById('phoneVolumeClose');
+    phoneVolumeClose.remove();
+    const envelopeClose = document.getElementById('envelopeClose');
+    envelopeClose.remove();
 }
 
-function download_image(eleCanvas) {
-    var canvas = document.getElementById(eleCanvas);
-    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    var link = document.createElement('a');
-    link.download = "download.png";
-    link.href = image;
-    link.click();
-}
+//function download_image(eleCanvas) {
+//    var canvas = document.getElementById(eleCanvas);
+//    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+//    var link = document.createElement('a');
+//    link.download = "download.png";
+//    link.href = image;
+//    link.click();
+//}

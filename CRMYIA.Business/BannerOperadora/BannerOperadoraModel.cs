@@ -31,26 +31,42 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-        //public static List<BannerOperadora> GetAllBannerOperadora(long IdOperadora)
-        //{
-        //    List<BannerOperadora> Entity = null;
-        //    try
-        //    {
-        //        using (YiaContext context = new YiaContext())
-        //        {
-        //            Entity = context.BannerOperadora
-        //                .Where(x => x.IdOperadora == IdOperadora)
-        //                .ToList();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return Entity;
-        //}
 
-        public static List<BannerOperadoraViewModel> GetAllBanner(List<long> IdBanner)
+        public static List<BannerOperadoraViewModel> GetList()
+        {
+            List<BannerOperadoraViewModel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Banner
+                        .Include(x => x.IdInformacaoNavigation)
+                        .Include(x => x.IdCampanhaNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.Ativo)
+                        .Select(x => new BannerOperadoraViewModel()
+                        {
+                            IdBanner = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdBanner.ToString()).ToString()),
+                            Descricao = x.IdInformacaoNavigation.Descricao,
+                            CaminhoArquivo = x.CaminhoArquivo,
+                            NomeArquivo = x.NomeArquivo,
+                            Width = x.Width,
+                            Height = x.Height,
+                            DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
+                            Ativo = x.Ativo
+                        })
+                        .OrderBy(o => o.Descricao)
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<BannerOperadoraViewModel> GetAllBanner(List<long> IdBanner, byte IdGrupoCorretor)
         {
             List<BannerOperadoraViewModel> Entity = null;
             try
@@ -58,21 +74,24 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     Entity = context.Banner
-                         .Include(x => x.IdInformacaoNavigation)
-                        .Where(x => x.Ativo)
-                        .Select(x => new BannerOperadoraViewModel() {
-                            //IdOperadora = x.IdOperadoraNavigation.IdOperadora.ToString(),
+                        .Include(x => x.IdInformacaoNavigation)
+                        .Include(x => x.IdCampanhaNavigation)
+                            .ThenInclude(x => x.GrupoCorretorCampanha)
+                        .Where(x => x.Ativo && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                        .Select(x => new BannerOperadoraViewModel()
+                        {
                             IdBanner = x.IdBanner.ToString(),
+                            IdCampanha = x.IdCampanhaNavigation.IdCampanha.ToString(),
                             Titulo = x.IdInformacaoNavigation.Titulo,
                             Descricao = x.IdInformacaoNavigation.Descricao,
+                            NomeCampanha = x.IdCampanhaNavigation.Descricao,
                             CaminhoArquivo = x.CaminhoArquivo,
                             NomeArquivo = x.NomeArquivo,
                             Width = x.Width,
                             Height = x.Height,
                             DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
                             Ativo = x.Ativo,
-                            //IdOperadoraNavigation = x.IdOperadoraNavigation,
-                            //IdInformacaoNavigation = x.IdBannerNavigation.IdInformacaoNavigation
+                            IdInformacaoNavigation = x.IdInformacaoNavigation
                         })
                         .ToList();
                 }

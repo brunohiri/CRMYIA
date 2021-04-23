@@ -24,7 +24,7 @@ namespace CRMYIA.Web.Pages
         {
             _logger = logger;
         }
-        public List<CampanhaArquivoViewModel> ListaCampanhaArquivo { get; set; }
+        public List<Campanha> ListaCampanhaArquivo { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -57,65 +57,38 @@ namespace CRMYIA.Web.Pages
             Campanha IdCampanhaNavigation = new Campanha();
             Informacao IdInformacaoNavigation = new Informacao();
 
-            List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
-            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
-            List<Campanha> Campanha = CampanhaModel.GetListOrderById();
+            List<Campanha> AuxCampanhaArquivo = new List<Campanha>();
+            List<Campanha> Campanha = CampanhaModel.GetListaCampanha();
+            List<Campanha> GrupoCorretorCampanhaEntity = null;
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-
+            Usuario EntityUsuario = UsuarioModel.Get(IdUsuario);
             foreach (var ItemCampanha in Campanha)
             {
-                i = 0;
-                foreach (var ItemCampanhaArquivo in CampanhaArquivo)
+                GrupoCorretorCampanhaEntity = GrupoCorretorCampanhaModel.GetListLinks(ItemCampanha.IdCampanha);
+
+                foreach (var ItemGrupoCorretorCampanha in GrupoCorretorCampanhaEntity)
                 {
-                    if (ItemCampanha.IdCampanha == ItemCampanhaArquivo.IdCampanha && ItemCampanhaArquivo.IdInformacao == ItemCampanhaArquivo.IdInformacaoNavigation.IdInformacao)
+                    if (ItemGrupoCorretorCampanha.IdCampanha == ItemCampanha.IdCampanha && ItemGrupoCorretorCampanha.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == EntityUsuario.IdGrupoCorretor).Count() > 0)
                     {
-
-                        if (i + 1 < CampanhaArquivo.Count)
+                        AuxCampanhaArquivo.Add(new Campanha()
                         {
-                            NomeArquivo += ItemCampanhaArquivo.NomeArquivo + "|";
-                            Width += ItemCampanhaArquivo.Width + "|";
-                            Height += ItemCampanhaArquivo.Height + "|";
-                        }
-                        else
-                        {
-                            NomeArquivo += ItemCampanhaArquivo.NomeArquivo;
-                            Width += ItemCampanhaArquivo.Width;
-                            Height += ItemCampanhaArquivo.Height;
-
-                        }
-                        IdCampanhaArquivo = ItemCampanhaArquivo.IdCampanhaArquivo;
-                        IdCampanha = ItemCampanhaArquivo.IdCampanha;
-                        Descricao = ItemCampanhaArquivo.IdInformacaoNavigation.Descricao;
-                        CaminhoArquivo = ItemCampanhaArquivo.CaminhoArquivo;
-                        RedesSociais = ItemCampanhaArquivo.RedesSociais;
-                        TipoPostagem = ItemCampanhaArquivo.TipoPostagem;
-                        DataCadastro = ItemCampanhaArquivo.DataCadastro;
-                        Ativo = ItemCampanhaArquivo.Ativo;
-                        IdCampanhaNavigation = ItemCampanhaArquivo.IdCampanhaNavigation;
-                        IdInformacaoNavigation = ItemCampanhaArquivo.IdInformacaoNavigation;
+                            IdCampanha = ItemCampanha.IdCampanha,
+                            IdUsuario = ItemCampanha.IdUsuario,
+                            Descricao = ItemCampanha.Descricao,
+                            CaminhoArquivo = ItemCampanha.CaminhoArquivo,
+                            NomeArquivo = ItemCampanha.NomeArquivo,
+                            DataCadastro = ItemCampanha.DataCadastro,
+                            Ativo = ItemCampanha.Ativo,
+                            IdUsuarioNavigation = ItemGrupoCorretorCampanha.IdUsuarioNavigation,
+                            AssinaturaCartao = ItemGrupoCorretorCampanha.AssinaturaCartao,
+                            Banner = ItemGrupoCorretorCampanha.Banner,
+                            CapaRedeSocial = ItemGrupoCorretorCampanha.CapaRedeSocial,
+                            CampanhaArquivo = ItemGrupoCorretorCampanha.CampanhaArquivo,
+                            GrupoCorretorCampanha = ItemGrupoCorretorCampanha.GrupoCorretorCampanha,
+                            Video = ItemGrupoCorretorCampanha.Video
+                        });
                     }
-                    i++;
                 }
-
-                AuxCampanhaArquivo.Add(new CampanhaArquivoViewModel()
-                {
-                    IdCampanhaArquivo = IdCampanhaArquivo,
-                    IdCampanha = IdCampanha,
-                    Descricao = Descricao,
-                    CaminhoArquivo = CaminhoArquivo,
-                    NomeArquivo = NomeArquivo,
-                    Width = Width,
-                    Height = Height,
-                    RedesSociais = RedesSociais,
-                    TipoPostagem = TipoPostagem,
-                    DataCadastro = DataCadastro,
-                    Ativo = Ativo,
-                    IdCampanhaNavigation = IdCampanhaNavigation,
-                    IdInformacaoNavigation = IdInformacaoNavigation
-                });
-                NomeArquivo = "";
-                Width = "";
-                Height = "";
 
             }
             if (AuxCampanhaArquivo != null && Campanha != null)
@@ -123,7 +96,6 @@ namespace CRMYIA.Web.Pages
                 status = true;
                 ListaCampanhaArquivo = AuxCampanhaArquivo;
             }
-            //return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = Campanha, usuarioEntity = UsuarioEntity });
         }
     }
 }

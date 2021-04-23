@@ -1,7 +1,4 @@
 ﻿$(document).ready(function () {
-
-   
-
 });
 
 $(document).on('click', '.btn-salvar-campanha',function (evt) {
@@ -30,25 +27,7 @@ $(document).on('click', '.btn-salvar-campanha',function (evt) {
     obj.File = arquivo;
     $('#Ativo').is(":checked") == true ? obj.Ativo = 'true' : obj.Ativo = 'false';
     obj.Descricao = $('#Descricao').val()
-    
-
-    //$.post('/NovaCampanhaGenerica?handler=Salvar', formData, function (data) {
-    //    if (data.status) {
-    //        $('#salvar-campanha')[0].reset();
-    //    }
-    //    $('#EmailMensagemDiv').show();
-    //    $('#EmailMensagemDivAlert').removeClass();
-    //    $('#EmailMensagemDivAlert').addClass(data.mensagem.cssClass);
-
-    //    $('#EmailMensagemIcon').removeClass();
-    //    $('#EmailMensagemIcon').addClass(data.mensagem.iconClass);
-    //    $('#EmailMensagemSpan').text(data.mensagem.mensagem);
-        
-
-    //});
-
-
-
+ 
     $.ajax({
         type: 'POST',
         url: "/NovaCampanhaGenerica?handler=Salvar",
@@ -125,76 +104,3 @@ $(document).on('change', '#eSubCategoria', function () {
     }
 
 });
-
-//(function () {
-//    'use strict';
-//    window.addEventListener('load', function () {
-//        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//        var forms = document.getElementsByClassName('needs-validation');
-//        // Loop over them and prevent submission
-//        var validation = Array.prototype.filter.call(forms, function (form) {
-//            form.addEventListener('submit', function (event) {
-//                if (form.checkValidity() === false) {
-//                    event.preventDefault();
-//                    event.stopPropagation();
-//                } else {
-//                    evt.preventDefault();
-//                    var dados = {};
-//                    alert('foi caraio')
-//                    dados.Descricao = $('#Descricao').val();
-//                    //dados.DataCadastro = $('#DataCadastro').val();
-//                    $('#Ativo').is(":checked") == true ? dados.Ativo = 'true' : dados.Ativo = 'false';
-//                    dados.IdCampanha = $("#IdCampanha").val();
-//                    //dados.IdCampanhaReferencia = $('#IdCampanhaReferencia').val();
-//                    if ($('#IdCampanhaReferencia').val() > 0 && $('#IdCampanhaReferencia').val() != undefined) {
-//                        dados.IdCampanhaReferencia = $('#IdCampanhaReferencia').val();
-//                    } else if ($('#IdCampanhaReferencia').val() != undefined) {
-//                        dados.IdCampanhaReferencia = null;
-//                    }
-//                    //if ($('#eSubCategoria').is(":checked") && $("#IdCampanhaReferencia").length > 0){
-//                    //    obj.IdCampanhaReferencia = IdCampanhaReferencia;
-//                    //} else {
-//                    //    obj.IdCampanhaReferencia = undefined;
-//                    //}
-
-//                    //$.ajax({
-//                    //    type: "POST",
-//                    //    url: "/NovaCampanhaGenerica?handler=Salvar",
-//                    //    beforeSend: function (xhr) {
-//                    //        xhr.setRequestHeader("XSRF-TOKEN",
-//                    //            $('input:hidden[name="__RequestVerificationToken"]').val());
-//                    //    },
-//                    //    data: JSON.stringify(dados),
-//                    //    contentType: "application/json; charset=utf-8",
-//                    //    dataType: "json",
-//                    //    success: function (data) {
-//                    //        if (data.status) {
-//                    //            //$(".needs-validation").each(function () {
-//                    //            //    this.reset();
-//                    //            //});
-//                    //            $('.categoria').html('');
-//                    //            $('#sub-categoria').html('');
-//                    //            $('#CampanhaMensagemDiv').show();
-//                    //            $('#CampanhaMensagemDivAlert').removeClass();
-//                    //            $('#CampanhaMensagemDivAlert').addClass(data.mensagem.cssClass);
-
-//                    //            $('#CampanhaMensagemIcon').removeClass();
-//                    //            $('#CampanhaMensagemIcon').addClass(data.mensagem.iconClass);
-//                    //            $('#CampanhaMensagemSpan').text(data.mensagem.mensagem);
-//                    //            $('#form-salvar input').val("");
-
-//                    //            //setTimeout(function () { location.href = '/NovaCampanha/' }, 3000);
-//                    //        }
-//                    //    },
-//                    //    failure: function (data) {
-//                    //        console.log(response);
-//                    //    }
-//                    //});
-
-
-//                }
-//                form.classList.add('was-validated');
-//            }, false);
-//        });
-//    }, false);
-//})();

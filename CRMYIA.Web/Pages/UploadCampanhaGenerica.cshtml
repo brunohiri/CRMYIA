@@ -47,7 +47,7 @@
                     <div class="row">
 
                         <input type="hidden" class="form-control" name="IdCampanhaArquivo" id="IdCampanhaArquivo" value="0">
-                        <input type="hidden" class="form-control" name="CaminhoImagem"  id="CaminhoImagem" value="0">
+                        <input type="hidden" class="form-control" name="CaminhoImagem" id="CaminhoImagem" value="0">
                         <input type="hidden" class="form-control" name="IdInformacao" id="IdInformacao" value="0">
 
                         @if (@Model.Entity.IdCampanhaArquivo! > 0)
@@ -55,14 +55,25 @@
                             <input type="hidden" class="form-control" name="ImagemDiferente" asp-for="@Model.ImagemDiferente" id="ImagemDiferente">
                         }
 
-                        @*<div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="NomeArquivoCampanha">Selecione um arquivo:</label>
-                                <div class="input-group">
-                                    <input type="file" id="NomeArquivoCampanha" asp-for="@Model.NomeArquivoCampanha" name="NomeArquivoCampanha" accept=".png">
-                                </div>
+                                <label>Título</label>
+                                <input type="text" placeholder="Título" class="form-control" name="Titulo" id="Titulo">
                             </div>
-                        </div>*@
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Data de Cadastro</label>
+                                <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataCadastro" readonly>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
 
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -77,14 +88,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Data de Cadastro</label>
-                                <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataCadastro" readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Status</label>
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -94,15 +98,7 @@
                             </div>
                         </div>
 
-                    </div>
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>Título</label>
-                                <input type="text" placeholder="Título" class="form-control" name="Titulo" id="Titulo">
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row">

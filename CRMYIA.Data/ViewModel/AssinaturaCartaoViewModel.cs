@@ -8,6 +8,7 @@ namespace CRMYIA.Data.ViewModel
     public class AssinaturaCartaoViewModel
     {
         public string IdAssinaturaCartao { get; set; }
+        public string IdCampanha { get; set; }
         public string Titulo { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }

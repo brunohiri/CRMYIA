@@ -51,6 +51,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<Perfil> ListPerfil { get; set; }
+        [BindProperty]
+        public List<GrupoCorretor> ListGrupoCorretor { get; set; }
 
         #endregion
 
@@ -82,6 +84,7 @@ namespace CRMYIA.Web.Pages
             CaminhoImagem = Entity.CaminhoFoto + Entity.NomeFoto;
             Entity.DataCadastro = DateTime.Now;
             ListPerfil = PerfilModel.GetListIdDescricao();
+            CarregarLists();
             return Page();
         }
 
@@ -253,6 +256,10 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
+        public void CarregarLists()
+        {
+            ListGrupoCorretor = Business.GrupoCorretorModel.GetList();
+        }
         public long GetIdUsuario()
         {
             long IdUsuario = "0".ExtractLong();

@@ -47,6 +47,10 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<Operadora> ListOperadora { get; set; }
         public long? IdOperadora { get; set; }
+        public long? IdCampanha { get; set; }
+        [BindProperty]
+        public List<Campanha> ListCampanha { get; set; }
+
         [BindProperty]
         public string ImagemDiferente { get; set; }
         [BindProperty]
@@ -87,7 +91,9 @@ namespace CRMYIA.Web.Pages
                 string Descricao = formData.Descricao;
                 bool Ativo = formData.Ativo;
                 long IdOperadora = formData.IdOperadora.ExtractLong();
-                long IdInformacao = formData.IdInformacao.ExtractLong();
+                long IdInformacao = formData.IdInformacao.ToString().ExtractLong();
+                long IdCampanha = formData.IdCampanha.ExtractLong();
+                string Titulo = formData.Titulo;
                 var documentFile = Request.Form.Files.ToList();
                 List<BannerOperadoraViewModel> EntityLista = null;
                 MensagemModel mensagem = null;
@@ -119,6 +125,7 @@ namespace CRMYIA.Web.Pages
                             string NomeArquivo = string.Empty;
                             InformacaoModel.Add(new Informacao
                             {
+                                Titulo = Titulo,
                                 Descricao = Descricao,
                                 DataCadastro = DateTime.Now,
                                 Ativo = formData.Ativo
@@ -145,6 +152,8 @@ namespace CRMYIA.Web.Pages
                                 var retorno = BannerOperadoraModel.AddBool(new Banner()
                                 {
                                     IdInformacao = EntityInformacao.IdInformacao,
+                                    IdCampanha = IdCampanha,
+                                    IdUsuario = IdUsuario,
                                     CaminhoArquivo = "ArquivoBannerOperadora/",
                                     NomeArquivo = NomeArquivo,
                                     Width = Width,
@@ -152,20 +161,8 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
                                     Ativo = Ativo
                                 });
-
-                                EntityBanner = BannerOperadoraModel.GetLastId();
-
-                                //if (retorno && EntityBanner != null)
-                                //{
-                                //    BannerOperadoraModel.Add(new BannerOperadora()
-                                //    {
-                                //        IdUsuario = IdUsuario,
-                                //        IdOperadora = IdOperadora,
-                                //        IdBanner = EntityBanner.IdBanner
-                                //    });
-                                //}
                             }
-                            //EntityLista = BannerOperadoraModel.GetList();
+                            EntityLista = BannerOperadoraModel.GetList();
                             status = true;
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                         }
@@ -173,12 +170,12 @@ namespace CRMYIA.Web.Pages
                         {
                             //Update Texto
                             EntityBanner = BannerOperadoraModel.Get(IdBanner);
-                            //EntityBannerOperadora = BannerOperadoraModel.Get(EntityBanner.IdBanner.ToString());
-                            if (EntityBanner != null && EntityBannerOperadora != null)
+                            if (EntityBanner != null)
                             {
                                 InformacaoModel.Update(new Informacao()
                                 {
                                     IdInformacao = IdInformacao,
+                                    Titulo = Titulo,
                                     Descricao = Descricao,
                                     DataCadastro = DateTime.Now,
                                     Ativo = Ativo
@@ -187,6 +184,9 @@ namespace CRMYIA.Web.Pages
                                 BannerOperadoraModel.Update(new Banner()
                                 {
                                     IdBanner = IdBanner,
+                                    IdInformacao = IdInformacao,
+                                    IdCampanha = IdCampanha,
+                                    IdUsuario = IdUsuario,
                                     CaminhoArquivo = EntityBanner.CaminhoArquivo,
                                     NomeArquivo = EntityBanner.NomeArquivo,
                                     Width = EntityBanner.Width,
@@ -194,18 +194,10 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     Ativo = Ativo
                                 });
-                            
-                                //BannerOperadoraModel.Update(new BannerOperadora()
-                                //{
-                                //    IdBannerOperadora = EntityBannerOperadora.IdBannerOperadora,
-                                //    IdUsuario = IdUsuario,
-                                //    IdOperadora = IdOperadora,
-                                //    IdBanner = EntityBanner.IdBanner
-                                //});
                             }
 
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Registro atualizado com Sucesso!!!");
-                            //EntityLista = BannerOperadoraModel.GetList();
+                            EntityLista = BannerOperadoraModel.GetList();
                             status = true;
                             return new JsonResult(new { status = status, entityLista = EntityLista, mensagem = mensagem });
                         }
@@ -236,6 +228,13 @@ namespace CRMYIA.Web.Pages
                 var file = Request.Form.Files.FirstOrDefault();
                 string IdBanner = Request.Form["IdBanner"].ToString();
                 string NomeArquivo = Request.Form["NomeArquivo"].ToString();
+                long IdCampanha = Request.Form["IdCampanha"].ToString().ExtractLong();
+
+                long IdInformacao = Request.Form["IdInformacao"].ToString().ExtractLong();
+                string Titulo = Request.Form["Titulo"].ToString();
+                string Descricao = Request.Form["Descricao"].ToString();
+                bool Ativo = Convert.ToBoolean(Request.Form["Ativo"]); 
+
                 Banner Entity = null;
                 Entity = BannerOperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdBanner)).ExtractLong());
                 string msg = "Alterado";
@@ -273,9 +272,22 @@ namespace CRMYIA.Web.Pages
                             Height = image.Height;
                         }
                         long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+
+                        InformacaoModel.Update(new Informacao()
+                        {
+                            IdInformacao = IdInformacao,
+                            Titulo = Titulo,
+                            Descricao = Descricao,
+                            DataCadastro = DateTime.Now,
+                            Ativo = Ativo
+                        });
+
                        BannerOperadoraModel.Update(new Banner()
                         {
                            IdBanner = Entity.IdBanner,
+                           IdInformacao = IdInformacao, 
+                           IdCampanha = IdCampanha,
+                           IdUsuario = IdUsuario,
                             CaminhoArquivo = Entity.CaminhoArquivo,
                             NomeArquivo = Entity.NomeArquivo,
                             Width = Width,
@@ -285,7 +297,7 @@ namespace CRMYIA.Web.Pages
                         });
                     }
 
-                    //EntityLista = BannerOperadoraModel.GetList();
+                    EntityLista = BannerOperadoraModel.GetList();
                     status = true;
                     mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterado com sucesso!");
                 }
@@ -374,12 +386,13 @@ namespace CRMYIA.Web.Pages
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, ex.Message);
                 return new JsonResult(new { status = status, mensagem = Mensagem, entityLista = EntityBanner });
             }
-            return new JsonResult(new { status = status, entityLista = EntityBanner, idOperadora = EntityBannerOperadora.IdOperadora, entityInformacao = EntityInformacao});
+            return new JsonResult(new { status = status, entityLista = EntityBanner, entityInformacao = EntityInformacao});
         }
         public void CarregarLists()
         {
             ListOperadora = OperadoraModel.GetListIdDescricao();
-            //ListBannerOperadora = BannerOperadoraModel.GetList();
+            ListBannerOperadora = BannerOperadoraModel.GetList();
+            ListCampanha = CampanhaModel.GetList();
         }
         #endregion
     }

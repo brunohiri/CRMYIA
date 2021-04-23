@@ -53,9 +53,10 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnPostListarCampanha()
         {
             string Id = Request.Form["Id"].ToString();
-
-            var HashId = HttpUtility.UrlEncode(Criptography.Encrypt(Id));
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            Usuario EntityUsuario = null;
+            EntityUsuario = UsuarioModel.Get(IdUsuario);
+
             bool status = false;
             int i;
 
@@ -75,7 +76,7 @@ namespace CRMYIA.Web.Pages
             Informacao IdInformacaoNavigation = new Informacao();
 
             List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
-            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(Id).ExtractLong());
+            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(Id).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
             List<Informacao> EntityInformacao = InformacaoModel.Get();
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
 
@@ -113,7 +114,7 @@ namespace CRMYIA.Web.Pages
                         IdInformacaoNavigation = ItemCampanhaArquivo.IdInformacaoNavigation;
                         i++;
                     }
-                   
+
                 }
 
                 if (i > 0)
@@ -148,15 +149,27 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = status, campanhaArquivo = AuxCampanhaArquivo, campanha = EntityInformacao, usuarioEntity = UsuarioEntity });
         }
 
-        //private void ListsCampanhaId(string Id = null)
-        //{
-        //    ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
-        //}
+        public IActionResult OnPostContadorDownload(Campanha fromData)
+        {
+            bool status = false;
+            try
+            {
+                if(fromData.IdCampanha > 0 && fromData.IdCampanha.ToString() != null)
+                {
+                   Campanha EntityCampanha = CampanhaModel.Get(fromData.IdCampanha);
+                    EntityCampanha.QuantidadeDownload = (EntityCampanha.QuantidadeDownload + 1);
+                   CampanhaModel.Update(EntityCampanha);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message);
+            }
+            return new JsonResult(new
+            {
+                status = status
+            });
+        }
 
-        //private void ListsCampanhaId()
-        //{
-        //    ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo();
-        //    ListCampanha = CampanhaModel.GetListOrderById();
-        //}
     }
 }
