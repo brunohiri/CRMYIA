@@ -481,6 +481,18 @@ namespace CRMYIA.Business
                         })
                         .ToList();
                     }
+                    if (up.IdPerfil == 6)
+                    {
+                        ListEntity = context.Usuario
+                        .Join(context.UsuarioPerfil, u => (Int64?)(u.IdUsuario), up => up.IdUsuario, (u, up) => new { u = u, up = up })
+                        .Where(temp0 => ((Int32?)(temp0.up.IdPerfil) != (Int32?)1) && ((Int32?)(temp0.up.IdPerfil) != (Int32?)2) && ((Int32?)(temp0.up.IdPerfil) != (Int32?)3))
+                        .Select(temp0 => temp0.u.Nome)
+                        .Select(x => new Usuario()
+                        {
+                            Nome = x
+                        })
+                        .ToList();
+                    }
                 }
             }
             catch (Exception)

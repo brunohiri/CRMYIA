@@ -120,9 +120,10 @@ namespace CRMYIA.Business
                     {
                         ListEntity = context.Visita
                             .Include(y => y.IdStatusVisitaNavigation)
+                            .Include(y => y.IdCalendarioSazonalNavigation)
                             .Include(y => y.IdPropostaNavigation)
                             .AsNoTracking()
-                            .Where(x => x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true))
+                            .Where(x => x.Visivel == (byte)Business.Util.EnumeradorModel.Visualizacao.Todos || (x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true)))
                             .AsNoTracking()
                             .OrderBy(o => o.DataAgendamento).ToList();
                     }
@@ -155,6 +156,7 @@ namespace CRMYIA.Business
                                         {
                                             return ListEntity = context.Visita
                                            .Include(y => y.IdStatusVisitaNavigation)
+                                           .Include(y => y.IdCalendarioSazonalNavigation)
                                            .Include(y => y.IdPropostaNavigation)
                                            .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                            .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -167,6 +169,7 @@ namespace CRMYIA.Business
                                         {
                                             return ListEntity = context.Visita
                                             .Include(y => y.IdStatusVisitaNavigation)
+                                            .Include(y => y.IdCalendarioSazonalNavigation)
                                             .Include(y => y.IdPropostaNavigation)
                                             .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                             .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -180,6 +183,7 @@ namespace CRMYIA.Business
                                         {
                                             return ListEntity = context.Visita
                                             .Include(y => y.IdStatusVisitaNavigation)
+                                            .Include(y => y.IdCalendarioSazonalNavigation)
                                             .Include(y => y.IdPropostaNavigation)
                                             .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                             .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -193,6 +197,7 @@ namespace CRMYIA.Business
                                         {
                                             return ListEntity = context.Visita
                                             .Include(y => y.IdStatusVisitaNavigation)
+                                            .Include(y => y.IdCalendarioSazonalNavigation)
                                             .Include(y => y.IdPropostaNavigation)
                                             .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                             .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -215,6 +220,7 @@ namespace CRMYIA.Business
                             {
                                 return ListEntity = context.Visita
                                         .Include(y => y.IdStatusVisitaNavigation)
+                                        .Include(y => y.IdCalendarioSazonalNavigation)
                                         .Include(y => y.IdPropostaNavigation)
                                         .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                         .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -227,6 +233,7 @@ namespace CRMYIA.Business
                             {
                                 return ListEntity = context.Visita
                                 .Include(y => y.IdStatusVisitaNavigation)
+                                .Include(y => y.IdCalendarioSazonalNavigation)
                                 .Include(y => y.IdPropostaNavigation)
                                 .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                 .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -240,6 +247,7 @@ namespace CRMYIA.Business
                             {
                                 return ListEntity = context.Visita
                                .Include(y => y.IdStatusVisitaNavigation)
+                               .Include(y => y.IdCalendarioSazonalNavigation)
                                .Include(y => y.IdPropostaNavigation)
                                .Join(context.Usuario, v => v.IdUsuario, u => (Int64?)(u.IdUsuario), (v, u) => new { v = v, u = u })
                                .Join(context.UsuarioPerfil, o => (Int64?)(o.u.IdUsuario), up => up.IdUsuario, (o, up) => new { o = o, up = up })
@@ -275,21 +283,111 @@ namespace CRMYIA.Business
 
         public static List<VisitaViewModel> GetListByDataAgendamentoReturnsViewModel(long IdUsuario, DateTime? DataInicial, DateTime? DataFinal)
         {
-            List<VisitaViewModel> ListEntityViewModel = null;
+            //List<VisitaViewModel> ListEntityViewModel = null;
+            List<VisitaViewModel> ListEntityViewModel = new List<VisitaViewModel>();
             List<Visita> ListEntity = null;
             try
             {
                 ListEntity = GetListByDataAgendamento(IdUsuario, DataInicial, DataFinal);
                 if (ListEntity != null && ListEntity.Count() > 0)
-                    ListEntityViewModel = ListEntity.Select(x => new VisitaViewModel()
+                {
+                    UsuarioPerfil EntityUsuarioPerfil = Business.PerfilModel.GetIdentificacaoPerfil(IdUsuario);
+
+                    if (EntityUsuarioPerfil.IdPerfil != (byte)6)
                     {
-                        sourceId = x.IdVisita,
-                        backgroundColor = x.IdStatusVisitaNavigation.CorHexa,
-                        borderColor = x.IdStatusVisitaNavigation.CorHexa,
-                        start = x.DataAgendamento.Value,
-                        title = x.Descricao,
-                        allDay = false
-                    }).ToList();
+
+                        foreach (var Item in ListEntity)
+                        {
+                            ListEntityViewModel.Add(new VisitaViewModel()
+                            {
+                                sourceId = Item.IdVisita,
+                                backgroundColor = Item.IdStatusVisitaNavigation.CorHexa,
+                                borderColor = Item.IdStatusVisitaNavigation.CorHexa,
+                                start = Item.DataAgendamento,
+                                title = Item.Descricao,
+                                allDay = false
+                            }
+                            );
+                        }
+                        
+                    }
+                    else
+                    {
+                        foreach (var Item in ListEntity)
+                        {
+
+                            if (Item.IdCalendarioSazonalNavigation != null)
+                            {
+                                ListEntityViewModel.Add(new VisitaViewModel()
+                                {
+                                    sourceId = Item.IdVisita,
+                                    backgroundColor = Item.IdCalendarioSazonalNavigation.Cor,
+                                    borderColor = Item.IdCalendarioSazonalNavigation.Cor,
+                                    start = Item.IdCalendarioSazonalNavigation.DataSazonal,
+                                    title = Item.Descricao,
+                                    allDay = false
+                                }
+                                );
+
+                                if (Item.IdCalendarioSazonalNavigation.ExisteCampanha == true)
+                                {
+                                    ListEntityViewModel.Add(new VisitaViewModel()
+                                    {
+                                        //sourceId = Item.IdVisita,
+                                        backgroundColor = Item.IdCalendarioSazonalNavigation.Cor,
+                                        borderColor = Item.IdCalendarioSazonalNavigation.Cor,
+                                        start = Convert.ToDateTime(Item.IdCalendarioSazonalNavigation.DataInicio?.ToString("yyyy-MM-dd")),
+                                        end = Convert.ToDateTime(Item.IdCalendarioSazonalNavigation.DataFim?.ToString("yyyy-MM-dd")),
+                                        title = "Período " + Item.IdCalendarioSazonalNavigation.Descricao,
+                                        allDay = false
+                                    }
+                                    );
+                                }
+                                //else
+                                //{
+                                //    ListEntityViewModel.Add(new VisitaViewModel()
+                                //    {
+                                //        sourceId = Item.IdVisita,
+                                //        backgroundColor = Item.IdCalendarioSazonalNavigation.Cor,
+                                //        borderColor = Item.IdCalendarioSazonalNavigation.Cor,
+                                //        start = Item.IdCalendarioSazonalNavigation.DataInicio,
+                                //        //end = Item.IdCalendarioSazonalNavigation.DataFim,
+                                //        title = "Período " + Item.IdCalendarioSazonalNavigation.Descricao,
+                                //        allDay = false
+                                //    }
+                                //   );
+                                //}
+                            }
+                            else
+                            {
+                                if(Item.DataInicio != null && Item.DataFim != null)
+                                {
+                                    ListEntityViewModel.Add(new VisitaViewModel()
+                                    {
+                                        sourceId = Item.IdVisita,
+                                        backgroundColor = Item.Cor,
+                                        borderColor = Item.Cor,
+                                        start = Item.DataInicio,
+                                        end = Item.DataFim,
+                                        title = Item.Descricao,
+                                        allDay = false
+                                    }
+                                    );
+                                }
+                            }
+
+                            //ListEntityViewModel = ListEntity.Select(x => new VisitaViewModel()
+                            //{
+                            //    sourceId = x.IdVisita,
+                            //    backgroundColor = x.IdStatusVisitaNavigation.CorHexa,
+                            //    borderColor = x.IdStatusVisitaNavigation.CorHexa,
+                            //    start = x.DataAgendamento.Value,
+                            //    title = x.Descricao,
+                            //    allDay = false
+                            //}).ToList();
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
@@ -321,6 +419,25 @@ namespace CRMYIA.Business
                 throw;
             }
             return ListEntityViewModel;
+        }
+
+        public static void AddList(List<Visita> ListEntity)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    foreach (Visita Item in ListEntity) 
+                    {
+                        context.Visita.Add(Item); 
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public static void Add(Visita Entity)

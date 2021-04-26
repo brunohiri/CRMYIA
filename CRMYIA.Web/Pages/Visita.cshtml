@@ -10,165 +10,415 @@
 
         <div class="card card-default">
 
-                <div class="card-header">
-                    <h3 class="card-title">Pesquisar</h3>
-                </div>
-                <!-- /.card-header -->
-                <!-- form start -->
-                <form id="FormPesquisa">
-                    <div class="card-body">
-                        <input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />
-                        <div class="row">
+            <div class="card-header">
+                <h3 class="card-title">Pesquisar</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <input type="hidden" name="IdPerfil" id="IdPerfil" asp-for="@Model.IdPerfil" />
+            <form id="FormPesquisa">
+                <div class="card-body">
+                    <input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />
+                    <div class="row">
 
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="estado">Perfil</label>
-                                    <select class="custom-select visitas-pesquisa" id="PreencherOption" name="PreencherOption">
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        Please select a valid state.
-                                    </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="estado">Perfil</label>
+                                <select class="custom-select visitas-pesquisa" id="PreencherOption" name="PreencherOption">
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a valid state.
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Nome</label>
-                                    @*<div id="menu" class="dropdown-menu" aria-labelledby="dropdown_coins" style="max-height: 20rem; overflow-y: auto;">*@
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Nome</label>
+                                @*<div id="menu" class="dropdown-menu" aria-labelledby="dropdown_coins" style="max-height: 20rem; overflow-y: auto;">*@
 
-                                            @*<input type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" class="form-control input-nome-pesquisa visitas-pesquisa" id="NomePesquisa" placeholder="" autofocus="autofocus">*@
-                                            @*<select class="form-control select2" style="width: 100%;"id="menuItems">
-                                                <option selected="selected">Selecione...</option>
-                                            </select>*@
-                                            @*<div id="menuItems"></div>*@
+                                @*<input type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" class="form-control input-nome-pesquisa visitas-pesquisa" id="NomePesquisa" placeholder="" autofocus="autofocus">*@
+                                @*<select class="form-control select2" style="width: 100%;"id="menuItems">
+                                        <option selected="selected">Selecione...</option>
+                                    </select>*@
+                                @*<div id="menuItems"></div>*@
                                 <select class="form-control select2 itens-option-nome" style="width: 100%;" id="menuItems">
                                     <option selected="selected">Selecione...</option>
                                 </select>
-                                </div>
                             </div>
-
-                            @*<div class="col-sm-6">
-            <div class="form-group">
-                <label>Corretor</label>
-
-                <input type="hidden" class="form-control" id="PropostaIdUsuarioCorretor" />
-                <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="Nome" />
-
-                <select class="form-control select2" style="width: 100%;" id="PropostaIdUsuarioCorretor">
-                    <option selected="selected">Selecione...</option>
-
-                </select>
-            </div>
-        </div>*@
-
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Data</label>
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="far fa-calendar-alt"></i>
-                                            </span>
-                                        </div>
-                                        <input type="text" class="form-control float-right daterange visitas-pesquisa" id="Inicio" name="Inicio">
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
+
+                        @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Corretor</label>
+
+                                    <input type="hidden" class="form-control" id="PropostaIdUsuarioCorretor" />
+                                    <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="Nome" />
+
+                                    <select class="form-control select2" style="width: 100%;" id="PropostaIdUsuarioCorretor">
+                                        <option selected="selected">Selecione...</option>
+
+                                    </select>
+                                </div>
+                            </div>*@
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Data</label>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control float-right daterange visitas-pesquisa" id="Inicio" name="Inicio">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </form>
+                </div>
+            </form>
         </div>
-     </div>
+    </div>
 </section>
 
-        <div class="row">
-            <div class="col-md-3">
-                <div class="sticky-top mb-3">
-                    <div class="card" style="display:none;">
-                        <div class="card-header">
-                            <h4 class="card-title">Eventos não agendados </h4>
-                        </div>
-                        <div class="card-body">
-                            <!-- the events -->
-                            <div id="external-events">
+<div class="row">
+    <div class="col-md-3">
+        <div class="sticky-top mb-3">
+            <div class="card" style="display:none;">
+                <div class="card-header">
+                    <h4 class="card-title">Eventos não agendados </h4>
+                </div>
+                <div class="card-body">
+                    <!-- the events -->
+                    <div id="external-events">
 
-                                <div class="external-event bg-info">Nenhum evento</div>
-                                <div class="checkbox">
-                                    <label for="drop-remove">
-                                        <input type="checkbox" id="drop-remove" checked>
-                                        remover depois de arrastar
-                                    </label>
+                        <div class="external-event bg-info">Nenhum evento</div>
+                        <div class="checkbox">
+                            <label for="drop-remove">
+                                <input type="checkbox" id="drop-remove" checked>
+                                remover depois de arrastar
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            <!--<div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Criar Evento</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page="/Visita" asp-page-handler="Visitas" id="formVisita">
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdVisita" id="VisitaIdVisita" />
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdStatusVisita" id="VisitaIdStatusVisita" />
+                        @Html.AntiForgeryToken()
+                        <span>Escolha um tipo de evento:</span>
+                        <div class="btn-group" style="width: 100%; margin-bottom: 10px;">-->
+                            <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                            <!--<ul class="fc-color-picker" id="color-chooser">
+                                @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
+                                {
+                                    foreach (var Item in Model.ListStatusVisita)
+                                    {
+                                        <li><a class="@Item.CssClass" href="#" title="@Item.Descricao" data-id="@Item.IdStatusVisita"><i class="fas fa-square"></i></a></li>
+                                    }
+                                }
+                            </ul>
+                        </div>-->
+                        <!-- /btn-group -->
+                        <!--<div style="padding-bottom:10px;">
+                            <span>Título:</span>
+                            <input id="VisitaTitulo" type="text" class="form-control" placeholder="Título" asp-for="@Model.Entity.Descricao">
+                        </div>
+                        <div>
+                            <span>Data:</span>
+                            <div class="input-group date" id="VisitaDataHora" data-target-input="nearest" style="padding-bottom:10px;">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#VisitaDataHora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00")" id="VisitaEventoDataHora" asp-for="@Model.Entity.DataAgendamento" />
+                                <div class="input-group-append" data-target="#VisitaDataHora" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Criar Evento</h3>
+                        <div style="padding-bottom:10px;">
+                            <span>Observação:</span>
+                            <textarea class="form-control" rows="3" id="VisitaObservacao" asp-for="@Model.Entity.Observacao"></textarea>
                         </div>
-                        <div class="card-body">
-                            <form method="post" asp-page="/Visita" asp-page-handler="Visitas" id="formVisita">
-                                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdVisita" id="VisitaIdVisita" />
-                                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdStatusVisita" id="VisitaIdStatusVisita" />
-                                @Html.AntiForgeryToken()
-                                <span>Escolha um tipo de evento:</span>
-                                <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                                    <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                                    <ul class="fc-color-picker" id="color-chooser">
-                                        @if ((Model != null) && (Model.ListStatusVisita != null) && (Model.ListStatusVisita.Count > 0))
-                                        {
-                                            foreach (var Item in Model.ListStatusVisita)
-                                            {
-                                                <li><a class="@Item.CssClass" href="#" title="@Item.Descricao" data-id="@Item.IdStatusVisita"><i class="fas fa-square"></i></a></li>
-                                            }
-                                        }
-                                    </ul>
-                                </div>
-                                <!-- /btn-group -->
-                                <div style="padding-bottom:10px;">
-                                    <span>Título:</span>
-                                    <input id="VisitaTitulo" type="text" class="form-control" placeholder="Título" asp-for="@Model.Entity.Descricao">
-                                </div>
-                                <div>
-                                    <span>Data:</span>
-                                    <div class="input-group date" id="VisitaDataHora" data-target-input="nearest" style="padding-bottom:10px;">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#VisitaDataHora" value="@DateTime.Now.AddDays(1).AddHours(1).ToString("dd/MM/yyyy HH:00")" id="VisitaEventoDataHora" asp-for="@Model.Entity.DataAgendamento" />
-                                        <div class="input-group-append" data-target="#VisitaDataHora" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="padding-bottom:10px;">
-                                    <span>Observação:</span>
-                                    <textarea class="form-control" rows="3" id="VisitaObservacao" asp-for="@Model.Entity.Observacao"></textarea>
-                                </div>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <button id="add-new-event" type="button" class="btn btn-primary">Salvar</button>
-                                    </div>
-                                    <!-- /btn-group -->
-                                </div>
-                            </form>
-                            <!-- /input-group -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /.col -->
-            <div class="col-md-9">
-                <div class="card card-primary">
-                    <div class="card-body p-0">
-                        <!-- THE CALENDAR -->
-                        <div id="calendar"></div>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
+                        <div class="input-group">
+                            <div class="input-group-append">
+                                <button id="add-new-event" type="button" class="btn btn-primary">Salvar</button>
+                            </div>-->
+                            <!-- /btn-group -->
+                        <!--</div>
+                    </form>-->
+                    <!-- /input-group -->
+                <!--</div>
+            </div>-->
+
         </div>
-        <!-- /.row -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-9">
+        <div class="card card-primary">
+            <div class="card-body p-0">
+                <!-- THE CALENDAR -->
+                <div id="calendar"></div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+
+<!-- Button trigger modal -->
+@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#FeriadoDataComemorativa">
+    Launch demo modal
+</button>*@
+
+<!-- Modal -->
+<div class="modal fade" id="FeriadoDataComemorativa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Criar Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formVisita">
+                    <input type="hidden" name="IdVisita" id="IdVisita" value="0" />
+                    <input type="hidden" name="IdCalendarioSazonal" id="IdCalendarioSazonal" value="0" />
+                    <input type="hidden" name="StartStr" id="StartStr" value="" />
+                    <input type="hidden" name="EndStr" id="EndStr" value="" />
+
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label>Titulo</label>
+                                <input type="text" class="form-control" name="Descricao" id="Descricao" placeholder="Descrição" autocomplete="off" required>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1">
+                            <div class="form-group">
+                                <label>Cor</label>
+                                <input type="color" class="form-control" name="Cor" id="Cor" required>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label>Tipo</label>
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Tipo[]" id="Feriado" data-radio="Tipo" value="1" required>
+                                    <label class="form-check-label" for="Feriado">Feriado</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Tipo[]" id="DataComemorativa" data-radio="Tipo" value="2" required>
+                                    <label class="form-check-label" for="DataComemorativa">Data Comemorativa</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Tipo[]" id="Evento" data-radio="Tipo" value="3" required>
+                                    <label class="form-check-label" for="Evento">Evento</label>
+                                </div><br />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label>Existe Campanha</label>
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="ExisteCampanha[]" id="Sim" data-radio="ExisteCampanha" value="true" required>
+                                    <label class="form-check-label" for="Sim">Sim</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="ExisteCampanha[]" id="Nao" data-radio="ExisteCampanha" value="false" required>
+                                    <label class="form-check-label" for="Nao">Não</label>
+                                </div><br />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-4" style="display: none;" data-tipo="3">
+                            <label>Repete</label>
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="Nunca" data-radio="Repete" value="1" checked required>
+                                    <label class="form-check-label" for="Nunca">Nunca</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="TodosDias" data-radio="Repete" value="2" required>
+                                    <label class="form-check-label" for="TodosDias">Todos os Dias</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="ACadaSemana" data-radio="Repete" value="3" required>
+                                    <label class="form-check-label" for="ACadaSemana">A Cada Semana</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="ACada2Semanas" data-radio="Repete" value="4" required>
+                                    <label class="form-check-label" for="ACada2Semanas">A Cada 2 Semanas</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="ACadaMeses" data-radio="Repete" value="5" required>
+                                    <label class="form-check-label" for="ACadaMes">A Cada Mês</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="ACadaAno" data-radio="Repete" value="6" required>
+                                    <label class="form-check-label" for="ACadaAno">A Cada Ano</label>
+                                </div><br />
+                                      <div class="dropdown-divider"></div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="Personalizado" data-radio="Repete" value="7" required>
+                                    <label class="form-check-label" for="Personalizado">Personalizado</label>
+                                </div><br />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4" style="display: none;" id="Frequencia" data-repete="7">
+                            <label id="SelecaoFrequencia">Frequência</label>
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Diariamente" data-radio="Diariamente" value="1" required>
+                                    <label class="form-check-label" for="Diariamente">Diariamente</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Semanamente" data-radio="Semanamente" value="2" required>
+                                    <label class="form-check-label" for="Semanamente">Semanamente</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Mensalmente" data-radio="Mensalmente" value="3" required>
+                                    <label class="form-check-label" for="Mensalmente">Mensalmente</label>
+                                </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Anualmente" data-radio="Anualmente" value="4" required>
+                                    <label class="form-check-label" for="Anualmente">Anualmente</label>
+                                </div><br />
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-4 BlocoRepetir" style="display: none" data-frequencia="1">
+                            <label id="SelecaoRepete">Repete a Cada</label>
+                            <div class="form-group">
+                                <input type="number" name="Repetir" id="Repetir" min="1" max="99" value="0">
+                            </div>
+                        </div>
+
+                        @*<div class="col-sm-3 BlocoRepetir" style="display: none">
+                            <div class="form-group">
+                                <label for="Repetir">Selecione um Período</label>
+                                <select class="form-control Tipo" name="Periodo" id="Periodo">
+                                    <option value="0">Selecione um Período</option>
+                                    <option value="1">Dia</option>
+                                    <option value="2">Semana</option>
+                                    <option value="3">Mês</option>
+                                    <option value="4">Ano</option>
+                                </select>
+                            </div>
+                        </div>*@
+
+                        @*<div class="row">
+
+                            <div class="col-sm-3 BlocoRepetir" style="display: none" data-frequencia="1">
+                                <label>Repete a Cada</label>
+                                <div class="form-group">
+                                    <input type="number" name="Repetir" id="Repetir" value="1" min="1" max="99">
+                                </div>
+                            </div>
+
+                        </div>*@
+
+                    </div>
+
+                    <div class="row" id="Termina" style="display: none">
+                        <div class="col-sm-6">
+                            <label id="SelecaoTermina">Termina</label>
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Termina[]" id="TerminaNunca" data-radio="TerminaNunca" value="1" required>
+                                    <label class="form-check-label" for="TerminaNunca">Nunca</label>
+                                </div><br />
+                                      <div class="form-check form-check-inline">
+                                          <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Em" data-radio="Em" value="2" required>
+                                          <label class="form-check-label" for="Em">Em</label>
+                                          &nbsp;<input type="date" class="form-control" name="DataEm" id="DataEm" required>
+                                      </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Entre" data-radio="Entre" value="3" required>
+                                    <label class="form-check-label" for="DeAte">Entre</label>
+                                    &nbsp;<input type="text" class="form-control daterange" style="width: 100% !important;" id="DataInicioFim" name="DataInicioFim" autocomplete="off" required>
+                                </div><br />
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        @*<div class="col-sm-5">
+                            <div class="form-group">
+                                <label class="DataSazonal">Data</label>
+                                <input type="date" class="form-control" name="DataSazonal" id="DataSazonal" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-5">
+                            <div class="form-group">
+                                <label>Data Início / Data Fim</label>
+
+                                <div class="input-group">
+
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control daterange" id="DataInicioFim" name="DataInicioFim" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>*@
+
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" id="Ativo" name="Ativo" checked>
+                                    <label class="custom-control-label" for="Ativo">Ativo</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row Observacao" style="display: none;">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Observações</label>
+                                <textarea rows="3" class="form-control" name="Observacao" id="Observacao" placeholder="Observações Gerais"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+
+                </form>
+
+            </div>
+            
+        </div>
+    </div>
+</div>

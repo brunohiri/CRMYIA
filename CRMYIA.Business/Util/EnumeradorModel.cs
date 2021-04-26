@@ -40,7 +40,8 @@ namespace CRMYIA.Business.Util
             Supervisor = 3,
             Corretor = 4,
             Vendedor = 5,
-            Marketing = 6
+            Marketing = 6,
+            Todos = 7
         }
         #endregion
 
@@ -52,7 +53,8 @@ namespace CRMYIA.Business.Util
             Agendada = 2,
             Realizada = 3,
             Adiada = 4,
-            Cancelada = 5
+            Cancelada = 5,
+            FeriadoDataSazonal = 6
         }
         #endregion
 
@@ -81,6 +83,29 @@ namespace CRMYIA.Business.Util
             Ausente,
             NaoIncomodar,
             Invisivel
+        }
+        #endregion
+
+        #region TipoSazonal
+        public enum TipoSazonal
+        {
+            Feriado = 1,
+            DataComemorativa = 2,
+            Evento = 3
+        }
+        #endregion
+
+        #region TipoSazonal
+        public enum Visualizacao
+        {
+            Todos = 1,
+            DataComemorativa = 2,
+            Administrador = 3,
+            Gerente = 4,
+            Supervisor = 5,
+            Corretor = 6,
+            Vendedor = 7,
+            Marketing = 8
         }
         #endregion
     }

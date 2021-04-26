@@ -21,6 +21,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
         public virtual DbSet<AssinaturaCartao> AssinaturaCartao { get; set; }
         public virtual DbSet<Banner> Banner { get; set; }
+        public virtual DbSet<CalendarioSazonal> CalendarioSazonal { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
         public virtual DbSet<Capa> Capa { get; set; }
@@ -53,6 +54,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<KPIMeta> KPIMeta { get; set; }
         public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
         public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
+        public virtual DbSet<LandingPage> LandingPage { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
@@ -63,7 +65,6 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<OperadoraDocumento> OperadoraDocumento { get; set; }
         public virtual DbSet<OperadoraTelefone> OperadoraTelefone { get; set; }
         public virtual DbSet<Origem> Origem { get; set; }
-        public virtual DbSet<PROPOSTA_BKP> PROPOSTA_BKP { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
         public virtual DbSet<PerfilModulo> PerfilModulo { get; set; }
         public virtual DbSet<Porte> Porte { get; set; }
@@ -83,6 +84,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<Video> Video { get; set; }
         public virtual DbSet<Visita> Visita { get; set; }
+        public virtual DbSet<VisitaCampanha> VisitaCampanha { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -205,6 +207,27 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_Banner");
             });
 
+            modelBuilder.Entity<CalendarioSazonal>(entity =>
+            {
+                entity.HasKey(e => e.IdCalendarioSazonal);
+
+                entity.Property(e => e.Cor)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.DataFim).HasColumnType("datetime");
+
+                entity.Property(e => e.DataInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.DataSazonal).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Campanha>(entity =>
             {
                 entity.HasKey(e => e.IdCampanha);
@@ -222,6 +245,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.NomeArquivo)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioSazonalNavigation)
+                    .WithMany(p => p.Campanha)
+                    .HasForeignKey(d => d.IdCalendarioSazonal)
+                    .HasConstraintName("CalendarioSazonal_Campanha");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Campanha)
@@ -1198,6 +1226,40 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("KPIMeta_KPIMetaVida");
             });
 
+            modelBuilder.Entity<LandingPage>(entity =>
+            {
+                entity.HasKey(e => e.IdLandingPage);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.DataNascimento).HasColumnType("datetime");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IP)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Profissao)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.LandingPage)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_LandingPage");
+            });
+
             modelBuilder.Entity<Linha>(entity =>
             {
                 entity.HasKey(e => e.IdLinha);
@@ -1371,45 +1433,6 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<PROPOSTA_BKP>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
-
-                entity.Property(e => e.DataSolicitacao).HasColumnType("datetime");
-
-                entity.Property(e => e.IdProposta).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.NumeroProposta)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Observacoes)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PeriodoParaLigar)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PlanoJaUtilizado)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PreferenciaHospitalar)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ProximoContatoComCliente).HasColumnType("datetime");
-
-                entity.Property(e => e.TempoPlano)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ValorPrevisto).HasColumnType("decimal(18, 2)");
             });
 
             modelBuilder.Entity<Perfil>(entity =>
@@ -1876,9 +1899,17 @@ namespace CRMYIA.Data.Context
             {
                 entity.HasKey(e => e.IdVisita);
 
+                entity.Property(e => e.Cor)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DataAgendamento).HasColumnType("datetime");
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.DataFim).HasColumnType("datetime");
+
+                entity.Property(e => e.DataInicio).HasColumnType("datetime");
 
                 entity.Property(e => e.DataVisitaRealizada).HasColumnType("datetime");
 
@@ -1889,6 +1920,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Observacao)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioSazonalNavigation)
+                    .WithMany(p => p.Visita)
+                    .HasForeignKey(d => d.IdCalendarioSazonal)
+                    .HasConstraintName("CalendarioSazonal_Visita");
 
                 entity.HasOne(d => d.IdPropostaNavigation)
                     .WithMany(p => p.Visita)
@@ -1904,6 +1940,23 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Visita)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_Visita");
+            });
+
+            modelBuilder.Entity<VisitaCampanha>(entity =>
+            {
+                entity.HasKey(e => e.IdVisitaCampanha);
+
+                entity.Property(e => e.IdVisitaCampanha).ValueGeneratedNever();
+
+                entity.HasOne(d => d.IdCampanhaNavigation)
+                    .WithMany(p => p.VisitaCampanha)
+                    .HasForeignKey(d => d.IdCampanha)
+                    .HasConstraintName("Campanha_VisitaCampanha");
+
+                entity.HasOne(d => d.IdVisitaNavigation)
+                    .WithMany(p => p.VisitaCampanha)
+                    .HasForeignKey(d => d.IdVisita)
+                    .HasConstraintName("Visita_VisitaCampanha");
             });
 
             OnModelCreatingPartial(modelBuilder);

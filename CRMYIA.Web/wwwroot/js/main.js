@@ -875,13 +875,15 @@ function CarregarCampanha(Id) {
 //});
 /* ========================== Loading =================================== */
 
-$(window).on('beforeunload', function () {
-    displayBusyIndicator()
-});
+if (!(window.location.href.indexOf('Visita') > 0)) {
+    $(window).on('beforeunload', function () {
+        displayBusyIndicator()
+    });
 
-$(document).on('submit', 'form', function () {
-    displayBusyIndicator();
-});
+    $(document).on('submit', 'form', function () {
+        displayBusyIndicator();
+    });
+}
 
 $(document).on('click', '.float-open', function () {
     $('.float-open').addClass('d-none');
@@ -889,12 +891,14 @@ $(document).on('click', '.float-open', function () {
     //lembrar de nao encerrar um as conversa
 });
 
-function displayBusyIndicator() {
-    $('.loading').show();
-}
+if (!(window.location.href.indexOf('Visita') > 0)) {
+    function displayBusyIndicator() {
+        $('.loading').show();
+    }
 
-function displayBusyAvailable() {
-    $('.loading').hide();
+    function displayBusyAvailable() {
+        $('.loading').hide();
+    }
 }
 
 function StatusUsuario(Status) {

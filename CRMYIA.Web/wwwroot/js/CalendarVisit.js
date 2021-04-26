@@ -57,7 +57,15 @@
         }
     });
 
-    CarregarCalendar(Calendar, calendarEl);
+
+    if ($('#IdPerfil').val() == 6) {
+        $('.help-block').attr('style', 'color: red !important;');
+        CarregarCalendarMkt(Calendar, calendarEl);
+    }
+    else
+    {
+        CarregarCalendar(Calendar, calendarEl);
+    }
 
     /* ADDING EVENTS */
     var currColor = '#3c8dbc' //Red by default
@@ -145,6 +153,143 @@
         }
     });
 
+    //Date range picker with time picker
+    $('#DataInicioFim').daterangepicker({
+        timePicker: true,
+        timePickerIncrement: 30,
+           "locale": {
+            "format": "DD/MM/YYYY hh:mm A",
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "daysOfWeek": [
+                "Dom",
+                "Seg",
+                "Ter",
+                "Qua",
+                "Qui",
+                "Sex",
+                "Sab"
+            ],
+            "daysOfWeek": [
+                "Dom",
+                "Seg",
+                "Ter",
+                "Qua",
+                "Qui",
+                "Sex",
+                "Sab"
+            ],
+            "monthNames": [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro"
+            ],
+            "firstDay": 1
+        }
+    });
+
+    //$('input[name="DataInicioFim"]').daterangepicker({
+    //    timePicker: true,
+    //    timePicker24Hour: true,
+    //    timePickerIncrement: 30,
+    //    startDate: moment().startOf('hour'),
+    //    endDate: moment().startOf('hour').add(32, 'hour'),
+    //    "locale": {
+    //        "format": "DD/MM/YYYY hh:mm A",
+    //        "separator": " - ",
+    //        "applyLabel": "Aplicar",
+    //        "cancelLabel": "Cancelar",
+    //        "daysOfWeek": [
+    //            "Dom",
+    //            "Seg",
+    //            "Ter",
+    //            "Qua",
+    //            "Qui",
+    //            "Sex",
+    //            "Sab"
+    //        ],
+    //        "daysOfWeek": [
+    //            "Dom",
+    //            "Seg",
+    //            "Ter",
+    //            "Qua",
+    //            "Qui",
+    //            "Sex",
+    //            "Sab"
+    //        ],
+    //        "monthNames": [
+    //            "Janeiro",
+    //            "Fevereiro",
+    //            "Março",
+    //            "Abril",
+    //            "Maio",
+    //            "Junho",
+    //            "Julho",
+    //            "Agosto",
+    //            "Setembro",
+    //            "Outubro",
+    //            "Novembro",
+    //            "Dezembro"
+    //        ],
+    //        "firstDay": 1
+    //    }
+    //});
+
+    //$('input[name="DataSazonal"]').daterangepicker({
+    //    singleDatePicker: true,
+    //    showDropdowns: true,
+    //    //minYear: 1901,
+    //    "locale": {
+    //        "format": "DD/MM/YYYY",
+    //        "applyLabel": "Aplicar",
+    //        "cancelLabel": "Cancelar",
+    //        "daysOfWeek": [
+    //            "Dom",
+    //            "Seg",
+    //            "Ter",
+    //            "Qua",
+    //            "Qui",
+    //            "Sex",
+    //            "Sab"
+    //        ],
+    //        cancelLabel: 'Clear',
+    //        "daysOfWeek": [
+    //            "Dom",
+    //            "Seg",
+    //            "Ter",
+    //            "Qua",
+    //            "Qui",
+    //            "Sex",
+    //            "Sab"
+    //        ],
+    //        "monthNames": [
+    //            "Janeiro",
+    //            "Fevereiro",
+    //            "Março",
+    //            "Abril",
+    //            "Maio",
+    //            "Junho",
+    //            "Julho",
+    //            "Agosto",
+    //            "Setembro",
+    //            "Outubro",
+    //            "Novembro",
+    //            "Dezembro"
+    //        ],
+    //        "firstDay": 1
+    //    }
+    //});
+
     PreencherRadio();
     BuscarVisita();
 
@@ -160,7 +305,290 @@
     })
 
     PreencherDropdown();
+
 })
+
+$(document).ready(function () {
+    
+    $('#formVisita')
+        .bootstrapValidator({
+            message: 'This value is not valid',
+            framework: 'bootstrap',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                Descricao: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Descrição é um campo obrigatório e não pode estar vazio.'
+                        }
+                    }
+                },
+                Cor: {
+                    validators: {
+                        color: {
+                            type: ['hex', 'rgb', 'hsl', 'keyword'],
+                            message: 'Deve ser uma cor %s válida.'
+                        },
+                        notEmpty: {
+                            message: 'Cor é um campo obrigatório e não pode estar vazio.'
+                        }
+                    }
+                },
+                Tipo: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Tipo é um campo obrigatório e não pode estar vazio.'
+                        }
+                    }
+                },
+                DataSazonal: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Data Sazonal é um campo obrigatório e não pode estar vazio.'
+                        }
+                    }
+                },
+                DataInicioFim: {
+                    validators:
+                    {
+                        notEmpty:
+                        {
+                            message: 'Data Início e Data Fim é um campo obrigatório e não pode estar vazio.'
+                        },
+                        //callback:
+                        //{
+                        //    message: 'The password is not valid',
+                        //    callback: function (value, validator, $field) {
+                        //        if (value === '') {
+                        //            return {
+                        //                valid: false,    // or false
+                        //                message: 'Data Início e Data Fim é um campo obrigatório e não pode estar vazio.'
+                        //            };
+                        //        }
+                        //    }
+                        //}
+                    }
+                },
+                Ativo: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Please specify at least one language you can speak'
+                        }
+                    }
+                },
+            }
+        }).on('success.form.bv', function (e) {
+            // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target),
+                form_data = new FormData();
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
+            // Use Ajax to submit form data
+            //$.post($form.attr('action'), $form.serialize(), function (result) {
+            //    console.log(result);
+            //}, 'json');
+
+
+            //Verificacao de Repetição
+            if ($('input[type="radio"][name="Tipo[]"]:checked').length > 0) {
+                form_data.append('Tipo', $('input[type="radio"][name="Tipo[]"]:checked').val())
+            }
+
+            if ($('input[type="radio"][name="Repete[]"]:checked').length > 0) {
+                form_data.append('Repete', $('input[type="radio"][name="Repete[]"]:checked').val())
+            }
+
+            if ($('input[type="radio"][name="Frequencia[]"]:checked').length > 0) {
+                form_data.append('Frequencia', $('input[type="radio"][name="Frequencia[]"]:checked').val())
+            }
+
+            if ($('input[type="radio"][name="Termina[]"]:checked').length > 0) {
+                form_data.append('Termina', $('input[type="radio"][name="Termina[]"]:checked').val())
+            }
+
+
+
+            form_data.append('IdVisita', $('#IdVisita').val());
+            form_data.append('IdCalendarioSazonal', $('#IdCalendarioSazonal').val());
+            form_data.append('Descricao', $('#Descricao').val());
+            form_data.append('Cor', $('#Cor').val());
+            //form_data.append('Tipo', $('input[type="radio"][name="Tipo[]"]:checked').val());
+            $('input[name=ExisteCampanha]:checked').val() == 'true' ? form_data.append("ExisteCampanha", 'true') : form_data.append("ExisteCampanha", 'false');
+
+            form_data.append('Repetir', $('#Repetir').val());
+
+            form_data.append('DataSazonal', $('#DataSazonal').val());
+            form_data.append('DataEm', $('#DataEm').val());
+            var DataInicioFim = $('#DataInicioFim').val().split('-')
+            form_data.append('DataInicio', DataInicioFim[0]);
+            form_data.append('DataFim', DataInicioFim[1]);
+            $('#Ativo').is(":checked") == true ? form_data.append("Ativo", 'true') : form_data.append("Ativo", 'false');
+            form_data.append('Observacao', $('#Observacao').val());
+
+
+
+            $.ajax({
+                type: 'POST',
+                url: "/Visita?handler=Visitas",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function (data) {
+                    if (data.status) {
+                        //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
+                        //    $('#Titulo').val(data.entityLista.titulo);
+                        //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
+                        //    $('#Titulo').focus();
+
+                        //    $('.salvar-texto').css('display', 'block');
+                        //    $('.upload-assinatura-cartao').css('display', 'none');
+                        //    $('.btn-adicionar-imagem').css('display', 'none');
+                    }
+                },
+                error: function () {
+                    swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+                }
+            });
+        })
+        .find('.Tipo')
+        .on('change', function () {
+            //input[type="radio"][name="Repete[]"]
+            //var topic = $(this).val(),
+            //    $container = $('[data-repete="' + topic + '"]');
+            //$container.toggle();
+
+            //var display = $container.css('display');
+            //alert($(this).data('radio'))
+
+            var topic = $(this).val();
+
+            //Tipo
+            if ($(this).data('radio') == 'Tipo') {
+                
+                   var $container = $('[data-tipo="' + topic + '"]');
+                $container.toggle();
+
+                var display = $container.css('display');
+                if (3 == topic && 'block' == display) {
+                    $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+                        validators: {
+                            notEmpty: {
+                                message: 'O Campo Frequência é um campo obrigatório.'
+                            }
+                        }
+                    });
+                }
+                else if (1 == topic || 2 == topic) {
+                    $('#Frequencia').css('display', 'none');
+                    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+                }
+            }//
+
+            //Repete
+            if ($(this).data('radio') == 'Repete') {
+                var $container = $('[data-repete="' + topic + '"]');
+                $container.toggle();
+
+                var display = $container.css('display');
+                if (7 == topic && 'block' == display) {
+                    $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+                        validators: {
+                            notEmpty: {
+                                message: 'O Campo Frequência é um campo obrigatório.'
+                            }
+                        }
+                    });
+                }
+                else if (1 == topic || 2 == topic || 3 == topic || 4 == topic || 5 == topic || 6 == topic) {
+                    $('#Frequencia').css('display', 'none');
+                    $('.BlocoRepetir').css('display', 'none');
+                    $('#Termina').css('display', 'none');
+                    $('input[type="radio"][name="Frequencia[]"]:checked').prop('checked', false); 
+                    $('input[type="radio"][name="Termina[]"]:checked').prop('checked', false); 
+                    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+                    $('#formVisita').bootstrapValidator('removeField', 'Repetir');
+                    $('#formVisita').bootstrapValidator('removeField', 'Periodo');
+                    $('#formVisita').bootstrapValidator('removeField', 'Termina[]');
+                }
+            }
+
+            var tam = $('input[type="radio"][name="Frequencia[]"]:checked');
+            if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7) {
+                $('.BlocoRepetir').css('display', 'block');
+                $('#Termina').css('display', 'block');
+
+                $('#formVisita').bootstrapValidator('addField', 'Repetir', {
+                    validators: {
+                        notEmpty: {
+                            message: 'O Campo Repete a Cada é um campo obrigatório.'
+                        }
+                    }
+                });
+                $('#formVisita').bootstrapValidator('addField', 'Periodo', {
+                    validators: {
+                        notEmpty: {
+                            message: 'O Campo é um campo obrigatório.'
+                        }
+                    }
+                });
+                $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
+                    validators: {
+                        notEmpty: {
+                            message: 'O Campo é um campo obrigatório.'
+                        }
+                    }
+                });
+            } 
+            //else {
+            //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]'); $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+            //}
+
+            //switch (true) {
+            //    case (7 == topic && 'block' == display):
+            //        $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+            //            validators: {
+            //                notEmpty: {
+            //                    message: 'Please choose at least 1 framework'
+            //                }
+            //            }
+            //        });
+            //        break;
+            //    case (7 == topic && 'none' == display):
+            //        $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+            //        break;
+            //case ('javascript' == topic && 'block' == display):
+            //    $('#interviewForm').bootstrapValidator('addField', 'js_frameworks[]', {
+            //        validators: {
+            //            notEmpty: {
+            //                message: 'The name of framework is required'
+            //            }
+            //        }
+            //    });
+            //    break;
+            //case ('javascript' == topic && 'none' == display):
+            //    $('#interviewForm').bootstrapValidator('removeField', 'js_frameworks[]');
+            //    break;
+            //}
+        });
+
+     $(document).on('click', '.select2-results__option', function () {
+        $("#select2-menuItems-container").val($(this).html());
+    });
+
+});
 
 $('.select2').on('change', function () {
     //var data = $(".select2 option:selected").text();
@@ -168,12 +596,61 @@ $('.select2').on('change', function () {
     VisitasPesquisa();
 })
 
-$(document).ready(function () {
-    $(document).on('click', '.select2-results__option', function () {
-        $("#select2-menuItems-container").val($(this).html());
-    });
+//$(document).ready(function () {
+   
+//});
+
+$(document).on('click', 'input[name="Tipo[]"]', function () {
+    if ($(this).val() == 3) {
+        $('.Observacao').css('display', 'block');
+    } else {
+        $('.Observacao').css('display', 'none');
+    }
+
+    if ($(this).val() == 1) {
+        $('.DataSazonal').html('Data do Feriado');
+        $('#DataSazonal').attr("disabled", false);
+        $('#Sim').attr("disabled", false);
+        $('#Nao').attr("disabled", false);
+    }
+    else if ($(this).val() == 2) {
+        $('.DataSazonal').html('Data Comemorativa');
+        $('#DataSazonal').attr("disabled", false);
+        $('#Sim').attr("disabled", false);
+        $('#Nao').attr("disabled", false);
+    }
+    else if ($(this).val() == 3) {
+        $('.DataSazonal').html('Data do Evento');
+        $('#DataSazonal').attr("disabled", false);
+        $('#Sim').attr("disabled", true);
+        $('#Nao').attr("disabled", true);
+        $('#Sim').prop('checked', false);
+        $('#Nao').prop('checked', false);
+    } else {
+        $('.DataSazonal').html('Data');
+        $('#DataSazonal').attr("disabled", false);
+        $('#Sim').attr("disabled", true);
+        $('#Nao').attr("disabled", true);
+    }
+
 });
 
+$(document).on('click', 'input[type="radio"][name="Frequencia[]"]:checked', function () {
+
+    if ($(this).data('radio') == 'Diariamente') {
+        $('#SelecaoRepete').html('Repete a Cada Dia');
+    }
+    else if ($(this).data('radio') == 'Semanamente') {
+        $('#SelecaoRepete').html('Repete a Cada Semana');
+    }
+    else if ($(this).data('radio') == 'Mensalmente') {
+        $('#SelecaoRepete').html('Repete a Cada Mês');
+    }
+    else if ($(this).data('radio') == 'Anualmente') {
+        $('#SelecaoRepete').html('Repete a Cada Ano');
+    }
+
+});
 
 $(document).on('click', '.todos-perfil', function () {
 
@@ -273,18 +750,25 @@ function VisitasPesquisa() {
     });
 }
 
-
 function CarregarCalendar(Calendar, calendarEl) {
     $('#calendar').html('');
     var calendar = new Calendar(calendarEl, {
         plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
         defaultView: 'dayGridMonth',
         locale: 'pt-br',
+    /*    selectable: true,*/
+        eventLimit: true, // permitir link a mais quando muitos eventos
         header: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
+        //dayClick: function (date) {
+        //    alert('clicked ' + date.format());
+        //},
+        //select: function (startDate, endDate) {
+        //    alert(startDate.startStr + ' ' + startDate.endStr);
+        //},
         'themeSystem': 'bootstrap',
         //Random default events
         events: function (info, successCallback, failureCallback) {
@@ -296,14 +780,26 @@ function CarregarCalendar(Calendar, calendarEl) {
                 success: function (data) {
                     var events = [];
                     $.map(data.listVisita, function (r) {
-                        events.push({
-                            sourceId: r.sourceId,
-                            title: r.title,
-                            backgroundColor: r.backgroundColor,
-                            borderColor: r.borderColor,
-                            start: r.start,
-                            allDay: r.allDay
-                        });
+                        if (r.end != '0001-01-01T00:00:00') {
+                            events.push({
+                                sourceId: r.sourceId,
+                                title: r.title,
+                                backgroundColor: r.backgroundColor,
+                                borderColor: r.borderColor,
+                                start: r.start,
+                                end: r.end,
+                                allDay: r.allDay
+                            });
+                        } else {
+                            events.push({
+                                sourceId: r.sourceId,
+                                title: r.title,
+                                backgroundColor: r.backgroundColor,
+                                borderColor: r.borderColor,
+                                start: r.start,
+                                allDay: r.allDay
+                            });
+                        }
                     });
                     successCallback(events);
                 }
@@ -347,6 +843,169 @@ function CarregarCalendar(Calendar, calendarEl) {
                 }
             });
         }
+    });
+
+    calendar.render();
+    // $('#calendar').fullCalendar()
+}
+
+/*#########################################################################*/
+
+function CarregarCalendarMkt(Calendar, calendarEl) {
+    $('#calendar').html('');
+    var calendar = new Calendar(calendarEl, {
+        plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+        defaultView: 'dayGridMonth',
+        locale: 'pt-br',
+        selectable: true,
+        //eventLimit: true, // permitir link a mais quando muitos eventos
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        dayClick: function (date) {
+            alert('clicked ' + date.format());
+        },
+        select: function (startDate, endDate) {
+            //alert(startDate.startStr.length + ' ' + startDate.endStr.length);
+            $('#StartStr').val(startDate.startStr);
+            $('#EndStr').val(startDate.endStr);
+            //var VetStartStr = startDate.startStr.split('-');
+            //console.log(VetStartStr[2] + '/' + VetStartStr[1] + '/' + VetStartStr[0])
+            $('#DataEm').val(startDate.startStr);
+            $('#FeriadoDataComemorativa').modal('show');
+            //$('#DataSazonal').attr("disabled", true);
+            $('.help-block').attr('style', 'display: none !important; color: red !important;');
+
+            $('#Feriado').prop('checked', false);
+            $('#DataComemorativa').prop('checked', false);
+            $('#Evento').prop('checked', false);
+
+            $('#Sim').prop('checked', false);
+            $('#Nao').prop('checked', false);
+            
+        },
+        'themeSystem': 'bootstrap',
+        //Random default events
+        events: function (info, successCallback, failureCallback) {
+            $.ajax({
+                url: '/Visita?handler=Visitas',
+                cache: false,
+                async: false,
+                type: "GET",
+                success: function (data) {
+                    var events = [];
+                    $.map(data.listVisita, function (r) {
+                        if (r.end != null) {
+                            var s = r.start.split('T');
+                            var e = r.end.split('T');
+                            events.push({
+                                //sourceId: r.sourceId,
+                                title: r.title,
+                                //backgroundColor: r.backgroundColor,
+                                //borderColor: r.borderColor,
+                                start: s[0],
+                                end: e[0],
+                                //allDay: r.allDay,
+                                overlap: false,
+                                rendering: 'background',
+                                color: '#ff9f89'
+                            });
+                        } else {
+                            events.push({
+                                sourceId: r.sourceId,
+                                title: r.title,
+                                backgroundColor: r.backgroundColor,
+                                borderColor: r.borderColor,
+                                start: r.start,
+                                allDay: r.allDay,
+                                //overlap: false,
+                                //rendering: 'background',
+                                //color: '#ff9f89'
+                            });
+                        }
+                    });
+                    successCallback(events);
+                }
+            });
+        },
+        eventRender(info) {
+            let tooltip = new Tooltip(info.el, {
+                title: info.event.title,
+                placement: 'top',
+                trigger: 'hover',
+                container: 'body',
+                html: true,
+            });
+            $(info.el).bind('dblclick', function (e) {
+                var eventObj = info.event;
+                console.log(eventObj.extendedProps.sourceId);
+                
+                if (eventObj.extendedProps.sourceId != undefined)
+                {
+                    $('#FeriadoDataComemorativa').modal('show');
+                    $('#Descricao').focus();
+                    $('#DataSazonal').attr("disabled", true);
+                    $('.help-block').attr('style', 'display: none !important; color: red !important;');
+
+                    $('#Feriado').prop('checked', false);
+                    $('#DataComemorativa').prop('checked', false);
+                    $('#Evento').prop('checked', false);
+
+                    $('#Sim').prop('checked', false);
+                    $('#Nao').prop('checked', false);
+
+
+                }
+                    //$.ajax({
+                    //    url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
+                    //    cache: false,
+                    //    async: false,
+                    //    contentType: "application/json",
+                    //    dataType: "json",
+                    //    type: "GET",
+                    //    success: function (data) {
+                    //        if (data.status) {
+                    //            $('#VisitaTitulo').val(data.entityVisita.descricao);
+                    //            $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
+                    //            $('#VisitaObservacao').val(data.entityVisita.observacao);
+                    //            $('#VisitaIdVisita').val(data.entityVisita.idVisita);
+                    //        }
+                    //    }
+                    //});
+            });
+        },
+        editable: true,
+        droppable: true, // this allows things to be dropped onto the calendar !!!
+        drop: function (info) {
+            // is the "remove after drop" checkbox checked?
+            if (checkbox.checked) {
+                // if so, remove the element from the "Draggable Events" list
+                info.draggedEl.parentNode.removeChild(info.draggedEl);
+            }
+        },
+        /*eventClick: function (info) {
+            var eventObj = info.event;
+            console.log(eventObj.extendedProps.sourceId);
+            if (eventObj.extendedProps.sourceId != undefined)
+            $.ajax({
+                url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
+                cache: false,
+                async: false,
+                contentType: "application/json",
+                dataType: "json",
+                type: "GET",
+                success: function (data) {
+                    if (data.status) {
+                        $('#VisitaTitulo').val(data.entityVisita.descricao);
+                        $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
+                        $('#VisitaObservacao').val(data.entityVisita.observacao);
+                        $('#VisitaIdVisita').val(data.entityVisita.idVisita);
+                    }
+                }
+            });
+        }*/
     });
 
     calendar.render();
@@ -465,4 +1124,9 @@ function Filtro(word) {
     else {
         $('#empty').hide()
     }
+}
+
+function InicializaCor() {
+    var toread = document.getElementById('Cor');
+    console.log("Red Value - " + parseInt("0x" + toread.value.slice(1, 3)));
 }

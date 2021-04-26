@@ -23,6 +23,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public Visita Entity { get; set; }
+        [BindProperty]
+        public byte? IdPerfil { get; set; }
 
         #region Lists
         public List<StatusVisita> ListStatusVisita { get; set; }
@@ -36,9 +38,12 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet()
         {
-                Entity = new Visita();
-                ListStatusVisita = StatusVisitaModel.GetList();
-                return Page();
+            long IdUsuario = GetIdUsuario();
+            UsuarioPerfil EntityUsuarioPerfil = Business.PerfilModel.GetIdentificacaoPerfil(IdUsuario);
+            IdPerfil = EntityUsuarioPerfil.IdPerfil;
+            Entity = new Visita();
+            ListStatusVisita = StatusVisitaModel.GetList();
+            return Page();
         }
 
         public IActionResult OnGetByIdVisita(string IdVisita = null)
@@ -84,66 +89,161 @@ namespace CRMYIA.Web.Pages
         }
 
 
-        public IActionResult OnPostVisitas()
+        public IActionResult OnPostVisitas(EnviarCalendarioSazonalViewModel dados)
         {
             List<VisitaViewModel> ListVisita = null;
+            CalendarioSazonal EntityCalendarioSazonal = null;
+
+            //var Data = dados.DataInicioFim.Split('-');
+            //DateTime DataInicio = Convert.ToDateTime(Data[0]);
+            //DateTime DataFim = Convert.ToDateTime(Data[1]);
 
             long IdUsuario = GetIdUsuario();
 
-            if (Entity.Descricao.IsNullOrEmpty())
-                return new JsonResult(new { status = false, mensagem = "Campo Título obrigatório em branco!" });
-            else
-                 if (Entity.DataAgendamento == null)
-                return new JsonResult(new { status = false, mensagem = "Campo Data Hora obrigatório em branco!" });
-            else
+            if(dados.Repete == 7 && dados.Frequencia == 1 && dados.Repetir > 0 && (dados.Termina > 0))
             {
-                if (Entity.IdVisita == 0)
-                {
-                    Business.VisitaModel.Add(new Visita()
-                    {
-                        Descricao = Entity.Descricao,
-                        DataAgendamento = Entity.DataAgendamento,
-                        DataCadastro = DateTime.Now,
-                        Observacao = Entity.Observacao,
-                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                        IdUsuario = IdUsuario
-                    });
-
-                    //Notificação
-                    UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
-                    if (EntityUsuarioHierarquia != null)
-                    {
-                        Visita EntityVisita = Business.VisitaModel.GetLastId();
-                        Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
-                        {
-                            IdUsuarioCadastro = IdUsuario,
-                            IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
-                            Titulo = null,
-                            Descricao = Entity.Descricao,
-                            Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
-                            Visualizado = false,
-                            DataCadastro = DateTime.Now,
-                            Ativo = true
-                        });
-                    }
-
-                }
-                else
-                {
-                    Visita EntityVisita = Business.VisitaModel.Get(Entity.IdVisita);
-                    EntityVisita.Descricao = Entity.Descricao;
-                    EntityVisita.DataAgendamento = Entity.DataAgendamento;
-                    EntityVisita.DataCadastro = DateTime.Now;
-                    EntityVisita.Observacao = Entity.Observacao;
-                    EntityVisita.IdStatusVisitaNavigation = null;
-                    EntityVisita.IdStatusVisita = (Entity.IdStatusVisita == null ? (byte)EnumeradorModel.StatusVisita.Agendada : Entity.IdStatusVisita);
-                    Business.VisitaModel.Update(EntityVisita);
-                }
-
-                ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month).AddMonths(-3), Util.GetLastDayOfMonth(DateTime.Now.Month).AddMonths(3));
-
-                return new JsonResult(new { status = true, listVisita = ListVisita });
+                PersonalizadoDiariamente(dados);
             }
+
+            //Business.CalendarioSazonalModel.Add(ListCalendarioSazonal1);
+            //Business.VisitaModel.AddList(ListVisita);
+
+            //if (dados.Descricao.IsNullOrEmpty())
+            //   return new JsonResult(new { status = false, mensagem = "Campo Título obrigatório em branco!" });
+            //else if (dados.DataSazonal == null)
+            //    return new JsonResult(new { status = false, mensagem = "Campo Data obrigatório em branco!" });
+            //else
+            //{
+            //    if (dados.IdCalendarioSazonal == 0)
+            //    {
+            //        if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+            //        {
+            //            Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+            //            {
+            //                Descricao = dados.Descricao,
+            //                Cor = dados.Cor,
+            //                Tipo = dados.Tipo,
+            //                DataSazonal = dados.DataSazonal,
+            //                DataInicio = dados.DataInicio,
+            //                DataFim = dados.DataFim,
+            //                DataCadastro = DateTime.Now,
+            //                ExisteCampanha = dados.ExisteCampanha,
+            //                Ativo = dados.Ativo
+            //            });
+
+            //            EntityCalendarioSazonal = CalendarioSazonalModel.GetLastId();
+
+            //            Business.VisitaModel.Add(new Visita()
+            //            {
+            //                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.FeriadoDataSazonal,
+            //                IdCalendarioSazonal = EntityCalendarioSazonal.IdCalendarioSazonal,
+            //                Descricao = EntityCalendarioSazonal.Descricao,
+            //                DataAgendamento = EntityCalendarioSazonal.DataSazonal,
+            //                DataInicio = EntityCalendarioSazonal.DataInicio,
+            //                DataFim = EntityCalendarioSazonal.DataFim,
+            //                Visivel = (byte)1,
+            //                Cor = EntityCalendarioSazonal.Cor,
+            //                DataCadastro = DateTime.Now,
+            //                IdUsuario = IdUsuario
+            //            });
+            //        }
+            //        else if (dados.Tipo == 3)
+            //        {
+            //            UsuarioPerfil EntityUsuarioPerfil =  PerfilModel.GetIdentificacaoPerfil(IdUsuario);
+            //            byte? Visivel = 0;
+            //            if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Administrador)
+            //            {
+            //                Visivel = (byte)EnumeradorModel.Visualizacao.Administrador;
+            //            }
+            //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Gerente)
+            //            {
+            //                Visivel = (byte)EnumeradorModel.Visualizacao.Gerente;
+            //            }
+            //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Supervisor)
+            //            {
+            //                Visivel = (byte)EnumeradorModel.Visualizacao.Supervisor;
+            //            }
+            //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Corretor)
+            //            {
+            //                Visivel = (byte)EnumeradorModel.Visualizacao.Corretor;
+            //            }
+            //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Vendedor)
+            //            {
+            //                Visivel = (byte)EnumeradorModel.Visualizacao.Vendedor;
+            //            }
+            //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Marketing)
+            //            {
+            //                Visivel = (byte)EnumeradorModel.Visualizacao.Marketing;
+            //            }
+
+            //            if (dados.DataInicio != null && dados.DataFim != null)
+            //            {
+            //                Business.VisitaModel.Add(new Visita()
+            //                {
+            //                    Descricao = dados.Descricao,
+            //                    DataAgendamento = dados.DataSazonal,
+            //                    DataInicio = dados.DataInicio,
+            //                    DataFim =dados.DataFim,
+            //                    DataCadastro = DateTime.Now,
+            //                    Observacao = dados.Observacao,
+            //                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+            //                    Visivel = Visivel,
+            //                    Cor = dados.Cor,
+            //                    IdUsuario = IdUsuario
+            //                });
+            //            }
+            //            else
+            //            {
+            //                Business.VisitaModel.Add(new Visita()
+            //                {
+            //                    Descricao = dados.Descricao,
+            //                    DataAgendamento = dados.DataSazonal,
+            //                    DataCadastro = DateTime.Now,
+            //                    Observacao = dados.Observacao,
+            //                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+            //                    Visivel = Visivel,
+            //                    Cor = dados.Cor,
+            //                    IdUsuario = IdUsuario
+            //                });
+            //            }
+
+            //            //Notificação
+            //            UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
+            //            if (EntityUsuarioHierarquia != null)
+            //            {
+            //                Visita EntityVisita = Business.VisitaModel.GetLastId();
+            //                Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+            //                {
+            //                    IdUsuarioCadastro = IdUsuario,
+            //                    IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+            //                    Titulo = null,
+            //                    Descricao = dados.Descricao,
+            //                    Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
+            //                    Visualizado = false,
+            //                    DataCadastro = DateTime.Now,
+            //                    Ativo = true
+            //                });
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        //UpDate
+
+            //        //Visita EntityVisita = Business.VisitaModel.Get(Entity.IdVisita);
+            //        //EntityVisita.Descricao = Entity.Descricao;
+            //        //EntityVisita.DataAgendamento = Entity.DataAgendamento;
+            //        //EntityVisita.DataCadastro = DateTime.Now;
+            //        //EntityVisita.Observacao = Entity.Observacao;
+            //        //EntityVisita.IdStatusVisitaNavigation = null;
+            //        //EntityVisita.IdStatusVisita = (Entity.IdStatusVisita == null ? (byte)EnumeradorModel.StatusVisita.Agendada : Entity.IdStatusVisita);
+            //        //Business.VisitaModel.Update(EntityVisita);
+            //    }
+
+            //    ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month).AddMonths(-3), Util.GetLastDayOfMonth(DateTime.Now.Month).AddMonths(3));
+
+               return new JsonResult(new { status = true, listVisita = ListVisita });
+            //}
         }
         public IActionResult OnGetTodosPerfil()
         {
@@ -220,6 +320,146 @@ namespace CRMYIA.Web.Pages
                 IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             }
             return IdUsuario;
+        }
+
+        private void PersonalizadoDiariamente(EnviarCalendarioSazonalViewModel dados)
+        {
+            long IdUsuario = GetIdUsuario();
+
+            UsuarioPerfil EntityUsuarioPerfil = PerfilModel.GetIdentificacaoPerfil(IdUsuario);
+            byte? Visivel = 0;
+            if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Administrador)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Administrador;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Gerente)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Gerente;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Supervisor)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Supervisor;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Corretor)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Corretor;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Vendedor)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Vendedor;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Marketing)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Marketing;
+            }
+
+            if(dados.Termina == 1)
+            {
+                DateTime DataInicio = dados.DataInicio;
+                DateTime DataFim = dados.DataFim;
+                int i = 0;
+                List<DateTime> Dia = new List<DateTime>();
+                int meses = 0;
+
+
+                int AnoInicio = DataInicio.Year;
+                int MesInicio = DataInicio.Month;
+                DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
+
+                int AnoFim = DataFim.Year;
+                int MesFim = DataFim.Month;
+                DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
+                //while (i < dtAtual.Month && meses != 24) {
+
+                int j = 0;
+                do
+                {
+                    DataInicio = DataInicio.AddDays(dados.Repetir);
+                    Dia.Add(DataInicio);
+
+                    DataFim = DataFim.AddDays(dados.Repetir);
+                    Dia.Add(DataFim);
+                    Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+
+                    Business.VisitaModel.Add(new Visita()
+                    {
+                        Descricao = dados.Descricao,
+                        DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario
+                    });
+
+                    j++;
+
+                } while (j < ((365 * 2) / dados.Repetir));
+                //    i++;
+                //    meses++;
+
+                //    mes = mes + 1;
+                //    if(mes > 12)
+                //    {
+                //        mes = 1;
+                //        ano = ano + 1;
+                //    }
+                //    data = new DateTime(ano, mes, DateTime.DaysInMonth(ano, mes));
+                //}
+            }
+
+            //if (dados.DataInicio != null && dados.DataFim != null)
+            //{
+            //    Business.VisitaModel.Add(new Visita()
+            //    {
+            //        Descricao = dados.Descricao,
+            //        DataAgendamento = dados.DataEm,
+            //        DataInicio = dados.DataInicio,
+            //        DataFim = dados.DataFim,
+            //        DataCadastro = DateTime.Now,
+            //        Observacao = dados.Observacao,
+            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+            //        Visivel = Visivel,
+            //        Cor = dados.Cor,
+            //        IdUsuario = IdUsuario
+            //    });
+            //}
+            //else
+            //{
+            //    Business.VisitaModel.Add(new Visita()
+            //    {
+            //        Descricao = dados.Descricao,
+            //        DataAgendamento = dados.DataSazonal,
+            //        DataCadastro = DateTime.Now,
+            //        Observacao = dados.Observacao,
+            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+            //        Visivel = Visivel,
+            //        Cor = dados.Cor,
+            //        IdUsuario = IdUsuario
+            //    });
+            //}
+
+            //Notificação
+            UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
+            if (EntityUsuarioHierarquia != null)
+            {
+                Visita EntityVisita = Business.VisitaModel.GetLastId();
+                Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+                {
+                    IdUsuarioCadastro = IdUsuario,
+                    IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+                    Titulo = null,
+                    Descricao = dados.Descricao,
+                    Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
+                    Visualizado = false,
+                    DataCadastro = DateTime.Now,
+                    Ativo = true
+                });
+            }
         }
     }
 

@@ -5,6 +5,11 @@ namespace CRMYIA.Data.Entities
 {
     public partial class Visita
     {
+        public Visita()
+        {
+            VisitaCampanha = new HashSet<VisitaCampanha>();
+        }
+
         public long IdVisita { get; set; }
         public long? IdProposta { get; set; }
         public byte? IdStatusVisita { get; set; }
@@ -14,9 +19,17 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public DateTime? DataVisitaRealizada { get; set; }
         public string Observacao { get; set; }
+        public long? IdCalendarioSazonal { get; set; }
+        public DateTime? DataInicio { get; set; }
+        public DateTime? DataFim { get; set; }
+        public byte? Visivel { get; set; }
+        public string Cor { get; set; }
+        public byte? Tipo { get; set; }
 
+        public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
         public virtual Proposta IdPropostaNavigation { get; set; }
         public virtual StatusVisita IdStatusVisitaNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
+        public virtual ICollection<VisitaCampanha> VisitaCampanha { get; set; }
     }
 }
