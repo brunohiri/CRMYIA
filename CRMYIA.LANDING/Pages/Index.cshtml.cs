@@ -50,11 +50,13 @@ namespace CRMYIA.Landing.Pages
             return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(string Id = null)
         {
             try
             {
+              var a =  Request.Form;
                 var IpCliente = HttpContext.Connection.RemoteIpAddress.ToString();
+                var idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
 
                 if (Entity.IdLandingPage == 0)
                 {
@@ -62,6 +64,7 @@ namespace CRMYIA.Landing.Pages
                     {
                         Entity.DataCadastro = DateTime.Now;
                         Entity.IP = IpCliente;
+                        Entity.IdUsuario = idUser;
                         LandingPageModel.Add(Entity);
                         Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }

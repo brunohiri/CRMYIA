@@ -217,51 +217,7 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Banner)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_Banner");
-<<<<<<< HEAD
-            });
 
-            modelBuilder.Entity<CalendarioSazonal>(entity =>
-            {
-                entity.HasKey(e => e.IdCalendarioSazonal);
-
-                entity.Property(e => e.Cor)
-                    .HasMaxLength(40)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
-
-                entity.Property(e => e.DataFim).HasColumnType("datetime");
-
-                entity.Property(e => e.DataInicio).HasColumnType("datetime");
-
-                entity.Property(e => e.DataSazonal).HasColumnType("datetime");
-
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-=======
->>>>>>> 5ca9325396fce66d6cb3f26d00a74f74602c8241
-            });
-
-            modelBuilder.Entity<CalendarioSazonal>(entity =>
-            {
-                entity.HasKey(e => e.IdCalendarioSazonal);
-
-                entity.Property(e => e.Cor)
-                    .HasMaxLength(40)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
-
-                entity.Property(e => e.DataFim).HasColumnType("datetime");
-
-                entity.Property(e => e.DataInicio).HasColumnType("datetime");
-
-                entity.Property(e => e.DataSazonal).HasColumnType("datetime");
-
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Campanha>(entity =>
