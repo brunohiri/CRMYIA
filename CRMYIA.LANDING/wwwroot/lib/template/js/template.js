@@ -249,8 +249,8 @@ $(document).ready(function() {
 //Google map
 
 jQuery(document).ready(function(){
-	var e=new google.maps.LatLng(44.789511,20.43633),
-		o={zoom:14,center:new google.maps.LatLng(44.789511,20.43633),
+	var e = new google.maps.LatLng(-23.545049, -46.640531),
+		o={zoom:14,center:new google.maps.LatLng(-23.545049, -46.640531),
 		mapTypeId:google.maps.MapTypeId.ROADMAP,
 		mapTypeControl:!1,
 		scrollwheel:!1,
@@ -261,10 +261,10 @@ jQuery(document).ready(function(){
 		google.maps.event.addDomListener(window,"resize",function(){var e=n.getCenter();
 		google.maps.event.trigger(n,"resize"),n.setCenter(e)});
 		
-		var g='<div class="map-tooltip"><h6>Ananke</h6><p>Checking out our office too?</p></div>',a=new google.maps.InfoWindow({content:g})
-		,t=new google.maps.MarkerImage("/lib/template/images/map-pin.png",new google.maps.Size(40,70),
+	var g ='<div class="map-tooltip"><h6>YIA</h6><p>Your Insurance Anywhere</p></div>',a=new google.maps.InfoWindow({content:g})
+		,t=new google.maps.MarkerImage("lib/template/images/map-pin.png",new google.maps.Size(40,70),
 		new google.maps.Point(0,0),new google.maps.Point(20,55)),
-		i=new google.maps.LatLng(44.789511,20.43633),
+			i = new google.maps.LatLng(-23.545049, -46.640531),
 		p=new google.maps.Marker({position:i,map:n,icon:t,zIndex:3});
 		google.maps.event.addListener(p,"click",function(){a.open(n,p)}),
 		$(".button-map").click(function(){$("#google_map").slideToggle(300,function(){google.maps.event.trigger(n,"resize"),n.setCenter(e)}),
@@ -275,35 +275,3 @@ jQuery(document).ready(function(){
  
   })(jQuery); 
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-
-
-
-
-	

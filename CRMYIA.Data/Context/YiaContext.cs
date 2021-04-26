@@ -70,7 +70,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Porte> Porte { get; set; }
         public virtual DbSet<Producao> Producao { get; set; }
         public virtual DbSet<Produto> Produto { get; set; }
-        public virtual DbSet<Proposta> Proposta { get; set; }
+        public virtual DbSet<Proposta> Proposta { get; set; }                                                                
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual DbSet<RedeSocial> RedeSocial { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
@@ -90,8 +90,20 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
+#if (DEBUG)
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+                      builder => builder.EnableRetryOnFailure());
+
+                //optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+                //      builder => builder.EnableRetryOnFailure());
+#endif
+#if (!DEBUG)
+			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+				builder => builder.EnableRetryOnFailure());       
+
+    //        optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+				//builder => builder.EnableRetryOnFailure());
+#endif
             }
         }
 
@@ -205,6 +217,30 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Banner)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_Banner");
+<<<<<<< HEAD
+            });
+
+            modelBuilder.Entity<CalendarioSazonal>(entity =>
+            {
+                entity.HasKey(e => e.IdCalendarioSazonal);
+
+                entity.Property(e => e.Cor)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.DataFim).HasColumnType("datetime");
+
+                entity.Property(e => e.DataInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.DataSazonal).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+=======
+>>>>>>> 5ca9325396fce66d6cb3f26d00a74f74602c8241
             });
 
             modelBuilder.Entity<CalendarioSazonal>(entity =>
