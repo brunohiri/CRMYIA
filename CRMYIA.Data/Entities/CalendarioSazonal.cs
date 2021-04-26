@@ -15,13 +15,11 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public string Cor { get; set; }
         public byte? Tipo { get; set; }
-        public DateTime DataSazonal { get; set; }
+        public DateTime DataFim { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public bool? ExisteCampanha { get; set; }
-        public DateTime? DataInicio { get; set; }
-        public DateTime? DataFim { get; set; }
-
+       
         public virtual ICollection<Campanha> Campanha { get; set; }
         public virtual ICollection<Visita> Visita { get; set; }
     }
