@@ -50,10 +50,11 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="~/plugins/sweetAlert2_7.2.0/sweetalert2.min.css">
     <script src="~/plugins/sweetAlert2_7.2.0/sweetalert2.all.min.js"></script>
-
+    <!-- BootstrapValidator -->
+    <link href="~/plugins/bootstrapvalidator/dist/css/bootstrapValidator.min.css" />
     @*<link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">*@
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">*@
 
 
     <style>
@@ -274,6 +275,18 @@
             }
         }
 
+        .has-error .help-block,
+        .has-error .control-label,
+        .has-error .radio,
+        .has-error .checkbox,
+        .has-error .radio-inline,
+        .has-error .checkbox-inline,
+        .has-error.radio label,
+        .has-error.checkbox label,
+        .has-error.radio-inline label,
+        .has-error.checkbox-inline label {
+            color: red;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -785,6 +798,10 @@
     <script src="~/js/sistema/geral.js"></script>
     <!--Dropzone-->
     <script src="~/plugins/dropzone/dropzone.js"></script>
+    <!-- BootstrapValidator -->
+    <script src="~/plugins/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script src="~/plugins/bootstrapvalidator/dist/js/language/pt_BR.js"></script>
+
     <!-- PAGE SCRIPTS -->
     @if (ViewData["Title"].ToString().ToUpper().Equals("DASHBOARD"))
     {

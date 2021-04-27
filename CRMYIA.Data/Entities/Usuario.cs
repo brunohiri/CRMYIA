@@ -18,6 +18,7 @@ namespace CRMYIA.Data.Entities
             HistoricoLigacao = new HashSet<HistoricoLigacao>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
             KPIGrupoUsuario = new HashSet<KPIGrupoUsuario>();
+            LandingPage = new HashSet<LandingPage>();
             NotificacaoIdUsuarioCadastroNavigation = new HashSet<Notificacao>();
             NotificacaoIdUsuarioVisualizarNavigation = new HashSet<Notificacao>();
             NotificacaoMensagemIdUsuarioDeNavigation = new HashSet<NotificacaoMensagem>();
@@ -68,6 +69,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual ICollection<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
+        public virtual ICollection<LandingPage> LandingPage { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioCadastroNavigation { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioVisualizarNavigation { get; set; }
         public virtual ICollection<NotificacaoMensagem> NotificacaoMensagemIdUsuarioDeNavigation { get; set; }
