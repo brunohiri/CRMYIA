@@ -9,6 +9,7 @@ namespace CRMYIA.Data.Entities
         {
             Email = new HashSet<Email>();
             Proposta = new HashSet<Proposta>();
+            PropostaCliente = new HashSet<PropostaCliente>();
             Telefone = new HashSet<Telefone>();
             UsuarioCliente = new HashSet<UsuarioCliente>();
         }
@@ -48,6 +49,7 @@ namespace CRMYIA.Data.Entities
         public virtual TipoLead IdTipoLeadNavigation { get; set; }
         public virtual ICollection<Email> Email { get; set; }
         public virtual ICollection<Proposta> Proposta { get; set; }
+        public virtual ICollection<PropostaCliente> PropostaCliente { get; set; }
         public virtual ICollection<Telefone> Telefone { get; set; }
         public virtual ICollection<UsuarioCliente> UsuarioCliente { get; set; }
     }

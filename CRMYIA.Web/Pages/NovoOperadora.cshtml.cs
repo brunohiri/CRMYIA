@@ -30,6 +30,8 @@ namespace CRMYIA.Web.Pages
         public Operadora Entity { get; set; }
         [BindProperty]
         public List<GrupoCorretor> ListGrupoCorretor { get; set; }
+        [BindProperty]
+        public List<GrupoCorretorOperadora> ListGrupoCorretorOperadora { get; set; }
 
         #endregion
 
@@ -51,6 +53,7 @@ namespace CRMYIA.Web.Pages
             else
             {
                 Entity = OperadoraModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong());
+                ListGrupoCorretorOperadora = GrupoCorretorOperadoraModel.Get(Entity.IdOperadora);
             }
             Entity.DataCadastro = DateTime.Now;
 
@@ -64,17 +67,21 @@ namespace CRMYIA.Web.Pages
             {
                 string[] IdGrupoCorretores = Request.Form["IdGrupoCorretor"];
                 bool gravado = false;
+
+                //var File = Request.Form.Files.ToList();
+                var File = Request.Form.Files.FirstOrDefault();
+                string NomeArquivoOriginal = File.FileName;
+                string NomeArquivo = Request.Form["Entity.NomeArquivo"];
+
                 if (Entity.IdOperadora == 0)
                 {
-                    var File = Request.Form.Files.ToList();
-                    string NomeArquivoOriginal = File[0].FileName;
-                    string NomeArquivo = string.Empty;
+                    
 
                     NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
                     var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoOperadora"], NomeArquivo);
                     using (var fileStream = new FileStream(file, FileMode.Create))
                     {
-                        await File[0].CopyToAsync(fileStream);
+                        await File.CopyToAsync(fileStream);
                     }
 
                     Entity.CaminhoArquivo = "ArquivoOperadora/";
@@ -86,43 +93,77 @@ namespace CRMYIA.Web.Pages
                     foreach (var Item in IdGrupoCorretores)
                     {
                         if (Item != null)
-                            Business.GrupoCorretorCampanhaModel.Add(new GrupoCorretorCampanha()
+                            Business.GrupoCorretorOperadoraModel.Add(new GrupoCorretorOperadora()
                             {
                                 IdGrupoCorretor = (byte)Convert.ToInt32(Item),
-                                IdCampanha = Entity.IdOperadora
+                                IdOperadora = Entity.IdOperadora
                             });
                     }
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                 }
                 else
                 {
-                    OperadoraModel.Update(Entity);
 
-                    List<GrupoCorretorOperadora> ListEntityGrupoCorretorOperadora = null;
-                    ListEntityGrupoCorretorOperadora = GrupoCorretorOperadoraModel.Get(Entity.IdOperadora);
-
-                    for (var i = 0; i < IdGrupoCorretores.Length; i++)
+                    if (File.Length > 0 && NomeArquivoOriginal != null)
                     {
-                        Business.GrupoCorretorOperadoraModel.Add(new GrupoCorretorOperadora()
-                        {
-                            IdGrupoCorretor = (byte)Convert.ToInt32(IdGrupoCorretores[i]),
-                            IdOperadora = Entity.IdOperadora
-                        });
-                        if (i >= IdGrupoCorretores.Length - 1)
-                        {
-                            gravado = true;
-                        }
-                    }
+                        
 
-                    if (gravado)
-                    {
-                        foreach (var Item in ListEntityGrupoCorretorOperadora)
+                        if (!string.IsNullOrEmpty(NomeArquivo) && File != null)
                         {
-                            Business.GrupoCorretorOperadoraModel.Delete(Item);
+                            string _imageToBeDeleted = Path.Combine(_environment.WebRootPath, _configuration["ArquivoOperadora"], NomeArquivo);
+                            if ((System.IO.File.Exists(_imageToBeDeleted)))
+                            {
+                                System.IO.File.Delete(_imageToBeDeleted);
+                            }
+                            NomeArquivoOriginal = File.FileName;
+
+                            string NovoNomeArquivo = Util.TratarNomeArquivoSeparadorPipe(NomeArquivoOriginal, 0);
+                            var arquivo = Path.Combine(_environment.WebRootPath, _configuration["ArquivoOperadora"], NovoNomeArquivo);
+
+                            using (var fileStream = new FileStream(arquivo, FileMode.Create))
+                            {
+                                await File.CopyToAsync(fileStream);
+                                Entity.CaminhoArquivo = "ArquivoOperadora/";
+                                Entity.NomeArquivo = NovoNomeArquivo;
+                            }
+                            OperadoraModel.Update(Entity);
                         }
+
+                        List<GrupoCorretorOperadora> ListEntityGrupoCorretorOperadora = null;
+                        ListEntityGrupoCorretorOperadora = GrupoCorretorOperadoraModel.Get(Entity.IdOperadora);
+
+                        for (var i = 0; i < IdGrupoCorretores.Length; i++)
+                        {
+                            Business.GrupoCorretorOperadoraModel.Add(new GrupoCorretorOperadora()
+                            {
+                                IdGrupoCorretor = (byte)Convert.ToInt32(IdGrupoCorretores[i]),
+                                IdOperadora = Entity.IdOperadora
+                            });
+                            if (i >= IdGrupoCorretores.Length - 1)
+                            {
+                                gravado = true;
+                            }
+                        }
+
+                        if (gravado)
+                        {
+                            foreach (var Item in ListEntityGrupoCorretorOperadora)
+                            {
+                                Business.GrupoCorretorOperadoraModel.Delete(Item);
+                            }
+                        }
+                        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados alterados com sucesso!");
+                        ListGrupoCorretorOperadora = GrupoCorretorOperadoraModel.Get(Entity.IdOperadora);
+                        CarregarLists();
                     }
+                    else
+                    {
+                        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Informe uma Imagem");
+                    }
+                    
                 }
 
-                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
+                
             }
             catch (Exception ex)
             {

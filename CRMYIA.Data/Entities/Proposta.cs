@@ -10,6 +10,7 @@ namespace CRMYIA.Data.Entities
             Documento = new HashSet<Documento>();
             HistoricoLigacao = new HashSet<HistoricoLigacao>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
+            PropostaCliente = new HashSet<PropostaCliente>();
             PropostaFaixaEtaria = new HashSet<PropostaFaixaEtaria>();
             Visita = new HashSet<Visita>();
         }
@@ -24,6 +25,7 @@ namespace CRMYIA.Data.Entities
         public byte? IdStatusProposta { get; set; }
         public byte? IdMotivoDeclinio { get; set; }
         public byte? IdFaseProposta { get; set; }
+        public long? IdBanco { get; set; }
         public DateTime? DataSolicitacao { get; set; }
         public DateTime? ProximoContatoComCliente { get; set; }
         public TimeSpan? HorarioParaLigar { get; set; }
@@ -37,9 +39,12 @@ namespace CRMYIA.Data.Entities
         public string Observacoes { get; set; }
         public string NumeroProposta { get; set; }
         public int? Probabilidade { get; set; }
+        public string Agencia { get; set; }
+        public string ContaCorrente { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
+        public virtual Banco IdBancoNavigation { get; set; }
         public virtual Categoria IdCategoriaNavigation { get; set; }
         public virtual Cliente IdClienteNavigation { get; set; }
         public virtual FaseProposta IdFasePropostaNavigation { get; set; }
@@ -52,6 +57,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<Documento> Documento { get; set; }
         public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
+        public virtual ICollection<PropostaCliente> PropostaCliente { get; set; }
         public virtual ICollection<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual ICollection<Visita> Visita { get; set; }
     }
