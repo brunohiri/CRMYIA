@@ -7,7 +7,7 @@
     <link href="~/css/landingPage.css" rel="stylesheet" />
 }
 @section Scripts {
-    
+
     <script src="~/js/landingPage.js"></script>
 }
 <div id="menu-wrap" class="menu-back cbp-af-header">
@@ -117,7 +117,7 @@
                     @if ((Model != null) && (Model.Mensagem != null))
                     {
                         <div class="@Model.Mensagem.CssClass alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <button type="button" class="close right" data-dismiss="alert" aria-hidden="true">×</button>
                             <i class="@Model.Mensagem.IconClass"></i>
                             @Model.Mensagem.Mensagem
                         </div>}
@@ -145,45 +145,56 @@
                     <label><input type="checkbox" checked id="outrosSeguros"><span class="label">Outros Seguros</span></label>
                 </div>
             </div>
+
+            <div class="d-none">
+                <input type="checkbox" class="custom-control-input" id="switchVoce" asp-for="@Model.Entity.Individual">
+                <input type="checkbox" class="custom-control-input" id="switchFamilia" asp-for="@Model.Entity.Familiar">
+                <input type="checkbox" class="custom-control-input" id="switchEmpresa" asp-for="@Model.Entity.Empresarial">
+                <input type="checkbox" class="custom-control-input" id="switchPlano" asp-for="@Model.Entity.PossuiPlano">
+                <input type="checkbox" class="custom-control-input" id="switchCarro" asp-for="@Model.Entity.PossuiVeiculo">
+                <input type="checkbox" class="custom-control-input" id="switchBuscaCarro" asp-for="@Model.Entity.BuscaVeiculo">
+                <input type="checkbox" class="custom-control-input" id="switchCnpj" asp-for="@Model.Entity.PossuiCNPJ">
+            </div>
+
             <div id="rowTipo" class="row d-none">
                 <div id="divTipo1" class="col-sm-4 selecionado">
-                    <label for="switchVoce">Para você</label>
+                    <label for="CTRLswitchVoce">Para você</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchVoce" checked asp-for="@Model.Entity.Individual">
-                        <label class="custom-control-label" for="switchVoce">Individual</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchVoce" checked>
+                        <label class="custom-control-label" for="CTRLswitchVoce">Individual</label>
                     </div>
                 </div>
                 <div id="divTipo2" class="col-sm-4">
-                    <label for="switchFamilia">Para sua Família</label>
+                    <label for="CTRLswitchFamilia">Para sua Família</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchFamilia" asp-for="@Model.Entity.Familiar">
-                        <label class="custom-control-label" for="switchFamilia">Familiar</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchFamilia">
+                        <label class="custom-control-label" for="CTRLswitchFamilia">Familiar</label>
                     </div>
                 </div>
                 <div id="divTipo3" class="col-sm-4">
                     <div class="form-group">
-                        <label for="switchEmpresa">Para sua Empresa</label>
+                        <label for="CTRLswitchEmpresa">Para sua Empresa</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="switchEmpresa" asp-for="@Model.Entity.Empresarial">
-                            <label class="custom-control-label" for="switchEmpresa">Empresarial</label>
+                            <input type="checkbox" class="custom-control-input" id="CTRLswitchEmpresa">
+                            <label class="custom-control-label" for="CTRLswitchEmpresa">Empresarial</label>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="rowResidencial" class="row d-none">
                 <div id="divResidencialVoce" class="col-sm-6 selecionado">
-                    <label for="switchResidencialVoce">Para você</label>
+                    <label for="CTRLswitchResidencialVoce">Para você</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchResidencialVoce" checked asp-for="@Model.Entity.Individual">
-                        <label class="custom-control-label" for="switchResidencialVoce">Individual</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchResidencialVoce" checked>
+                        <label class="custom-control-label" for="CTRLswitchResidencialVoce">Individual</label>
                     </div>
                 </div>
                 <div id="divResidencialEmpresa" class="col-sm-6">
                     <div class="form-group">
-                        <label for="switchResidencialEmpresa">Para sua Empresa</label>
+                        <label for="CTRLswitchResidencialEmpresa">Para sua Empresa</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                            <input type="checkbox" class="custom-control-input" id="switchResidencialEmpresa" asp-for="@Model.Entity.Empresarial">
-                            <label class="custom-control-label" for="switchResidencialEmpresa">Empresarial</label>
+                            <input type="checkbox" class="custom-control-input" id="CTRLswitchResidencialEmpresa">
+                            <label class="custom-control-label" for="CTRLswitchResidencialEmpresa">Empresarial</label>
                         </div>
                     </div>
                 </div>
@@ -193,17 +204,17 @@
             </div>
             <div id="rowPlano" class="row d-none">
                 <div id="divPlanoSim" class="col-sm-3">
-                    <label for="switchSimPlano">Sim</label>
+                    <label for="CTRLswitchSimPlano">Sim</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchSimPlano" asp-for="@Model.Entity.PossuiPlano">
-                        <label class="custom-control-label" for="switchSimPlano">Sim</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchSimPlano">
+                        <label class="custom-control-label" for="CTRLswitchSimPlano">Sim</label>
                     </div>
                 </div>
                 <div id="divPlanoNao" class="col-sm-3 selecionado">
-                    <label for="switchNaoPlano">Não</label>
+                    <label for="CTRLswitchNaoPlano">Não</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchNaoPlano" checked asp-for="@Model.Entity.PossuiPlano">
-                        <label class="custom-control-label" for="switchNaoPlano">Não</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchNaoPlano" checked>
+                        <label class="custom-control-label" for="CTRLswitchNaoPlano">Não</label>
                     </div>
                 </div>
                 <div class="col-sm-6 ">
@@ -218,17 +229,17 @@
             </div>
             <div id="rowPossuiCarro" class="row d-none">
                 <div id="divPossuiCarroSim" class="col-sm-6">
-                    <label for="switchSimCarro">Sim</label>
+                    <label for="CTRLswitchSimCarro">Sim</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchSimCarro" asp-for="@Model.Entity.PossuiVeiculo">
-                        <label class="custom-control-label" for="switchSimCarro">Sim</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchSimCarro">
+                        <label class="custom-control-label" for="CTRLswitchSimCarro">Sim</label>
                     </div>
                 </div>
                 <div id="divPossuiCarroNao" class="col-sm-6 selecionado">
-                    <label for="switchNaoCarro">Não</label>
+                    <label for="CTRLswitchNaoCarro">Não</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchNaoCarro" checked asp-for="@Model.Entity.PossuiVeiculo">
-                        <label class="custom-control-label" for="switchNaoCarro">Não</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchNaoCarro" checked>
+                        <label class="custom-control-label" for="CTRLswitchNaoCarro">Não</label>
                     </div>
                 </div>
             </div>
@@ -237,17 +248,17 @@
             </div>
             <div id="rowBuscaCarro" class="row d-none">
                 <div id="divBuscaCarroSim" class="col-sm-6">
-                    <label for="switchSimBuscaCarro">Sim</label>
+                    <label for="CTRLswitchSimBuscaCarro">Sim</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchSimBuscaCarro" asp-for="@Model.Entity.BuscaVeiculo">
-                        <label class="custom-control-label" for="switchSimBuscaCarro">Sim</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchSimBuscaCarro">
+                        <label class="custom-control-label" for="CTRLswitchSimBuscaCarro">Sim</label>
                     </div>
                 </div>
                 <div id="divBuscaCarroNao" class="col-sm-6 selecionado">
-                    <label for="switchNaoBuscaCarro">Não</label>
+                    <label for="CTRLswitchNaoBuscaCarro">Não</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchNaoBuscaCarro" checked asp-for="@Model.Entity.BuscaVeiculo">
-                        <label class="custom-control-label" for="switchNaoBuscaCarro">Não</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchNaoBuscaCarro" checked>
+                        <label class="custom-control-label" for="CTRLswitchNaoBuscaCarro">Não</label>
                     </div>
                 </div>
             </div>
@@ -267,17 +278,17 @@
             </div>
             <div id="rowCnpj" class="row d-none">
                 <div id="divCnpjSim" class="col-sm-6">
-                    <label for="switchSimCnpj">Sim</label>
+                    <label for="CTRLswitchSimCnpj">Sim</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchSimCnpj" asp-for="@Model.Entity.PossuiCNPJ">
-                        <label class="custom-control-label" for="switchSimCnpj">Sim</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchSimCnpj">
+                        <label class="custom-control-label" for="CTRLswitchSimCnpj">Sim</label>
                     </div>
                 </div>
                 <div id="divCnpjNao" class="col-sm-6 selecionado">
-                    <label for="switchNaoCnpj">Não</label>
+                    <label for="CTRLswitchNaoCnpj">Não</label>
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                        <input type="checkbox" class="custom-control-input" id="switchNaoCnpj" checked asp-for="@Model.Entity.PossuiCNPJ">
-                        <label class="custom-control-label" for="switchNaoCnpj">Não</label>
+                        <input type="checkbox" class="custom-control-input" id="CTRLswitchNaoCnpj" checked>
+                        <label class="custom-control-label" for="CTRLswitchNaoCnpj">Não</label>
                     </div>
                 </div>
             </div>

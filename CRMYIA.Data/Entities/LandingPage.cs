@@ -17,7 +17,6 @@ namespace CRMYIA.Data.Entities
         public string Email { get; set; }
         public string Telefone { get; set; }
         public string IP { get; set; }
-        public DateTime DataNascimento { get; set; }
         public string Profissao { get; set; }
         public bool PossuiVeiculo { get; set; }
         public bool BuscaVeiculo { get; set; }
