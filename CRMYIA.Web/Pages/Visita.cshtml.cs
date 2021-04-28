@@ -364,23 +364,16 @@ namespace CRMYIA.Web.Pages
 
                 int AnoInicio = DataInicio.Year;
                 int MesInicio = DataInicio.Month;
-                DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
+                //DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
 
                 int AnoFim = DataFim.Year;
                 int MesFim = DataFim.Month;
-                DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
+                //DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
                 //while (i < dtAtual.Month && meses != 24) {
 
                 int j = 0;
                 do
                 {
-                    DataInicio = DataInicio.AddDays(dados.Repetir);
-                    Dia.Add(DataInicio);
-
-                    DataFim = DataFim.AddDays(dados.Repetir);
-                    Dia.Add(DataFim);
-                    Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
-
                     Business.VisitaModel.Add(new Visita()
                     {
                         Descricao = dados.Descricao,
@@ -395,6 +388,17 @@ namespace CRMYIA.Web.Pages
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario
                     });
+
+                    DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
+
+                    DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
+
+                    DataInicio = DataInicio.AddDays(dados.Repetir);
+                    Dia.Add(DataInicio);
+
+                    DataFim = DataFim.AddDays(dados.Repetir);
+                    Dia.Add(DataFim);
+                    Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
 
                     j++;
 
@@ -444,22 +448,22 @@ namespace CRMYIA.Web.Pages
             //}
 
             //Notificação
-            UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
-            if (EntityUsuarioHierarquia != null)
-            {
-                Visita EntityVisita = Business.VisitaModel.GetLastId();
-                Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
-                {
-                    IdUsuarioCadastro = IdUsuario,
-                    IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
-                    Titulo = null,
-                    Descricao = dados.Descricao,
-                    Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
-                    Visualizado = false,
-                    DataCadastro = DateTime.Now,
-                    Ativo = true
-                });
-            }
+            //UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
+            //if (EntityUsuarioHierarquia != null)
+            //{
+            //    Visita EntityVisita = Business.VisitaModel.GetLastId();
+            //    Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+            //    {
+            //        IdUsuarioCadastro = IdUsuario,
+            //        IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+            //        Titulo = null,
+            //        Descricao = dados.Descricao,
+            //        Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
+            //        Visualizado = false,
+            //        DataCadastro = DateTime.Now,
+            //        Ativo = true
+            //    });
+            //}
         }
     }
 

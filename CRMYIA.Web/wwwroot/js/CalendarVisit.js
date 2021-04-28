@@ -856,6 +856,11 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
     var calendar = new Calendar(calendarEl, {
         plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
         defaultView: 'dayGridMonth',
+        views: {
+            timelineFourDays: {
+                type: 'timeline',
+            }
+        },
         locale: 'pt-br',
         selectable: true,
         //eventLimit: true, // permitir link a mais quando muitos eventos
@@ -897,24 +902,9 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                 success: function (data) {
                     var events = [];
                     $.map(data.listVisita, function (r) {
-                        if (r.end != null) {
-                            var s = r.start.split('T');
-                            var e = r.end.split('T');
-                            events.push({
-                                //sourceId: r.sourceId,
-                                title: r.title,
-                                //backgroundColor: r.backgroundColor,
-                                //borderColor: r.borderColor,
-                                start: s[0],
-                                end: e[0],
-                                //allDay: r.allDay,
-                                overlap: false,
-                                rendering: 'background',
-                                color: '#ff9f89'
-                            });
-                        } else {
-                            events.push({
-                                sourceId: r.sourceId,
+                       
+                        events.push({
+                                   sourceId: r.sourceId,
                                 title: r.title,
                                 backgroundColor: r.backgroundColor,
                                 borderColor: r.borderColor,
@@ -923,8 +913,35 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                                 //overlap: false,
                                 //rendering: 'background',
                                 //color: '#ff9f89'
-                            });
-                        }
+                        });
+                        //if (r.end != null) {
+                        //    var s = r.start.split('T');
+                        //    var e = r.end.split('T');
+                        //    events.push({
+                        //        sourceId: r.sourceId,
+                        //        title: r.title,
+                        //        //backgroundColor: r.backgroundColor,
+                        //        //borderColor: r.borderColor,
+                        //        start: s[0],
+                        //        end: e[0],
+                        //        //allDay: r.allDay,
+                        //        overlap: false,
+                        //        rendering: 'background',
+                        //        color: '#ff9f89'
+                        //    });
+                        //} else {
+                        //    events.push({
+                        //        sourceId: r.sourceId,
+                        //        title: r.title,
+                        //        backgroundColor: r.backgroundColor,
+                        //        borderColor: r.borderColor,
+                        //        start: r.start,
+                        //        allDay: r.allDay,
+                        //        //overlap: false,
+                        //        //rendering: 'background',
+                        //        //color: '#ff9f89'
+                        //    });
+                        //}
                     });
                     successCallback(events);
                 }

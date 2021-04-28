@@ -32,7 +32,7 @@
                             {
                                 <tr>
                                     <td></td>
-                                    <td>@Item.Descricao</td>
+                                    <td>@Item.Descricao.ToUpper()</td>
                                     <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.Produto == null ? 0 : Item.Produto.Count())))</td>
                                     <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                     <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>

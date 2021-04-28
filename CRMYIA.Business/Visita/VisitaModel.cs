@@ -123,7 +123,7 @@ namespace CRMYIA.Business
                             .Include(y => y.IdCalendarioSazonalNavigation)
                             .Include(y => y.IdPropostaNavigation)
                             .AsNoTracking()
-                            .Where(x => x.Visivel == (byte)Business.Util.EnumeradorModel.Visualizacao.Todos || (x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true)))
+                            .Where(x => x.Visivel == (byte)Business.Util.EnumeradorModel.Visualizacao.Todos || x.Tipo == 3 || (x.IdUsuario == IdUsuario && (DataInicial.HasValue ? (x.DataAgendamento >= DataInicial.Value) : true) && (DataFinal.HasValue ? (x.DataAgendamento <= DataFinal.Value) : true)))
                             .AsNoTracking()
                             .OrderBy(o => o.DataAgendamento).ToList();
                     }
@@ -311,7 +311,7 @@ namespace CRMYIA.Business
                         }
                         
                     }
-                    else
+                    else if (EntityUsuarioPerfil.IdPerfil == (byte)6)
                     {
                         foreach (var Item in ListEntity)
                         {
@@ -358,22 +358,19 @@ namespace CRMYIA.Business
                                 //   );
                                 //}
                             }
-                            else
+                            else if (Item.Tipo == 3)
                             {
-                                if(Item.DataInicio != null && Item.DataFim != null)
+                                ListEntityViewModel.Add(new VisitaViewModel()
                                 {
-                                    ListEntityViewModel.Add(new VisitaViewModel()
-                                    {
-                                        sourceId = Item.IdVisita,
-                                        backgroundColor = Item.Cor,
-                                        borderColor = Item.Cor,
-                                        start = Item.DataInicio,
-                                        end = Item.DataFim,
-                                        title = Item.Descricao,
-                                        allDay = false
-                                    }
-                                    );
+                                    sourceId = Item.IdVisita,
+                                    backgroundColor = Item.Cor,
+                                    borderColor = Item.Cor,
+                                    start = Item.DataInicio,
+                                    end = Item.DataFim,
+                                    title = Item.Descricao,
+                                    allDay = false
                                 }
+                                );
                             }
 
                             //ListEntityViewModel = ListEntity.Select(x => new VisitaViewModel()

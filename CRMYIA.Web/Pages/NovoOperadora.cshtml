@@ -4,13 +4,16 @@
     ViewData["Title"] = "Nova";
     ViewData["Pagina"] = "Operadora/Seguradora";
 }
+@{var checkedd = ""; }
+@{ int i = 0;}
+@{ int j = 0;}
 
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
     </div>
     <!-- /.card-header -->
-    <form  method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">
@@ -28,6 +31,7 @@
             </div>
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdOperadora">
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.NomeArquivo">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Descrição</label>
@@ -52,21 +56,63 @@
             </div>
             <div class="row">
 
-                <div class="col-sm-6">
-                    <label>Grupo de Corretores</label>
-                    <div class="form-check">
-                        @foreach (var Item in Model.ListGrupoCorretor)
-                        {
+                @*<div class="col-sm-6">
+                        <label>Grupo de Corretores</label>
+                        <div class="form-check">
+                            @foreach (var Item in Model.ListGrupoCorretor)
+                            {
 
-                            <input class="form-check-input" type="checkbox" name="IdGrupoCorretor" value="@Item.IdGrupoCorretor">
-                            <label class="form-check-label" for="IdGrupoCorretor">@(Item.Descricao)</label><br>
-                        }
+                                <input class="form-check-input" type="checkbox" name="IdGrupoCorretor" value="@Item.IdGrupoCorretor">
+                                <label class="form-check-label" for="IdGrupoCorretor">@(Item.Descricao)</label><br>
+                            }
+                        </div>
+                    </div>*@
+
+                @if (Model.ListGrupoCorretorOperadora == null || Model.ListGrupoCorretorOperadora.Count == 0)
+                {
+                    <div class="col-sm-6">
+                        <label>Grupo de Corretores</label>
+                        <div class="form-check">
+                            @foreach (var Item in Model.ListGrupoCorretor)
+                            {
+
+                                <input class="form-check-input" type="checkbox" name="IdGrupoCorretor" value="@Item.IdGrupoCorretor">
+                                <label class="form-check-label" for="IdGrupoCorretor">@(Item.Descricao)</label><br>
+                            }
+
+
+
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="col-sm-6">
+                        <label>Grupo de Corretores</label>
+                        <div class="form-check">
+                            @while (i < Model.ListGrupoCorretor.Count())
+                            {
+                                if (Model.ListGrupoCorretor[i].IdGrupoCorretor == Model.ListGrupoCorretorOperadora[j].IdGrupoCorretor && Model.ListGrupoCorretorOperadora.Count() >= 1)
+                                {
+                                    <input class="form-check-input" type="checkbox" name="IdGrupoCorretor" value="@Model.ListGrupoCorretor[i].IdGrupoCorretor" checked>
+                                    <label class="form-check-label" for="IdGrupoCorretor">@(Model.ListGrupoCorretor[i].Descricao)</label><br>
+                                    if (!(Model.ListGrupoCorretorOperadora.Count() == 1))
+                                        j++;
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="checkbox" name="IdGrupoCorretor" value="@Model.ListGrupoCorretor[i].IdGrupoCorretor">
+                                    <label class="form-check-label" for="IdGrupoCorretor">@(Model.ListGrupoCorretor[i].Descricao)</label><br>
+                                }
+                                i++;
+                            }
+                        </div>
+                    </div>
+                }
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="NomeArquivoBanner">Selecione um arquivo:</label>
+                        <label for="NomeArquivoBanner">Selecione uma Logo Marca:</label>
                         <div class="input-group">
                             <input type="file" id="NomeArquivoBanner" name="NomeArquivoBanner">
                         </div>
