@@ -1,4 +1,8 @@
-﻿//Seguro auto
+﻿$(document).ready(function () {
+    $('#txtTelefone').mask('(00) 0 0000-0000');
+});
+
+//Seguro auto
 $("#seguroAuto").click(function () {
     $("#seguroAuto").prop('checked', true);
 
@@ -24,47 +28,59 @@ $("#seguroAuto").click(function () {
     $("#txtVidas").val("");
 
     $("#divCnpjNao").addClass("selecionado");
-    $("#switchNaoCnpj").prop('checked', true);
+    $("#CTRLswitchNaoCnpj").prop('checked', true);
     $("#divCnpjSim").removeClass("selecionado");
-    $("#switchSimCnpj").prop('checked', false);
+    $("#CTRLswitchSimCnpj").prop('checked', false);
+
+
     $("#rowResidencial").addClass("d-none");
     $("#divResidencialVoce").prop('checked', true);
     $("#divResidencialVoce").addClass("selecionado");
     $("#divResidencialEmpresa").prop('checked', false);
     $("#divResidencialEmpresa").removeClass("selecionado");
+
+
     $("#divPlanoNao").addClass("selecionado");
-    $("#switchNaoPlano").prop('checked', true);
+    $("#CTRLswitchNaoPlano").prop('checked', true);
     $("#divPlanoSim").removeClass("selecionado");
-    $("#switchSimPlano").prop('checked', false);
+    $("#CTRLswitchSimPlano").prop('checked', false);
     
 });
 $("#divPossuiCarroSim").click(function () {
     $("#divPossuiCarroSim").addClass("selecionado");
-    $("#switchSimCarro").prop('checked', true);
+    $("#CTRLswitchSimCarro").prop('checked', true);
 
     $("#divPossuiCarroNao").removeClass("selecionado");
-    $("#switchNaoCarro").prop('checked', false);
+    $("#CTRLswitchNaoCarro").prop('checked', false);
+
+    $("#switchCarro").prop('checked', true);
 });
 $("#divPossuiCarroNao").click(function () {
     $("#divPossuiCarroNao").addClass("selecionado");
-    $("#switchNaoCarro").prop('checked', true);
+    $("#CTRLswitchNaoCarro").prop('checked', true);
 
     $("#divPossuiCarroSim").removeClass("selecionado");
-    $("#switchSimCarro").prop('checked', false);
+    $("#CTRLswitchSimCarro").prop('checked', false);
+
+    $("#switchCarro").prop('checked', false);
 });
 $("#divBuscaCarroSim").click(function () {
     $("#divBuscaCarroSim").addClass("selecionado");
-    $("#switchSimBuscaCarro").prop('checked', true);
+    $("#CTRLswitchSimBuscaCarro").prop('checked', true);
 
     $("#divBuscaCarroNao").removeClass("selecionado");
-    $("#switchNaoBuscaCarro").prop('checked', false);
+    $("#CTRLswitchNaoBuscaCarro").prop('checked', false);
+
+    $("#switchBuscaCarro").prop('checked', true);
 });
 $("#divBuscaCarroNao").click(function () {
     $("#divBuscaCarroNao").addClass("selecionado");
-    $("#switchNaoBuscaCarro").prop('checked', true);
+    $("#CTRLswitchNaoBuscaCarro").prop('checked', true);
 
     $("#divBuscaCarroSim").removeClass("selecionado");
-    $("#switchSimBuscaCarro").prop('checked', false);
+    $("#CTRLswitchSimBuscaCarro").prop('checked', false);
+
+    $("#switchBuscaCarro").prop('checked', false);
 });
 //Seguro auto
 
@@ -110,9 +126,9 @@ $("#planoSaude").click(function () {
     $("#divTipo1").addClass("selecionado");
     $("#divTipo2").removeClass("selecionado");
     $("#divTipo3").removeClass("selecionado");
-    $("#switchVoce").prop('checked', true);
-    $("#switchFamilia").prop('checked', false);
-    $("#switchEmpresa").prop('checked', false);
+    $("#CTRLswitchVoce").prop('checked', true);
+    $("#CTRLswitchFamilia").prop('checked', false);
+    $("#CTRLswitchEmpresa").prop('checked', false);
 
     $("#rowTipo").removeClass("d-none");
     $("#rowPlanoLabel").removeClass("d-none");
@@ -137,13 +153,17 @@ $("#planoSaude").click(function () {
     $("#txtProfissao").val("");
     $("#txtVidas").val("");
 });
-$("#switchVoce").click(function () {
+$("#CTRLswitchVoce").click(function () {
     $("#divTipo1").addClass("selecionado");
+    $("#CTRLswitchVoce").prop('checked', true);
     $("#switchVoce").prop('checked', true);
 
     $("#divTipo2").removeClass("selecionado");
+    $("#CTRLswitchFamilia").prop('checked', false);
     $("#switchFamilia").prop('checked', false);
+
     $("#divTipo3").removeClass("selecionado");
+    $("#CTRLswitchEmpresa").prop('checked', false);
     $("#switchEmpresa").prop('checked', false);
 
     $("#rowCnpjLabel").addClass("d-none");
@@ -152,13 +172,17 @@ $("#switchVoce").click(function () {
     $("#rowPlano").addClass("d-none");
     $("#txtVidas").val("");
 });
-$("#switchFamilia").click(function () {
+$("#CTRLswitchFamilia").click(function () {
     $("#divTipo2").addClass("selecionado");
+    $("CTRLswitchFamilia").prop('checked', true);
     $("switchFamilia").prop('checked', true);
 
     $("#divTipo1").removeClass("selecionado");
+    $("#CTRLswitchVoce").prop('checked', false);
     $("#switchVoce").prop('checked', false);
+
     $("#divTipo3").removeClass("selecionado");
+    $("#CTRLswitchEmpresa").prop('checked', false);
     $("#switchEmpresa").prop('checked', false);
 
     $("#rowCnpjLabel").removeClass("d-none");
@@ -166,13 +190,17 @@ $("#switchFamilia").click(function () {
     $("#rowCnpj").removeClass("d-none");
     $("#rowPlano").removeClass("d-none");
 });
-$("#switchEmpresa").click(function () {
+$("#CTRLswitchEmpresa").click(function () {
     $("#divTipo3").addClass("selecionado");
+    $("#CTRLswitchEmpresa").prop('checked', true);
     $("#switchEmpresa").prop('checked', true);
 
     $("#divTipo1").removeClass("selecionado");
+    $("#CTRLswitchVoce").prop('checked', false);
     $("#switchVoce").prop('checked', false);
+
     $("#divTipo2").removeClass("selecionado");
+    $("#CTRLswitchFamilia").prop('checked', false);
     $("#switchFamilia").prop('checked', false);
 
     $("#rowPlanoLabel").removeClass("d-none");
@@ -182,31 +210,39 @@ $("#switchEmpresa").click(function () {
 });
 $("#divPlanoSim").click(function () {
     $("#divPlanoSim").addClass("selecionado");
-    $("#switchSimPlano").prop('checked', true);
+    $("#CTRLswitchSimPlano").prop('checked', true);
 
     $("#divPlanoNao").removeClass("selecionado");
-    $("#switchNaoPlano").prop('checked', false);
+    $("#CTRLswitchNaoPlano").prop('checked', false);
+
+    $("#switchPlano").prop('checked', true);
 });
 $("#divPlanoNao").click(function () {
     $("#divPlanoNao").addClass("selecionado");
-    $("#switchNaoPlano").prop('checked', true);
+    $("#CTRLswitchNaoPlano").prop('checked', true);
 
     $("#divPlanoSim").removeClass("selecionado");
-    $("#switchSimPlano").prop('checked', false);
+    $("#CTRLswitchSimPlano").prop('checked', false);
+
+    $("#switchPlano").prop('checked', false);
 });
 $("#divCnpjSim").click(function () {
     $("#divCnpjSim").addClass("selecionado");
-    $("#switchSimCnpj").prop('checked', true);
+    $("#CTRLswitchSimCnpj").prop('checked', true);
 
     $("#divCnpjNao").removeClass("selecionado");
-    $("#switchNaoCnpj").prop('checked', false);
+    $("#CTRLswitchNaoCnpj").prop('checked', false);
+
+    $("#switchCnpj").prop('checked', true);
 });
 $("#divCnpjNao").click(function () {
     $("#divCnpjNao").addClass("selecionado");
-    $("#switchNaoCnpj").prop('checked', true);
+    $("#CTRLswitchNaoCnpj").prop('checked', true);
 
     $("#divCnpjSim").removeClass("selecionado");
-    $("#switchSimCnpj").prop('checked', false);
+    $("#CTRLswitchSimCnpj").prop('checked', false);
+
+    $("#switchCnpj").prop('checked', false);
 });
 //Plano saude
 
@@ -220,9 +256,9 @@ $("#seguroResidencial").click(function () {
     $("#outrosSeguros").prop('checked', false);
 
     $("#divResidencialVoce").addClass("selecionado");
-    $("#switchResidencialVoce").prop('checked', true);
+    $("#CTRLswitchResidencialVoce").prop('checked', true);
     $("#divResidencialEmpresa").removeClass("selecionado");
-    $("#switchResidencialEmpresa").prop('checked', false);
+    $("#CTRLswitchResidencialEmpresa").prop('checked', false);
 
     $("#rowResidencial").removeClass("d-none");
 
@@ -238,19 +274,25 @@ $("#seguroResidencial").click(function () {
     $("#rowProfLabel").addClass("d-none");
     $("#rowProf").addClass("d-none");
 });
-$("#switchResidencialVoce").click(function () {
+$("#CTRLswitchResidencialVoce").click(function () {
     $("#divResidencialVoce").addClass("selecionado");
-    $("#switchResidencialVoce").prop('checked', true);
+    $("#CTRLswitchResidencialVoce").prop('checked', true);
 
     $("#divResidencialEmpresa").removeClass("selecionado");
-    $("#switchResidencialEmpresa").prop('checked', false);
+    $("#CTRLswitchResidencialEmpresa").prop('checked', false);
+
+    $("#switchVoce").prop('checked', true);
+    $("#switchEmpresa").prop('checked', false);
 });
-$("#switchResidencialEmpresa").click(function () {
+$("#CTRLswitchResidencialEmpresa").click(function () {
     $("#divResidencialEmpresa").addClass("selecionado");
-    $("#switchResidencialEmpresa").prop('checked', true);
+    $("#CTRLswitchResidencialEmpresa").prop('checked', true);
 
     $("#divResidencialVoce").removeClass("selecionado");
-    $("#switchResidencialVoce").prop('checked', false);
+    $("#CTRLswitchResidencialVoce").prop('checked', false);
+
+    $("#switchEmpresa").prop('checked', true);
+    $("#switchVoce").prop('checked', false);
 });
 //Seguro residencial
 

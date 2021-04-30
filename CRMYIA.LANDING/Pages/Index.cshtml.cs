@@ -60,11 +60,15 @@ namespace CRMYIA.Landing.Pages
 
                 if (Entity.IdLandingPage == 0)
                 {
-                    if (Entity.Nome.Length > 0)
+                    if (Entity.Nome.Length > 0 && Entity.Email.Length > 0 && Entity.Email.Contains("@") && Entity.Telefone.Length > 0)
                     {
                         Entity.DataCadastro = DateTime.Now;
                         Entity.IP = IpCliente;
                         Entity.IdUsuario = idUser;
+                        if (Entity.Profissao == null)
+                            Entity.Profissao = "";
+                        if (Entity.Vidas == null)
+                            Entity.Vidas = 0;
                         LandingPageModel.Add(Entity);
                         Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }

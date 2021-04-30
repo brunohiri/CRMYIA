@@ -28,4 +28,11 @@
     <ProjectReference Include="..\CRMYIA.Business\CRMYIA.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
