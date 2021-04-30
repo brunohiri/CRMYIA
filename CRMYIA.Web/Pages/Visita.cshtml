@@ -200,7 +200,7 @@
 
                     <div class="row">
 
-                        <div class="col-sm-5">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Titulo</label>
                                 <input type="text" class="form-control" name="Descricao" id="Descricao" placeholder="Descrição" autocomplete="off" required>
@@ -214,7 +214,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <label>Tipo</label>
                             <div class="form-group">
                                 <div class="form-check form-check-inline">
@@ -232,7 +232,14 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
+                            <label>Data</label>
+                             <div class="form-group">
+                                <input type="text" class="form-control daterange" style="width: 100% !important;" id="DataInicioFim" name="DataInicioFim" autocomplete="off" required>
+                             </div>
+                        </div>
+
+                        <div class="col-sm-2">
                             <label>Existe Campanha</label>
                             <div class="form-group">
                                 <div class="form-check form-check-inline">
@@ -311,7 +318,7 @@
                         <div class="col-sm-4 BlocoRepetir" style="display: none" data-frequencia="1">
                             <label id="SelecaoRepete">Repete a Cada</label>
                             <div class="form-group">
-                                <input type="number" name="Repetir" id="Repetir" min="1" max="99" value="0">
+                                <input type="number" name="Repetir" id="Repetir" min="1" max="99" value="1">
                             </div>
                         </div>
 
@@ -352,13 +359,13 @@
                                       <div class="form-check form-check-inline">
                                           <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Em" data-radio="Em" value="2" required>
                                           <label class="form-check-label" for="Em">Em</label>
-                                          &nbsp;<input type="date" class="form-control" name="DataEm" id="DataEm" required>
+                                          &nbsp;<input type="date" class="form-control" name="DataTerminaEm" id="DataTerminaEm" required>
                                       </div><br />
-                                <div class="form-check form-check-inline">
+                                @*<div class="form-check form-check-inline">
                                     <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Entre" data-radio="Entre" value="3" required>
                                     <label class="form-check-label" for="DeAte">Entre</label>
                                     &nbsp;<input type="text" class="form-control daterange" style="width: 100% !important;" id="DataInicioFim" name="DataInicioFim" autocomplete="off" required>
-                                </div><br />
+                                </div><br />*@
 
                             </div>
                         </div>

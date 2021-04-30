@@ -304,8 +304,10 @@ namespace CRMYIA.Business
                                 backgroundColor = Item.IdStatusVisitaNavigation.CorHexa,
                                 borderColor = Item.IdStatusVisitaNavigation.CorHexa,
                                 start = Item.DataAgendamento,
+                                end = Item.DataFim,
                                 title = Item.Descricao,
-                                allDay = false
+                                allDay = false,
+                                Tipo = Item.Tipo
                             }
                             );
                         }
@@ -324,8 +326,10 @@ namespace CRMYIA.Business
                                     backgroundColor = Item.IdCalendarioSazonalNavigation.Cor,
                                     borderColor = Item.IdCalendarioSazonalNavigation.Cor,
                                     start = Item.IdCalendarioSazonalNavigation.DataSazonal,
+                                    end = Item.IdCalendarioSazonalNavigation.DataFim,
                                     title = Item.Descricao,
-                                    allDay = false
+                                    allDay = false,
+                                    Tipo = Item.Tipo
                                 }
                                 );
 
@@ -339,7 +343,8 @@ namespace CRMYIA.Business
                                         start = Convert.ToDateTime(Item.IdCalendarioSazonalNavigation.DataInicio?.ToString("yyyy-MM-dd")),
                                         end = Convert.ToDateTime(Item.IdCalendarioSazonalNavigation.DataFim?.ToString("yyyy-MM-dd")),
                                         title = "Período " + Item.IdCalendarioSazonalNavigation.Descricao,
-                                        allDay = false
+                                        allDay = false,
+                                        Tipo = Item.Tipo
                                     }
                                     );
                                 }
@@ -368,7 +373,8 @@ namespace CRMYIA.Business
                                     start = Item.DataInicio,
                                     end = Item.DataFim,
                                     title = Item.Descricao,
-                                    allDay = false
+                                    allDay = false,
+                                    Tipo = Item.Tipo
                                 }
                                 );
                             }

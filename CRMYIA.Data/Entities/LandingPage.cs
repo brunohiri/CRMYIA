@@ -20,9 +20,6 @@ namespace CRMYIA.Data.Entities
         public string Profissao { get; set; }
         public bool PossuiVeiculo { get; set; }
         public bool BuscaVeiculo { get; set; }
-        public bool Casa { get; set; }
-        public bool Condominio { get; set; }
-        public bool Apartamento { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 

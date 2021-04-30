@@ -15,7 +15,7 @@ namespace CRMYIA.Data.ViewModel
         public bool ExisteCampanha { get; set; }
         public DateTime DataAgendamento { get; set; }
         public DateTime DataSazonal { get; set; }
-        public DateTime DataEm { get; set; }
+        public DateTime DataTerminaEm { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
         public string DataInicioFim { get; set; }

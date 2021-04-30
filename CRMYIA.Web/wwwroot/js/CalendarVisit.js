@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿var DataTerminaEm = '';
+$(function () {
 
     /* initialize the external events
      -----------------------------------------------------------------*/
@@ -426,7 +427,7 @@ $(document).ready(function () {
             form_data.append('Repetir', $('#Repetir').val());
 
             form_data.append('DataSazonal', $('#DataSazonal').val());
-            form_data.append('DataEm', $('#DataEm').val());
+            form_data.append('DataTerminaEm', $('#DataTerminaEm').val());
             var DataInicioFim = $('#DataInicioFim').val().split('-')
             form_data.append('DataInicio', DataInicioFim[0]);
             form_data.append('DataFim', DataInicioFim[1]);
@@ -657,6 +658,18 @@ $(document).on('click', '.todos-perfil', function () {
     VisitasPesquisa();
 });
 
+$(document).on('change', '#DataInicioFim', function () {
+
+    //alert($(this).val());
+    var data = $(this).val();
+
+    var dataVet = data.split('-');
+    var dataVet1 = dataVet[1].trim().split(' ');
+    var dataVet2 = dataVet1[0].split('/');//2021-04-06
+    DataTerminaEm = dataVet2[2] + '-' + dataVet2[1] + '-' + dataVet2[0];
+    $('#DataTerminaEm').val(DataTerminaEm);
+});
+
 function BuscarVisita() {
     
     var UrlParametro = window.location.search;
@@ -876,9 +889,32 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
             //alert(startDate.startStr.length + ' ' + startDate.endStr.length);
             $('#StartStr').val(startDate.startStr);
             $('#EndStr').val(startDate.endStr);
+
+            var DataInicioFim = $('#DataInicioFim').val();
+            var DataInicioFimAMPM = DataInicioFim.split('-');
+            var DataInicioFimAM = DataInicioFimAMPM[0].trim().split(' ');
+
+            //var DataInicioFimPM1 = DataInicioFim.split('-');
+            var DataInicioFimPM = DataInicioFimAMPM[1].trim().split(' ');
+
+
+            var StartStr = startDate.startStr.split('-');
+            var EndStr = startDate.endStr.split('-');
+            //2021-04-24
+
+            var hora = Date().split(' ');
+            var horaVet = hora[4].split(':')
+            var horaInicio = horaVet[0] + ':' + '30';
+            var horaFim = (parseInt(horaVet[0]) + 1) + ':' + '30';
+
+            $('#DataInicioFim').val(StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaInicio + ' ' + DataInicioFimAM[2] + ' - ' + StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaFim + ' ' + DataInicioFimPM[2])
+            //"30/04/2021 12:00 AM - 30/04/2021 11:59 PM" 
+
+            $('#DataTerminaEm').val(startDate.startStr);
+
             //var VetStartStr = startDate.startStr.split('-');
             //console.log(VetStartStr[2] + '/' + VetStartStr[1] + '/' + VetStartStr[0])
-            $('#DataEm').val(startDate.startStr);
+            
             $('#FeriadoDataComemorativa').modal('show');
             //$('#DataSazonal').attr("disabled", true);
             $('.help-block').attr('style', 'display: none !important; color: red !important;');
@@ -889,6 +925,13 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
 
             $('#Sim').prop('checked', false);
             $('#Nao').prop('checked', false);
+
+            //if (DataTerminaEm > startDate.startStr) {
+            //    $('#DataTerminaEm').val(DataTerminaEm);
+            //} else {
+            //    $('#DataTerminaEm').val(startDate.startStr);
+            //}
+            
             
         },
         'themeSystem': 'bootstrap',
@@ -902,18 +945,69 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                 success: function (data) {
                     var events = [];
                     $.map(data.listVisita, function (r) {
-                       
-                        events.push({
-                                   sourceId: r.sourceId,
+                        if (r.tipo == 1) {
+                            //Feriado
+                            events.push({
+                                sourceId: r.sourceId,
                                 title: r.title,
                                 backgroundColor: r.backgroundColor,
                                 borderColor: r.borderColor,
                                 start: r.start,
+                                //end: r.end,
                                 allDay: r.allDay,
                                 //overlap: false,
                                 //rendering: 'background',
                                 //color: '#ff9f89'
-                        });
+                            });
+
+                            var s = r.start.split('T');
+                            var e = r.end.split('T');
+                            events.push({
+                                title: r.title,
+                                start: s[0],
+                                end: e[0],
+                                overlap: false,
+                                rendering: 'background'
+                            });
+                        } else if (r.tipo == 2) {
+                            //Data Comemorativa
+                            events.push({
+                                sourceId: r.sourceId,
+                                title: r.title,
+                                backgroundColor: r.backgroundColor,
+                                borderColor: r.borderColor,
+                                start: r.start,
+                                //end: r.end,
+                                allDay: r.allDay,
+                                //overlap: false,
+                                //rendering: 'background',
+                                //color: '#ff9f89'
+                            });
+
+                            var s = r.start.split('T');
+                            var e = r.end.split('T');
+                            events.push({
+                                title: r.title,
+                                start: s[0],
+                                end: e[0],
+                                overlap: false,
+                                rendering: 'background'
+                            });
+                        } else if (r.tipo == 3) {
+                            //Evento
+                            events.push({
+                                sourceId: r.sourceId,
+                                title: r.title,
+                                backgroundColor: r.backgroundColor,
+                                borderColor: r.borderColor,
+                                start: r.start,
+                                end: r.end,
+                                allDay: r.allDay,
+                                //overlap: false,
+                                //rendering: 'background',
+                                //color: '#ff9f89'
+                            });
+                        }
                         //if (r.end != null) {
                         //    var s = r.start.split('T');
                         //    var e = r.end.split('T');
