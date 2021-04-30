@@ -1,4 +1,8 @@
-﻿//Seguro auto
+﻿$(document).ready(function () {
+    $('#txtTelefone').mask('(00) 0 0000-0000');
+});
+
+//Seguro auto
 $("#seguroAuto").click(function () {
     $("#seguroAuto").prop('checked', true);
 
