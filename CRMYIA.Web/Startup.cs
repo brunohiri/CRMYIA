@@ -157,33 +157,34 @@ namespace CRMYIA.Web
             ////Criação do Calendário Sazonal 
             ////Aténcão verificAr qual usuario será adicionado no IdUsuario referente a Classe Visita por padrão sera o IdUsuario => 2720
 
-            ////List<Visita> ListVisita = new List<Visita>();
-            ////int QuantidadeAnos = 2;
-            ////List<CalendarioSazonal> ListCalendarioSazonal1 = Util.CalcularFeriado(DateTime.Now.Year, QuantidadeAnos);
-            ////List<CalendarioSazonal> ListCalendarioSazonal2 = null;
+            //List<Visita> ListVisita = new List<Visita>();
+            //int QuantidadeAnos = 2;
+            //List<CalendarioSazonal> ListCalendarioSazonal1 = Util.CalcularFeriado(DateTime.Now.Year, QuantidadeAnos);
+            //List<CalendarioSazonal> ListCalendarioSazonal2 = null;
 
-            ////Business.CalendarioSazonalModel.AddList(ListCalendarioSazonal1);
+            //Business.CalendarioSazonalModel.AddList(ListCalendarioSazonal1);
 
-            ////ListCalendarioSazonal2 = Business.CalendarioSazonalModel.GetList();
+            //ListCalendarioSazonal2 = Business.CalendarioSazonalModel.GetList();
 
-            ////foreach (CalendarioSazonal Item in ListCalendarioSazonal2)
-            ////{
-            ////    ListVisita.Add(new Visita()
-            ////    {
-            ////        IdStatusVisita = (byte)6,
-            ////        Visivel = (byte)1,
-            ////        Cor = Item.Cor,
-            ////        IdUsuario = 2720,
-            ////        IdCalendarioSazonal = Item.IdCalendarioSazonal,
-            ////        Descricao = Item.Descricao,
-            ////        DataAgendamento = Item.DataSazonal,
-            ////        DataInicio = Item.DataInicio,
-            ////        DataFim = Item.DataFim,
-            ////        DataCadastro = DateTime.Now
-            ////    });
-            ////}
+            //foreach (CalendarioSazonal Item in ListCalendarioSazonal2)
+            //{
+            //    ListVisita.Add(new Visita()
+            //    {
+            //        IdStatusVisita = (byte)6,
+            //        Visivel = (byte)1,
+            //        Tipo = Item.Tipo,
+            //        Cor = Item.Cor,
+            //        IdUsuario = 2720,
+            //        IdCalendarioSazonal = Item.IdCalendarioSazonal,
+            //        Descricao = Item.Descricao,
+            //        DataAgendamento = Item.DataSazonal,
+            //        DataInicio = Item.DataInicio,
+            //        DataFim = Item.DataFim,
+            //        DataCadastro = DateTime.Now
+            //    });
+            //}
 
-            ////Business.VisitaModel.AddList(ListVisita);
+            //Business.VisitaModel.AddList(ListVisita);
         }
     }
 }

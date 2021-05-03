@@ -353,25 +353,48 @@ namespace CRMYIA.Web.Pages
                 Visivel = (byte)EnumeradorModel.Visualizacao.Marketing;
             }
 
-            if(dados.Termina == 1)
+            //#
+
+            DateTime DataInicio = dados.DataInicio;
+            DateTime DataFim = dados.DataFim;
+            int i = 0;
+            List<DateTime> Dia = new List<DateTime>();
+            int meses = 0;
+
+            int AnoInicio = DataInicio.Year;
+            int MesInicio = DataInicio.Month;
+
+            int AnoFim = DataFim.Year;
+            int MesFim = DataFim.Month;
+
+            if (dados.Termina == 1)
             {
-                DateTime DataInicio = dados.DataInicio;
-                DateTime DataFim = dados.DataFim;
-                int i = 0;
-                List<DateTime> Dia = new List<DateTime>();
-                int meses = 0;
+                Business.VisitaModel.Add(new Visita()
+                {
+                    Descricao = dados.Descricao,
+                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                    DataInicio = DataInicio,
+                    DataFim = DataFim,
+                    DataCadastro = DateTime.Now,
+                    Observacao = dados.Observacao,
+                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                    Visivel = Visivel,
+                    Tipo = dados.Tipo,
+                    Cor = dados.Cor,
+                    IdUsuario = IdUsuario
+                });
+            }
 
+            int j = 0;
 
-                int AnoInicio = DataInicio.Year;
-                int MesInicio = DataInicio.Month;
+            //#
+
+            if (dados.Termina == 1)
+            {
                 DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
 
-                int AnoFim = DataFim.Year;
-                int MesFim = DataFim.Month;
                 DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
-                //while (i < dtAtual.Month && meses != 24) {
 
-                int j = 0;
                 do
                 {
                     DataInicio = DataInicio.AddDays(dados.Repetir);
@@ -398,68 +421,46 @@ namespace CRMYIA.Web.Pages
 
                     j++;
 
-                } while (j < ((365 * 2) / dados.Repetir));
-                //    i++;
-                //    meses++;
+                } while (j < ((365 * 8) / dados.Repetir));
 
-                //    mes = mes + 1;
-                //    if(mes > 12)
-                //    {
-                //        mes = 1;
-                //        ano = ano + 1;
-                //    }
-                //    data = new DateTime(ano, mes, DateTime.DaysInMonth(ano, mes));
-                //}
-            }
-
-            //if (dados.DataInicio != null && dados.DataFim != null)
-            //{
-            //    Business.VisitaModel.Add(new Visita()
-            //    {
-            //        Descricao = dados.Descricao,
-            //        DataAgendamento = dados.DataEm,
-            //        DataInicio = dados.DataInicio,
-            //        DataFim = dados.DataFim,
-            //        DataCadastro = DateTime.Now,
-            //        Observacao = dados.Observacao,
-            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-            //        Visivel = Visivel,
-            //        Cor = dados.Cor,
-            //        IdUsuario = IdUsuario
-            //    });
-            //}
-            //else
-            //{
-            //    Business.VisitaModel.Add(new Visita()
-            //    {
-            //        Descricao = dados.Descricao,
-            //        DataAgendamento = dados.DataSazonal,
-            //        DataCadastro = DateTime.Now,
-            //        Observacao = dados.Observacao,
-            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-            //        Visivel = Visivel,
-            //        Cor = dados.Cor,
-            //        IdUsuario = IdUsuario
-            //    });
-            //}
-
-            //Notificação
-            UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
-            if (EntityUsuarioHierarquia != null)
+            }else if (dados.Termina == 2)
             {
-                Visita EntityVisita = Business.VisitaModel.GetLastId();
-                Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
-                {
-                    IdUsuarioCadastro = IdUsuario,
-                    IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
-                    Titulo = null,
-                    Descricao = dados.Descricao,
-                    Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
-                    Visualizado = false,
-                    DataCadastro = DateTime.Now,
-                    Ativo = true
-                });
-            }
+                
+
+                DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
+
+                DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
+                //var a = (DataFim - DataInicio).Days;
+
+                while (DataInicio <= dados.DataTerminaEm){
+                    
+                    Dia.Add(DataInicio);
+
+                    DataFim = DataFim.AddDays(dados.Repetir);
+                    Dia.Add(DataFim);
+                    //Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+
+                    Business.VisitaModel.Add(new Visita()
+                    {
+                        Descricao = dados.Descricao,
+                        DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario
+                    });
+
+                    DataInicio = DataInicio.AddDays(dados.Repetir);
+                    j++;
+
+                }
+            //} while (new DateTime(DataFim.Year, DataFim.Month, DataFim.Day) != new DateTime(dados.DataTerminaEm.Year, dados.DataTerminaEm.Month, dados.DataTerminaEm.Day)) ;
+        }
         }
     }
 

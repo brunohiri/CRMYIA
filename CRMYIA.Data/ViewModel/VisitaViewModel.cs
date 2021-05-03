@@ -13,5 +13,6 @@ namespace CRMYIA.Data.ViewModel
         public string backgroundColor { get; set; }
         public string borderColor { get; set; }
         public bool allDay { get; set; }
+        public byte? Tipo { get; set; }
     }
 }

@@ -1,13 +1,17 @@
-﻿.selecionado {
+﻿@import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
+
+.selecionado {
     background-color: #EE5C25;
     border: 1px solid #ccc !important;
     border-radius: 16px;
     color: aliceblue;
 }
+
 .btn-edited {
     background-color: #EE5C25;
-    color:aliceblue;
+    color: aliceblue;
 }
+
     .btn-edited:hover {
         background-color: #C73B0B;
         color: aliceblue;
@@ -16,14 +20,13 @@
 
 input[type=checkbox] {
     display: none;
-    
 }
 
 .label {
     border: 1px solid #ccc !important;
     border-radius: 5px;
     color: black;
-    font-weight:bold;
+    font-weight: bold;
     display: inline-block;
     padding: 3px;
     height: 50px;
@@ -41,11 +44,122 @@ input[type=checkbox]:checked + .label {
     width: 150px;
     /* background-image: url("checked.png"); */
 }
+
 .tumb-parceiro {
     display: flex;
     align-items: center;
 }
+
 .responsive {
     max-width: 100%;
     height: auto;
 }
+
+
+
+
+.corretor {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    font-family: 'Josefin Sans', sans-serif !important;
+    width: 720px;
+    display: flex;
+    box-shadow: 0 1px 20px 0 rgba(69,90,100,.08);
+    flex-wrap: nowrap;
+}
+
+    .corretor .left {
+        width: 35%;
+        background: linear-gradient(to right,#EE5C25,#ff8d00);
+        padding: 30px 25px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        text-align: center;
+        color: #fff;
+    }
+
+        .corretor .left img {
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .corretor .left h4 {
+            margin-bottom: 10px;
+        }
+
+        .corretor .left p {
+            font-size: 16px;
+        }
+
+    .corretor .right {
+        width: 65%;
+        background: #fff;
+        padding: 30px 25px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+        .corretor .right .info,
+        .corretor .right .projects {
+            margin-bottom: 25px;
+        }
+
+            .corretor .right .info h3,
+            .corretor .right .projects h3 {
+                margin-bottom: 15px;
+                padding-bottom: 5px;
+                font-size: 18px;
+                border-bottom: 1px solid #e0e0e0;
+                color: #353c4e;
+                text-transform: uppercase;
+                letter-spacing: 5px;
+            }
+
+        .corretor .right .info_data,
+        .corretor .right .projects_data {
+            display: flex;
+            justify-content: space-between;
+        }
+
+            .corretor .right .info_data .data,
+            .corretor .right .projects_data .data {
+                width: 45%;
+            }
+
+                .corretor .right .info_data .data h4,
+                .corretor .right .projects_data .data h4 {
+                    color: #353c4e;
+                    margin-bottom: 5px;
+                    font-size:18px;
+                }
+
+                .corretor .right .info_data .data p,
+                .corretor .right .projects_data .data p {
+                    font-size: 18px;
+                    text-align:center;
+                    margin-bottom: 10px;
+                    color: #353c4e;
+                }
+
+    .corretor .social_media ul {
+        display: flex;
+        justify-content: center;
+    }
+
+        .corretor .social_media ul li {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(to right,#EE5C25,#ff8d00);
+            margin-right: 10px;
+            border-radius: 5px;
+            text-align: center; 
+            line-height: 45px;
+        }
+
+            .corretor .social_media ul li a {
+                color: #fff;
+                display: block;
+                font-size: 22px;
+            }

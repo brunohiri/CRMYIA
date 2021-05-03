@@ -266,6 +266,10 @@
         "package.json",
         "README.md"
       ]
+    },
+    {
+      "library": "datetimepicker@0.1.39",
+      "destination": "wwwroot/plugins/datetimepicker/"
     }
   ]
 }
