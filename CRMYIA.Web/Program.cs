@@ -22,7 +22,7 @@ namespace CRMYIA.Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
 #if (!DEBUG)
-                    webBuilder.UseUrls("http://crm.q2bn.com.br:5000");
+                    webBuilder.UseUrls("http://www.yiabroker.com.br:5000");
 #endif
                     webBuilder.UseStartup<Startup>();
                 });
