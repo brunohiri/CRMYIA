@@ -71,6 +71,9 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<Porte> ListPorte { get; set; }
+
+        [BindProperty]
+        public List<Banco> ListBanco { get; set; }
         #endregion
 
         #endregion
@@ -410,6 +413,7 @@ namespace CRMYIA.Web.Pages
             ListMotivoDeclinio = MotivoDeclinioModel.GetListIdDescricao();
             ListFaixaEtaria = FaixaEtariaModel.GetListIdDescricao();
             ListPorte = PorteModel.GetListIdDescricao();
+            ListBanco = BancoModel.GetListIdDescricao();
         }
         public long GetIdUsuario()
         {

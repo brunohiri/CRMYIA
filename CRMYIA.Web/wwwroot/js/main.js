@@ -122,6 +122,7 @@ $(document).ready(function () {
     if (window.location.href.indexOf('NovaProposta') > 0) {
         //Cadastro de Propostas
         CadastroPropostas();
+        CarregarButtonDependentes();
         SalvarHistoricoLigacao();
     }
     if (window.location.href.indexOf('Tarefa') > 0) {
@@ -788,6 +789,25 @@ function CalcularQuantidadeVidas() {
                 qtdSoma += parseInt($('.faixaetaria')[i].value);
         }
         $('#PropostaQuantidadeVidas').val(qtdSoma);
+    });
+}
+
+function CarregarButtonDependentes() {
+    $('div[id*="divDependente"]').hide();
+
+    function ContarDependentes() {
+        var qtd = $('div[id*="divDependente-"]:visible').length;
+        return qtd;
+    }
+
+    $('#ButtonAdicionarDependente').click(function () {
+        console.log('qtd ' + ContarDependentes());
+        var i = ContarDependentes();
+        $('div[id="divDependente-' + (i + 1).toString() + '"]').show();
+    });
+
+    $('#ButtonRemoverDependente').click(function () {
+
     });
 }
 

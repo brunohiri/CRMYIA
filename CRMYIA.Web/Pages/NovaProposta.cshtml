@@ -10,22 +10,22 @@
 
 
 <div class="card card-default">
-    <div class="card-header">
-        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
-    </div>
-    <!-- /.card-header -->
     <form method="post">
+        <div class="card-header">
+            <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+        </div>
+        <!-- /.card-header -->
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
                         @if ((Model != null) && (Model.Mensagem != null))
                         {
-                            <div class="@Model.Mensagem.CssClass alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i class="@Model.Mensagem.IconClass"></i>
-                                @Model.Mensagem.Mensagem
-                            </div>
+                        <div class="@Model.Mensagem.CssClass alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <i class="@Model.Mensagem.IconClass"></i>
+                            @Model.Mensagem.Mensagem
+                        </div>
                         }
                     </div>
                 </div>
@@ -55,19 +55,19 @@
                         <label>Corretor *</label>
                         @if (UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong()) == (byte?)EnumeradorModel.Perfil.Corretor)
                         {
-                            <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
-                            <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />
+                        <input type="hidden" class="form-control" asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor" />
+                        <input type="text" readonly class="form-control" id="PropostaIdUsuarioCorretorNome" value="@Model.ListCorretor.Where(x=>x.IdUsuario == Model.Entity.IdUsuarioCorretor).FirstOrDefault().Nome" />
                         }
                         else
                         {
-                            <select class="form-control select2" style="width: 100%;"
-                                    asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
-                                <option selected="selected">Selecione...</option>
-                                @foreach (var Item in Model.ListCorretor)
+                        <select class="form-control select2" style="width: 100%;"
+                                asp-for="@Model.Entity.IdUsuarioCorretor" id="PropostaIdUsuarioCorretor">
+                            <option selected="selected">Selecione...</option>
+                            @foreach (var Item in Model.ListCorretor)
                                 {
-                                    <option value="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
+                            <option value="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
                                 }
-                            </select>
+                        </select>
                         }
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListModalidade)
                             {
-                                <option value="@Item.IdModalidade">@(Item.Descricao)</option>
+                            <option value="@Item.IdModalidade">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -93,7 +93,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListOperadora)
                             {
-                                <option value="@Item.IdOperadora">@(Item.Descricao)</option>
+                            <option value="@Item.IdOperadora">@(Item.Descricao)</option>
                             }
                         </select>
 
@@ -143,12 +143,17 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListPorte)
                             {
-                                <option value="@Item.IdPorte">@(Item.Descricao)</option>
+                            <option value="@Item.IdPorte">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="card-header">
+            <h3 class="card-title">Titular</h3>
+        </div>
+        <div class="card-body">
             <div class="row">
                 <div class="col-sm-2">
                     <div class="form-group">
@@ -166,7 +171,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>Data Nasc./Abertura</label>
-                        <input type="text" class="form-control" placeholder="Data de Nascimento ou Abertura" readonly id="PropostaClienteDataNascAbertura" />
+                        <input type="text" class="form-control" placeholder="Data Nasc./Abertura" readonly id="PropostaClienteDataNascAbertura" />
                     </div>
                 </div>
                 <div class="col-sm-1">
@@ -208,8 +213,140 @@
                         <input type="text" class="form-control telefone" placeholder="Telefone" id="PropostaClienteTelefone" readonly />
                     </div>
                 </div>
-
             </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Compra Carência?*</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="PropostaCompraCarencia">
+                            <label class="custom-control-label" for="PropostaPossuiPlano">Sim</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Nome Plano Origem</label>
+                        <input type="text" class="form-control" placeholder="Nome Plano Origem" id="PropostaClienteTelefone" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Vigência Contrato</label>
+                        <input type="text" class="form-control" placeholder="Vigência Contrato" id="PropostaClienteTelefone" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Banco</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdBanco" id="PropostaIdBanco">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListBanco)
+                            {
+                            <option value="@Item.IdBanco">@(Item.Nome)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Agência</label>
+                        <input type="text" class="form-control" placeholder="Agência" id="@Model.Entity.Agencia" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Conta Corrente</label>
+                        <input type="text" class="form-control" placeholder="Conta Corrente" id="@Model.Entity.ContaCorrente" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        @{
+                for(int i = 1; i <= 100; i++)
+            {
+            <div id="@("divDependente-" + i)" style="display:none;">
+                <div class="card-header">
+                    <h3 class="card-title">Dependente @i</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>CPF*</label>
+                                <input type="text" class="form-control cpf-cnpj" placeholder="CPF" required id="@("PropostaDocumentoCliente" + i)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="@("PropostaIdClienteHidden" + i)" />
+                                <label>Nome*</label>
+                                <input type="text" class="form-control" placeholder="Nome" readonly id="@("PropostaClienteNome" + i)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Data de Nascimento</label>
+                                <input type="text" class="form-control" placeholder="Data de Nascimento" readonly id="@("PropostaClienteDataNascAbertura" + i)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <div class="form-group">
+                                <label>Situação</label>
+                                <input type="text" class="form-control" placeholder="Situação" readonly id="@("PropostaClienteSituacao" + i)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <div class="form-group" style="margin-top:38px;">
+                                <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))">Ver Cadastro</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Nome da Mãe</label>
+                                <input type="text" class="form-control" placeholder="Nome da Mãe" id="@("PropostaNomeMae" + i)" readonly />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Compra Carência?*</label>
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" id="@("PropostaCompraCarencia" + i)">
+                                    <label class="custom-control-label" for="@("PropostaCompraCarencia" + i)">Sim</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Nome Plano Origem</label>
+                                <input type="text" class="form-control" placeholder="NomePlanoOrigem" id="@("PropostaNomePlanoOrigem" + i)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Vigência Contrato</label>
+                                <input type="text" class="form-control" placeholder="Vigência Contrato" id="@("PropostaVigenciaContrato" + i)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <div class="form-group" style="margin-top:38px;">
+                                <button type="button" class="btn btn-danger" id="@("ButtonRemoverDependente" + i)"><i class="fa fa-minus-circle"></i>  Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    }
+        }
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary" id="ButtonAdicionarDependente"><i class="fa fa-plus-circle"></i>  Adicionar Dependente</button>
+        </div>
+        <div class="card-header">
+            <h3 class="card-title">Dados da Proposta</h3>
+        </div>
+        <div class="card-body">
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -241,7 +378,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListFaseProposta)
                             {
-                                <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
+                            <option value="@Item.IdFaseProposta">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -261,7 +398,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-1">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label>Possui Plano?*</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -270,7 +407,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label>Qual plano?</label>
                         <input type="text" class="form-control" placeholder="Ex: Plano A" asp-for="@Model.Entity.PlanoJaUtilizado" id="PropostaPlanoJaUtilizado">
@@ -297,7 +434,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListStatusProposta)
                             {
-                                <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
+                            <option value="@Item.IdStatusProposta">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -309,7 +446,7 @@
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListMotivoDeclinio)
                             {
-                                <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
+                            <option value="@Item.IdMotivoDeclinio">@(Item.Descricao)</option>
                             }
                         </select>
                     </div>
@@ -361,7 +498,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">                                                                                          
+            <div class="row">
                 <div class="col-sm-5">
                     <br />
                     <div class="row">
@@ -374,25 +511,25 @@
                         {
                             if ((i == 0) || (i % 5 == 0))
                             {
-                                @Html.Raw("<div class=\"row\">")
+                    @Html.Raw("<div class=\"row\">")
                             }
 
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label>@Model.ListFaixaEtaria[i].Descricao</label>
-                                    <input type="text" class="form-control faixaetaria" placeholder="0" name="PropostaFaixaEtariaQuantidade"
-                                           value="@(Model.ListEntityPropostaFaixaEtaria == null || Model.ListEntityPropostaFaixaEtaria.Count() == 0 ? 0 : Model.ListEntityPropostaFaixaEtaria[i].Quantidade)" />
-                                </div>
-                            </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label>@Model.ListFaixaEtaria[i].Descricao</label>
+                            <input type="text" class="form-control faixaetaria" placeholder="0" name="PropostaFaixaEtariaQuantidade"
+                                   value="@(Model.ListEntityPropostaFaixaEtaria == null || Model.ListEntityPropostaFaixaEtaria.Count() == 0 ? 0 : Model.ListEntityPropostaFaixaEtaria[i].Quantidade)" />
+                        </div>
+                    </div>
 
                             if ((i + 1) % 5 == 0)
                             {
-                                @Html.Raw("</div>")
+                    @Html.Raw("</div>")
                             }
                         }
                         if (Model.ListFaixaEtaria.Count() % 5 > 0)
                         {
-                            @Html.Raw("</div>")
+                    @Html.Raw("</div>")
                         }
                     }
                 </div>
@@ -424,40 +561,40 @@
                                                     {
                                                         i++;
                                                         <!-- timeline time label -->
-                                                        <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
-                                                            <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                    <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                </div>
+ <!-- /.timeline-label -->
+ <!-- timeline item -->
+                                                <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                    <i class="fas fa-user bg-green"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
+                                                        <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
+                                                        <div class="timeline-body">
+                                                            @Item.Observacao
                                                         </div>
-                                                        <!-- /.timeline-label -->
-                                                        <!-- timeline item -->
-                                                        <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
-                                                            <i class="fas fa-user bg-green"></i>
-                                                            <div class="timeline-item">
-                                                                <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
-                                                                <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
-                                                                <div class="timeline-body">
-                                                                    @Item.Observacao
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- END timeline item -->
-                                                    }
-                                                    <div>
-                                                        <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus fa-10x"></i></a>
-                                                        
                                                     </div>
+                                                </div>
+ <!-- END timeline item -->
+                                                    }
+                                                <div>
+                                                    <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus fa-10x"></i></a>
+
+                                                </div>
                                                 }
                                                 else
                                                 {
-                                                    <div>
-                                                        <i class="fas fa-clock bg-gray"></i>
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
-                                                            <div class="timeline-body">
-                                                                Nenhum histórico registrado
-                                                            </div>
+                                                <div>
+                                                    <i class="fas fa-clock bg-gray"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fas fa-clock"></i> @DateTime.Now.ToString("HH:mm:ss")</span>
+                                                        <div class="timeline-body">
+                                                            Nenhum histórico registrado
                                                         </div>
-                                                        
                                                     </div>
+
+                                                </div>
                                                 }
 
                                             </div>
@@ -471,43 +608,43 @@
                                                     {
                                                         i++;
                                                         <!-- timeline time label -->
-                                                        <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
-                                                            <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                <div class="time-label @(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                    <span class="bg-blue">@Item.DataCadastro.ToString("dd/MM/yyyy")</span>
+                                                </div>
+ <!-- /.timeline-label -->
+ <!-- timeline item -->
+                                                <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
+                                                    <i class="fas fa-user bg-green"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
+                                                        <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
+                                                        <div class="timeline-body">
+                                                            @Item.Observacao
                                                         </div>
-                                                        <!-- /.timeline-label -->
-                                                        <!-- timeline item -->
-                                                        <div class="@(i > 3 ? "collapse" : string.Empty)" @(i > 3 ? "id=collapseHistorico" : string.Empty)>
-                                                            <i class="fas fa-user bg-green"></i>
-                                                            <div class="timeline-item">
-                                                                <span class="time"><i class="fas fa-clock"></i> @Item.DataCadastro.ToString("HH:mm:ss")</span>
-                                                                <h3 class="timeline-header"><a href="#">@Item.IdUsuarioNavigation.Nome </a> escreveu:</h3>
-                                                                <div class="timeline-body">
-                                                                    @Item.Observacao
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- END timeline item -->
-                                                    }
-                                                    <div>
-                                                        <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
-                                                        <i class="fas fa-clock bg-gray" data-toggle="modal" data-target="#modal-historico"></i>
                                                     </div>
+                                                </div>
+ <!-- END timeline item -->
+                                                    }
+                                                <div>
+                                                    <a data-toggle="collapse" href="#collapseHistorico" role="button" aria-expanded="false" aria-controls="collapseHistorico"><i class="fas fa-plus"></i></a>
+                                                    <i class="fas fa-clock bg-gray" data-toggle="modal" data-target="#modal-historico"></i>
+                                                </div>
                                                 }
                                                 else
                                                 {
-                                                    <div>
-                                                        <i class="fas fa-clock bg-gray" data-toggle="modal" data-target="#modal-historico"></i>
-                                                        <div class="timeline-item">
-                                                            <span class="time">
-                                                                <i class="fas fa-clock"></i>
-                                                                @DateTime.Now.ToString("HH:mm:ss")
-                                                            </span>
-                                                            <div class="timeline-body">
-                                                                Nenhum histórico de ligações registrado
-                                                            </div>
+                                                <div>
+                                                    <i class="fas fa-clock bg-gray" data-toggle="modal" data-target="#modal-historico"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time">
+                                                            <i class="fas fa-clock"></i>
+                                                            @DateTime.Now.ToString("HH:mm:ss")
+                                                        </span>
+                                                        <div class="timeline-body">
+                                                            Nenhum histórico de ligações registrado
                                                         </div>
-
                                                     </div>
+
+                                                </div>
                                                 }
 
                                             </div>

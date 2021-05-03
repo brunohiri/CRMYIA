@@ -20,6 +20,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<AbordagemCategoria> AbordagemCategoria { get; set; }
         public virtual DbSet<ArquivoLead> ArquivoLead { get; set; }
         public virtual DbSet<AssinaturaCartao> AssinaturaCartao { get; set; }
+        public virtual DbSet<Banco> Banco { get; set; }
         public virtual DbSet<Banner> Banner { get; set; }
         public virtual DbSet<CalendarioSazonal> CalendarioSazonal { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
@@ -71,6 +72,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Producao> Producao { get; set; }
         public virtual DbSet<Produto> Produto { get; set; }
         public virtual DbSet<Proposta> Proposta { get; set; }
+        public virtual DbSet<PropostaCliente> PropostaCliente { get; set; }
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual DbSet<RedeSocial> RedeSocial { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
@@ -90,8 +92,20 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
+#if (DEBUG)
+                //optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+                //      builder => builder.EnableRetryOnFailure());
+
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+                      builder => builder.EnableRetryOnFailure());
+#endif
+#if (!DEBUG)
+			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+				builder => builder.EnableRetryOnFailure());       
+
+    //        optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
+				//builder => builder.EnableRetryOnFailure());
+#endif
             }
         }
 
@@ -175,6 +189,21 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.AssinaturaCartao)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_AssinaturaCartao");
+            });
+
+            modelBuilder.Entity<Banco>(entity =>
+            {
+                entity.HasKey(e => e.IdBanco);
+
+                entity.Property(e => e.Codigo)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Nome)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Banner>(entity =>
@@ -1232,8 +1261,6 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
-                entity.Property(e => e.DataNascimento).HasColumnType("datetime");
-
                 entity.Property(e => e.Email)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -1529,6 +1556,14 @@ namespace CRMYIA.Data.Context
                 entity.HasIndex(e => new { e.Ativo, e.IdUsuarioCorretor, e.DataSolicitacao })
                     .HasName("IX_ATIVO_IDUSUARIOCORRETOR_DATASOLICITACAO");
 
+                entity.Property(e => e.Agencia)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContaCorrente)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.DataSolicitacao).HasColumnType("datetime");
@@ -1560,6 +1595,11 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorPrevisto).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.IdBancoNavigation)
+                    .WithMany(p => p.Proposta)
+                    .HasForeignKey(d => d.IdBanco)
+                    .HasConstraintName("Banco_Proposta");
 
                 entity.HasOne(d => d.IdCategoriaNavigation)
                     .WithMany(p => p.Proposta)
@@ -1605,6 +1645,32 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.PropostaIdUsuarioCorretorNavigation)
                     .HasForeignKey(d => d.IdUsuarioCorretor)
                     .HasConstraintName("UsuarioCorretor_Proposta");
+            });
+
+            modelBuilder.Entity<PropostaCliente>(entity =>
+            {
+                entity.HasKey(e => e.IdPropostaCliente);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Nome_do_Plano)
+                    .HasColumnName("Nome do Plano")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VigenciaContrato).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdClienteNavigation)
+                    .WithMany(p => p.PropostaCliente)
+                    .HasForeignKey(d => d.IdCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Cliente_PropostaCliente");
+
+                entity.HasOne(d => d.IdPropostaNavigation)
+                    .WithMany(p => p.PropostaCliente)
+                    .HasForeignKey(d => d.IdProposta)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Proposta_PropostaCliente");
             });
 
             modelBuilder.Entity<PropostaFaixaEtaria>(entity =>
