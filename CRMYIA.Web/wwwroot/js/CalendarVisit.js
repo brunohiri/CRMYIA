@@ -429,10 +429,22 @@ $(document).ready(function () {
             form_data.append('DataSazonal', $('#DataSazonal').val());
             form_data.append('DataTerminaEm', $('#DataTerminaEm').val());
             var DataInicioFim = $('#DataInicioFim').val().split('-')
-            form_data.append('DataInicio', DataInicioFim[0]);
-            form_data.append('DataFim', DataInicioFim[1]);
+            var DataInicio = DataInicioFim[0];
+            var DataFim = DataInicioFim[1];
+            form_data.append('DataInicio', DataInicio.trim());
+            form_data.append('DataFim', DataFim.trim());
             $('#Ativo').is(":checked") == true ? form_data.append("Ativo", 'true') : form_data.append("Ativo", 'false');
             form_data.append('Observacao', $('#Observacao').val());
+
+            if ($('input[type="radio"][name="Frequencia[]"]:checked').val() == 2) {//Semanalmente
+                var semamadia = [];
+                var Semana = $('.Semana');
+                for (var i = 0; i < Semana.length; i++) {
+                    if (Semana[i].value == "true")
+                        semamadia.push(Semana[i].dataset.posicao.toString());
+                }
+                form_data.append('Semana', semamadia);
+            }
 
 
 
@@ -517,19 +529,24 @@ $(document).ready(function () {
                     $('#Frequencia').css('display', 'none');
                     $('.BlocoRepetir').css('display', 'none');
                     $('#Termina').css('display', 'none');
+                    $('#Semana').css('display', 'none');
                     $('input[type="radio"][name="Frequencia[]"]:checked').prop('checked', false); 
                     $('input[type="radio"][name="Termina[]"]:checked').prop('checked', false); 
                     $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
                     $('#formVisita').bootstrapValidator('removeField', 'Repetir');
                     $('#formVisita').bootstrapValidator('removeField', 'Periodo');
                     $('#formVisita').bootstrapValidator('removeField', 'Termina[]');
+                    $('#formVisita').bootstrapValidator('removeField', 'Semana[]');
                 }
             }
 
             var tam = $('input[type="radio"][name="Frequencia[]"]:checked');
-            if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7) {
+            if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 1) {//Diariamente
                 $('.BlocoRepetir').css('display', 'block');
                 $('#Termina').css('display', 'block');
+
+                $('#Semana').css('display', 'none');
+                $('#formVisita').bootstrapValidator('removeField', 'Semana[]');
 
                 $('#formVisita').bootstrapValidator('addField', 'Repetir', {
                     validators: {
@@ -552,7 +569,29 @@ $(document).ready(function () {
                         }
                     }
                 });
-            } 
+            } else if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 2) {//Semanalmente
+                $('.BlocoRepetir').css('display', 'block');
+                $('#Semana').css('display', 'block');
+                $('#Termina').css('display', 'block');
+
+                $('#formVisita').bootstrapValidator('addField', 'Semana[]', {
+                    validators: {
+                        notEmpty: {
+                            message: 'O Campo é um campo obrigatório.'
+                        }
+                    }
+                });
+
+                SelecionarDiaDaSemana();
+
+                $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
+                    validators: {
+                        notEmpty: {
+                            message: 'O Campo é um campo obrigatório.'
+                        }
+                    }
+                });
+            }
             //else {
             //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]'); $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
             //}
@@ -641,7 +680,7 @@ $(document).on('click', 'input[type="radio"][name="Frequencia[]"]:checked', func
     if ($(this).data('radio') == 'Diariamente') {
         $('#SelecaoRepete').html('Repete a Cada Dia');
     }
-    else if ($(this).data('radio') == 'Semanamente') {
+    else if ($(this).data('radio') == 'Semanalmente') {
         $('#SelecaoRepete').html('Repete a Cada Semana');
     }
     else if ($(this).data('radio') == 'Mensalmente') {
@@ -669,6 +708,42 @@ $(document).on('change', '#DataInicioFim', function () {
     DataTerminaEm = dataVet2[2] + '-' + dataVet2[1] + '-' + dataVet2[0];
     $('#DataTerminaEm').val(DataTerminaEm);
 });
+
+$('button[name="Semana"]').click(function () {
+    if ($(this).val() == "false") {
+        $('.' + $(this).data('semana')).removeClass('btn-secondary').addClass('btn-success');
+        $(this).val("true");
+    } else if ($(this).val() == "true"){
+        $('.' + $(this).data('semana')).removeClass('btn-success').addClass('btn-secondary');
+        $(this).val("false");
+    }
+});
+
+function SelecionarDiaDaSemana(){
+    var d = new Date();
+    var weekday = new Array(7);
+    weekday[0] = "Domingo";
+    weekday[1] = "Segunda";
+    weekday[2] = "Terca";
+    weekday[3] = "Quarta";
+    weekday[4] = "Quinta";
+    weekday[5] = "Sexta";
+    weekday[6] = "Sabado";
+
+    var a = $('.Semana');
+    for (var i = 0; i < a.length; i++) {
+        a[i].classList.remove("btn-success");
+        a[i].classList.add("btn-secondary");
+        a[i].value = "false";
+    }
+   
+
+    var n = weekday[d.getDay()];
+
+    $('.' + n).removeClass('btn-secondary');
+    $('.' + n).addClass('btn-success');
+    $('.' + n).val('true');
+}
 
 function BuscarVisita() {
     

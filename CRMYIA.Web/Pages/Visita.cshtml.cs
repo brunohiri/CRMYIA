@@ -94,15 +94,21 @@ namespace CRMYIA.Web.Pages
             List<VisitaViewModel> ListVisita = null;
             CalendarioSazonal EntityCalendarioSazonal = null;
 
+             
+
             //var Data = dados.DataInicioFim.Split('-');
             //DateTime DataInicio = Convert.ToDateTime(Data[0]);
             //DateTime DataFim = Convert.ToDateTime(Data[1]);
 
             long IdUsuario = GetIdUsuario();
 
-            if(dados.Repete == 7 && dados.Frequencia == 1 && dados.Repetir > 0 && (dados.Termina > 0))
+            if(dados.Repete == 7 && dados.Frequencia == 1 && dados.Repetir > 0 && (dados.Termina > 0))//Diariamente
             {
                 PersonalizadoDiariamente(dados);
+            }
+            else if (dados.Repete == 7 && dados.Frequencia == 2 && dados.Repetir > 0 && (dados.Termina > 0))//Semanalmente
+            {
+                PersonalizadoSemanalmente(dados);
             }
 
             //Business.CalendarioSazonalModel.Add(ListCalendarioSazonal1);
@@ -242,7 +248,7 @@ namespace CRMYIA.Web.Pages
 
             //    ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, Util.GetFirstDayOfMonth(DateTime.Now.Month).AddMonths(-3), Util.GetLastDayOfMonth(DateTime.Now.Month).AddMonths(3));
 
-               return new JsonResult(new { status = true, listVisita = ListVisita });
+            return new JsonResult(new { status = true, listVisita = ListVisita });
             //}
         }
         public IActionResult OnGetTodosPerfil()
@@ -325,6 +331,12 @@ namespace CRMYIA.Web.Pages
         private void PersonalizadoDiariamente(EnviarCalendarioSazonalViewModel dados)
         {
             long IdUsuario = GetIdUsuario();
+            Guid GuidId;
+
+            do
+            {
+                GuidId = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidId));      
 
             UsuarioPerfil EntityUsuarioPerfil = PerfilModel.GetIdentificacaoPerfil(IdUsuario);
             byte? Visivel = 0;
@@ -380,6 +392,7 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
+                    GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario
                 });
@@ -415,6 +428,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
+                        GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario
                     });
@@ -451,6 +465,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
+                        GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario
                     });
@@ -461,6 +476,172 @@ namespace CRMYIA.Web.Pages
                 }
             //} while (new DateTime(DataFim.Year, DataFim.Month, DataFim.Day) != new DateTime(dados.DataTerminaEm.Year, dados.DataTerminaEm.Month, dados.DataTerminaEm.Day)) ;
         }
+        }
+    
+        private void PersonalizadoSemanalmente(EnviarCalendarioSazonalViewModel dados)
+        {
+            var Semana = dados.Semana.Split(',');
+
+            long IdUsuario = GetIdUsuario();
+            Guid GuidId;
+
+            do
+            {
+                GuidId = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidId));
+
+            UsuarioPerfil EntityUsuarioPerfil = PerfilModel.GetIdentificacaoPerfil(IdUsuario);
+            byte? Visivel = 0;
+            if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Administrador)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Administrador;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Gerente)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Gerente;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Supervisor)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Supervisor;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Corretor)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Corretor;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Vendedor)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Vendedor;
+            }
+            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Marketing)
+            {
+                Visivel = (byte)EnumeradorModel.Visualizacao.Marketing;
+            }
+
+            //#
+
+            DateTime DataInicio = dados.DataInicio;
+            DateTime DataFim = dados.DataFim;
+            int i = 0;
+            List<DateTime> Dia = new List<DateTime>();
+            int meses = 0;
+
+            int AnoInicio = DataInicio.Year;
+            int MesInicio = DataInicio.Month;
+
+            int AnoFim = DataFim.Year;
+            int MesFim = DataFim.Month;
+
+            //if (dados.Termina == 1)
+            //{
+            //    Business.VisitaModel.Add(new Visita()
+            //    {
+            //        Descricao = dados.Descricao,
+            //        DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+            //        DataInicio = DataInicio,
+            //        DataFim = DataFim,
+            //        DataCadastro = DateTime.Now,
+            //        Observacao = dados.Observacao,
+            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+            //        Visivel = Visivel,
+            //        Tipo = dados.Tipo,
+            //        GuidId = GuidId.ToString(),
+            //        Cor = dados.Cor,
+            //        IdUsuario = IdUsuario
+            //    });
+            //}
+
+            int j = 0;
+
+            //#
+
+            if (dados.Termina == 1)
+            {
+                //DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
+
+                //DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
+
+                do
+                {
+                    var a = DataInicio.DayOfWeek.ToString();
+                    var e = Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString()));
+                    if (Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString())) == true)
+                    {
+                        
+
+                        Business.VisitaModel.Add(new Visita()
+                        {
+                            Descricao = dados.Descricao,
+                            DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                            DataInicio = DataInicio,
+                            DataFim = DataFim,
+                            DataCadastro = DateTime.Now,
+                            Observacao = dados.Observacao,
+                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                            Visivel = Visivel,
+                            Tipo = dados.Tipo,
+                            GuidId = GuidId.ToString(),
+                            Cor = dados.Cor,
+                            IdUsuario = IdUsuario
+                        });;
+
+                        j++;
+                    }
+                    DataInicio = DataInicio.AddDays(1);
+                    Dia.Add(DataInicio);
+
+                    DataFim = DataFim.AddDays(1);
+                    Dia.Add(DataFim);
+                    Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+
+                } while (new DateTime(DateTime.Now.Year + 8, DateTime.Now.Month, DateTime.Now.Day) > new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+
+            }else if (dados.Termina == 2)
+            {
+
+
+                //DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
+
+                //DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
+                //var a = (DataFim - DataInicio).Days;
+
+                
+                    while (DataInicio <= dados.DataTerminaEm)
+                {
+
+
+                    //Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                    var a = DataInicio.DayOfWeek.ToString();
+                    var e = Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString()));
+                    if (Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString())) == true)
+                    {
+                        Business.VisitaModel.Add(new Visita()
+                        {
+                            Descricao = dados.Descricao,
+                            DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                            DataInicio = DataInicio,
+                            DataFim = DataFim,
+                            DataCadastro = DateTime.Now,
+                            Observacao = dados.Observacao,
+                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                            Visivel = Visivel,
+                            Tipo = dados.Tipo,
+                            GuidId = GuidId.ToString(),
+                            Cor = dados.Cor,
+                            IdUsuario = IdUsuario
+                        });
+
+                       
+                    }
+                    Dia.Add(DataInicio);
+
+                    DataFim = DataFim.AddDays(1);
+                    Dia.Add(DataFim);
+
+                    DataInicio = DataInicio.AddDays(1);
+                    j++;
+                }
+                
+            }
         }
     }
 

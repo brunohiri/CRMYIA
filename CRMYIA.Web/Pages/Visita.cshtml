@@ -300,8 +300,8 @@
                                     <label class="form-check-label" for="Diariamente">Diariamente</label>
                                 </div><br />
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Semanamente" data-radio="Semanamente" value="2" required>
-                                    <label class="form-check-label" for="Semanamente">Semanamente</label>
+                                    <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Semanalmente" data-radio="Semanalmente" value="2" required>
+                                    <label class="form-check-label" for="Semanalmente">Semanalmente</label>
                                 </div><br />
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input Tipo" type="radio" name="Frequencia[]" id="Mensalmente" data-radio="Mensalmente" value="3" required>
@@ -349,6 +349,56 @@
                     </div>
 
                     <div class="row" id="Termina" style="display: none">
+
+                        <div class="col-sm-6" id="Semana" style="display: none">
+                            <label>Repetir às/aos</label>
+                            <div class="d-flex justify-content-start">
+                                <div class="m-1">
+                                    <label>Dom</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Domingo btn btn-secondary" name='Semana' value="false" data-semana="Domingo" data-posicao="Sunday">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Seg</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Segunda btn btn-secondary" name='Semana' value="false" data-semana="Segunda" data-posicao="Monday">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Ter</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Terca btn btn-secondary" name='Semana' value="false" data-semana="Terca" data-posicao="Tuesday">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Qua</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Quarta btn btn-secondary" name='Semana' value="false" data-semana="Quarta" data-posicao="Wednesday">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Qui</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Quinta btn btn-secondary" name='Semana' value="false" data-semana="Quinta" data-posicao="Thursday">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Sex</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Sexta btn btn-secondary" name='Semana' value="false" data-semana="Sexta" data-posicao="Friday">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Sab</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Sabado btn btn-secondary" name='Semana' value="false" data-semana="Sabado" data-posicao="Saturday">&nbsp;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div class="col-sm-6">
                             <label id="SelecaoTermina">Termina</label>
                             <div class="form-group">
@@ -356,20 +406,76 @@
                                     <input class="form-check-input Tipo" type="radio" name="Termina[]" id="TerminaNunca" data-radio="TerminaNunca" value="1" required>
                                     <label class="form-check-label" for="TerminaNunca">Nunca</label>
                                 </div><br />
-                                      <div class="form-check form-check-inline">
-                                          <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Em" data-radio="Em" value="2" required>
-                                          <label class="form-check-label" for="Em">Em</label>
-                                          &nbsp;<input type="date" class="form-control" name="DataTerminaEm" id="DataTerminaEm" required>
-                                      </div><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Em" data-radio="Em" value="2" required>
+                                    <label class="form-check-label" for="Em">Em</label>
+                                    &nbsp;<input type="date" class="form-control" name="DataTerminaEm" id="DataTerminaEm" required>
+                                </div><br />
                                 @*<div class="form-check form-check-inline">
-                                    <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Entre" data-radio="Entre" value="3" required>
-                                    <label class="form-check-label" for="DeAte">Entre</label>
-                                    &nbsp;<input type="text" class="form-control daterange" style="width: 100% !important;" id="DataInicioFim" name="DataInicioFim" autocomplete="off" required>
-                                </div><br />*@
+                    <input class="form-check-input Tipo" type="radio" name="Termina[]" id="Entre" data-radio="Entre" value="3" required>
+                    <label class="form-check-label" for="DeAte">Entre</label>
+                    &nbsp;<input type="text" class="form-control daterange" style="width: 100% !important;" id="DataInicioFim" name="DataInicioFim" autocomplete="off" required>
+                </div><br />*@
 
                             </div>
                         </div>
+
+
                     </div>
+
+                    @*<div class="row" id="Semana" style="display: none">
+                        <div class="col-sm-6" id="Semana" style="display: none">
+                            <label>Repetir às/aos</label>
+                            <div class="d-flex justify-content-start">
+                                <div class="m-1">
+                                    <label>Dom</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Domingo btn btn-secondary" name='Semana' value="false" data-semana="Domingo">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Seg</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Segunda btn btn-secondary" name='Semana' value="false" data-semana="Segunda">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Ter</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Terca btn btn-secondary" name='Semana' value="false" data-semana="Terca">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Qua</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Quarta btn btn-secondary" name='Semana' value="false" data-semana="Quarta">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Qui</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Quinta btn btn-secondary" name='Semana' value="false" data-semana="Quinta">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Sex</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Sexta btn btn-secondary" name='Semana' value="false" data-semana="Sexta">&nbsp;</button>
+                                    </div>
+                                </div>
+                                <div class="m-1">
+                                    <label>Sab</label>
+                                    <div class="form-group">
+                                        <button type="button" class="Semana Sabado btn btn-secondary" name='Semana' value="false" data-semana="Sabado">&nbsp;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>*@
 
                     <div class="row">
 
