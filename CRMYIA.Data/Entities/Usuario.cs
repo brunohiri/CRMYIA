@@ -37,6 +37,7 @@ namespace CRMYIA.Data.Entities
         public long? IdCorretora { get; set; }
         public byte? IdClassificacao { get; set; }
         public byte? IdProducao { get; set; }
+        public byte? IdGrupoCorretor { get; set; }
         public string Nome { get; set; }
         public string Documento { get; set; }
         public DateTime? DataNascimentoAbertura { get; set; }
@@ -46,13 +47,16 @@ namespace CRMYIA.Data.Entities
         public string Login { get; set; }
         public string Senha { get; set; }
         public string IP { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public bool Ativo { get; set; }
         public string CaminhoFoto { get; set; }
         public string NomeFoto { get; set; }
         public string Logado { get; set; }
         public string NomeApelido { get; set; }
-        public byte? IdGrupoCorretor { get; set; }
+        public string Facebook { get; set; }
+        public string Twitter { get; set; }
+        public string Instagram { get; set; }
+        public string Linkedin { get; set; }
+        public DateTime DataCadastro { get; set; }
+        public bool Ativo { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }
