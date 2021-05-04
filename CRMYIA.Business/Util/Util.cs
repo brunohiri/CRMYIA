@@ -532,23 +532,126 @@ namespace CRMYIA.Business.Util
             int i = 0;
             int antes = 5;
             int depois = 3;
+
+            #region GuiIds
+            Guid GuidIdCarnaval;
+            Guid GuidIdQuarta;
+            Guid GuidIdSexta;
+            Guid GuidIdPascoa;
+            Guid GuidIdCorpusChristi;
+            Guid GuidIdSetembroAmarelo;
+            Guid GuidIdOutubroRosa;
+            Guid GuidIdNovembroAzul;
+
+            Guid GuidIdConfraternizacao;
+            Guid GuidIdAniversarioSp;
+            Guid GuidIdDiaDaMulher;
+            Guid GuidIdDiaDasMaes;
+            Guid GuidIdDiaDosNamorados;
+            Guid GuidIdDiaDosPais;
+            Guid GuidIdDiaDasCrianca;
+            Guid GuidIdDiaDoCorretorDeSeguro;
+            Guid GuidIdDiaDoSecuritario;
+            Guid GuidIdNatal;
+
+            do
+            {
+                GuidIdCarnaval = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdCarnaval));
+            do
+            {
+                GuidIdQuarta = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdQuarta));
+            do
+            {
+                GuidIdSexta = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdSexta));
+            do
+            {
+                GuidIdPascoa = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdPascoa));
+            do
+            {
+                GuidIdCorpusChristi = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdCorpusChristi));
+            do
+            {
+                GuidIdSetembroAmarelo = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdSetembroAmarelo));
+            do
+            {
+                GuidIdOutubroRosa = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdOutubroRosa));
+            do
+            {
+                GuidIdNovembroAzul = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdNovembroAzul));
+            do
+            {
+                GuidIdConfraternizacao = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdConfraternizacao));
+            do
+            {
+                GuidIdAniversarioSp = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdAniversarioSp));
+            do
+            {
+                GuidIdDiaDaMulher = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDaMulher));
+            do
+            {
+                GuidIdDiaDasMaes = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDasMaes));
+            do
+            {
+                GuidIdDiaDosNamorados = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDosNamorados));
+            do
+            {
+                GuidIdDiaDosPais = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDosPais));
+            do
+            {
+                GuidIdDiaDasCrianca = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDasCrianca));
+            do
+            {
+                GuidIdDiaDoCorretorDeSeguro = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDoCorretorDeSeguro));
+            do
+            {
+                GuidIdDiaDoSecuritario = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdDiaDoSecuritario));
+            do
+            {
+                GuidIdNatal = Guid.NewGuid();
+            } while (Business.VisitaModel.VerificaGuidId(GuidIdNatal));
+            #endregion
+
             List<CalendarioSazonal> ListCalendarioSazonal = new List<CalendarioSazonal>();
             while (i < QuantidadeAnos)
             {
 
                 DateTime dtAtual = Convert.ToDateTime(ano + i + "-01-01 00:00:00.000".ToString());
                 DateTime data = CalcularPascoa(ano + i);
-                
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Carnaval", Cor = "#ff4747", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, DataSazonal = data.AddDays(-47), DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes -47), DataFim = data.AddDays(depois - 47), ExisteCampanha = true, Ativo = true }); 
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Quarta-feira de cinzas", Cor = "#47fff3", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, DataSazonal = data.AddDays(-46), DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes -46), DataFim = data.AddDays(depois - 46), ExisteCampanha = true, Ativo = true });
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Sexta-feira Santa", Cor = "#ff9747", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, DataSazonal = data.AddDays(-2), DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes -2), DataFim = data.AddDays(depois - 2), ExisteCampanha = true, Ativo = true });
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Páscoa", Cor = "#53210D", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, DataSazonal = data, DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes), DataFim = data.AddDays(depois), ExisteCampanha = true, Ativo = true });
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Corpus Christi", Cor = "#9a47ff", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, DataSazonal = data.AddDays(60), DataCadastro = DateTime.Now, DataInicio = data.AddDays(60 - antes), DataFim = data.AddDays(60 + depois), ExisteCampanha = true, Ativo = true });
 
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Confraternização Universal (Ano Novo)", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdConfraternizacao.ToString(), DataSazonal = new DateTime(dtAtual.Year, 1, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 1, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 1, 1).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Aniversário de São Paulo", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdAniversarioSp.ToString(), DataSazonal = new DateTime(dtAtual.Year, 1, 25), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 1, 25).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 1, 25).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Carnaval", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdCarnaval.ToString(), DataSazonal = data.AddDays(-47), DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes -47), DataFim = data.AddDays(depois - 47), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Dia Internacional da Mulher", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdDiaDaMulher.ToString(), DataSazonal = new DateTime(dtAtual.Year, 3, 8), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 3, 8).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 3, 8).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                //ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Quarta-feira de cinzas", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdQuarta.ToString(), DataSazonal = data.AddDays(-46), DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes -46), DataFim = data.AddDays(depois - 46), ExisteCampanha = true, Ativo = true });
+                //ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Sexta-feira Santa", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdSexta.ToString(), DataSazonal = data.AddDays(-2), DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes -2), DataFim = data.AddDays(depois - 2), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Páscoa", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdPascoa.ToString(), DataSazonal = data, DataCadastro = DateTime.Now, DataInicio = data.AddDays(-antes), DataFim = data.AddDays(depois), ExisteCampanha = true, Ativo = true });
+                //ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Corpus Christi", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdCorpusChristi.ToString(), DataSazonal = data.AddDays(60), DataCadastro = DateTime.Now, DataInicio = data.AddDays(60 - antes), DataFim = data.AddDays(60 + depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Dia dos Namorados", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdDiaDosNamorados.ToString(), DataSazonal = new DateTime(dtAtual.Year, 6, 12), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 6, 12).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 6, 12).AddDays(depois), ExisteCampanha = true, Ativo = true });
                 //var mes = new DateTime(dtAtual.Year, 9, DateTime.DaysInMonth(dtAtual.Year, 9));
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Setembro Amarelo", Cor = "#fff047", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, DataSazonal = new DateTime(dtAtual.Year, 9, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 9, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 9, DateTime.DaysInMonth(dtAtual.Year, 9)).AddDays(depois), ExisteCampanha = true, Ativo = true });
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Outubro Rosa", Cor = "#ff47b6", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, DataSazonal = new DateTime(dtAtual.Year, 10, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 10, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 10, DateTime.DaysInMonth(dtAtual.Year, 10)).AddDays(depois), ExisteCampanha = true, Ativo = true });
-                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Novembro Azul", Cor = "#476fff", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, DataSazonal = new DateTime(dtAtual.Year, 11, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 11, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 11, DateTime.DaysInMonth(dtAtual.Year, 11)).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Setembro Amarelo", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdSetembroAmarelo.ToString(), DataSazonal = new DateTime(dtAtual.Year, 9, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 9, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 9, DateTime.DaysInMonth(dtAtual.Year, 9)).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Outubro Rosa", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdOutubroRosa.ToString(), DataSazonal = new DateTime(dtAtual.Year, 10, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 10, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 10, DateTime.DaysInMonth(dtAtual.Year, 10)).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Dia das Crianças", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdDiaDasCrianca.ToString(), DataSazonal = new DateTime(dtAtual.Year, 10, 12), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 10, 12).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 10, 12).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Dia do Corretor de Seguros", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdDiaDoCorretorDeSeguro.ToString(), DataSazonal = new DateTime(dtAtual.Year, 10, 12), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 10, 12).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 10, 12).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Dia do Securitário", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdDiaDoSecuritario.ToString(), DataSazonal = new DateTime(dtAtual.Year, 10, 18), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 10, 18).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 10, 18).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Novembro Azul", Cor = "#E65100", Tipo = (byte)EnumeradorModel.TipoSazonal.DataComemorativa, GuidId = GuidIdNovembroAzul.ToString(), DataSazonal = new DateTime(dtAtual.Year, 11, 1), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 11, 1).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 11, DateTime.DaysInMonth(dtAtual.Year, 11)).AddDays(depois), ExisteCampanha = true, Ativo = true });
+                ListCalendarioSazonal.Add(new CalendarioSazonal() { Descricao = "Natal", Cor = "#1B5E20", Tipo = (byte)EnumeradorModel.TipoSazonal.Feriado, GuidId = GuidIdNatal.ToString(), DataSazonal = new DateTime(dtAtual.Year, 12, 25), DataCadastro = DateTime.Now, DataInicio = new DateTime(dtAtual.Year, 12, 25).AddDays(-antes), DataFim = new DateTime(dtAtual.Year, 12, 25).AddDays(depois), ExisteCampanha = true, Ativo = true });
 
                 i++;
             }

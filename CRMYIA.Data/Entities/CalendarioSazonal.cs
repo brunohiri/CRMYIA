@@ -21,6 +21,7 @@ namespace CRMYIA.Data.Entities
         public bool? ExisteCampanha { get; set; }
         public DateTime? DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
+        public string GuidId { get; set; }
 
         public virtual ICollection<Campanha> Campanha { get; set; }
         public virtual ICollection<Visita> Visita { get; set; }

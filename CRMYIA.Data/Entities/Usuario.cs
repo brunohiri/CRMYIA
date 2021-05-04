@@ -19,6 +19,7 @@ namespace CRMYIA.Data.Entities
             HistoricoProposta = new HashSet<HistoricoProposta>();
             KPIGrupoUsuario = new HashSet<KPIGrupoUsuario>();
             LandingPage = new HashSet<LandingPage>();
+            LandingPageCarrossel = new HashSet<LandingPageCarrossel>();
             NotificacaoIdUsuarioCadastroNavigation = new HashSet<Notificacao>();
             NotificacaoIdUsuarioVisualizarNavigation = new HashSet<Notificacao>();
             NotificacaoMensagemIdUsuarioDeNavigation = new HashSet<NotificacaoMensagem>();
@@ -37,6 +38,7 @@ namespace CRMYIA.Data.Entities
         public long? IdCorretora { get; set; }
         public byte? IdClassificacao { get; set; }
         public byte? IdProducao { get; set; }
+        public byte? IdGrupoCorretor { get; set; }
         public string Nome { get; set; }
         public string Documento { get; set; }
         public DateTime? DataNascimentoAbertura { get; set; }
@@ -46,13 +48,16 @@ namespace CRMYIA.Data.Entities
         public string Login { get; set; }
         public string Senha { get; set; }
         public string IP { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public bool Ativo { get; set; }
         public string CaminhoFoto { get; set; }
         public string NomeFoto { get; set; }
         public string Logado { get; set; }
         public string NomeApelido { get; set; }
-        public byte? IdGrupoCorretor { get; set; }
+        public string Facebook { get; set; }
+        public string Twitter { get; set; }
+        public string Instagram { get; set; }
+        public string Linkedin { get; set; }
+        public DateTime DataCadastro { get; set; }
+        public bool Ativo { get; set; }
 
         public virtual Classificacao IdClassificacaoNavigation { get; set; }
         public virtual Corretora IdCorretoraNavigation { get; set; }
@@ -70,6 +75,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
         public virtual ICollection<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
         public virtual ICollection<LandingPage> LandingPage { get; set; }
+        public virtual ICollection<LandingPageCarrossel> LandingPageCarrossel { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioCadastroNavigation { get; set; }
         public virtual ICollection<Notificacao> NotificacaoIdUsuarioVisualizarNavigation { get; set; }
         public virtual ICollection<NotificacaoMensagem> NotificacaoMensagemIdUsuarioDeNavigation { get; set; }

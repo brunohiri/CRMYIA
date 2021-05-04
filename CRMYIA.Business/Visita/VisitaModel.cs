@@ -443,6 +443,25 @@ namespace CRMYIA.Business
             }
         }
 
+        public static bool VerificaGuidId(Guid GuidId)
+        {
+            List<Visita> EntityVisita = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    EntityVisita = context.Visita
+                        .Where(x => x.GuidId == GuidId.ToString())
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return EntityVisita.Count > 0 ? true: false;
+        }
+
         public static void Add(Visita Entity)
         {
             try
