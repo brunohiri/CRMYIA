@@ -20,6 +20,9 @@ namespace CRMYIA.Landing
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+#if (!DEBUG)
+                    webBuilder.UseUrls("http://www.yiahomebroker.com.br:5000");
+#endif
                     webBuilder.UseStartup<Startup>();
                 });
     }

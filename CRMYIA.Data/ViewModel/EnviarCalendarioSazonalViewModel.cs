@@ -27,5 +27,12 @@ namespace CRMYIA.Data.ViewModel
         public int Frequencia { get; set; }
         public int Termina { get; set; }
         public int Repetir { get; set; }
+        public string Semana { get; set; }
+
+        //Semanalmente
+        public int MesDataColocacao { get; set; }
+        public string MesDiaDaSemana { get; set; }
+        public int MesDia { get; set; }
+        public int SelectMensalmente { get; set; }
     }
 }

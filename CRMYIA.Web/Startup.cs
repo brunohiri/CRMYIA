@@ -173,6 +173,7 @@ namespace CRMYIA.Web
             //        IdStatusVisita = (byte)6,
             //        Visivel = (byte)1,
             //        Tipo = Item.Tipo,
+            //        GuidId = Item.GuidId,
             //        Cor = Item.Cor,
             //        IdUsuario = 2720,
             //        IdCalendarioSazonal = Item.IdCalendarioSazonal,
