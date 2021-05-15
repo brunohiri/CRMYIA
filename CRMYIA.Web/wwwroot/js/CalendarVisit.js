@@ -313,7 +313,6 @@ $(document).ready(function () {
     
     $('#formVisita')
         .bootstrapValidator({
-            message: 'This value is not valid',
             framework: 'bootstrap',
             feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
@@ -339,13 +338,13 @@ $(document).ready(function () {
                         }
                     }
                 },
-                Tipo: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Tipo é um campo obrigatório e não pode estar vazio.'
-                        }
-                    }
-                },
+                //Tipo: {
+                //    validators: {
+                //        notEmpty: {
+                //            message: 'Tipo é um campo obrigatório e não pode estar vazio.'
+                //        }
+                //    }
+                //},
                 DataSazonal: {
                     validators: {
                         notEmpty: {
@@ -353,27 +352,48 @@ $(document).ready(function () {
                         }
                     }
                 },
-                DataInicioFim: {
-                    validators:
-                    {
-                        notEmpty:
-                        {
-                            message: 'Data Início e Data Fim é um campo obrigatório e não pode estar vazio.'
-                        },
-                        //callback:
-                        //{
-                        //    message: 'The password is not valid',
-                        //    callback: function (value, validator, $field) {
-                        //        if (value === '') {
-                        //            return {
-                        //                valid: false,    // or false
-                        //                message: 'Data Início e Data Fim é um campo obrigatório e não pode estar vazio.'
-                        //            };
-                        //        }
-                        //    }
-                        //}
+                DataInicio: {
+                    validators: {
+                        callback: {
+                            message: 'Data Início é maior que Data Fim.',
+                            callback: function (DataInicio, validator) {
+                                var DataFim = $('#DataFim').val();
+                                return DataInicio < DataFim;
+                            }
+                        }
                     }
                 },
+                DataFim: {
+                    validators: {
+                        callback: {
+                            message: 'Data Fim é menor que Data Início.',
+                            callback: function (DataFim, validator) {
+                                var DataInicio = $('#DataInicio').val();
+                                return DataFim > DataInicio;
+                            }
+                        }
+                    }
+                },
+                //DataInicio: {
+                //    validators: {
+                //        notEmpty: {
+                //            message: 'Data Início é um campo obrigatório e não pode estar vazio.'
+                //        },
+                //        date: {
+                //            format: 'DD/MM/YYYY h:m'
+                //        }
+                //    }
+                //},
+                //DataFim: {
+                //    validators: {
+                //        notEmpty: {
+                //            message: 'Data Início é um campo obrigatório e não pode estar vazio.'
+                //        },
+                //        date: {
+                //            format: 'DD/MM/YYYY h:m'
+                //        }
+                //    }
+                //},
                 Ativo: {
                     validators: {
                         notEmpty: {
@@ -400,21 +420,27 @@ $(document).ready(function () {
 
             //Verificacao de Repetição
             if ($('input[type="radio"][name="Tipo[]"]:checked').length > 0) {
-                form_data.append('Tipo', $('input[type="radio"][name="Tipo[]"]:checked').val())
+                form_data.append('Tipo', $('input[type="radio"][name="Tipo[]"]:checked').val());
             }
 
             if ($('input[type="radio"][name="Repete[]"]:checked').length > 0) {
-                form_data.append('Repete', $('input[type="radio"][name="Repete[]"]:checked').val())
+                form_data.append('Repete', $('input[type="radio"][name="Repete[]"]:checked').val());
             }
 
             if ($('input[type="radio"][name="Frequencia[]"]:checked').length > 0) {
-                form_data.append('Frequencia', $('input[type="radio"][name="Frequencia[]"]:checked').val())
+                form_data.append('Frequencia', $('input[type="radio"][name="Frequencia[]"]:checked').val());
             }
 
             if ($('input[type="radio"][name="Termina[]"]:checked').length > 0) {
-                form_data.append('Termina', $('input[type="radio"][name="Termina[]"]:checked').val())
+                form_data.append('Termina', $('input[type="radio"][name="Termina[]"]:checked').val());
             }
 
+            if ($('input[type="radio"][name="Frequencia[]"]:checked').val() == 3) {
+                form_data.append('MesDataColocacao', $('#MesDataColocacao').val());
+                form_data.append('MesDiaDaSemana', $('#DiaDaSemanaOriginal').val());
+                form_data.append('MesDia', $('#MesDia').val());
+                form_data.append('SelectMensalmente', $('#SelectMensalmente').val());
+            }
 
 
             form_data.append('IdVisita', $('#IdVisita').val());
@@ -428,11 +454,13 @@ $(document).ready(function () {
 
             form_data.append('DataSazonal', $('#DataSazonal').val());
             form_data.append('DataTerminaEm', $('#DataTerminaEm').val());
-            var DataInicioFim = $('#DataInicioFim').val().split('-')
-            var DataInicio = DataInicioFim[0];
-            var DataFim = DataInicioFim[1];
-            form_data.append('DataInicio', DataInicio.trim());
-            form_data.append('DataFim', DataFim.trim());
+
+            //var DataInicioFim = $('#DataInicioFim').val().split('-')
+            //var DataInicio = DataInicioFim[0];
+            //var DataFim = DataInicioFim[1];
+            form_data.append('DataInicio', $('#DataInicio').val());
+            form_data.append('DataFim', $('#DataFim').val());
+
             $('#Ativo').is(":checked") == true ? form_data.append("Ativo", 'true') : form_data.append("Ativo", 'false');
             form_data.append('Observacao', $('#Observacao').val());
 
@@ -475,153 +503,14 @@ $(document).ready(function () {
                     swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
                 }
             });
+            $form
+                .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
+                .bootstrapValidator('resetForm', true);             // Reset the form
         })
         .find('.Tipo')
         .on('change', function () {
-            //input[type="radio"][name="Repete[]"]
-            //var topic = $(this).val(),
-            //    $container = $('[data-repete="' + topic + '"]');
-            //$container.toggle();
-
-            //var display = $container.css('display');
-            //alert($(this).data('radio'))
-
-            var topic = $(this).val();
-
-            //Tipo
-            if ($(this).data('radio') == 'Tipo') {
-                
-                   var $container = $('[data-tipo="' + topic + '"]');
-                $container.toggle();
-
-                var display = $container.css('display');
-                if (3 == topic && 'block' == display) {
-                    $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
-                        validators: {
-                            notEmpty: {
-                                message: 'O Campo Frequência é um campo obrigatório.'
-                            }
-                        }
-                    });
-                }
-                else if (1 == topic || 2 == topic) {
-                    $('#Frequencia').css('display', 'none');
-                    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-                }
-            }//
-
-            //Repete
-            if ($(this).data('radio') == 'Repete') {
-                var $container = $('[data-repete="' + topic + '"]');
-                $container.toggle();
-
-                var display = $container.css('display');
-                if (7 == topic && 'block' == display) {
-                    $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
-                        validators: {
-                            notEmpty: {
-                                message: 'O Campo Frequência é um campo obrigatório.'
-                            }
-                        }
-                    });
-                }
-                else if (1 == topic || 2 == topic || 3 == topic || 4 == topic || 5 == topic || 6 == topic) {
-                    $('#Frequencia').css('display', 'none');
-                    $('.BlocoRepetir').css('display', 'none');
-                    $('#Termina').css('display', 'none');
-                    $('#Semana').css('display', 'none');
-                    $('input[type="radio"][name="Frequencia[]"]:checked').prop('checked', false); 
-                    $('input[type="radio"][name="Termina[]"]:checked').prop('checked', false); 
-                    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-                    $('#formVisita').bootstrapValidator('removeField', 'Repetir');
-                    $('#formVisita').bootstrapValidator('removeField', 'Periodo');
-                    $('#formVisita').bootstrapValidator('removeField', 'Termina[]');
-                    $('#formVisita').bootstrapValidator('removeField', 'Semana[]');
-                }
-            }
-
-            var tam = $('input[type="radio"][name="Frequencia[]"]:checked');
-            if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 1) {//Diariamente
-                $('.BlocoRepetir').css('display', 'block');
-                $('#Termina').css('display', 'block');
-
-                $('#Semana').css('display', 'none');
-                $('#formVisita').bootstrapValidator('removeField', 'Semana[]');
-
-                $('#formVisita').bootstrapValidator('addField', 'Repetir', {
-                    validators: {
-                        notEmpty: {
-                            message: 'O Campo Repete a Cada é um campo obrigatório.'
-                        }
-                    }
-                });
-                $('#formVisita').bootstrapValidator('addField', 'Periodo', {
-                    validators: {
-                        notEmpty: {
-                            message: 'O Campo é um campo obrigatório.'
-                        }
-                    }
-                });
-                $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
-                    validators: {
-                        notEmpty: {
-                            message: 'O Campo é um campo obrigatório.'
-                        }
-                    }
-                });
-            } else if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 2) {//Semanalmente
-                $('.BlocoRepetir').css('display', 'block');
-                $('#Semana').css('display', 'block');
-                $('#Termina').css('display', 'block');
-
-                $('#formVisita').bootstrapValidator('addField', 'Semana[]', {
-                    validators: {
-                        notEmpty: {
-                            message: 'O Campo é um campo obrigatório.'
-                        }
-                    }
-                });
-
-                SelecionarDiaDaSemana();
-
-                $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
-                    validators: {
-                        notEmpty: {
-                            message: 'O Campo é um campo obrigatório.'
-                        }
-                    }
-                });
-            }
-            //else {
-            //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]'); $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-            //}
-
-            //switch (true) {
-            //    case (7 == topic && 'block' == display):
-            //        $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
-            //            validators: {
-            //                notEmpty: {
-            //                    message: 'Please choose at least 1 framework'
-            //                }
-            //            }
-            //        });
-            //        break;
-            //    case (7 == topic && 'none' == display):
-            //        $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-            //        break;
-            //case ('javascript' == topic && 'block' == display):
-            //    $('#interviewForm').bootstrapValidator('addField', 'js_frameworks[]', {
-            //        validators: {
-            //            notEmpty: {
-            //                message: 'The name of framework is required'
-            //            }
-            //        }
-            //    });
-            //    break;
-            //case ('javascript' == topic && 'none' == display):
-            //    $('#interviewForm').bootstrapValidator('removeField', 'js_frameworks[]');
-            //    break;
-            //}
+            var $this = this;
+            AdicionarValidacao($this);
         });
 
      $(document).on('click', '.select2-results__option', function () {
@@ -629,6 +518,11 @@ $(document).ready(function () {
     });
 
 });
+
+$('#FeriadoDataComemorativas').on('hidden.bs.modal', function () {
+    alert('foi')
+});
+
 
 $('.select2').on('change', function () {
     //var data = $(".select2 option:selected").text();
@@ -737,12 +631,103 @@ function SelecionarDiaDaSemana(){
         a[i].value = "false";
     }
    
-
+    //Dia da Semana
     var n = weekday[d.getDay()];
 
     $('.' + n).removeClass('btn-secondary');
     $('.' + n).addClass('btn-success');
     $('.' + n).val('true');
+}
+
+function GerarSelectOption() {
+
+    formData = new FormData();
+    formData.append('DataInicio', $('#StartStr').val());
+
+    ObterDataColocacaoDiaDaSemana($('#StartStr').val());
+}
+
+async function ObterDataColocacaoDiaDaSemana(Data) {
+    $('#DataTerminaEm').val(Data);
+    formData = new FormData();
+    formData.append('DataInicio', Data);
+    $.ajax({
+        type: 'POST',
+        url: "/Visita?handler=DataColocacao",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (data) {
+            if (data.status) {
+                ////Dia em numero
+                //var dia = Date().split(' ');
+
+                ////Dia da Semana
+                //var d = new Date();
+                //var weekday = new Array(7);
+                //weekday[0] = "Domingo";
+                //weekday[1] = "Segunda";
+                //weekday[2] = "Terca";
+                //weekday[3] = "Quarta";
+                //weekday[4] = "Quinta";
+                //weekday[5] = "Sexta";
+                //weekday[6] = "Sabado";
+
+                //var n = weekday[d.getDay()];
+                //$('#MesDia').val(dia[2]);
+                var DiaDaSemana = "";
+                if ("Sunday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "no " + data.mesDataColocacao + "&ordm;" + " domingo";
+                } else if ("Monday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "na " + data.mesDataColocacao + "&ordf;" + " segunda";
+                }
+                else if ("Tuesday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "na " + data.mesDataColocacao + "&ordf;" + " terça";
+                }
+                else if ("Wednesday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "na " + data.mesDataColocacao + "&ordf;" + " quarta";
+                }
+                else if ("Thursday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "na " + data.mesDataColocacao + "&ordf;" + " quinta";
+                }
+                else if ("Friday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "na " + data.mesDataColocacao + "&ordf;" + " sexta";
+                }
+                else if ("Saturday" == data.mesDiaDaSemana) {
+                    DiaDaSemana = "no " + data.mesDataColocacao + "&ordm;" + " sabado";
+                }
+
+                var html = '';
+                $('#Mes').html(html);
+                html += '<div class="col-sm-6">\
+                <label>Mensalmente</label>\
+                <div class="form-group">\
+                    <select class="form-control" id="SelectMensalmente">';
+                html += '<option value=1>Mensalmente no dia ' + data.dia + '</option>';
+                html += '<option value=2>Mensalmente ' + DiaDaSemana + '</option>';
+
+                html += '</select>\
+                </div>\
+                </div >';
+                $('#DiaDaSemanaOriginal').val(data.mesDiaDaSemana);
+                $('#MesDataColocacao').val(data.mesDataColocacao);
+                $('#MesDia').val(data.dia);
+
+                $('#Mes').html(html);
+
+                //$('#MesDataColocacao').val(data.mesDataColocacao);
+                //$('#DiaDaSemana').val(data.mesDiaDaSemana);
+            }
+        },
+        error: function () {
+            swal("Erro!", "Erro ao excluir o registro, contate o Administrador do Sistema.", "error");
+        }
+    });
 }
 
 function BuscarVisita() {
@@ -944,6 +929,8 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
     var calendar = new Calendar(calendarEl, {
         plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
         defaultView: 'dayGridMonth',
+        //timeZone: 'UTC',
+        eventLimit: true, // allow "more" link when too many events
         views: {
             timelineFourDays: {
                 type: 'timeline',
@@ -962,34 +949,111 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
         },
         select: function (startDate, endDate) {
             //alert(startDate.startStr.length + ' ' + startDate.endStr.length);
+
+            $('#formVisita')
+                .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
+                .bootstrapValidator('resetForm', true);             // Reset the form
+
+            
+            $('#Ativo').prop('checked', true);
+            $('#Repetir').val('1');
+
+            //startDate.start
             $('#StartStr').val(startDate.startStr);
             $('#EndStr').val(startDate.endStr);
 
-            var DataInicioFim = $('#DataInicioFim').val();
-            var DataInicioFimAMPM = DataInicioFim.split('-');
-            var DataInicioFimAM = DataInicioFimAMPM[0].trim().split(' ');
-
-            //var DataInicioFimPM1 = DataInicioFim.split('-');
-            var DataInicioFimPM = DataInicioFimAMPM[1].trim().split(' ');
-
-
             var StartStr = startDate.startStr.split('-');
-            var EndStr = startDate.endStr.split('-');
-            //2021-04-24
+            var Hora;
+            var Minutos;
 
-            var hora = Date().split(' ');
-            var horaVet = hora[4].split(':')
-            var horaInicio = horaVet[0] + ':' + '30';
-            var horaFim = (parseInt(horaVet[0]) + 1) + ':' + '30';
+            /*if (AnoBissexto(StartStr[0])) {*/
+            var DataInicio = new Date();
+                Hora = DataInicio.getHours();
+                Minutos = DataInicio.getMinutes();
+                DataInicio = startDate.start;
+                DataInicio.setHours(Hora);
+                DataInicio.setMinutes(Minutos);
+                DataInicio.setSeconds(00);
 
-            $('#DataInicioFim').val(StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaInicio + ' ' + DataInicioFimAM[2] + ' - ' + StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaFim + ' ' + DataInicioFimPM[2])
-            //"30/04/2021 12:00 AM - 30/04/2021 11:59 PM" 
+                DataInicio.setMinutes(DataInicio.getMinutes() - DataInicio.getTimezoneOffset());
+                document.getElementById('DataInicio').value = DataInicio.toISOString().slice(0, 16);
+
+            var DataFim = new Date();
+                Hora = DataFim.getHours();
+                Minutos = DataFim.getMinutes();
+                DataFim = startDate.start;
+                DataFim.setHours(Hora);
+                DataFim.setMinutes(Minutos);
+                DataFim.setSeconds(00);
+                DataFim.setDate(DataInicio.getDate());
+
+                DataFim.setMinutes(DataFim.getMinutes() - DataFim.getTimezoneOffset()); DataFim.setMinutes(DataFim.getMinutes() + 30);
+            document.getElementById('DataFim').value = DataFim.toISOString().slice(0, 16);
+
+
+            var DataTerminaEm = new Date();
+            Hora = DataTerminaEm.getHours();
+            Minutos = DataTerminaEm.getMinutes();
+            DataTerminaEm = startDate.start;
+            DataTerminaEm.setHours(Hora);
+            DataTerminaEm.setMinutes(Minutos);
+            DataTerminaEm.setSeconds(00);
+
+            DataTerminaEm.setMinutes(DataTerminaEm.getMinutes() - DataTerminaEm.getTimezoneOffset());
+            document.getElementById('DataTerminaEm').value = DataTerminaEm.toISOString().slice(0, 16);
+
+
+            //} else {
+            //    var DataInicio = new Date();
+            //    DataInicio.setDate(StartStr[2]);
+            //    DataInicio.setMonth(parseInt(StartStr[1]) - 1);
+            //    DataInicio.setYear(StartStr[0]);
+            //    DataInicio.setMinutes(DataInicio.getMinutes() - DataInicio.getTimezoneOffset());
+            //    document.getElementById('DataInicio').value = DataInicio.toISOString().slice(0, 16);
+
+            //    var DataFim = new Date();
+            //    DataFim.setDate(StartStr[2])
+            //    DataFim.setMonth(parseInt(StartStr[1]) - 1);
+            //    DataFim.setYear(StartStr[0]);
+            //    DataFim.setMinutes(DataFim.getMinutes() - DataFim.getTimezoneOffset()); DataFim.setMinutes(DataFim.getMinutes() + 30);
+            //    document.getElementById('DataFim').value = DataFim.toISOString().slice(0, 16);
+            //}
+
+            //var DataInicioFim = $('#DataInicioFim').val();
+            //var DataInicioFimAMPM = DataInicioFim.split('-');
+            //var DataInicioFimAM = DataInicioFimAMPM[0].trim().split(' ');
+
+            ////var DataInicioFimPM1 = DataInicioFim.split('-');
+            //var DataInicioFimPM = DataInicioFimAMPM[1].trim().split(' ');
+
+
+            //var StartStr = startDate.startStr.split('-');
+            //var EndStr = startDate.endStr.split('-');
+            ////2021-04-24
+
+            //var hora = Date().split(' ');
+            //var horaVet = hora[4].split(':')
+            //var horaInicio = horaVet[0] + ':' + '30';
+            //var horaFim = (parseInt(horaVet[0]) + 1) + ':' + '30';
+
+            //$('#DataInicioFim').val(StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaInicio + ' ' + DataInicioFimAM[2] + ' - ' + StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaFim + ' ' + DataInicioFimPM[2])
+            ////"30/04/2021 12:00 AM - 30/04/2021 11:59 PM" 
 
             $('#DataTerminaEm').val(startDate.startStr);
 
             //var VetStartStr = startDate.startStr.split('-');
             //console.log(VetStartStr[2] + '/' + VetStartStr[1] + '/' + VetStartStr[0])
-            
+
+            ObterDataColocacaoDiaDaSemana(startDate.startStr);
+
+            $('#formVisita').bootstrapValidator('addField', 'Tipo[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Tipo é um campo obrigatório.'
+                    }
+                }
+            });
+
             $('#FeriadoDataComemorativa').modal('show');
             //$('#DataSazonal').attr("disabled", true);
             $('.help-block').attr('style', 'display: none !important; color: red !important;');
@@ -1013,10 +1077,15 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
         //Random default events
         events: function (info, successCallback, failureCallback) {
             $.ajax({
-                url: '/Visita?handler=Visitas',
+                type: "POST",
+                url: '/Visita?handler=ObterVisitas',
+                data: { Inicio: info.startStr, Fim: info.endStr},
                 cache: false,
                 async: false,
-                type: "GET",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
                 success: function (data) {
                     var events = [];
                     $.map(data.listVisita, function (r) {
@@ -1162,7 +1231,7 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                     //});
             });
         },
-        editable: true,
+        editable: false,
         droppable: true, // this allows things to be dropped onto the calendar !!!
         drop: function (info) {
             // is the "remove after drop" checkbox checked?
@@ -1254,6 +1323,239 @@ function CarregarCalendarPesquisa(Calendar, calendarEl, Event) {
 
     calendar.render();
     // $('#calendar').fullCalendar()
+}
+
+function AdicionarValidacao($this) {
+    //input[type="radio"][name="Repete[]"]
+    //var topic = $(this).val(),
+    //    $container = $('[data-repete="' + topic + '"]');
+    //$container.toggle();
+
+    //var display = $container.css('display');
+    //alert($(this).data('radio'))
+
+    var topic = $($this).val();
+
+    //Tipo
+    if ($($this).data('radio') == 'Tipo') {
+
+        var $container = $('[data-tipo="' + topic + '"]');
+        $container.toggle();
+
+        var display = $container.css('display');
+        if (3 == topic && 'block' == display) {
+            $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'O Campo Frequência é um campo obrigatório.'
+                    }
+                }
+            });
+        }
+        //else if (1 == topic || 2 == topic) {
+        //    $('#Frequencia').css('display', 'none');
+        //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+        //}
+    }//
+
+    //Repete
+    if ($($this).data('radio') == 'Repete') {
+        var $container = $('[data-repete="' + topic + '"]');
+        $container.toggle();
+
+        var display = $container.css('display');
+        if (7 == topic && 'block' == display) {
+            $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'O Campo Frequência é um campo obrigatório.'
+                    }
+                }
+            });
+        }
+        else if (1 == topic || 2 == topic || 3 == topic || 4 == topic || 5 == topic || 6 == topic) {
+            $('#Frequencia').css('display', 'none');
+            $('.BlocoRepetir').css('display', 'none');
+            $('#Termina').css('display', 'none');
+            $('#Semana').css('display', 'none');
+            $('input[type="radio"][name="Frequencia[]"]:checked').prop('checked', false);
+            $('input[type="radio"][name="Termina[]"]:checked').prop('checked', false);
+            $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+            $('#formVisita').bootstrapValidator('removeField', 'Repetir');
+            $('#formVisita').bootstrapValidator('removeField', 'Periodo');
+            $('#formVisita').bootstrapValidator('removeField', 'Termina[]');
+            $('#formVisita').bootstrapValidator('removeField', 'Semana[]');
+        }
+    }
+
+    var tam = $('input[type="radio"][name="Frequencia[]"]:checked');
+    if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 1) {//Diariamente
+        $('.BlocoRepetir').css('display', 'block');
+        $('#Termina').css('display', 'block');
+
+        $('#Semana').css('display', 'none');
+        $('#Mes').css('display', 'none');
+        $('#formVisita').bootstrapValidator('removeField', 'Semana[]');
+
+        $('#formVisita').bootstrapValidator('addField', 'Repetir', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo Repete a Cada é um campo obrigatório.'
+                }
+            }
+        });
+        $('#formVisita').bootstrapValidator('addField', 'Periodo', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+        $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+    } else if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 2) {//Semanalmente
+        $('.BlocoRepetir').css('display', 'block');
+        $('#Semana').css('display', 'block');
+        $('#Termina').css('display', 'block');
+
+        $('#Mes').css('display', 'none');
+        $('#formVisita').bootstrapValidator('addField', 'Semana[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+
+        SelecionarDiaDaSemana();
+
+        $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+    } else if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 3) {//Mensalmente
+
+        $('.BlocoRepetir').css('display', 'block');
+        $('#Mes').css('display', 'block');
+        $('#Termina').css('display', 'block');
+
+        $('#Semana').css('display', 'none');
+        //SelecionarDiaDaSemana();
+        GerarSelectOption();
+
+        //Add a data selecionada mais um mes
+        var VetStartStr = $('#StartStr').val().split('-');
+        var Data = new Date();
+        Data.setDate(VetStartStr[2]);
+        Data.setMonth(VetStartStr[1]);
+        Data.setFullYear(VetStartStr[0]);
+        var Dia = ("0" + Data.getDate()).slice(-2);
+        var Mes = ("0" + (Data.getMonth() + 1)).slice(-2);
+        var DataHoje = Data.getFullYear() + "-" + (Mes) + "-" + (Dia);
+
+        $('#DataTerminaEm').val(DataHoje)
+
+        $('#formVisita').bootstrapValidator('addField', 'Mes[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+
+        $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+    } else if (tam.length > 0 && $('input[type="radio"][name="Repete[]"]:checked').val() == 7 && $('input[type="radio"][name="Frequencia[]"]:checked').val() == 4) {//Anualmente
+
+        $('.BlocoRepetir').css('display', 'block');
+        $('#Mes').css('display', 'block');
+        $('#Termina').css('display', 'block');
+
+        $('#Semana').css('display', 'none');
+        $('#Mes').css('display', 'none');
+        //SelecionarDiaDaSemana();
+        GerarSelectOption();
+
+        //Add a data selecionada mais um mes
+        var VetStartStr = $('#StartStr').val().split('-');
+        var Data = new Date();
+        Data.setDate(VetStartStr[2]);
+        Data.setMonth(VetStartStr[1]);
+        Data.setFullYear(VetStartStr[0]);
+        var Dia = ("0" + Data.getDate()).slice(-2);
+        var Mes = ("0" + (Data.getMonth() + 1)).slice(-2);
+        var DataHoje = Data.getFullYear() + "-" + (Mes) + "-" + (Dia);
+
+        $('#DataTerminaEm').val(DataHoje)
+
+        $('#formVisita').bootstrapValidator('addField', 'Mes[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+
+        $('#formVisita').bootstrapValidator('addField', 'Termina[]', {
+            validators: {
+                notEmpty: {
+                    message: 'O Campo é um campo obrigatório.'
+                }
+            }
+        });
+    }
+
+            //else {
+            //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]'); $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+            //}
+
+            //switch (true) {
+            //    case (7 == topic && 'block' == display):
+            //        $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+            //            validators: {
+            //                notEmpty: {
+            //                    message: 'Please choose at least 1 framework'
+            //                }
+            //            }
+            //        });
+            //        break;
+            //    case (7 == topic && 'none' == display):
+            //        $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
+            //        break;
+            //case ('javascript' == topic && 'block' == display):
+            //    $('#interviewForm').bootstrapValidator('addField', 'js_frameworks[]', {
+            //        validators: {
+            //            notEmpty: {
+            //                message: 'The name of framework is required'
+            //            }
+            //        }
+            //    });
+            //    break;
+            //case ('javascript' == topic && 'none' == display):
+            //    $('#interviewForm').bootstrapValidator('removeField', 'js_frameworks[]');
+            //    break;
+            //}
+}
+
+function AnoBissexto(year) {
+    return new Date(year, 1, 29).getMonth() == 1
+}
+
+function DataMaior(data) {
+    
 }
 
 function PreencherRadio() {

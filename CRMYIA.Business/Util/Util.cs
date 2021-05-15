@@ -1,6 +1,7 @@
 ﻿using CRMYIA.Data.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -678,6 +679,29 @@ namespace CRMYIA.Business.Util
                     break;
             }
             return dataPascoa.Date;
+        }
+
+        public static int ObterNumeroDaSemana(DateTime Data)
+        {
+            CultureInfo CiCurr = CultureInfo.CurrentCulture;
+            int NumeroDaSemana = CiCurr.Calendar.GetWeekOfYear(Data, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
+            return NumeroDaSemana;
+        }
+        public static int ObterClassificacao(DateTime Data)
+        {
+            //1- Qual é a semana do ano em da data desejada
+            int semanaDoAnoDt = ObterNumeroDaSemana(Data);
+            //2- Qual é o dia da semana da data desejada 
+            int diaDaSemanaDt = (int)Data.DayOfWeek;
+
+            DateTime primeiroDiaDoMes = new DateTime(Data.Year, Data.Month, 1);
+            //3- Qual é a semana do ano do primeiro dia do mes da data desejada
+            int semanaDoAnoPrimeiroDiaDoMes = ObterNumeroDaSemana(primeiroDiaDoMes);
+            //4- Qual é a dia da semana do ano do primeiro dia do mes da data desejada
+            int diaDaSemanaPrimeiroDiaDoMes = (int)primeiroDiaDoMes.DayOfWeek;
+            //
+            int fator = diaDaSemanaDt >= diaDaSemanaPrimeiroDiaDoMes ? 1 : 0;
+            return (semanaDoAnoDt - semanaDoAnoPrimeiroDiaDoMes) + fator;
         }
 
         #endregion

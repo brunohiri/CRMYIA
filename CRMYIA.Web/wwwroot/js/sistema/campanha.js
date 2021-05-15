@@ -452,7 +452,7 @@ function CarregarTabela(data) {
                         <td class="text-center">'+ ativo + '</td>\
                         <td class="text-center">\
                             <span class="btn alterar-titulo" title="Editar Texto" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '"><i class="icon fas fa-edit"></i></span>\
-                            <span class="btn alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + this.nomeArquivo + '" data-caminho="' + this.caminhoArquivo + '"><i class="fas fa-images"></i></span>\
+                            <span class="btn alterar-imagem" title="Editar Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + this.nomeArquivo + '" data-caminhoimagem="' + this.caminhoArquivo + '"><i class="fas fa-images"></i></span>\
                             <span class="btn excluir-imagem" title="Excluir Imagem" data-idcampanhaarquivo="' + this.idCampanhaArquivo + '" data-nomearquivo="' + this.nomeArquivo + '"><i class="fas fa-trash-alt"></i></span>\
                         </td >\
                     </tr>';
