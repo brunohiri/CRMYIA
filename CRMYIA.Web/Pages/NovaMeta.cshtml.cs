@@ -102,7 +102,7 @@ namespace CRMYIA.Web.Pages
                 if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
                 {
 
-                    Entity.IdKPIGrupoUsuario = EntityKPIGrupoUsuario.IdKPIGrupoUsuario;
+                    Entity.IdKPIGrupoNavigation.IdUsuario = EntityKPIGrupoUsuario.IdKPIGrupoUsuario;
                     KPIMetaModel.Add(Entity);
                     KPIMetaValorEntity.IdMeta = Entity.IdMeta;
                     KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
@@ -112,14 +112,14 @@ namespace CRMYIA.Web.Pages
                 }
                 else
                 {
-                    Entity.IdKPIGrupoUsuario = EntityKPIGrupoUsuario.IdKPIGrupoUsuario;
+                    Entity.IdKPIGrupoNavigation.IdUsuario = EntityKPIGrupoUsuario.IdKPIGrupoUsuario;
                     KPIMetaValorEntity.IdMeta = Entity.IdMeta;
                     KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
                     KPIMetaModel.Update(Entity);
                     KPIMetaValorModel.Update(KPIMetaValorEntity);
                     KPIMetaVidaModel.Update(KPIMetaVidaEntity);
                 }
-                EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.GetByKPIGrupoUsuario((long)Entity.IdKPIGrupoUsuario);
+                EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.GetByKPIGrupoUsuario((long)Entity.IdKPIGrupoNavigation.IdUsuario);
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
             }
             catch (Exception ex)

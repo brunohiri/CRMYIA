@@ -20,7 +20,7 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static KPIGrupo Get(long IdKPIGrupo)
+        public static KPIGrupo Get(long IdUsuario)
         {
             KPIGrupo Entity = null;
             try
@@ -29,7 +29,7 @@ namespace CRMYIA.Business
                 {
                     Entity = context.KPIGrupo
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdKPIGrupo == IdKPIGrupo)
+                        .Where(x => x.Ativo && x.IdUsuario == IdUsuario)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -40,7 +40,24 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
+        public static KPIGrupo GetByKPIGrupo(long IdKPIGrupo)
+        {
+            KPIGrupo Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.KPIGrupo
+                        .Where(x => x.Ativo && x.IdKPIGrupo == IdKPIGrupo)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
         public static List<KPIGrupo> GetList()
         {
             List<KPIGrupo> ListEntity = null;

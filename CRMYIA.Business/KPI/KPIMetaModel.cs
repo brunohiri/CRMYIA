@@ -29,7 +29,7 @@ namespace CRMYIA.Business
                 {
                     Entity = context.KPIMeta
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdKPIGrupoUsuario == IdKPIUsuario)
+                        .Where(x => x.Ativo && x.IdKPIGrupoNavigation.IdUsuario == IdKPIUsuario)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }

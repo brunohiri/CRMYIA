@@ -163,3 +163,18 @@ input[type=checkbox]:checked + .label {
                 display: block;
                 font-size: 22px;
             }
+
+
+
+
+@media (min-width: 400px) {
+    .card-group.card-group-scroll {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+        .card-group.card-group-scroll > .card {
+            border-style:none;
+            flex-basis: 15%;
+        }
+}

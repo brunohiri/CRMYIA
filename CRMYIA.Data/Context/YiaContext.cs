@@ -56,6 +56,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
         public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
         public virtual DbSet<LandingPage> LandingPage { get; set; }
+        public virtual DbSet<LandingPageCarrossel> LandingPageCarrossel { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
@@ -92,20 +93,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                //optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                //      builder => builder.EnableRetryOnFailure());
-
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());       
-
-    //        optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				//builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -254,6 +243,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GuidId)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
             });
 
@@ -1164,6 +1157,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.KPIGrupo)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_KPIGrupo");
             });
 
             modelBuilder.Entity<KPIGrupoUsuario>(entity =>
@@ -1199,6 +1197,11 @@ namespace CRMYIA.Data.Context
                     .HasForeignKey(d => d.IdKPIGrupo)
                     .HasConstraintName("KPIGrupo_KPIGrupoUsuario");
 
+                entity.HasOne(d => d.IdMetaNavigation)
+                    .WithMany(p => p.KPIGrupoUsuario)
+                    .HasForeignKey(d => d.IdMeta)
+                    .HasConstraintName("KPIMeta_KPIGrupoUsuario");
+
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.KPIGrupoUsuario)
                     .HasForeignKey(d => d.IdUsuario)
@@ -1213,10 +1216,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataMinima).HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdKPIGrupoUsuarioNavigation)
+                entity.HasOne(d => d.IdKPIGrupoNavigation)
                     .WithMany(p => p.KPIMeta)
-                    .HasForeignKey(d => d.IdKPIGrupoUsuario)
-                    .HasConstraintName("KPIGrupoUsuario_KPIMeta");
+                    .HasForeignKey(d => d.IdKPIGrupo)
+                    .HasConstraintName("KPIGrupo_KPIMeta");
             });
 
             modelBuilder.Entity<KPIMetaValor>(entity =>
@@ -1273,18 +1276,46 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Outro)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Profissao)
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefone)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.LandingPage)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_LandingPage");
+            });
+
+            modelBuilder.Entity<LandingPageCarrossel>(entity =>
+            {
+                entity.HasKey(e => e.IdLandingPageCarrossel);
+
+                entity.Property(e => e.CaminhoArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.NomeArquivo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Titulo)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.LandingPageCarrossel)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_LandingPageCarrossel");
             });
 
             modelBuilder.Entity<Linha>(entity =>
@@ -1816,8 +1847,20 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Facebook)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.IP)
                     .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Instagram)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Linkedin)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Logado)
@@ -1847,6 +1890,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Telefone)
                     .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Twitter)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdClassificacaoNavigation)
@@ -1981,6 +2028,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GuidId)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observacao)

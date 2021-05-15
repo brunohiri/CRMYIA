@@ -1,5 +1,13 @@
 ﻿$(document).ready(function () {
+    if (document.cookie.indexOf("termosYIA") < 0) {
+        $('#modalCookies').modal('show')
+    }
     $('#txtTelefone').mask('(00) 0 0000-0000');
+});
+
+$("#btnModalCookies").click(function () {
+    $('#modalCookies').modal('hide')
+    document.cookie = "termosYIA=accept";
 });
 
 //Seguro auto
@@ -16,6 +24,8 @@ $("#seguroAuto").click(function () {
     $("#rowBuscaCarroLabel").removeClass("d-none");
     $("#rowBuscaCarro").removeClass("d-none");
 
+    $("#rowOutroLabel").addClass("d-none");
+    $("#rowOutro").addClass("d-none");
     $("#rowProfLabel").addClass("d-none");
     $("#rowProf").addClass("d-none");
     $("#rowCnpjLabel").addClass("d-none");
@@ -93,6 +103,8 @@ $("#seguroVida").click(function () {
     $("#seguroResidencial").prop('checked', false);
     $("#outrosSeguros").prop('checked', false);
 
+    $("#rowOutroLabel").addClass("d-none");
+    $("#rowOutro").addClass("d-none");
     $("#rowPossuiCarroLabel").addClass("d-none");
     $("#rowPossuiCarro").addClass("d-none");
     $("#rowBuscaCarroLabel").addClass("d-none");
@@ -134,7 +146,8 @@ $("#planoSaude").click(function () {
     $("#rowPlanoLabel").removeClass("d-none");
     $("#rowPlano").removeClass("d-none");
 
-
+    $("#rowOutroLabel").addClass("d-none");
+    $("#rowOutro").addClass("d-none");
     $("#rowProfLabel").addClass("d-none");
     $("#rowProf").addClass("d-none");
     $("#rowPlanoLabel").addClass("d-none");
@@ -262,6 +275,8 @@ $("#seguroResidencial").click(function () {
 
     $("#rowResidencial").removeClass("d-none");
 
+    $("#rowOutroLabel").addClass("d-none");
+    $("#rowOutro").addClass("d-none");
     $("#rowPossuiCarroLabel").addClass("d-none");
     $("#rowPossuiCarro").addClass("d-none");
     $("#rowBuscaCarroLabel").addClass("d-none");
@@ -304,6 +319,9 @@ $("#outrosSeguros").click(function () {
     $("#planoSaude").prop('checked', false);
     $("#seguroResidencial").prop('checked', false);
     $("#seguroVida").prop('checked', false);
+
+    $("#rowOutroLabel").removeClass("d-none");
+    $("#rowOutro").removeClass("d-none");
 
     $("#rowPossuiCarroLabel").addClass("d-none");
     $("#rowPossuiCarro").addClass("d-none");

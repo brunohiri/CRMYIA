@@ -15,6 +15,7 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public string Cor { get; set; }
         public byte? Tipo { get; set; }
+        public string GuidId { get; set; }
         public DateTime DataSazonal { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }

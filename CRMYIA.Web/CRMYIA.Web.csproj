@@ -57,6 +57,9 @@
     <Folder Include="wwwroot\ArquivoAssinaturaCartao\" />
     <Folder Include="wwwroot\ArquivoOperadora\" />
     <Folder Include="wwwroot\ArquivoBannerOperadora\" />
+    <Folder Include="wwwroot\ArquivoCarrosselLanding\" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

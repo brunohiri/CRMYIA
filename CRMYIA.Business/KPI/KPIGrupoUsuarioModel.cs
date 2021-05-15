@@ -63,11 +63,10 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.KPIGrupoUsuario.Where(x => x.Ativo)
-                        .Include(y => y.KPIMeta)
-                        .ThenInclude(z => z.KPIMetaVida)
-                        .Include(y => y.KPIMeta)
-                        .ThenInclude(v => v.KPIMetaValor)
+                    ListEntity = context.KPIGrupoUsuario
+                        .Include(y => y.IdMetaNavigation).ThenInclude(z => z.KPIMetaValor)
+                        .Include(y => y.IdMetaNavigation).ThenInclude(z => z.KPIMetaVida)
+                        .Where(x => x.Ativo)
                         .AsNoTracking()
                         .ToList();
                 }
@@ -105,7 +104,7 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     bancoEntity = context.KPIGrupoUsuario.Where(x => x.IdKPIGrupoUsuario == Entity.IdKPIGrupoUsuario && x.Ativo == true).FirstOrDefault();
-                    thisMeta = context.KPIMeta.Where(x => x.IdKPIGrupoUsuario == bancoEntity.IdKPIGrupoUsuario && x.Ativo == true).FirstOrDefault();
+                    thisMeta = context.KPIMeta.Where(x => x.IdKPIGrupoNavigation.IdKPIGrupo == bancoEntity.IdKPIGrupoUsuario && x.Ativo == true).FirstOrDefault();
                     if (thisMeta != null)
                     {
                         thisKPIMetaValor = context.KPIMetaValor.Where(x => x.IdMeta == thisMeta.IdMeta && x.Ativo == true).FirstOrDefault();

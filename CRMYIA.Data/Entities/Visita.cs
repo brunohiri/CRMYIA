@@ -25,6 +25,7 @@ namespace CRMYIA.Data.Entities
         public byte? Visivel { get; set; }
         public string Cor { get; set; }
         public byte? Tipo { get; set; }
+        public string GuidId { get; set; }
 
         public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
         public virtual Proposta IdPropostaNavigation { get; set; }

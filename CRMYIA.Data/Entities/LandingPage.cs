@@ -15,6 +15,7 @@ namespace CRMYIA.Data.Entities
         public bool PossuiCNPJ { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
+        public string Outro { get; set; }
         public string Telefone { get; set; }
         public string IP { get; set; }
         public string Profissao { get; set; }

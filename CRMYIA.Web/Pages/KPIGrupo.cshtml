@@ -46,20 +46,7 @@
                                 <!-- /.card-tools -->
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body" style="display: block;">
-                                <span class="card-header-text text-center">
-                                    <select class="form-control btn-outline-dark" style="width: 100%;" onchange="this.form.submit()"
-                                            asp-for="@Model.IdPerfil" id="IdPerfil" name="IdPerfil">
-                                        <option value="0">Selecione um perfil</option>
-                                        <option selected="selected" value="1">Gerente</option>
-                                        <option value="2">Supervisor</option>
-                                        <option value="3">Corretor</option>
-                                    </select>
-                                </span>
-
-                                <div class="row m-2 text-center">
-                                    <button type="button" data-toggle="modal" data-target="#modal-Grupo" class="btn btn-block btn-outline-dark btn-xs">Novo grupo +</button>
-                                </div>
+                            <div class="card-body mb-5 mt-1" style="display: block;">
                                 <div class="input-group input-group-sm">
                                     <input class="form-control btn-outline-dark" id="searchKPIGrupo" type="text" placeholder="Nome..." aria-label="Nome">
                                     <div class="input-group-append">
@@ -68,14 +55,17 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div class="row m-2 text-center">
+                                    <button type="button" data-toggle="modal" data-target="#modal-Grupo" class="btn btn-block btn-outline-dark btn-xs">Novo grupo +</button>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
                         <div class="containerLoad">
                             <ul class="sortable ui-sortable TODO" id="Pefis" data-grupo-id="Pefis">
-                                @if ((Model.ListPerfil != null) && (Model.ListPerfil.Count > 0))
+                                @if ((Model.ListCorretor != null) && (Model.ListCorretor.Count > 0))
                                 {
-                                    foreach (var Item in Model.ListPerfil)
+                                    foreach (var Item in Model.ListCorretor)
                                     {
                                         <li class="text-row ui-sortable-handle"
                                             data-realizado="0"
@@ -91,7 +81,7 @@
                                                     </h3>
 
                                                     <div class="card-tools mr-2 mb-1">
-                                                        <button type="button" class="btn btn-outline-light btn-sm" data-card-widget="collapse">
+                                                        <button type="button" class="btn btn-outline-light btn-sm" data-card-widget="collapse" >
                                                             <i class="fas fa-minus"></i>
                                                         </button>
                                                         <button type="button" class="btn btn-outline-light btn-sm" data-card-widget="remove">
@@ -165,42 +155,68 @@
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
                                             </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                                <i class="fas fa-times"></i>
+                                            </button>
                                         </div>
                                         <!-- /.card-tools -->
                                     </div>
                                     <!-- /.card-header -->
                                     <div class="card-body" style="display: block;">
-                                        <div  class="row">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <a asp-page="/NovaMetaGrupo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))">
+                                                    <button type="button" class="btn btn-block btn-outline-dark btn-xs">Nova meta +</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-sm-6 border-bottom">
                                                 <div class="description-block">
-                                                    <h5 id="realizado-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Realizado</span>
+                                                    <div class="col-sm-12">
+                                                        <span id="realizado-grupo-@Item.IdKPIGrupo">0</span>  
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <span>Realizado</span>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
                                             <!-- /.col -->
                                             <div class="col-sm-6 border-bottom">
                                                 <div class="description-block">
-                                                    <h5 id="valor-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Meta R$ Grupo</span>
+                                                    <div class="col-sm-12">
+                                                        <span id="valor-grupo-@Item.IdKPIGrupo">0</span>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <span>Meta R$ grupo</span>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
                                             <!-- /.col -->
                                         </div>
-                                        <div class="row mb-n3">
+                                        <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="description-block">
-                                                    <h5 id="realizadoVidas-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Realizado</span>
+                                                    <div class="col-sm-12">
+                                                        <span id="realizadoVidas-grupo-@Item.IdKPIGrupo">0</span>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <span>Realizado</span>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
                                             <!-- /.col -->
                                             <div class="col-sm-6">
                                                 <div class="description-block">
-                                                    <h5 id="vidas-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Vidas Grupo</span>
+                                                    <div class="col-sm-12">
+                                                        <span id="vidas-grupo-@Item.IdKPIGrupo">0</span>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <span>Vidas Grupo</span>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -226,7 +242,7 @@
                                                                 realizado = realizado + (decimal)itemRealizado.ValorPrevisto;
                                                         }
 
-                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
+                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.IdKPIGrupoNavigation.KPIMeta)
                                                         {
                                                             @foreach (var itemValor in itemMeta.KPIMetaValor)
                                                             {
@@ -236,7 +252,7 @@
                                                                     valores = 0;
                                                             }
                                                         }
-                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
+                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.IdKPIGrupoNavigation.KPIMeta)
                                                         {
                                                             @foreach (var itemVida in itemMeta.KPIMetaVida)
                                                             {
@@ -359,7 +375,7 @@
 
                         <div class="form-group">
                             <div class="alert alert-success alert-dismissible" id="KPIGrupoMensagemDivAlert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
                                 <i id="KPIGrupoMensagemIcon" class="icon fas fa-check"></i>
                                 <span id="KPIGrupoMensagemSpan">Dados salvos com sucesso!</span>
                             </div>
@@ -368,12 +384,18 @@
                 </div>
                 <form method="post" asp-page="/KPIGrupo" asp-page-handler="KPIGrupo" id="formKPIGrupo">
                     @Html.AntiForgeryToken()
-
+                    <input type="hidden" class="form-control" placeholder="Nome" asp-for="@Model.KPIGrupoEntity.Nome" id="txtNomeKPIGrupo">
                     <div class="row">
                         <div class="col-sm-10">
                             <div class="form-group">
-                                <label>Nome</label>
-                                <input type="text" class="form-control" placeholder="Nome" asp-for="@Model.KPIGrupoEntity.Nome">
+                                <label>Corretor</label>
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.KPIGrupoEntity.IdUsuario" id="IdUsuarioKPIGrupo">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListSupervisor)
+                                    {
+                                        <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-2">
