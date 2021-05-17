@@ -1,4 +1,6 @@
 ﻿var DataTerminaEm = '';
+var Calendar = FullCalendar.Calendar;
+var calendarEl = document.getElementById('calendar');
 $(function () {
 
     /* initialize the external events
@@ -448,7 +450,7 @@ $(document).ready(function () {
             form_data.append('Descricao', $('#Descricao').val());
             form_data.append('Cor', $('#Cor').val());
             //form_data.append('Tipo', $('input[type="radio"][name="Tipo[]"]:checked').val());
-            $('input[name=ExisteCampanha]:checked').val() == 'true' ? form_data.append("ExisteCampanha", 'true') : form_data.append("ExisteCampanha", 'false');
+            $('input[type="radio"][name="ExisteCampanha[]"]:checked').val() == 'true' ? form_data.append("ExisteCampanha", 'true') : form_data.append("ExisteCampanha", 'false');
 
             form_data.append('Repetir', $('#Repetir').val());
 
@@ -476,33 +478,497 @@ $(document).ready(function () {
 
 
 
-            $.ajax({
-                type: 'POST',
-                url: "/Visita?handler=Visitas",
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("XSRF-TOKEN",
-                        $('input:hidden[name="__RequestVerificationToken"]').val());
-                },
-                success: function (data) {
-                    if (data.status) {
-                        //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
-                        //    $('#Titulo').val(data.entityLista.titulo);
-                        //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
-                        //    $('#Titulo').focus();
+            //$.ajax({
+            //    type: 'POST',
+            //    url: "/Visita?handler=Visitas",
+            //    data: form_data,
+            //    cache: false,
+            //    contentType: false,
+            //    processData: false,
+            //    beforeSend: function (xhr) {
+            //        xhr.setRequestHeader("XSRF-TOKEN",
+            //            $('input:hidden[name="__RequestVerificationToken"]').val());
+            //    },
+            //    success: function (data) {
+            //        if (data.status) {
+            //            //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
+            //            //    $('#Titulo').val(data.entityLista.titulo);
+            //            //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
+            //            //    $('#Titulo').focus();
 
-                        //    $('.salvar-texto').css('display', 'block');
-                        //    $('.upload-assinatura-cartao').css('display', 'none');
-                        //    $('.btn-adicionar-imagem').css('display', 'none');
+            //            //    $('.salvar-texto').css('display', 'block');
+            //            //    $('.upload-assinatura-cartao').css('display', 'none');
+            //            //    $('.btn-adicionar-imagem').css('display', 'none');
+            //        }
+            //    },
+            //    error: function () {
+            //        swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+            //    }
+            //});
+            $('#calendar').html('');
+            var calendar = new Calendar(calendarEl, {
+                plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+                defaultView: 'dayGridMonth',
+                //timeZone: 'UTC',
+                eventLimit: true, // allow "more" link when too many events
+                views: {
+                    timelineFourDays: {
+                        type: 'timeline',
                     }
                 },
-                error: function () {
-                    swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
-                }
+                locale: 'pt-br',
+                selectable: true,
+                //eventLimit: true, // permitir link a mais quando muitos eventos
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                dayClick: function (date) {
+                    alert('clicked ' + date.format());
+                },
+                select: function (startDate, endDate) {
+                    //alert(startDate.startStr.length + ' ' + startDate.endStr.length);
+
+                    $('#formVisita')
+                        .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
+                        .bootstrapValidator('resetForm', true);             // Reset the form
+
+
+                    $('#Ativo').prop('checked', true);
+                    $('#Repetir').val('1');
+
+                    //startDate.start
+                    $('#StartStr').val(startDate.startStr);
+                    $('#EndStr').val(startDate.endStr);
+
+                    var StartStr = startDate.startStr.split('-');
+                    var Hora;
+                    var Minutos;
+
+                    /*if (AnoBissexto(StartStr[0])) {*/
+                    var DataInicio = new Date();
+                    Hora = DataInicio.getHours();
+                    Minutos = DataInicio.getMinutes();
+                    DataInicio = startDate.start;
+                    DataInicio.setHours(Hora);
+                    DataInicio.setMinutes(Minutos);
+                    DataInicio.setSeconds(00);
+
+                    DataInicio.setMinutes(DataInicio.getMinutes() - DataInicio.getTimezoneOffset());
+                    document.getElementById('DataInicio').value = DataInicio.toISOString().slice(0, 16);
+
+                    var DataFim = new Date();
+                    Hora = DataFim.getHours();
+                    Minutos = DataFim.getMinutes();
+                    DataFim = startDate.start;
+                    DataFim.setHours(Hora);
+                    DataFim.setMinutes(Minutos);
+                    DataFim.setSeconds(00);
+                    DataFim.setDate(DataInicio.getDate());
+
+                    DataFim.setMinutes(DataFim.getMinutes() - DataFim.getTimezoneOffset()); DataFim.setMinutes(DataFim.getMinutes() + 30);
+                    document.getElementById('DataFim').value = DataFim.toISOString().slice(0, 16);
+
+
+                    var DataTerminaEm = new Date();
+                    Hora = DataTerminaEm.getHours();
+                    Minutos = DataTerminaEm.getMinutes();
+                    DataTerminaEm = startDate.start;
+                    DataTerminaEm.setHours(Hora);
+                    DataTerminaEm.setMinutes(Minutos);
+                    DataTerminaEm.setSeconds(00);
+
+                    DataTerminaEm.setMinutes(DataTerminaEm.getMinutes() - DataTerminaEm.getTimezoneOffset());
+                    document.getElementById('DataTerminaEm').value = DataTerminaEm.toISOString().slice(0, 16);
+
+
+                    //} else {
+                    //    var DataInicio = new Date();
+                    //    DataInicio.setDate(StartStr[2]);
+                    //    DataInicio.setMonth(parseInt(StartStr[1]) - 1);
+                    //    DataInicio.setYear(StartStr[0]);
+                    //    DataInicio.setMinutes(DataInicio.getMinutes() - DataInicio.getTimezoneOffset());
+                    //    document.getElementById('DataInicio').value = DataInicio.toISOString().slice(0, 16);
+
+                    //    var DataFim = new Date();
+                    //    DataFim.setDate(StartStr[2])
+                    //    DataFim.setMonth(parseInt(StartStr[1]) - 1);
+                    //    DataFim.setYear(StartStr[0]);
+                    //    DataFim.setMinutes(DataFim.getMinutes() - DataFim.getTimezoneOffset()); DataFim.setMinutes(DataFim.getMinutes() + 30);
+                    //    document.getElementById('DataFim').value = DataFim.toISOString().slice(0, 16);
+                    //}
+
+                    //var DataInicioFim = $('#DataInicioFim').val();
+                    //var DataInicioFimAMPM = DataInicioFim.split('-');
+                    //var DataInicioFimAM = DataInicioFimAMPM[0].trim().split(' ');
+
+                    ////var DataInicioFimPM1 = DataInicioFim.split('-');
+                    //var DataInicioFimPM = DataInicioFimAMPM[1].trim().split(' ');
+
+
+                    //var StartStr = startDate.startStr.split('-');
+                    //var EndStr = startDate.endStr.split('-');
+                    ////2021-04-24
+
+                    //var hora = Date().split(' ');
+                    //var horaVet = hora[4].split(':')
+                    //var horaInicio = horaVet[0] + ':' + '30';
+                    //var horaFim = (parseInt(horaVet[0]) + 1) + ':' + '30';
+
+                    //$('#DataInicioFim').val(StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaInicio + ' ' + DataInicioFimAM[2] + ' - ' + StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaFim + ' ' + DataInicioFimPM[2])
+                    ////"30/04/2021 12:00 AM - 30/04/2021 11:59 PM" 
+
+                    $('#DataTerminaEm').val(startDate.startStr);
+
+                    //var VetStartStr = startDate.startStr.split('-');
+                    //console.log(VetStartStr[2] + '/' + VetStartStr[1] + '/' + VetStartStr[0])
+
+                    ObterDataColocacaoDiaDaSemana(startDate.startStr);
+
+                    $('#formVisita').bootstrapValidator('addField', 'Tipo[]', {
+                        validators: {
+                            notEmpty: {
+                                message: 'Tipo é um campo obrigatório.'
+                            }
+                        }
+                    });
+
+                    $('#FeriadoDataComemorativa').modal('show');
+                    //$('#DataSazonal').attr("disabled", true);
+                    $('.help-block').attr('style', 'display: none !important; color: red !important;');
+
+                    $('#Feriado').prop('checked', false);
+                    $('#DataComemorativa').prop('checked', false);
+                    $('#Evento').prop('checked', false);
+
+                    $('#Sim').prop('checked', false);
+                    $('#Nao').prop('checked', false);
+
+                    //if (DataTerminaEm > startDate.startStr) {
+                    //    $('#DataTerminaEm').val(DataTerminaEm);
+                    //} else {
+                    //    $('#DataTerminaEm').val(startDate.startStr);
+                    //}
+
+
+                },
+                'themeSystem': 'bootstrap',
+                //Random default events
+                events: function (info, successCallback, failureCallback) {
+                    form_data.append('StartStr', info.startStr);
+                    form_data.append('EndStr', info.endStr);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Visita?handler=Visitas",
+                        data: form_data,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN",
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        },
+                        success: function (data) {
+                                if (data.status) {
+                                    var events = [];
+                                    $.map(data.listVisita, function (r) {
+                                        if (r.tipo == 1) {
+                                            //Feriado
+                                            events.push({
+                                                sourceId: r.sourceId,
+                                                title: r.title,
+                                                backgroundColor: r.backgroundColor,
+                                                borderColor: r.borderColor,
+                                                start: r.start,
+                                                //end: r.end,
+                                                allDay: r.allDay,
+                                                //overlap: false,
+                                                //rendering: 'background',
+                                                //color: '#ff9f89'
+                                            });
+
+                                            var s = r.start.split('T');
+                                            var e = r.end.split('T');
+                                            events.push({
+                                                title: r.title,
+                                                start: s[0],
+                                                end: e[0],
+                                                overlap: false,
+                                                rendering: 'background'
+                                            });
+                                        } else if (r.tipo == 2) {
+                                            //Data Comemorativa
+                                            events.push({
+                                                sourceId: r.sourceId,
+                                                title: r.title,
+                                                backgroundColor: r.backgroundColor,
+                                                borderColor: r.borderColor,
+                                                start: r.start,
+                                                //end: r.end,
+                                                allDay: r.allDay,
+                                                //overlap: false,
+                                                //rendering: 'background',
+                                                //color: '#ff9f89'
+                                            });
+
+                                            var s = r.start.split('T');
+                                            var e = r.end.split('T');
+                                            events.push({
+                                                title: r.title,
+                                                start: s[0],
+                                                end: e[0],
+                                                overlap: false,
+                                                rendering: 'background'
+                                            });
+                                        } else if (r.tipo == 3) {
+                                            //Evento
+                                            events.push({
+                                                sourceId: r.sourceId,
+                                                title: r.title,
+                                                backgroundColor: r.backgroundColor,
+                                                borderColor: r.borderColor,
+                                                start: r.start,
+                                                end: r.end,
+                                                allDay: r.allDay,
+                                                //overlap: false,
+                                                //rendering: 'background',
+                                                //color: '#ff9f89'
+                                            });
+                                        }
+                                        //if (r.end != null) {
+                                        //    var s = r.start.split('T');
+                                        //    var e = r.end.split('T');
+                                        //    events.push({
+                                        //        sourceId: r.sourceId,
+                                        //        title: r.title,
+                                        //        //backgroundColor: r.backgroundColor,
+                                        //        //borderColor: r.borderColor,
+                                        //        start: s[0],
+                                        //        end: e[0],
+                                        //        //allDay: r.allDay,
+                                        //        overlap: false,
+                                        //        rendering: 'background',
+                                        //        color: '#ff9f89'
+                                        //    });
+                                        //} else {
+                                        //    events.push({
+                                        //        sourceId: r.sourceId,
+                                        //        title: r.title,
+                                        //        backgroundColor: r.backgroundColor,
+                                        //        borderColor: r.borderColor,
+                                        //        start: r.start,
+                                        //        allDay: r.allDay,
+                                        //        //overlap: false,
+                                        //        //rendering: 'background',
+                                        //        //color: '#ff9f89'
+                                        //    });
+                                        //}
+                                    });
+                                    successCallback(events);
+                                    $('#FeriadoDataComemorativa').modal('hide');
+                                }
+                        },
+                        error: function () {
+                            swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+                        }
+                    });
+                    $('#calendar').html('');
+                },
+                eventRender(info) {
+                    let tooltip = new Tooltip(info.el, {
+                        title: info.event.title,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body',
+                        html: true,
+                    });
+                    $(info.el).bind('dblclick', function (e) {
+                        var eventObj = info.event;
+                        console.log(eventObj.extendedProps.sourceId);
+
+                        if (eventObj.extendedProps.sourceId != undefined) {
+                            //Aciona no duplo Clique
+
+                            $('#Descricao').focus();
+                            $('#DataSazonal').attr("disabled", true);
+                            $('.help-block').attr('style', 'display: none !important; color: red !important;');
+
+                            $('#Feriado').prop('checked', false);
+                            $('#DataComemorativa').prop('checked', false);
+                            $('#Evento').prop('checked', false);
+
+                            $('#Sim').prop('checked', false);
+                            $('#Nao').prop('checked', false);
+
+                            var form_data = new FormData();
+                            form_data.append('IdVisita', eventObj.extendedProps.sourceId);
+                            $.ajax({
+                                type: 'POST',
+                                url: "/Visita?handler=Obter",
+                                data: form_data,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader("XSRF-TOKEN",
+                                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                                },
+                                success: function (data) {
+                                    var html = '';
+                                    //2021-05-09T05:24:00
+
+
+                                    if (data.status) {
+                                        var StrData = '';
+
+                                        var VetDataInicio = data.entityVisita.dataInicio.split('T');
+                                        var VetDataFim = data.entityVisita.dataFim.split('T');
+
+                                        var DataHoje = new Date();
+                                        if (DataHoje.getMonth() < 9)
+                                            var DataHojeFormatada = (DataHoje.getFullYear() + "-" + ("0" + (DataHoje.getMonth() + 1)) + "-" + (DataHoje.getDate()));
+                                        else
+                                            var DataHojeFormatada = (DataHoje.getFullYear() + "-" + ((DataHoje.getMonth() + 1)) + "-" + (DataHoje.getDate()));
+
+                                        var DataInicio = new Date(data.entityVisita.dataInicio);
+                                        var DataFim = new Date(data.entityVisita.dataFim);
+                                        var DataMoment = moment(data.entityVisita.dataInicio, "MM-DD-YYYY");
+
+                                        //DataMoment._locale._months[11] mes
+                                        //DataMoment._locale._weekdays[6] dia da semana
+
+                                        if (VetDataInicio[0] == VetDataFim[0] && DataHojeFormatada == VetDataInicio[0] && DataHojeFormatada == VetDataFim[0]) {
+                                            //Hoje
+                                            StrData = 'Hoje, ' + VetDataInicio[1].trim().substring(0, 5) + ' - ' + VetDataFim[1].trim().substring(0, 5);
+                                        } else if (VetDataInicio[0] == VetDataFim[0] && data.entityVisita.dataInicio < data.entityVisita.dataFim) {
+                                            StrData = DataMoment._locale._weekdays[DataInicio.getDay()] + ', ' + DataInicio.getDate() + ' de ' + DataMoment._locale._months[DataInicio.getMonth()] + ', ' + VetDataInicio[1].trim().substring(0, 5) + ' - ' + VetDataFim[1].trim().substring(0, 5);
+                                        } else if (VetDataInicio[0] < VetDataFim[0] && data.entityVisita.dataInicio < data.entityVisita.dataFim) {
+                                            StrData = DataMoment._locale._weekdays[DataInicio.getDay()] + ', ' + DataInicio.getDate() + ' de ' + DataMoment._locale._months[DataInicio.getMonth()] + ', ' + VetDataInicio[1].trim().substring(0, 5) + ' - '
+                                                + DataMoment._locale._weekdays[DataFim.getDay()] + ', ' + DataFim.getDate() + ' de ' + DataMoment._locale._months[DataFim.getMonth()] + ', ' + VetDataFim[1].trim().substring(0, 5);
+                                        }
+
+                                        html += '<div class="card text-center">\
+                                        <div class="card-header">Titulo: '+ data.entityVisita.descricao.toUpperCase() + '<br> ' + StrData + '</div>\
+                                        <div class="card-body">\
+                                            <div class="form-group">\
+                                                <label class="col-lg-12 control-label" > Selecione uma opção</label>\
+                                                <div class="col-lg-12">\
+                                                    <div class="checkbox">\
+                                                        <label><input type="radio" class="Tipo" name="ExcluirAlterar[]" value="1" /> Alterar </label>\
+                                                    </div>\
+                                                    <div class="checkbox">\
+                                                        <label><input type="radio" class="Tipo" name="ExcluirAlterar[]" value="2" /> Excluir </label>\
+                                                    </div>\
+                                                </div>\
+                                            </div>\
+                                            <div class="d-flex justify-content-center">\
+                                                <div class="col-sm-6" id="BlocoExcluirAlterar" style="display: none">\
+                                                    <label id="TituloExcluirAlterar"></label>\
+                                                    <div class="form-group">\
+                                                        <div class="form-check form-check-inline">\
+                                                            <input class="form-check-input Tipo" type="radio" name="OpExcluirAlterar[]" id="EsteEvento" value="1" checked>\
+                                                                <label class="form-check-label" for="EsteEvento">Este Evento</label>\
+                                                                    </div><br />';
+                                        if (data.existeMaisQueUm) {
+                                            html += '<div class="form-check form-check-inline">\
+                                                                <input class="form-check-input Tipo" type="radio" name="OpExcluirAlterar[]" id="EventosSeguintes" value="2">\
+                                                                    <label class="form-check-label" for="EventosSeguintes">Este e os eventos Seguintes</label>\
+                                                                    </div><br />\
+                                                                <div class="form-check form-check-inline">\
+                                                                    <input class="form-check-input Tipo" type="radio" name="OpExcluirAlterar[]" id="TodosEventos" data-tipo="3" data-radio="Tipo" value="3">\
+                                                                        <label class="form-check-label" for="TodosEventos">Todos os Eventos</label>\
+                                                                    </div><br />';
+                                        }
+                                        html += '</div>\
+                                                            </div>\
+                                                            <!--<div class="col-sm-6">\
+                                                            </div>-->\
+                                                        </div>\
+                                                    </div>\
+                                                    <!--<div class="card-footer text-muted">\
+                                                        2 days ago\
+                                                    </div>-->\
+                                                </div>\
+                                                <div class="modal-footer d-flex justify-content-around">\
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>\
+                                                    <div id="BtnAlterar" style="display: none"><button type="button" class="btn btn-warning btn-alterar-excluir" data-btn="alterar">Alterar</button></div>\
+                                                    <div id="BtnExcluir" style="display: none"><button type="button" class="btn btn-danger btn-alterar-excluir" data-btn="excluir">Excluir</button></div>\
+                                                </div>';
+                                        $('#AlterarExcluirIdVisita').val(data.entityVisita.idVisita);
+                                        $('#GuidId').val(data.entityVisita.guidId);
+                                        $('#AlterarExcluir').modal('show');
+
+                                        //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
+                                        //    $('#Titulo').val(data.entityLista.titulo);
+                                        //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
+                                        //    $('#Titulo').focus();
+
+                                        //    $('.salvar-texto').css('display', 'block');
+                                        //    $('.upload-assinatura-cartao').css('display', 'none');
+                                        //    $('.btn-adicionar-imagem').css('display', 'none');
+                                    }
+                                    $('#modalAlterarExcluir').html(html);
+                                },
+                                error: function () {
+                                    swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+                                }
+                            });
+
+
+                        }
+                        //$.ajax({
+                        //    url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
+                        //    cache: false,
+                        //    async: false,
+                        //    contentType: "application/json",
+                        //    dataType: "json",
+                        //    type: "GET",
+                        //    success: function (data) {
+                        //        if (data.status) {
+                        //            $('#VisitaTitulo').val(data.entityVisita.descricao);
+                        //            $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
+                        //            $('#VisitaObservacao').val(data.entityVisita.observacao);
+                        //            $('#VisitaIdVisita').val(data.entityVisita.idVisita);
+                        //        }
+                        //    }
+                        //});
+                    });
+                },
+                editable: false,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function (info) {
+                    // is the "remove after drop" checkbox checked?
+                    if (checkbox.checked) {
+                        // if so, remove the element from the "Draggable Events" list
+                        info.draggedEl.parentNode.removeChild(info.draggedEl);
+                    }
+                },
+        /*eventClick: function (info) {
+                var eventObj = info.event;
+                console.log(eventObj.extendedProps.sourceId);
+                if (eventObj.extendedProps.sourceId != undefined)
+                $.ajax({
+                    url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
+                    cache: false,
+                    async: false,
+                    contentType: "application/json",
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        if (data.status) {
+                            $('#VisitaTitulo').val(data.entityVisita.descricao);
+                            $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
+                            $('#VisitaObservacao').val(data.entityVisita.observacao);
+                            $('#VisitaIdVisita').val(data.entityVisita.idVisita);
+                        }
+                    }
+                });
+            }*/
             });
+            calendar.render();
+
             $form
                 .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
                 .bootstrapValidator('resetForm', true);             // Reset the form
@@ -535,32 +1001,32 @@ $('.select2').on('change', function () {
 //});
 
 $(document).on('click', 'input[name="Tipo[]"]', function () {
-    if ($(this).val() == 3) {
-        $('.Observacao').css('display', 'block');
-    } else {
-        $('.Observacao').css('display', 'none');
-    }
-
-    if ($(this).val() == 1) {
+   
+    if ($(this).val() == 3 && $(this).data('tipo') == 1) {
         $('.DataSazonal').html('Data do Feriado');
         $('#DataSazonal').attr("disabled", false);
         $('#Sim').attr("disabled", false);
         $('#Nao').attr("disabled", false);
+        $('.Observacao').css('display', 'block');
     }
-    else if ($(this).val() == 2) {
+    else if ($(this).val() == 3 && $(this).data('tipo') == 2) {
         $('.DataSazonal').html('Data Comemorativa');
         $('#DataSazonal').attr("disabled", false);
         $('#Sim').attr("disabled", false);
         $('#Nao').attr("disabled", false);
+        $('.Observacao').css('display', 'block');
+
     }
-    else if ($(this).val() == 3) {
+    else if ($(this).val() == 3 && $(this).data('tipo') == 3) {
         $('.DataSazonal').html('Data do Evento');
         $('#DataSazonal').attr("disabled", false);
         $('#Sim').attr("disabled", true);
         $('#Nao').attr("disabled", true);
         $('#Sim').prop('checked', false);
         $('#Nao').prop('checked', false);
-    } else {
+        $('.Observacao').css('display', 'none');
+    }
+    else {
         $('.DataSazonal').html('Data');
         $('#DataSazonal').attr("disabled", false);
         $('#Sim').attr("disabled", true);
@@ -601,6 +1067,38 @@ $(document).on('change', '#DataInicioFim', function () {
     var dataVet2 = dataVet1[0].split('/');//2021-04-06
     DataTerminaEm = dataVet2[2] + '-' + dataVet2[1] + '-' + dataVet2[0];
     $('#DataTerminaEm').val(DataTerminaEm);
+});
+
+$(document).on('click', 'input[type="radio"][name="ExcluirAlterar[]"]:checked', function () {
+    $('#BlocoExcluirAlterar').css('display', 'block');
+
+    if ($(this).val() == 1) {
+        $('#TituloExcluirAlterar').html('Selecione uma opção para ser alterada.');
+        $('#BtnAlterar').css('display', 'block');
+        $('#BtnExcluir').css('display', 'none');
+    } else if ($(this).val() == 2) {
+        $('#TituloExcluirAlterar').html('Selecione uma opção para ser excluida.');
+        $('#BtnAlterar').css('display', 'none');
+        $('#BtnExcluir').css('display', 'block');
+    }
+
+});
+
+$(document).on('click', '.btn-alterar-excluir', function () {
+       
+    var form_data = new FormData();
+
+    if ($(this).data('btn') == 'alterar') {
+        form_data.append('ExcluirAlterar', $(this).data('btn'));
+    } else if ($(this).data('btn') == 'excluir') {
+        form_data.append('ExcluirAlterar', $(this).data('btn'));
+    }
+    form_data.append('OpExcluirAlterar', $('input[type="radio"][name="OpExcluirAlterar[]"]:checked').val());
+    form_data.append('IdVisita', $('#AlterarExcluirIdVisita').val());
+    form_data.append('GuidId', $('#GuidId').val());
+    form_data.append('Visivel', $('#Visivel').val());
+
+
 });
 
 $('button[name="Semana"]').click(function () {
@@ -1199,7 +1697,8 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                 
                 if (eventObj.extendedProps.sourceId != undefined)
                 {
-                    $('#FeriadoDataComemorativa').modal('show');
+                    //Aciona no duplo Clique
+                    
                     $('#Descricao').focus();
                     $('#DataSazonal').attr("disabled", true);
                     $('.help-block').attr('style', 'display: none !important; color: red !important;');
@@ -1211,7 +1710,122 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                     $('#Sim').prop('checked', false);
                     $('#Nao').prop('checked', false);
 
+                    var form_data = new FormData();
+                    form_data.append('IdVisita', eventObj.extendedProps.sourceId);
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Visita?handler=Obter",
+                        data: form_data,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN",
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        },
+                        success: function (data) {
+                            var html = '';
+                            //2021-05-09T05:24:00
+                            
 
+                            if (data.status) {
+                                var StrData = '';
+
+                                var VetDataInicio = data.entityVisita.dataInicio.split('T');
+                                var VetDataFim = data.entityVisita.dataFim.split('T');
+
+                                var DataHoje = new Date();
+                                if (DataHoje.getMonth() < 9)
+                                    var DataHojeFormatada = (DataHoje.getFullYear() + "-" + ("0" + (DataHoje.getMonth() + 1)) + "-" + (DataHoje.getDate()));
+                                else
+                                    var DataHojeFormatada = (DataHoje.getFullYear() + "-" + ((DataHoje.getMonth() + 1)) + "-" + (DataHoje.getDate()));
+
+                                var DataInicio = new Date(data.entityVisita.dataInicio);
+                                var DataFim = new Date(data.entityVisita.dataFim);
+                                var DataMoment = moment(data.entityVisita.dataInicio, "MM-DD-YYYY");
+
+                                //DataMoment._locale._months[11] mes
+                                //DataMoment._locale._weekdays[6] dia da semana
+
+                                if (VetDataInicio[0] == VetDataFim[0] && DataHojeFormatada == VetDataInicio[0] && DataHojeFormatada == VetDataFim[0]) {
+                                    //Hoje
+                                    StrData = 'Hoje, ' + VetDataInicio[1].trim().substring(0, 5) + ' - ' + VetDataFim[1].trim().substring(0, 5);
+                                } else if (VetDataInicio[0] == VetDataFim[0] && data.entityVisita.dataInicio < data.entityVisita.dataFim) {
+                                    StrData = DataMoment._locale._weekdays[DataInicio.getDay()] + ', ' + DataInicio.getDate() + ' de ' + DataMoment._locale._months[DataInicio.getMonth()] + ', ' + VetDataInicio[1].trim().substring(0, 5) + ' - ' + VetDataFim[1].trim().substring(0, 5);
+                                } else if (VetDataInicio[0] < VetDataFim[0] && data.entityVisita.dataInicio < data.entityVisita.dataFim) {
+                                    StrData = DataMoment._locale._weekdays[DataInicio.getDay()] + ', ' + DataInicio.getDate() + ' de ' + DataMoment._locale._months[DataInicio.getMonth()] + ', ' + VetDataInicio[1].trim().substring(0, 5) + ' - '
+                                        + DataMoment._locale._weekdays[DataFim.getDay()] + ', ' + DataFim.getDate() + ' de ' + DataMoment._locale._months[DataFim.getMonth()] + ', ' + VetDataFim[1].trim().substring(0, 5);
+                                }
+
+                                html += '<div class="card text-center">\
+                                        <div class="card-header">Titulo: '+ data.entityVisita.descricao.toUpperCase() + '<br> ' + StrData + '</div>\
+                                        <div class="card-body">\
+                                            <div class="form-group">\
+                                                <label class="col-lg-12 control-label" > Selecione uma opção</label>\
+                                                <div class="col-lg-12">\
+                                                    <div class="checkbox">\
+                                                        <label><input type="radio" class="Tipo" name="ExcluirAlterar[]" value="1" /> Alterar </label>\
+                                                    </div>\
+                                                    <div class="checkbox">\
+                                                        <label><input type="radio" class="Tipo" name="ExcluirAlterar[]" value="2" /> Excluir </label>\
+                                                    </div>\
+                                                </div>\
+                                            </div>\
+                                            <div class="d-flex justify-content-center">\
+                                                <div class="col-sm-6" id="BlocoExcluirAlterar" style="display: none">\
+                                                    <label id="TituloExcluirAlterar"></label>\
+                                                    <div class="form-group">\
+                                                        <div class="form-check form-check-inline">\
+                                                            <input class="form-check-input Tipo" type="radio" name="OpExcluirAlterar[]" id="EsteEvento" value="1" checked>\
+                                                                <label class="form-check-label" for="EsteEvento">Este Evento</label>\
+                                                                    </div><br />';
+                                if (data.existeMaisQueUm) {
+                                    html += '<div class="form-check form-check-inline">\
+                                                                <input class="form-check-input Tipo" type="radio" name="OpExcluirAlterar[]" id="EventosSeguintes" value="2">\
+                                                                    <label class="form-check-label" for="EventosSeguintes">Este e os eventos Seguintes</label>\
+                                                                    </div><br />\
+                                                                <div class="form-check form-check-inline">\
+                                                                    <input class="form-check-input Tipo" type="radio" name="OpExcluirAlterar[]" id="TodosEventos" data-tipo="3" data-radio="Tipo" value="3">\
+                                                                        <label class="form-check-label" for="TodosEventos">Todos os Eventos</label>\
+                                                                    </div><br />';
+                                }
+                                                                html += '</div>\
+                                                            </div>\
+                                                            <!--<div class="col-sm-6">\
+                                                            </div>-->\
+                                                        </div>\
+                                                    </div>\
+                                                    <!--<div class="card-footer text-muted">\
+                                                        2 days ago\
+                                                    </div>-->\
+                                                </div>\
+                                                <div class="modal-footer d-flex justify-content-around">\
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>\
+                                                    <div id="BtnAlterar" style="display: none"><button type="button" class="btn btn-warning btn-alterar-excluir" data-btn="alterar">Alterar</button></div>\
+                                                    <div id="BtnExcluir" style="display: none"><button type="button" class="btn btn-danger btn-alterar-excluir" data-btn="excluir">Excluir</button></div>\
+                                                </div>';
+                                $('#AlterarExcluirIdVisita').val(data.entityVisita.idVisita);
+                                $('#GuidId').val(data.entityVisita.guidId);
+                                $('#Visivel').val(data.entityVisita.visivel);
+                                $('#AlterarExcluir').modal('show');
+                               
+                                //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
+                                //    $('#Titulo').val(data.entityLista.titulo);
+                                //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
+                                //    $('#Titulo').focus();
+
+                                //    $('.salvar-texto').css('display', 'block');
+                                //    $('.upload-assinatura-cartao').css('display', 'none');
+                                //    $('.btn-adicionar-imagem').css('display', 'none');
+                            }
+                            $('#modalAlterarExcluir').html(html);
+                        },
+                        error: function () {
+                            swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+                        }
+                    });
+
+                   
                 }
                     //$.ajax({
                     //    url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
@@ -1340,18 +1954,21 @@ function AdicionarValidacao($this) {
     if ($($this).data('radio') == 'Tipo') {
 
         var $container = $('[data-tipo="' + topic + '"]');
-        $container.toggle();
+        //$container.toggle();
+        if ($($this).data('tipo') == 1 || $($this).data('tipo') == 2 || $($this).data('tipo') == 3) {
+            $('[data-tipo="3"]').css('display', 'block');
+        }
 
         var display = $container.css('display');
-        if (3 == topic && 'block' == display) {
-            $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
-                validators: {
-                    notEmpty: {
-                        message: 'O Campo Frequência é um campo obrigatório.'
-                    }
-                }
-            });
-        }
+        //if (3 == topic && 'block' == display) {
+        //    $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
+        //        validators: {
+        //            notEmpty: {
+        //                message: 'O Campo Frequência é um campo obrigatório.'
+        //            }
+        //        }
+        //    });
+        //}
         //else if (1 == topic || 2 == topic) {
         //    $('#Frequencia').css('display', 'none');
         //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
@@ -1359,9 +1976,11 @@ function AdicionarValidacao($this) {
     }//
 
     //Repete
+    $('input[type="radio"][name="Tipo[]"]').css('display', 'block');
     if ($($this).data('radio') == 'Repete') {
         var $container = $('[data-repete="' + topic + '"]');
         $container.toggle();
+        
 
         var display = $container.css('display');
         if (7 == topic && 'block' == display) {
