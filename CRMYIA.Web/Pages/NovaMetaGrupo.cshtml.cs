@@ -42,8 +42,9 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<Usuario> ListUsuario { get; set; }
         #endregion
-        public string origem { get; set; }
+        public string Origem { get; set; }
         public long idUser { get; set; }
+        public int Mes { get; set; }
         #endregion
 
         #region Construtores
@@ -63,10 +64,12 @@ namespace CRMYIA.Web.Pages
             }
             else
             {
-                origem = HttpContext.Request.Headers["Referer"].ToString();
+                Origem = HttpContext.Request.Headers["Referer"].ToString();
                 idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
 
-                if (origem.Contains("KPIGrupo"))
+                Mes = DateTime.Now.Month;
+
+                if (Origem.Contains("KPIGrupo"))
                 {
                     EntityKPIGrupo = KPIGrupoModel.Get(idUser);
                     Entity = KPIMetaModel.Get((long)EntityKPIGrupo.IdKPIGrupo);
@@ -102,7 +105,7 @@ namespace CRMYIA.Web.Pages
                 if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
                 {
 
-                    Entity.IdKPIGrupoNavigation.IdUsuario = EntityKPIGrupo.IdKPIGrupo;
+                    Entity.IdKPIGrupo = EntityKPIGrupo.IdKPIGrupo;
                     KPIMetaModel.Add(Entity);
                     KPIMetaValorEntity.IdMeta = Entity.IdMeta;
                     KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
@@ -125,7 +128,7 @@ namespace CRMYIA.Web.Pages
             catch (Exception ex)
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
-                
+
             }
             return Page();
         }

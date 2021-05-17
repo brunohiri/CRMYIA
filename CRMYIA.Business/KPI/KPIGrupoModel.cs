@@ -66,9 +66,8 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.KPIGrupo
+                        .Include(y => y.KPIMeta)
                         .Where(x => x.Ativo)
-                        .AsNoTracking()
-                        .Include(y => y.KPIGrupoUsuario)
                         .AsNoTracking()
                         .ToList();
                 }
@@ -95,7 +94,59 @@ namespace CRMYIA.Business
                 throw;
             }
         }
+        public static void Excluir(KPIGrupo Entity)
+        {
+            KPIGrupo bancoEntity = null;
+            List<KPIGrupoUsuario> bancoEntityUsuarios = null;
+            KPIMeta thisMeta = null;
+            KPIMetaValor thisKPIMetaValor = null;
+            KPIMetaVida thisKPIMetaVida = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    bancoEntity = context.KPIGrupo.Where(x => x.IdKPIGrupo == Entity.IdKPIGrupo && x.Ativo == true).FirstOrDefault();
+                    thisMeta = context.KPIMeta.Where(x => x.IdKPIGrupoNavigation.IdKPIGrupo == bancoEntity.IdKPIGrupo && x.Ativo == true).FirstOrDefault();
+                    bancoEntityUsuarios = context.KPIGrupoUsuario.Where(x => x.IdKPIGrupo == Entity.IdKPIGrupo && x.Ativo == true).ToList();
+                    if (thisMeta != null)
+                    {
+                        thisKPIMetaValor = context.KPIMetaValor.Where(x => x.IdMeta == thisMeta.IdMeta && x.Ativo == true).FirstOrDefault();
+                        thisKPIMetaVida = context.KPIMetaVida.Where(x => x.IdMeta == thisMeta.IdMeta && x.Ativo == true).FirstOrDefault();
+                    }
+                    if (bancoEntity != null)
+                    {
+                        if (bancoEntityUsuarios != null)
+                            foreach (var item in bancoEntityUsuarios)
+                            {
+                                item.Motivo = "Exclusão grupo " + Entity.Nome.ToString();
+                                item.Saida = DateTime.Now;
+                                item.Ativo = false;
+                                context.KPIGrupoUsuario.Update(item);
+                            }
 
+                        if (thisMeta != null)
+                            thisMeta.Ativo = false;
+                        if (thisKPIMetaValor != null)
+                            thisKPIMetaValor.Ativo = false;
+                        if (thisKPIMetaVida != null)
+                            thisKPIMetaVida.Ativo = false;
+
+                        context.KPIGrupo.Update(bancoEntity);
+                        if (thisMeta != null)
+                            context.KPIMeta.Update(thisMeta);
+                        if (thisKPIMetaValor != null)
+                            context.KPIMetaValor.Update(thisKPIMetaValor);
+                        if (thisKPIMetaVida != null)
+                            context.KPIMetaVida.Update(thisKPIMetaVida);
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public static void Update(KPIGrupo Entity)
         {
             try

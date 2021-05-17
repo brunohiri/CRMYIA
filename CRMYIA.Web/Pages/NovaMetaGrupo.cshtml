@@ -1,10 +1,13 @@
 ﻿@page
 @model CRMYIA.Web.Pages.NovaMetaGrupoModel
-@{
-    ViewData["Title"] = "Novo";
-    ViewData["Pagina"] = "KPI Meta";
+@{ ViewData["Title"] = "Novo";
+                ViewData["Pagina"] = "KPI Meta Grupo"; }
+@section CSS {
+    <link href="~/css/novaMetaGrupo.css" rel="stylesheet" />
 }
-
+@section Scripts {
+    <script src="~/js/sistema/novaMetaGrupo.js"></script>
+}
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
@@ -28,6 +31,7 @@
             </div>
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMeta" id="MetaId">
+                <input type="hidden" class="form-control" asp-for="@Model.Mes" id="Mes">
                 <input type="hidden" class="form-control" name="IdKPIGrupo" asp-for="@Model.EntityKPIGrupo.IdKPIGrupo" id="IdKPIGrupo">
 
                 <div class="col-sm-3">
@@ -36,7 +40,18 @@
                         <input type="text" class="form-control is-valid" value="@Model.EntityKPIGrupo.Nome" disabled="">
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
+                    <p class="text-bold">Periodo desejado</p>
+                    <input type="radio" id="radio1" name="radios" value="Personalizado" checked>
+                    <label for="radio1">Personalizado</label>
+                    <input type="radio" id="radio2" name="radios" value="Mensal">
+                    <label for="radio2">Mensal</label>
+                    <input type="radio" id="radio3" name="radios" value="Trimestral">
+                    <label for="radio3">Trimestral</label>
+                    <input type="radio" id="radio4" name="radios" value="Semestre">
+                    <label for="radio4">Semestre</label>
+                </div>
+                <div class="col-sm-2">
                     @if (Model.Entity.DataMinima == DateTime.MinValue)
                     {
                         <div class="form-group">
@@ -52,13 +67,13 @@
                         </div>
                     }
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     @if (Model.Entity.DataMaxima == DateTime.MinValue)
                     {
                         <div class="form-group">
                             <label>Data mínima</label>
                             <input type="date" class="form-control" id="DataMaxima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMaxima">
-                        </div> 
+                        </div>
                     }
                     else
                     {
@@ -68,7 +83,7 @@
                         </div>
                     }
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-1">
                     <div class="form-group">
                         <label>Status *</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -150,7 +165,7 @@
                         <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaVidaEntity.Descricao"></textarea>
                     </div>
                 </div>
-                
+
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-success">Salvar</button>

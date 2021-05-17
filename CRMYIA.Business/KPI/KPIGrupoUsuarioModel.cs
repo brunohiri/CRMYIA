@@ -96,39 +96,17 @@ namespace CRMYIA.Business
         public static void Excluir(KPIGrupoUsuario Entity)
         {
             KPIGrupoUsuario bancoEntity = null;
-            KPIMeta thisMeta = null;
-            KPIMetaValor thisKPIMetaValor = null;
-            KPIMetaVida thisKPIMetaVida = null;
+            
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     bancoEntity = context.KPIGrupoUsuario.Where(x => x.IdKPIGrupoUsuario == Entity.IdKPIGrupoUsuario && x.Ativo == true).FirstOrDefault();
-                    thisMeta = context.KPIMeta.Where(x => x.IdKPIGrupoNavigation.IdKPIGrupo == bancoEntity.IdKPIGrupoUsuario && x.Ativo == true).FirstOrDefault();
-                    if (thisMeta != null)
-                    {
-                        thisKPIMetaValor = context.KPIMetaValor.Where(x => x.IdMeta == thisMeta.IdMeta && x.Ativo == true).FirstOrDefault();
-                        thisKPIMetaVida = context.KPIMetaVida.Where(x => x.IdMeta == thisMeta.IdMeta && x.Ativo == true).FirstOrDefault();
-                    }
                     if (bancoEntity != null)
                     {
                         bancoEntity.Motivo = Entity.Motivo;
                         bancoEntity.Saida = DateTime.Now;
                         bancoEntity.Ativo = false;
-                        if (thisMeta != null)
-                            thisMeta.Ativo = false;
-                        if (thisKPIMetaValor != null)
-                            thisKPIMetaValor.Ativo = false;
-                        if (thisKPIMetaVida != null)
-                            thisKPIMetaVida.Ativo = false;
-
-                        context.KPIGrupoUsuario.Update(bancoEntity);
-                        if (thisMeta != null)
-                            context.KPIMeta.Update(thisMeta);
-                        if (thisKPIMetaValor != null)
-                            context.KPIMetaValor.Update(thisKPIMetaValor);
-                        if (thisKPIMetaVida != null)
-                            context.KPIMetaVida.Update(thisKPIMetaVida);
                     }
                     context.SaveChanges();
                 }

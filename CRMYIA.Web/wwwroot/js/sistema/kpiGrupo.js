@@ -41,46 +41,46 @@ $("#IdUsuarioKPIGrupo").change(function () {
     $("#txtNomeKPIGrupo").val($("#IdUsuarioKPIGrupo").children("option:selected").text())
 });
 function AtualizarRealizado() {
-    var grupos = CalcularGrupos();
-    var realizado = 0.00;
-    var valor = 0.00;
-    var vidas = 0;
-    $.each(grupos, function (i, d) {
-        $.each(d.itens, function (i, da) {
-            if (da.realizado == 0 && da.vidas == 0 && da.valores == 0) {
-                $("#realizado-" + d.grupo).html("");
-                $("#realizado-" + d.grupo).append(da.realizado);
+//    var grupos = CalcularGrupos();
+//    var realizado = 0.00;
+//    var valor = 0.00;
+//    var vidas = 0;
+//    $.each(grupos, function (i, d) {
+//        $.each(d.itens, function (i, da) {
+//            if (da.realizado == 0 && da.vidas == 0 && da.valores == 0) {
+//                $("#realizado-" + d.grupo).html("");
+//                $("#realizado-" + d.grupo).append(da.realizado);
 
-                $("#valor-" + d.grupo).html("");
-                $("#valor-" + d.grupo).append(da.valores);
+//                $("#valor-" + d.grupo).html("");
+//                $("#valor-" + d.grupo).append(da.valores);
 
-                $("#vidas-" + d.grupo).html("");
-                $("#vidas-" + d.grupo).append(da.vidas);
-            } else {
-                realizado += realizado + parseFloat(da.realizado);
-                vidas += parseInt(da.vidas);
-                valor += parseFloat(da.valores);
-            }
-        });
-        if (realizado != 0) {
-            $("#realizado-" + d.grupo).html("");
-            $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        }
+//                $("#vidas-" + d.grupo).html("");
+//                $("#vidas-" + d.grupo).append(da.vidas);
+//            } else {
+//                realizado += realizado + parseFloat(da.realizado);
+//                vidas += parseInt(da.vidas);
+//                valor += parseFloat(da.valores);
+//            }
+//        });
+//        if (realizado != 0) {
+//            $("#realizado-" + d.grupo).html("");
+//            $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+//        }
 
-        if (valor != 0) {
-            $("#valor-" + d.grupo).html("");
-            $("#valor-" + d.grupo).append(valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        }
+//        if (valor != 0) {
+//            $("#valor-" + d.grupo).html("");
+//            $("#valor-" + d.grupo).append(valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+//        }
 
-        if (vidas != 0) {
-            $("#vidas-" + d.grupo).html("");
-            $("#vidas-" + d.grupo).append(vidas);
-        }
+//        if (vidas != 0) {
+//            $("#vidas-" + d.grupo).html("");
+//            $("#vidas-" + d.grupo).append(vidas);
+//        }
 
-        realizado = 0.00;
-        valor = 0.00;
-        vidas = 0;
-    });
+//        realizado = 0.00;
+//        valor = 0.00;
+//        vidas = 0;
+//    });
 }
 function CalcularGrupos() {
     allGrupos = $(".grupo");
@@ -98,7 +98,6 @@ function eachChildren(itens) {
     if (itens.length > 0) {
         $.each(itens, function (i, d) {
             result.push({
-                'realizado': d.dataset.realizado,
                 'vidas': d.dataset.vidas,
                 'valores': d.dataset.valores
             }
@@ -106,7 +105,6 @@ function eachChildren(itens) {
         });
     } else {
         result.push({
-            'realizado': 0,
             'vidas': 0,
             'valores': 0
         })
@@ -162,19 +160,13 @@ $('.TODO').on('scroll', function () {
                             '</div>' +
                             '<div class="card-footer bg-gradient-light">' +
                             '<div class="row">' +
-                            '<div class="col-sm-4 border-right">' +
-                            '<div class="description-block">' +
-                            '<h5 class="description-header">0</h5>' +
-                            '<span class="description-text">Realizado</span>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="col-sm-4 border-right">' +
+                            '<div class="col-sm-6 border-right">' +
                             '<div class="description-block">' +
                             '<h5 class="description-header">0</h5>' +
                             '<span class="description-text">Meta</span>' +
                             '</div>' +
                             '</div>' +
-                            '<div class="col-sm-4">' +
+                            '<div class="col-sm-6">' +
                             '<div class="description-block">' +
                             '<h5 class="description-header">0</h5>' +
                             '<span class="description-text">Vidas</span>' +
@@ -275,19 +267,13 @@ function CarregarCardsTODO() {
                                 '</div>' +
                                 '<div class="card-footer bg-gradient-light">' +
                                 '<div class="row">' +
-                                '<div class="col-sm-4 border-right">' +
+                                '<div class="col-sm-6 border-right">' +
                                 '<div class="description-block">' +
                                 '<h5 class="description-header">0</h5>' +
-                                '<span class="description-text">Realizado</span>' +
+                                '<span class="description-text">Valores</span>' +
                                 '</div>' +
                                 '</div>' +
-                                '<div class="col-sm-4 border-right">' +
-                                '<div class="description-block">' +
-                                '<h5 class="description-header">0</h5>' +
-                                '<span class="description-text">Meta</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-sm-4">' +
+                                '<div class="col-sm-6">' +
                                 '<div class="description-block">' +
                                 '<h5 class="description-header">0</h5>' +
                                 '<span class="description-text">Vidas</span>' +
@@ -332,19 +318,13 @@ function CarregarCardsTODO() {
                                 '</div>' +
                                 '<div class="card-footer bg-gradient-light">' +
                                 '<div class="row">' +
-                                '<div class="col-sm-4 border-right">' +
+                                '<div class="col-sm-6 border-right">' +
                                 '<div class="description-block">' +
                                 '<h5 class="description-header">0</h5>' +
-                                '<span class="description-text">Realizado</span>' +
+                                '<span class="description-text">Valores</span>' +
                                 '</div>' +
                                 '</div>' +
-                                '<div class="col-sm-4 border-right">' +
-                                '<div class="description-block">' +
-                                '<h5 class="description-header">0</h5>' +
-                                '<span class="description-text">Meta</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-sm-4">' +
+                                '<div class="col-sm-6">' +
                                 '<div class="description-block">' +
                                 '<h5 class="description-header">0</h5>' +
                                 '<span class="description-text">Vidas</span>' +
@@ -389,7 +369,7 @@ $("#searchKPIGrupo").change(function () {
 function ExcluirKPICard(id) {
     swal({
         title: "Você tem certeza?",
-        text: "Que deseja Excluir do grupo.",
+        text: "Que deseja Excluir o grupo.",
         type: "warning",
         showCancelButton: !0,
         confirmButtonText: "Sim!",
@@ -404,6 +384,54 @@ function ExcluirKPICard(id) {
             $.ajax({
                 type: 'POST',
                 url: "/KPIGrupo?handler=ExcluirKPIGrupo",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function (data) {
+                    if (data.status) {
+                        swal("Sucesso!", data.mensagem, "success");
+                        $('#btnRemove-' + id).CardWidget("remove");
+                        location.reload();
+                    }
+                    else {
+                        swal("Erro!", data.mensagem, "Error");
+                    }
+                },
+                error: function () {
+                    alert("Error occurs");
+                }
+            });
+        } else {
+            e.dismiss;
+        }
+
+    }, function (dismiss) {
+        return false;
+    });
+}
+function ExcluirKPICardUsuario(id) {
+    swal({
+        title: "Você tem certeza?",
+        text: "Que deseja Excluir o corretor do grupo.",
+        type: "warning",
+        showCancelButton: !0,
+        confirmButtonText: "Sim!",
+        cancelButtonText: "Não, cancelar!",
+        reverseButtons: !0,
+        confirmButtonColor: "#198754",
+        cancelButtonColor: "#DC3545"
+    }).then(function (e) {
+        if (e.value === true) {
+            formData = new FormData();
+            formData.append('id', id);
+            $.ajax({
+                type: 'POST',
+                url: "/KPIGrupo?handler=ExcluirKPIGrupoUsuario",
                 data: formData,
                 cache: false,
                 contentType: false,
@@ -456,11 +484,11 @@ function CadastroGrupos() {
         {
             connectWith: ".sortable",
             receive: function (e, ui) {
-                var grupo_id = $(ui.item).parent(".sortable").data(
-                    "grupo-id");
+                var grupo_id = $(ui.item).parent(".sortable").data("grupo-id");
+                var meta_id = $(ui.item).parent(".sortable").data("meta-id");
                 var usuario_id = $(ui.item).data("user-id");
                 $.ajax({
-                    url: '/KPIGrupo?handler=Edit&grupoId=' + grupo_id + '&usuarioId=' + usuario_id,
+                    url: '/KPIGrupo?handler=Edit&grupoId=' + grupo_id + '&usuarioId=' + usuario_id + '&metaId=' + meta_id,
                     success: function (data) {
                         if (data.status) {
                             for (var i = 0; i < $('#sort' + grupo_id + ' li').length; i++) {

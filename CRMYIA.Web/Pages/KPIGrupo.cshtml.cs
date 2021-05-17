@@ -109,9 +109,9 @@ namespace CRMYIA.Web.Pages
 
             return new JsonResult(new { ListCorretor = ListCorretor });
         }
-        public IActionResult OnGetEdit(string grupoId = null, string usuarioId = null)
+        public IActionResult OnGetEdit(string grupoId = null, string usuarioId = null, string metaId = null)
         {
-            if ((!grupoId.IsNullOrEmpty()) && (!usuarioId.IsNullOrEmpty()))
+            if ((!grupoId.IsNullOrEmpty()) && (!usuarioId.IsNullOrEmpty()) && (!metaId.IsNullOrEmpty()))
             {
                 KPIGrupoUsuario EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.Get(usuarioId.ExtractLong());
 
@@ -119,6 +119,8 @@ namespace CRMYIA.Web.Pages
                 {
                     EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
                     EntityKPIGrupoUsuario.IdUsuario = usuarioId.ExtractLong();
+                    EntityKPIGrupoUsuario.IdMeta = metaId.ExtractLong();
+
 
                     KPIGrupoUsuarioModel.Update(EntityKPIGrupoUsuario);
                 }
@@ -129,6 +131,7 @@ namespace CRMYIA.Web.Pages
 
                     EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
                     EntityKPIGrupoUsuario.IdUsuario = usuarioId.ExtractLong();
+                    EntityKPIGrupoUsuario.IdMeta = metaId.ExtractLong();
                     EntityKPIGrupoUsuario.Inicio = DateTime.Now;
                     EntityKPIGrupoUsuario.Nome = UsuarioCargo.Nome;
                     EntityKPIGrupoUsuario.Perfil = UsuarioCargo.DescricaoPerfil;
@@ -178,6 +181,25 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnPostExcluirKPIGrupo(IFormCollection dados)
         {
+            int id;
+            bool status = false;
+            KPIGrupo user = new KPIGrupo();
+
+            id = int.Parse(dados["id"]);
+            user.IdKPIGrupo = id;
+
+            if (id > 0)
+            {
+                KPIGrupoModel.Excluir(user);
+                status = true;
+            }
+            if (status == false)
+                return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
+            else
+                return new JsonResult(new { mensagem = "Sucesso", status });
+        }
+        public IActionResult OnPostExcluirKPIGrupoUsuario(IFormCollection dados)
+        {
             int id = 0;
             string motivo = "";
             bool status = false;
@@ -205,14 +227,14 @@ namespace CRMYIA.Web.Pages
         {
             ListKPIGrupo = KPIGrupoModel.GetList();
             ListKPIGrupoUsuario = KPIGrupoUsuarioModel.GetList();
-            listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
-            foreach (var item in ListKPIGrupoUsuario)
-            {
-                foreach (var item2 in item.IdKPIGrupoNavigation.KPIMeta)
-                {
-                    listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima));
-                }
-            }
+            //listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
+            //foreach (var item in ListKPIGrupoUsuario)
+            //{
+            //    foreach (var item2 in item.IdKPIGrupoNavigation.KPIMeta)
+            //    {
+            //        listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima));
+            //    }
+            //}
 
             ListSupervisor = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Supervisor), "Supervisor");
 
