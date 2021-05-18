@@ -55,14 +55,14 @@
                     @if (Model.Entity.DataMinima == DateTime.MinValue)
                     {
                         <div class="form-group">
-                            <label>Data mínima</label>
+                            <label>Data Mínima</label>
                             <input type="date" class="form-control" id="DataMinima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMinima">
                         </div>
                     }
                     else
                     {
                         <div class="form-group">
-                            <label>Data mínima</label>
+                            <label>Data Mínima</label>
                             <input type="date" class="form-control" id="DataMinima" asp-for="@Model.Entity.DataMinima">
                         </div>
                     }
@@ -71,14 +71,14 @@
                     @if (Model.Entity.DataMaxima == DateTime.MinValue)
                     {
                         <div class="form-group">
-                            <label>Data mínima</label>
+                            <label>Data Máxima</label>
                             <input type="date" class="form-control" id="DataMaxima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMaxima">
                         </div>
                     }
                     else
                     {
                         <div class="form-group">
-                            <label>Data mínima</label>
+                            <label>Data Máxima</label>
                             <input type="date" class="form-control" id="DataMaxima" asp-for="@Model.Entity.DataMaxima">
                         </div>
                     }
