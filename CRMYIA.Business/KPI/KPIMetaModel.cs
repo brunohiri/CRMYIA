@@ -20,16 +20,15 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static KPIMeta Get(long IdKPIUsuario)
+        public static KPIMeta Get(long IdKPIGrupo)
         {
             KPIMeta Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.KPIMeta
-                        .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdKPIGrupoNavigation.IdUsuario == IdKPIUsuario)
+                    Entity = context.KPIMeta.Include(x => x.KPIMetaValor).Include(y => y.KPIMetaVida)
+                        .Where(x => x.Ativo && x.IdKPIGrupo == IdKPIGrupo)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }

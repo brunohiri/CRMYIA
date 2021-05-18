@@ -216,11 +216,12 @@ namespace CRMYIA.Business
             {
                 Entity = ListEntity
                     .Where(x => x.Ativo && x.IdUsuario == IdUsuario)
-                    .Select(x => new UsuarioCorretorViewModel(){ 
-                    Nome = x.Nome,
-                    NomeApelido = x.NomeApelido,
-                    Email = x.Email,
-                    Telefone = x.Telefone
+                    .Select(x => new UsuarioCorretorViewModel()
+                    {
+                        Nome = x.Nome,
+                        NomeApelido = x.NomeApelido,
+                        Email = x.Email,
+                        Telefone = x.Telefone
                     })
                     .FirstOrDefault();
             }
@@ -315,13 +316,11 @@ namespace CRMYIA.Business
         {
             List<ListaKPIUsuarioViewModel> ListEntity = null;
             List<KPIGrupoUsuario> ListKPIGrupoUsuario = null;
+            List<KPIGrupo> ListKPIGrupo = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-
-                    ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Ativo == true && x.Perfil == perfil).AsNoTracking().ToList();
-                    
                     ListEntity = context.Usuario
                         .Include(y => y.UsuarioPerfil)
                             .ThenInclude(p => p.IdPerfilNavigation)
@@ -344,9 +343,21 @@ namespace CRMYIA.Business
                         .OrderBy(o => o.Nome)
                         .ToList();
 
-                    foreach (var item in ListKPIGrupoUsuario)
+                    if (perfil == "Supervisor")
                     {
-                        ListEntity.RemoveAll(us => us.Nome == item.Nome);
+                        ListKPIGrupo = context.KPIGrupo.Where(x => x.Ativo == true).AsNoTracking().ToList();
+                        foreach (var item in ListKPIGrupo)
+                        {
+                            ListEntity.RemoveAll(us => us.Nome == item.Nome);
+                        }
+                    }
+                    else
+                    {
+                        ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Ativo == true && x.Perfil == perfil).AsNoTracking().ToList();
+                        foreach (var item in ListKPIGrupoUsuario)
+                        {
+                            ListEntity.RemoveAll(us => us.Nome == item.Nome);
+                        }
                     }
                 }
             }

@@ -54,16 +54,16 @@
                 <div class="col-sm-2">
                     @if (Model.Entity.DataMinima == DateTime.MinValue)
                     {
-                        <div class="form-group">
-                            <label>Data Mínima</label>
-                            <input type="date" class="form-control" id="DataMinima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMinima">
-                        </div>
+                    <div class="form-group">
+                        <label>Data Mínima</label>
+                        <input type="date" class="form-control" id="DataMinima" name="DataMinima" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataMinima">
+                    </div>
                     }
                     else
                     {
                         <div class="form-group">
                             <label>Data Mínima</label>
-                            <input type="date" class="form-control" id="DataMinima" asp-for="@Model.Entity.DataMinima">
+                            <input type="date" class="form-control" id="DataMinima" name="DataMinima" asp-for="@Model.Entity.DataMinima">
                         </div>
                     }
                 </div>
@@ -72,14 +72,14 @@
                     {
                         <div class="form-group">
                             <label>Data Máxima</label>
-                            <input type="date" class="form-control" id="DataMaxima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMaxima">
+                            <input type="date" class="form-control" id="DataMaxima" name="DataMaxima" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataMaxima">
                         </div>
                     }
                     else
                     {
                         <div class="form-group">
                             <label>Data Máxima</label>
-                            <input type="date" class="form-control" id="DataMaxima" asp-for="@Model.Entity.DataMaxima">
+                            <input type="date" class="form-control" id="DataMaxima" name="DataMaxima" asp-for="@Model.Entity.DataMaxima">
                         </div>
                     }
                 </div>

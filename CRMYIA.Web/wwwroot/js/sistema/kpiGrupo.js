@@ -41,46 +41,46 @@ $("#IdUsuarioKPIGrupo").change(function () {
     $("#txtNomeKPIGrupo").val($("#IdUsuarioKPIGrupo").children("option:selected").text())
 });
 function AtualizarRealizado() {
-//    var grupos = CalcularGrupos();
-//    var realizado = 0.00;
-//    var valor = 0.00;
-//    var vidas = 0;
-//    $.each(grupos, function (i, d) {
-//        $.each(d.itens, function (i, da) {
-//            if (da.realizado == 0 && da.vidas == 0 && da.valores == 0) {
-//                $("#realizado-" + d.grupo).html("");
-//                $("#realizado-" + d.grupo).append(da.realizado);
+    var grupos = CalcularGrupos();
+    var realizado = 0.00;
+    var valor = 0.00;
+    var vidas = 0;
+    $.each(grupos, function (i, d) {
+        $.each(d.itens, function (i, da) {
+            if (da.realizado == 0 && da.vidas == 0 && da.valores == 0) {
+                $("#realizado-" + d.grupo).html("");
+                $("#realizado-" + d.grupo).append(da.realizado);
 
-//                $("#valor-" + d.grupo).html("");
-//                $("#valor-" + d.grupo).append(da.valores);
+                $("#valor-" + d.grupo).html("");
+                $("#valor-" + d.grupo).append(da.valores);
 
-//                $("#vidas-" + d.grupo).html("");
-//                $("#vidas-" + d.grupo).append(da.vidas);
-//            } else {
-//                realizado += realizado + parseFloat(da.realizado);
-//                vidas += parseInt(da.vidas);
-//                valor += parseFloat(da.valores);
-//            }
-//        });
-//        if (realizado != 0) {
-//            $("#realizado-" + d.grupo).html("");
-//            $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-//        }
+                $("#vidas-" + d.grupo).html("");
+                $("#vidas-" + d.grupo).append(da.vidas);
+            } else {
+                realizado += realizado + parseFloat(da.realizado);
+                vidas += parseInt(da.vidas);
+                valor += parseFloat(da.valores);
+            }
+        });
+        if (realizado != 0) {
+            $("#realizado-" + d.grupo).html("");
+            $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        }
 
-//        if (valor != 0) {
-//            $("#valor-" + d.grupo).html("");
-//            $("#valor-" + d.grupo).append(valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-//        }
+        if (valor != 0) {
+            $("#valor-" + d.grupo).html("");
+            $("#valor-" + d.grupo).append(valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+        }
 
-//        if (vidas != 0) {
-//            $("#vidas-" + d.grupo).html("");
-//            $("#vidas-" + d.grupo).append(vidas);
-//        }
+        if (vidas != 0) {
+            $("#vidas-" + d.grupo).html("");
+            $("#vidas-" + d.grupo).append(vidas);
+        }
 
-//        realizado = 0.00;
-//        valor = 0.00;
-//        vidas = 0;
-//    });
+        realizado = 0.00;
+        valor = 0.00;
+        vidas = 0;
+    });
 }
 function CalcularGrupos() {
     allGrupos = $(".grupo");
