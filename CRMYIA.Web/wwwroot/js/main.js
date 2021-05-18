@@ -640,7 +640,7 @@ function CadastroPropostas() {
     $('#PropostaIdLinha').change(function () {
         var IdLinha = $(this).val();
         CarregarPropostaLinhaCategoria(IdLinha);
-    });
+    });                                                       
 
     CalcularQuantidadeVidas();
 }
@@ -793,22 +793,28 @@ function CalcularQuantidadeVidas() {
 }
 
 function CarregarButtonDependentes() {
-    $('div[id*="divDependente"]').hide();
+    //$('div[id*="divDependente"]').hide();
 
-    function ContarDependentes() {
-        var qtd = $('div[id*="divDependente-"]:visible').length;
-        return qtd;
-    }
+    //function ContarDependentes() {
+    //    var qtd = $('div[id*="divDependente-"]:visible').length;
+    //    return qtd;
+    //}
+
+    //$('#ButtonAdicionarDependente').click(function () {
+    //    console.log('qtd ' + ContarDependentes());
+    //    var i = ContarDependentes();
+    //    $('div[id="divDependente-' + (i + 1).toString() + '"]').show();
+    //});
+
+    //$('#ButtonRemoverDependente').click(function () {
+
+    //});
 
     $('#ButtonAdicionarDependente').click(function () {
-        console.log('qtd ' + ContarDependentes());
-        var i = ContarDependentes();
-        $('div[id="divDependente-' + (i + 1).toString() + '"]').show();
-    });
-
-    $('#ButtonRemoverDependente').click(function () {
-
-    });
+        var i = $('div[id*="divDependente-"]').length + 1;
+        console.log(i);
+        AddDependente(i);
+    })
 }
 
 
@@ -1035,4 +1041,83 @@ function VerificaNomeArquivoAssinaturaCartao(data) {
     } else {
         return false;
     }
+}
+
+
+function AddDependente(i) {
+    var html = '';
+    html += '<div id="divDependente-' + i.toString() + '">';
+    html += '		<div class="card-header">';
+    html += '			<h3 class="card-title">Dependente ' + i.toString() + '</h3>';
+    html += '		</div>';
+    html += '		<div class="card-body">';
+    html += '			<div class="row">';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>CPF*</label>';
+    html += '						<input type="text" class="form-control cpf-cnpj" placeholder="CPF" required id="PropostaDocumentoCliente-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-6">';
+    html += '					<div class="form-group">';
+    html += '						<input type="hidden" class="form-control" id="PropostaIdClienteHidden-' + i.toString() + '" />';
+    html += '						<label>Nome*</label>';
+    html += '						<input type="text" class="form-control" placeholder="Nome" readonly id="PropostaClienteNome-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Data de Nascimento</label>';
+    html += '						<input type="text" class="form-control" placeholder="Data de Nascimento" readonly id="PropostaClienteDataNascAbertura-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-1">';
+    html += '					<div class="form-group">';
+    html += '						<label>Situação</label>';
+    html += '						<input type="text" class="form-control" placeholder="Situação" readonly id="PropostaClienteSituacao-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-1">';
+    html += '					<div class="form-group" style="margin-top:38px;">';
+    html += '						<a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))"><i class="fas fa-search" title="Ver Cadastro"></i></a>';
+    html += '					</div>';
+    html += '				</div>';
+    html += '			</div>';
+    html += '			<div class="row">';
+    html += '				<div class="col-sm-4">';
+    html += '					<div class="form-group">';
+    html += '						<label>Nome da Mãe</label>';
+    html += '						<input type="text" class="form-control" placeholder="Nome da Mãe" id="PropostaNomeMae-' + i.toString() + '" readonly />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Compra Carência?*</label>';
+    html += '						<div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">';
+    html += '							<input type="checkbox" class="custom-control-input" id="PropostaCompraCarencia-' + i.toString() + '">';
+    html += '							<label class="custom-control-label" for="PropostaCompraCarencia-' + i.toString() + '">Sim</label>';
+    html += '						</div>';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Nome Plano Origem</label>';
+    html += '						<input type="text" class="form-control" placeholder="NomePlanoOrigem" id="PropostaNomePlanoOrigem-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Vigência Contrato</label>';
+    html += '						<input type="text" class="form-control" placeholder="Vigência Contrato" id="PropostaVigenciaContrato-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2 text-right">';
+    html += '					<div class="form-group" style="margin-top:38px;">';
+    html += '						<button type="button" class="btn btn-danger" id="ButtonRemoverDependente-' + i.toString() + '"><i class="fa fa-minus-circle"></i>  Remover</button>';
+    html += '					</div>';
+    html += '				</div>';
+    html += '			</div>';
+    html += '		</div>';
+    html += '	</div>';
+    $('#DivDependentes').append(html);
 }

@@ -182,7 +182,7 @@
                 </div>
                 <div class="col-sm-1">
                     <div class="form-group" style="margin-top:38px;">
-                        <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))">Ver Cadastro</a>
+                        <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))"><i class="fas fa-search" title="Ver Cadastro"></i></a>
                     </div>
                 </div>
             </div>
@@ -262,84 +262,9 @@
                 </div>
             </div>
         </div>
-        @{
-                for(int i = 1; i <= 100; i++)
-            {
-            <div id="@("divDependente-" + i)" style="display:none;">
-                <div class="card-header">
-                    <h3 class="card-title">Dependente @i</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>CPF*</label>
-                                <input type="text" class="form-control cpf-cnpj" placeholder="CPF" required id="@("PropostaDocumentoCliente" + i)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="hidden" class="form-control" id="@("PropostaIdClienteHidden" + i)" />
-                                <label>Nome*</label>
-                                <input type="text" class="form-control" placeholder="Nome" readonly id="@("PropostaClienteNome" + i)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Data de Nascimento</label>
-                                <input type="text" class="form-control" placeholder="Data de Nascimento" readonly id="@("PropostaClienteDataNascAbertura" + i)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <label>Situação</label>
-                                <input type="text" class="form-control" placeholder="Situação" readonly id="@("PropostaClienteSituacao" + i)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                            <div class="form-group" style="margin-top:38px;">
-                                <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))">Ver Cadastro</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Nome da Mãe</label>
-                                <input type="text" class="form-control" placeholder="Nome da Mãe" id="@("PropostaNomeMae" + i)" readonly />
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Compra Carência?*</label>
-                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                    <input type="checkbox" class="custom-control-input" id="@("PropostaCompraCarencia" + i)">
-                                    <label class="custom-control-label" for="@("PropostaCompraCarencia" + i)">Sim</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Nome Plano Origem</label>
-                                <input type="text" class="form-control" placeholder="NomePlanoOrigem" id="@("PropostaNomePlanoOrigem" + i)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Vigência Contrato</label>
-                                <input type="text" class="form-control" placeholder="Vigência Contrato" id="@("PropostaVigenciaContrato" + i)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-2 text-right">
-                            <div class="form-group" style="margin-top:38px;">
-                                <button type="button" class="btn btn-danger" id="@("ButtonRemoverDependente" + i)"><i class="fa fa-minus-circle"></i>  Remover</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                    }
-        }
+        <div id="DivDependentes">
+
+        </div>
         <div class="card-footer">
             <button type="button" class="btn btn-primary" id="ButtonAdicionarDependente"><i class="fa fa-plus-circle"></i>  Adicionar Dependente</button>
         </div>
