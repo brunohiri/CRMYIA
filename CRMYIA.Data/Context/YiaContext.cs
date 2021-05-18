@@ -93,20 +93,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#if (DEBUG)
-                //optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                //      builder => builder.EnableRetryOnFailure());
-
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-                      builder => builder.EnableRetryOnFailure());
-#endif
-#if (!DEBUG)
-			//optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-			//	builder => builder.EnableRetryOnFailure());       
-
-            optionsBuilder.UseSqlServer("Server=172.31.1.76;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;",
-				builder => builder.EnableRetryOnFailure());
-#endif
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -1169,6 +1157,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.KPIGrupo)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_KPIGrupo");
             });
 
             modelBuilder.Entity<KPIGrupoUsuario>(entity =>
@@ -1204,6 +1197,11 @@ namespace CRMYIA.Data.Context
                     .HasForeignKey(d => d.IdKPIGrupo)
                     .HasConstraintName("KPIGrupo_KPIGrupoUsuario");
 
+                entity.HasOne(d => d.IdMetaNavigation)
+                    .WithMany(p => p.KPIGrupoUsuario)
+                    .HasForeignKey(d => d.IdMeta)
+                    .HasConstraintName("KPIMeta_KPIGrupoUsuario");
+
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.KPIGrupoUsuario)
                     .HasForeignKey(d => d.IdUsuario)
@@ -1218,10 +1216,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataMinima).HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdKPIGrupoUsuarioNavigation)
+                entity.HasOne(d => d.IdKPIGrupoNavigation)
                     .WithMany(p => p.KPIMeta)
-                    .HasForeignKey(d => d.IdKPIGrupoUsuario)
-                    .HasConstraintName("KPIGrupoUsuario_KPIMeta");
+                    .HasForeignKey(d => d.IdKPIGrupo)
+                    .HasConstraintName("KPIGrupo_KPIMeta");
             });
 
             modelBuilder.Entity<KPIMetaValor>(entity =>

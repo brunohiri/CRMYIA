@@ -17,6 +17,7 @@ namespace CRMYIA.Data.Entities
             HistoricoAcesso = new HashSet<HistoricoAcesso>();
             HistoricoLigacao = new HashSet<HistoricoLigacao>();
             HistoricoProposta = new HashSet<HistoricoProposta>();
+            KPIGrupo = new HashSet<KPIGrupo>();
             KPIGrupoUsuario = new HashSet<KPIGrupoUsuario>();
             LandingPage = new HashSet<LandingPage>();
             LandingPageCarrossel = new HashSet<LandingPageCarrossel>();
@@ -73,6 +74,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }
         public virtual ICollection<HistoricoProposta> HistoricoProposta { get; set; }
+        public virtual ICollection<KPIGrupo> KPIGrupo { get; set; }
         public virtual ICollection<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
         public virtual ICollection<LandingPage> LandingPage { get; set; }
         public virtual ICollection<LandingPageCarrossel> LandingPageCarrossel { get; set; }

@@ -36,7 +36,7 @@
     <div class="small-text">
         <div class="cl-effect-5">
             <a class="scroll" href="#contact">
-                <span data-hover="Faça uma cotação ↓">Faça uma cotação ↓</span>
+                <span data-hover="Faça sua cotação">Faça sua cotação</span>
             </a>
         </div>
     </div>
@@ -132,8 +132,8 @@
     <div class="container">
         <div class="col-sm-12 columns" data-scrollreveal="enter top and move 150px over 1s">
             <div class="header-text">
-                <div class="header-shadow-text">Faça uma cotação</div>
-                <h1 style="color:#EE5C25">Faça uma cotação</h1>
+                <div class="header-shadow-text">Faça sua cotação</div>
+                <h1 style="color:#EE5C25">Faça sua cotação</h1>
                 <p>Encontre o melhor você, sua família ou sua empresa.</p>
             </div>
         </div>
@@ -301,6 +301,17 @@
                     </div>
                 </div>
             </div>
+            <div id="rowOutroLabel" class="row">
+                <p>Qual outro seguro precisa?</p>
+            </div>
+            <div id="rowOutro" class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Outro seguro</label>
+                        <input type="text" class="form-control" id="txtOutro" placeholder="Nome do seguro" asp-for="@Model.Entity.Outro">
+                    </div>
+                </div>
+            </div>
             <div id="rowCnpjLabel" class="row d-none">
                 <p>Você ou alguém da família tem um CNPJ ativo?</p>
             </div>
@@ -362,103 +373,107 @@
         </div>
     </div>
     <div id="contact">
-        <div class="container text-align-center">
+        <div class="container">
             <div class="row" style="background-color:#ffffff">
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/1.png" alt="" />
+                <div class="card-group card-group-scroll">
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/1.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/2.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/3.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/4.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/5.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/6.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/7.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/8.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/9.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/10.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/11.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/12.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/13.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/14.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/15.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/16.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/17.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/18.png" alt="" />
+                    </div>
+                    <div class="card">
+                        <img class="responsive" src="/lib/template/images/logos/19.png" alt="" />
+                    </div>
                 </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/2.png" alt="" />
+                <div id="corretor"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-sm-12 d-flex justify-content-center" data-scrollreveal="enter left and move 150px over 1s">
+
+        <div class="corretor">
+            <div class="left">
+                <img src="@Model.Corretor.CaminhoFoto@Model.Corretor.NomeFoto" alt="@Model.Corretor.NomeFoto" width="100">
+                <h4>@Model.Corretor.Nome</h4>
+                <p>Corretor YIA</p>
+            </div>
+            <div class="right">
+                <div class="info">
+                    <h3>Informaçôes do corretor</h3>
+                    <div class="info_data">
+                        <div class="data">
+                            <h4>Email</h4>
+                            <p>@Model.Corretor.Email</p>
+                        </div>
+                        <div class="data">
+                            <h4>Telefone</h4>
+                            <p>@Model.Corretor.Telefone</p>
+                        </div>
+                    </div>
+                    <p class="text-align-center"><em>Segunda à Sexta | 09:00–18:00</em></p>
                 </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/3.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/4.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/5.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/6.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/7.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/8.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/9.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/10.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/11.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/12.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/13.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/14.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/15.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/16.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/17.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/18.png" alt="" />
-                </div>
-                <div class="col-sm-2 tumb-parceiro">
-                    <img class="responsive" src="/lib/template/images/logos/19.png" alt="" />
+                <div class="social_media">
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fab fa-whatsapp"></i></a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <div id="corretor"></div>
-    </div>
-    
-    <div class="col-sm-12 d-flex justify-content-center" data-scrollreveal="enter left and move 150px over 1s">
-
-            <div class="corretor">
-                <div class="left">
-                    <img src="@Model.Corretor.CaminhoFoto@Model.Corretor.NomeFoto" alt="@Model.Corretor.NomeFoto" width="100">
-                    <h4>@Model.Corretor.Nome</h4>
-                    <p>Corretor YIA</p>
-                </div>
-                <div class="right">
-                    <div class="info">
-                        <h3>Informaçôes do corretor</h3>
-                        <div class="info_data">
-                            <div class="data">
-                                <h4>Email</h4>
-                                <p>@Model.Corretor.Email</p>
-                            </div>
-                            <div class="data">
-                                <h4>Telefone</h4>
-                                <p>@Model.Corretor.Telefone</p>
-                            </div>
-                        </div>
-                        <p class="text-align-center"><em>Segunda à Sexta | 09:00–18:00</em></p>
-                    </div>
-                    <div class="social_media">
-                        <ul>
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fab fa-whatsapp"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
     </div>
     <div class="eight columns" data-scrollreveal="enter right and move 150px over 1s">
         <div class="contact-wrap">
@@ -472,5 +487,20 @@
     <div id="google_map"></div>
 </div>
 
-
+<!-- /.modal cookies -->
+<div class="modal fade" id="modalCookies">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 style="color:black">Usamos cookies</h5>
+                <p>Utilizamos cookies para melhorar sua experiência em nosso site. Ao continuar navegando, você concorda com a nossa  Política de Privacidade.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button id="btnModalCookies" type="button" class="btn btn-primary">Aceitar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 

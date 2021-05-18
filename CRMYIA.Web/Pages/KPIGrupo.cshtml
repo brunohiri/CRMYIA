@@ -39,27 +39,14 @@
                                 <h3 class="card-title">Perfis</h3>
 
                                 <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <button type="button" style="border:none;" class="btn btn-outline-light btn-sm" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
                                     </button>
                                 </div>
                                 <!-- /.card-tools -->
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body" style="display: block;">
-                                <span class="card-header-text text-center">
-                                    <select class="form-control btn-outline-dark" style="width: 100%;" onchange="this.form.submit()"
-                                            asp-for="@Model.IdPerfil" id="IdPerfil" name="IdPerfil">
-                                        <option value="0">Selecione um perfil</option>
-                                        <option selected="selected" value="1">Gerente</option>
-                                        <option value="2">Supervisor</option>
-                                        <option value="3">Corretor</option>
-                                    </select>
-                                </span>
-
-                                <div class="row m-2 text-center">
-                                    <button type="button" data-toggle="modal" data-target="#modal-Grupo" class="btn btn-block btn-outline-dark btn-xs">Novo grupo +</button>
-                                </div>
+                            <div class="card-body mb-5 mt-1" style="display: block;">
                                 <div class="input-group input-group-sm">
                                     <input class="form-control btn-outline-dark" id="searchKPIGrupo" type="text" placeholder="Nome..." aria-label="Nome">
                                     <div class="input-group-append">
@@ -68,14 +55,17 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div class="row m-2 text-center">
+                                    <button type="button" data-toggle="modal" data-target="#modal-Grupo" class="btn btn-block btn-outline-dark btn-xs">Novo grupo +</button>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
                         <div class="containerLoad">
                             <ul class="sortable ui-sortable TODO" id="Pefis" data-grupo-id="Pefis">
-                                @if ((Model.ListPerfil != null) && (Model.ListPerfil.Count > 0))
+                                @if ((Model.ListCorretor != null) && (Model.ListCorretor.Count > 0))
                                 {
-                                    foreach (var Item in Model.ListPerfil)
+                                    foreach (var Item in Model.ListCorretor)
                                     {
                                         <li class="text-row ui-sortable-handle"
                                             data-realizado="0"
@@ -111,23 +101,16 @@
                                                             </div>
                                                             <div class="card-footer bg-gradient-light">
                                                                 <div class="row">
-                                                                    <div class="col-sm-4 border-right">
+                                                                    <!-- /.col -->
+                                                                    <div class="col-sm-6 border-right">
                                                                         <div class="description-block">
                                                                             <h5 class="description-header">0</h5>
-                                                                            <span class="description-text">Realizado</span>
+                                                                            <span class="description-text">Valores</span>
                                                                         </div>
                                                                         <!-- /.description-block -->
                                                                     </div>
                                                                     <!-- /.col -->
-                                                                    <div class="col-sm-4 border-right">
-                                                                        <div class="description-block">
-                                                                            <h5 class="description-header">0</h5>
-                                                                            <span class="description-text">Meta</span>
-                                                                        </div>
-                                                                        <!-- /.description-block -->
-                                                                    </div>
-                                                                    <!-- /.col -->
-                                                                    <div class="col-sm-4">
+                                                                    <div class="col-sm-6">
                                                                         <div class="description-block">
                                                                             <h5 class="description-header">0</h5>
                                                                             <span class="description-text">Vidas</span>
@@ -162,96 +145,103 @@
                                     <div class="card-header">
                                         <h3 id="nome-grupo-@Item.IdKPIGrupo" class="card-title">@Item.Nome.Trim()</h3>
                                         <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <button type="button"style="border:none;" class="btn btn-outline-light btn-sm" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
+                                            </button>
+                                            <button type="button" onclick="ExcluirKPICard(@Item.IdUsuario)" style="border:none;" class="btn btn-outline-light btn-sm" id="btnRemove-@Item.IdUsuario" name="btnRemove-@Item.IdUsuario">
+                                                <i class="fas fa-times"></i>
                                             </button>
                                         </div>
                                         <!-- /.card-tools -->
                                     </div>
                                     <!-- /.card-header -->
                                     <div class="card-body" style="display: block;">
-                                        <div  class="row">
-                                            <div class="col-sm-6 border-bottom">
-                                                <div class="description-block">
-                                                    <h5 id="realizado-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Realizado</span>
-                                                </div>
-                                                <!-- /.description-block -->
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <a asp-page="/NovaMetaGrupo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))">
+                                                    <button type="button" class="btn btn-block btn-outline-dark btn-xs">Nova meta +</button>
+                                                </a>
                                             </div>
-                                            <!-- /.col -->
-                                            <div class="col-sm-6 border-bottom">
-                                                <div class="description-block">
-                                                    <h5 id="valor-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Meta R$ Grupo</span>
-                                                </div>
-                                                <!-- /.description-block -->
-                                            </div>
-                                            <!-- /.col -->
                                         </div>
-                                        <div class="row mb-n3">
-                                            <div class="col-sm-6">
-                                                <div class="description-block">
-                                                    <h5 id="realizadoVidas-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Realizado</span>
+                                        @{
+                                            foreach (var MetaItem in Item.KPIMeta)
+                                            {
+                                                var MetaItems = KPIMetaModel.GetByMeta(MetaItem.IdMeta);
+
+                                                <div class="row">
+                                                    <div class="col-sm-6 border-bottom">
+                                                        <div class="description-block">
+                                                            <div class="col-sm-12">
+                                                                <span id="realizado-grupo-@Item.IdKPIGrupo">0</span>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <span>Realizado</span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    @foreach (var valorItem in MetaItems.KPIMetaValor)
+                                                    {
+                                                        <div class="col-sm-6 border-bottom">
+                                                            <div class="description-block">
+                                                                <div class="col-sm-12">
+                                                                    <span id="valor-grupo-@Item.IdKPIGrupo">@valorItem.ValorMaximo</span>
+                                                                </div>
+                                                                <div class="col-sm-12">
+                                                                    <span>Meta R$ grupo</span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.description-block -->
+                                                        </div>
+                                                    }
+                                                    <!-- /.col -->
                                                 </div>
-                                                <!-- /.description-block -->
-                                            </div>
-                                            <!-- /.col -->
-                                            <div class="col-sm-6">
-                                                <div class="description-block">
-                                                    <h5 id="vidas-grupo-@Item.IdKPIGrupo" class="description-header">0</h5>
-                                                    <span class="description-text">Vidas Grupo</span>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="description-block">
+                                                            <div class="col-sm-12">
+                                                                <span id="realizadoVidas-grupo-@Item.IdKPIGrupo">0</span>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <span>Realizado</span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    @foreach (var vidaItem in MetaItems.KPIMetaVida)
+                                                    {
+                                                        <div class="col-sm-6">
+                                                            <div class="description-block">
+                                                                <div class="col-sm-12">
+                                                                    <span id="vidas-grupo-@Item.IdKPIGrupo">@((int)vidaItem.ValorMaximo)</span>
+                                                                </div>
+                                                                <div class="col-sm-12">
+                                                                    <span>Vidas Grupo</span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.description-block -->
+                                                        </div>
+                                                    }
+                                                    <!-- /.col -->
                                                 </div>
-                                                <!-- /.description-block -->
-                                            </div>
-                                            <!-- /.col -->
-                                        </div>
+                                            }
+                                        }
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
-                                <ul class="sortable ui-sortable grupo grupo-@Item.IdKPIGrupo" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo">
+                                @{long idM = 0; }
+                                @foreach (var id in @Item.KPIMeta) { idM = id.IdMeta; }
+                                <ul class="sortable ui-sortable grupo grupo-@Item.IdKPIGrupo" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo"
+                                    data-meta-id="@idM">
                                     @if ((Model.ListKPIGrupoUsuario != null) && (Model.ListKPIGrupoUsuario.Count > 0))
                                     {
                                         foreach (var ItemListKPIGrupoUsuario in Model.ListKPIGrupoUsuario)
                                         {
                                             @if (ItemListKPIGrupoUsuario.IdKPIGrupo == Item.IdKPIGrupo)
                                             {
-                                                @foreach (var itemListRealizado in Model.listAllRealizado)
-                                                {
-                                                    @foreach (var itemRealizado in itemListRealizado)
-                                                    {
-                                                        @if (itemRealizado.IdUsuario == ItemListKPIGrupoUsuario.IdUsuario)
-                                                        {
-                                                            if (itemRealizado.ValorPrevisto != null)
-                                                                realizado = realizado + (decimal)itemRealizado.ValorPrevisto;
-                                                        }
-
-                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
-                                                        {
-                                                            @foreach (var itemValor in itemMeta.KPIMetaValor)
-                                                            {
-                                                                if (@itemValor.ValorMaximo != null)
-                                                                    valores = (decimal)@itemValor.ValorMaximo;
-                                                                else
-                                                                    valores = 0;
-                                                            }
-                                                        }
-                                                        @foreach (var itemMeta in ItemListKPIGrupoUsuario.KPIMeta)
-                                                        {
-                                                            @foreach (var itemVida in itemMeta.KPIMetaVida)
-                                                            {
-                                                                if (itemVida.ValorMaximo != null)
-                                                                    vidas = (int)@itemVida.ValorMaximo;
-                                                                else
-                                                                    vidas = 0;
-                                                            }
-                                                        }
-                                                    }
-
-                                                }
-
                                                 <li class="text-row ui-sortable-handle"
-                                                    data-realizado="@realizado"
                                                     data-vidas="@vidas"
                                                     data-valores="@valores"
                                                     data-user-id="@ItemListKPIGrupoUsuario.IdUsuario" id="@("id-" + ItemListKPIGrupoUsuario.IdUsuario)">
@@ -266,7 +256,7 @@
                                                                 <button type="button" class="btn btn-outline-light btn-sm" data-card-widget="collapse">
                                                                     <i class="fas fa-minus"></i>
                                                                 </button>
-                                                                <button type="button" onclick="ExcluirKPICard(@ItemListKPIGrupoUsuario.IdKPIGrupoUsuario)" class="btn btn-outline-light btn-sm" id="btnRemove-@ItemListKPIGrupoUsuario.IdKPIGrupoUsuario" name="btnRemove-@ItemListKPIGrupoUsuario.IdKPIGrupoUsuario">
+                                                                <button type="button" onclick="ExcluirKPICardUsuario(@ItemListKPIGrupoUsuario.IdKPIGrupoUsuario)" class="btn btn-outline-light btn-sm" id="btnRemove-@ItemListKPIGrupoUsuario.IdKPIGrupoUsuario" name="btnRemove-@ItemListKPIGrupoUsuario.IdKPIGrupoUsuario">
                                                                     <i class="fas fa-times"></i>
                                                                 </button>
                                                             </div>
@@ -283,22 +273,11 @@
                                                                     </div>
                                                                     <div class="card-footer bg-gradient-light">
                                                                         <div class="row">
-                                                                            <div class="col-sm-4 border-right">
-                                                                                <div class="description-block">
-                                                                                    <h5 class="description-header" style="font-size:12px">@realizado.ToString("C2")</h5>
-                                                                                    <span class="description-text">Realizado</span>
-                                                                                    @if (true)
-                                                                                    {
-                                                                                        realizado = 0;
-                                                                                    }
-                                                                                </div>
-                                                                                <!-- /.description-block -->
-                                                                            </div>
                                                                             <!-- /.col -->
-                                                                            <div class="col-sm-4 border-right">
+                                                                            <div class="col-sm-6 border-right">
                                                                                 <div class="description-block">
                                                                                     <h5 class="description-header" style="font-size:12px">@valores.ToString("C2")</h5>
-                                                                                    <span class="description-text">Meta</span>
+                                                                                    <span class="description-text">Valores</span>
                                                                                     @if (true)
                                                                                     {
                                                                                         valores = 0;
@@ -307,7 +286,7 @@
                                                                                 <!-- /.description-block -->
                                                                             </div>
                                                                             <!-- /.col -->
-                                                                            <div class="col-sm-4">
+                                                                            <div class="col-sm-6">
                                                                                 <div class="description-block">
                                                                                     <h5 class="description-header">@vidas</h5>
                                                                                     <span class="description-text">Vidas</span>
@@ -359,7 +338,7 @@
 
                         <div class="form-group">
                             <div class="alert alert-success alert-dismissible" id="KPIGrupoMensagemDivAlert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
                                 <i id="KPIGrupoMensagemIcon" class="icon fas fa-check"></i>
                                 <span id="KPIGrupoMensagemSpan">Dados salvos com sucesso!</span>
                             </div>
@@ -368,12 +347,18 @@
                 </div>
                 <form method="post" asp-page="/KPIGrupo" asp-page-handler="KPIGrupo" id="formKPIGrupo">
                     @Html.AntiForgeryToken()
-
+                    <input type="hidden" class="form-control" placeholder="Nome" asp-for="@Model.KPIGrupoEntity.Nome" id="txtNomeKPIGrupo">
                     <div class="row">
                         <div class="col-sm-10">
                             <div class="form-group">
-                                <label>Nome</label>
-                                <input type="text" class="form-control" placeholder="Nome" asp-for="@Model.KPIGrupoEntity.Nome">
+                                <label>Corretor</label>
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.KPIGrupoEntity.IdUsuario" id="IdUsuarioKPIGrupo">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListSupervisor)
+                                    {
+                                        <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-2">

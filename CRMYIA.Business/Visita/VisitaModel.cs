@@ -42,6 +42,26 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static bool ExisteMaisQueUm(string GuidId)
+        {
+            List<Visita> Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Visita
+                        .Include(y => y.IdStatusVisitaNavigation)
+                        .Where(x => x.GuidId == GuidId)
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity.Count > 1;
+        }
+
         public static Visita GetVisitaId(long IdVisita)
         {
             Visita Entity = null;
@@ -337,7 +357,7 @@ namespace CRMYIA.Business
                                 {
                                     ListEntityViewModel.Add(new VisitaViewModel()
                                     {
-                                        //sourceId = Item.IdVisita,
+                                        sourceId = Item.IdVisita,
                                         backgroundColor = Item.IdCalendarioSazonalNavigation.Cor,
                                         borderColor = Item.IdCalendarioSazonalNavigation.Cor,
                                         start = Convert.ToDateTime(Item.IdCalendarioSazonalNavigation.DataInicio?.ToString("yyyy-MM-dd")),
@@ -485,6 +505,50 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     context.Visita.Update(Entity);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void UpdateEventosSeguintes(Visita Entity, long IdVisita, string GuidId)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    var alterarVisita = context.Visita
+                  .Where(x => x.IdVisita >= IdVisita && x.GuidId == GuidId).First();
+
+                    alterarVisita = Entity;
+
+                    context.Visita.Attach(alterarVisita);
+                    context.Entry(alterarVisita).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void UpdateTodosEventos(Visita Entity, string GuidId)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    var alterarVisita = context.Visita
+                  .Where(x => x.GuidId == GuidId).First();
+
+                    alterarVisita = Entity;
+
+                    context.Visita.Attach(alterarVisita);
+                    context.Entry(alterarVisita).State = EntityState.Modified;
                     context.SaveChanges();
                 }
             }

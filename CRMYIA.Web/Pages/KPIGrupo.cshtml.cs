@@ -28,7 +28,9 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public KPIGrupo KPIGrupoEntity { get; set; }
         [BindProperty]
-        public List<ListaKPIUsuarioViewModel> ListPerfil { get; set; }
+        public List<ListaKPIUsuarioViewModel> ListCorretor { get; set; }
+        [BindProperty]
+        public List<ListaKPIUsuarioViewModel> ListSupervisor { get; set; }
         [BindProperty]
         public KPIUsuarioViewModel UsuarioCargo { get; set; }
         [BindProperty]
@@ -59,16 +61,13 @@ namespace CRMYIA.Web.Pages
         #region M�todos
         public IActionResult OnGet()
         {
-            CarregarLists(1);
+            CarregarLists();
             KPIGrupoEntity = new KPIGrupo();
             return Page();
         }
         public IActionResult OnPost()
         {
-            int id = 0;
-            id = int.Parse(Request.Form["IdPerfil"]);
-            if (id > 0)
-                CarregarLists(int.Parse(Request.Form["IdPerfil"]));
+            CarregarLists();
             return Page();
         }
         public IActionResult OnPostSearchByName(IFormCollection dados)
@@ -77,42 +76,26 @@ namespace CRMYIA.Web.Pages
             int start = int.Parse(dados["start"]);
             string nome = dados["termo"];
             int take = int.Parse(dados["take"]);
-            if (perfil > 0)
-            {
-                if (perfil == 1)
-                {
-                    IdPerfil = 1;
-                    ListPerfil = UsuarioModel.GetListKPIUsuarioByName((byte)(EnumeradorModel.Perfil.Gerente), "Gerente", nome);
-                }
-                if (perfil == 2)
-                {
-                    IdPerfil = 2;
-                    ListPerfil = UsuarioModel.GetListKPIUsuarioByName((byte)(EnumeradorModel.Perfil.Supervisor), "Supervisor", nome);
-                }
-                if (perfil == 3)
-                {
-                    IdPerfil = 3;
-                    ListPerfil = UsuarioModel.GetListKPIUsuarioByName((byte)(EnumeradorModel.Perfil.Corretor), "Corretor", nome).Select(x => new ListaKPIUsuarioViewModel
-                    {
-                        IdUsuario = x.IdUsuario,
-                        Nome = x.Nome,
-                        NomeFoto = x.NomeFoto,
-                        CaminhoFoto = x.CaminhoFoto,
-                        DataCadastro = x.DataCadastro,
-                        Corretora = x.Corretora,
-                        DescricaoPerfil = x.DescricaoPerfil,
-                        Ativo = x.Ativo
-                    }).Skip(start).Take(take).ToList();
-                }
-            }
 
-            return new JsonResult(new { listPerfil = ListPerfil, start = start == 0 ? 100 : start });
+            ListCorretor = UsuarioModel.GetListKPIUsuarioByName((byte)(EnumeradorModel.Perfil.Corretor), "Corretor", nome).Select(x => new ListaKPIUsuarioViewModel
+            {
+                IdUsuario = x.IdUsuario,
+                Nome = x.Nome,
+                NomeFoto = x.NomeFoto,
+                CaminhoFoto = x.CaminhoFoto,
+                DataCadastro = x.DataCadastro,
+                Corretora = x.Corretora,
+                DescricaoPerfil = x.DescricaoPerfil,
+                Ativo = x.Ativo
+            }).Skip(start).Take(take).ToList();
+
+            return new JsonResult(new { ListCorretor = ListCorretor, start = start == 0 ? 100 : start });
         }
         public IActionResult OnPostCorretores(IFormCollection dados)
         {
             int start = int.Parse(dados["start"]);
 
-            ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Corretor), "Corretor").Select(x => new ListaKPIUsuarioViewModel
+            ListCorretor = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Corretor), "Corretor").Select(x => new ListaKPIUsuarioViewModel
             {
                 IdUsuario = x.IdUsuario,
                 Nome = x.Nome,
@@ -124,11 +107,11 @@ namespace CRMYIA.Web.Pages
                 Ativo = x.Ativo
             }).Skip(start).Take(20).ToList();
 
-            return new JsonResult(new { listPerfil = ListPerfil });
+            return new JsonResult(new { ListCorretor = ListCorretor });
         }
-        public IActionResult OnGetEdit(string grupoId = null, string usuarioId = null)
+        public IActionResult OnGetEdit(string grupoId = null, string usuarioId = null, string metaId = null)
         {
-            if ((!grupoId.IsNullOrEmpty()) && (!usuarioId.IsNullOrEmpty()))
+            if ((!grupoId.IsNullOrEmpty()) && (!usuarioId.IsNullOrEmpty()) && (!metaId.IsNullOrEmpty()))
             {
                 KPIGrupoUsuario EntityKPIGrupoUsuario = KPIGrupoUsuarioModel.Get(usuarioId.ExtractLong());
 
@@ -136,6 +119,8 @@ namespace CRMYIA.Web.Pages
                 {
                     EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
                     EntityKPIGrupoUsuario.IdUsuario = usuarioId.ExtractLong();
+                    EntityKPIGrupoUsuario.IdMeta = metaId.ExtractLong();
+
 
                     KPIGrupoUsuarioModel.Update(EntityKPIGrupoUsuario);
                 }
@@ -146,6 +131,7 @@ namespace CRMYIA.Web.Pages
 
                     EntityKPIGrupoUsuario.IdKPIGrupo = grupoId.ExtractLong();
                     EntityKPIGrupoUsuario.IdUsuario = usuarioId.ExtractLong();
+                    EntityKPIGrupoUsuario.IdMeta = metaId.ExtractLong();
                     EntityKPIGrupoUsuario.Inicio = DateTime.Now;
                     EntityKPIGrupoUsuario.Nome = UsuarioCargo.Nome;
                     EntityKPIGrupoUsuario.Perfil = UsuarioCargo.DescricaoPerfil;
@@ -169,6 +155,7 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
+               var req = Request.Form;
                 if (KPIGrupoEntity.IdKPIGrupo == 0)
                 {
                     KPIGrupoEntity.DataCadastro = DateTime.Now;
@@ -194,6 +181,25 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnPostExcluirKPIGrupo(IFormCollection dados)
         {
+            int id;
+            bool status = false;
+            KPIGrupo user = new KPIGrupo();
+
+            id = int.Parse(dados["id"]);
+            user.IdKPIGrupo = id;
+
+            if (id > 0)
+            {
+                KPIGrupoModel.Excluir(user);
+                status = true;
+            }
+            if (status == false)
+                return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
+            else
+                return new JsonResult(new { mensagem = "Sucesso", status });
+        }
+        public IActionResult OnPostExcluirKPIGrupoUsuario(IFormCollection dados)
+        {
             int id = 0;
             string motivo = "";
             bool status = false;
@@ -216,59 +222,33 @@ namespace CRMYIA.Web.Pages
         }
         #endregion
 
-        //        List<List<ListKPIRealizadoPropostaViewModel>> listR = new List<List<ListKPIRealizadoPropostaViewModel>>();
 
-        //            foreach (var item in ListKPIGrupoUsuario)
-        //            {
-        //                foreach (var item2 in item.KPIMeta)
-        //                {
-        //                    listR.Add(PropostaModel.GetListKPIRealizadoProposta((long) item.IdUsuario, item2.DataMinima, item2.DataMaxima));
-        //                }
-        //}
-
-
-        public void CarregarLists(int perfil = 0)
+        public void CarregarLists()
         {
             ListKPIGrupo = KPIGrupoModel.GetList();
             ListKPIGrupoUsuario = KPIGrupoUsuarioModel.GetList();
-            listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
-            foreach (var item in ListKPIGrupoUsuario)
-            {
-                foreach (var item2 in item.KPIMeta)
-                {
-                    listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima));
-                }
-            }
-            if (perfil > 0)
-            {
-                if (perfil == 1)
-                {
-                    IdPerfil = 1;
-                    ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Gerente), "Gerente");
-                }
-                if (perfil == 2)
-                {
-                    IdPerfil = 2;
-                    ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Supervisor), "Supervisor");
-                }
-                if (perfil == 3)
-                {
-                    IdPerfil = 3;
-                    ListPerfil = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Corretor), "Corretor").Select(x => new ListaKPIUsuarioViewModel
-                    {
-                        IdUsuario = x.IdUsuario,
-                        Nome = x.Nome,
-                        NomeFoto = x.NomeFoto,
-                        CaminhoFoto = x.CaminhoFoto,
-                        DataCadastro = x.DataCadastro,
-                        Corretora = x.Corretora,
-                        DescricaoPerfil = x.DescricaoPerfil,
-                        Ativo = x.Ativo
-                    }).Take(20).ToList();
-                }
+            //listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
+            //foreach (var item in ListKPIGrupoUsuario)
+            //{
+            //    foreach (var item2 in item.IdKPIGrupoNavigation.KPIMeta)
+            //    {
+            //        listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima));
+            //    }
+            //}
 
-            }
+            ListSupervisor = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Supervisor), "Supervisor");
 
+            ListCorretor = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Corretor), "Corretor").Select(x => new ListaKPIUsuarioViewModel
+            {
+                IdUsuario = x.IdUsuario,
+                Nome = x.Nome,
+                NomeFoto = x.NomeFoto,
+                CaminhoFoto = x.CaminhoFoto,
+                DataCadastro = x.DataCadastro,
+                Corretora = x.Corretora,
+                DescricaoPerfil = x.DescricaoPerfil,
+                Ativo = x.Ativo
+            }).Take(20).ToList();
         }
 
     }

@@ -29,7 +29,26 @@ namespace CRMYIA.Business
                 {
                     Entity = context.KPIMeta
                         .AsNoTracking()
-                        .Where(x => x.Ativo && x.IdKPIGrupoUsuario == IdKPIUsuario)
+                        .Where(x => x.Ativo && x.IdKPIGrupoNavigation.IdUsuario == IdKPIUsuario)
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+        public static KPIMeta GetByMeta(long IdMeta)
+        {
+            KPIMeta Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.KPIMeta.Include(x => x.KPIMetaValor).Include(y => y.KPIMetaVida)
+                        .Where(x => x.Ativo && x.IdMeta == IdMeta)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -48,7 +67,7 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.KPIMeta
+                    ListEntity = context.KPIMeta.Include(x => x.KPIMetaValor).Include(y => y.KPIMetaVida)
                         .Where(x => x.Ativo)
                         .AsNoTracking()
                         .OrderBy(o => o.DataMaxima).ToList();

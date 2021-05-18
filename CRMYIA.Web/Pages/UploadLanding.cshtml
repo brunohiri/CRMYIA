@@ -1,0 +1,221 @@
+﻿@page
+@model CRMYIA.Web.Pages.UploadLanding
+@{
+    ViewData["Title"] = "Upload";
+    ViewData["Pagina"] = "Landing Page";
+}
+@section Scripts {
+    <script src="~/js/sistema/uploadLanding.js"></script>
+}
+@using CRMYIA.Business.Util;
+@{ var caminhoImagem = ""; }
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <form role="form" id="uploadLandingCarrossel" method="post" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="row" id="MensagemDiv" style="display: none;">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="alert alert-success alert-dismissible" id="MensagemDivAlert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <i id="MensagemIcon" class="icon fas fa-check"></i>
+                                    <span id="MensagemSpan">Dados salvos com sucesso!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <input type="hidden" class="form-control" name="CaminhoImagem" id="CaminhoImagem" value="0">
+                        <input type="hidden" class="form-control" name="IdLandingPageCarrossel" id="IdLandingPageCarrossel" value="0">
+                        @if (@Model.Entity.IdLandingPageCarrossel! > 0)
+                        {
+                            <input type="hidden" class="form-control" name="ImagemDiferente" asp-for="@Model.ImagemDiferente" id="ImagemDiferente">
+                        }
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Título</label>
+                                <input type="text" placeholder="Título" class="form-control" name="Titulo" id="Titulo">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Corretor</label>
+                                <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuario" name="IdUsuarioLand" id="IdUsuarioLand">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListCorretor)
+                                    {
+                                        <option value="@Item.IdUsuario">@(Item.Nome)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" name="Ativo" id="Ativo" checked asp-for="@Model.Entity.Ativo">
+                                    <label class="custom-control-label" for="Ativo">Ativo</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row btn-adicionar-imagem align-items-center">
+                        <div class="col-sm-2">
+                            <span class="btn btn-success fileinput-button dz-clickable my-5">
+                                <span>Adicionar imagens &nbsp;</span><i class="fas fa-upload"></i>
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>Tamanho padrão 1920x1080 desktop e 1253x1963 mobile.</h5>
+                        </div>
+                    </div>
+                    <div class="table table-striped files" id="imageUpload">
+                        <div id="template" class="file-row dz-image-preview">
+                            <!-- This is used as the file preview template -->
+                            <div>
+                                <span class="preview"><img data-dz-thumbnail></span>
+                            </div>
+                            <div>
+                                <p class="name" data-dz-name></p>
+                                <strong class="error text-danger" data-dz-errormessage></strong>
+                            </div>
+                            <div>
+                                <p class="size" data-dz-size></p>
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                </div>
+                            </div>
+                            <div>
+                                <button data-dz-remove class="btn btn-danger delete">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span>Excluir</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer salvar-texto" style="display: none">
+                    <button type="button" id="btn-salvar-texto" class="btn btn-success">Salvar</button>
+                </div>
+                <div class="card-footer uploadLandingCarrossel" style="display: block">
+                    <button type="submit" id="btnUploadLandingCarrossel" class="btn btn-success">Salvar</button>
+                    <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
+                </div>
+            </form>
+            <div id="tableLandingCarrossel">
+                <div class="card-body table-responsive">
+                    <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Imagem</th>
+                                <th>Usuário</th>
+                                <th>Cadastro</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                            {
+                                foreach (var Item in Model.ListEntity)
+                                {
+                                    if (Item.CaminhoArquivo != null && Item.NomeArquivo != null)
+                                    {
+                                        caminhoImagem = Item.CaminhoArquivo + Item.NomeArquivo;
+                                    }
+                                    else
+                                    {
+                                        caminhoImagem = "/img/carrosselLanding/imgCorretor.jpeg";
+                                    }
+                                    <tr>
+                                        <td class="text-center"></td>
+                                        <td class="text-center"> @Html.Raw(!string.IsNullOrEmpty(caminhoImagem) ? "<img src='" + caminhoImagem + "'  style=\"width: 50px!important;\" > " : "Não")</td>
+                                        <td class="text-center">@Item.IdUsuarioNavigation.Nome</td>
+                                        <td class="text-center">@Item.DataCadastro</td>
+                                        <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span title=\"ATIVADO\" class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span title=\"DESATIVADO\" class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                        <td class="text-center">
+                                            <span class="btn alterar-titulo" title="Editar Texto" data-idlandcarrossel="@Item.IdLandingPageCarrossel"><i class="icon fas fa-edit"></i></span>
+                                            <span class="btn alterar-imagem" title="Editar Imagem" data-idlandcarrossel="@Item.IdLandingPageCarrossel" data-nomearquivo="@Item.NomeArquivo" data-caminhoimagem="@caminhoImagem"><i class="fas fa-images"></i></span>
+                                            <span class="btn excluir-imagem" title="Excluir Imagem" data-idlandcarrossel="@Item.IdLandingPageCarrossel" data-nomearquivo="@Item.NomeArquivo"><i class="fas fa-trash-alt"></i></span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Alterar Imagem -->
+<div class="modal fade" id="modalAlterarImagem" tabindex="-1" aria-labelledby="modalAlterarImagem" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabelAlterarImagem"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-alterarUploadLandingCarrossel">
+                <div class="row" id="ModalAlterarImagemMensagemDiv" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="alert alert-success alert-dismissible" id="ModalAlterarImagemMensagemDivAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i id="ModalAlterarImagemMensagemIcon" class="icon fas fa-check"></i>
+                                <span id="ModalAlterarImagemMensagemSpan">Dados salvos com sucesso!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <img src="" id="imagem" width="80px" alt="Alterar Imagem" />
+                </div>
+                <form role="form" id="alterarUploadLandingCarrossel" method="post" enctype="multipart/form-data">
+                    <div class="table table-striped files" id="imageUploadAlterar">
+                        <div id="template-alterar" class="file-row dz-image-preview">
+                            <!-- This is used as the file preview template -->
+                            <div>
+                                <span class="preview"><img data-dz-thumbnail></span>
+                            </div>
+                            <div>
+                                <p class="name" data-dz-name></p>
+                                <strong class="error text-danger" data-dz-errormessage></strong>
+                            </div>
+                            <div>
+                                <p class="size" data-dz-size></p>
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                </div>
+                            </div>
+                            <div>
+                                <button data-dz-remove class="btn btn-danger delete">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                    <span>Excluir</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <span class="btn btn-success fileinput-alterar dz-clickable my-5">
+                            <i class="fas fa-upload"></i>
+                            <span> Adicionar Imagens...</span>
+                        </span>
+                        <button type="submit" id="btnAlterar" class="btn btn-primary">Alterar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -279,7 +279,7 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         Entity.ValorMetaEstipulada = context.KPIMetaValor
-                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoUsuario == IdUsuario)
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoNavigation.IdUsuario == IdUsuario)
                             .Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta
@@ -377,7 +377,7 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         context.KPIMetaValor
-                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoUsuario == IdUsuario)
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoNavigation.IdUsuario == IdUsuario)
                             .Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta
@@ -485,7 +485,7 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         Entity.ValorMetaEstipulada = context.KPIMetaValor
-                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoUsuario == IdUsuario)
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoNavigation.IdUsuario == IdUsuario)
                             .Sum(y => y.ValorMaximo.Value).ToString("c2");
                             //.Sum(y => y.ValorMaximo.Value).ToString("c2");
 
@@ -566,7 +566,7 @@ namespace CRMYIA.Business.Dashboard
                             .Sum(y => y.ValorPrevisto.Value).ToString("c2");
 
                         Entity.ValorMetaEstipulada = context.KPIMetaValor
-                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoUsuario == IdUsuario)
+                            .Where(x => x.Ativo && x.IdMetaNavigation.IdKPIGrupoNavigation.IdUsuario == IdUsuario)
                             .Sum(y => y.ValorMaximo.Value).ToString("c2");
 
                         Entity.QtdNegociosPerdidos = context.Proposta

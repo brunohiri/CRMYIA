@@ -1,0 +1,176 @@
+﻿@page
+@model CRMYIA.Web.Pages.NovaMetaGrupoModel
+@{ ViewData["Title"] = "Novo";
+                ViewData["Pagina"] = "KPI Meta Grupo"; }
+@section CSS {
+    <link href="~/css/novaMetaGrupo.css" rel="stylesheet" />
+}
+@section Scripts {
+    <script src="~/js/sistema/novaMetaGrupo.js"></script>
+}
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+    </div>
+    <!-- /.card-header -->
+    <form method="post">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @if ((Model != null) && (Model.Mensagem != null))
+                        {
+                            <div class="@Model.Mensagem.CssClass alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i class="@Model.Mensagem.IconClass"></i>
+                                @Model.Mensagem.Mensagem
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMeta" id="MetaId">
+                <input type="hidden" class="form-control" asp-for="@Model.Mes" id="Mes">
+                <input type="hidden" class="form-control" name="IdKPIGrupo" asp-for="@Model.EntityKPIGrupo.IdKPIGrupo" id="IdKPIGrupo">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Supervisor</label>
+                        <input type="text" class="form-control is-valid" value="@Model.EntityKPIGrupo.Nome" disabled="">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <p class="text-bold">Periodo desejado</p>
+                    <input type="radio" id="radio1" name="radios" value="Personalizado" checked>
+                    <label for="radio1">Personalizado</label>
+                    <input type="radio" id="radio2" name="radios" value="Mensal">
+                    <label for="radio2">Mensal</label>
+                    <input type="radio" id="radio3" name="radios" value="Trimestral">
+                    <label for="radio3">Trimestral</label>
+                    <input type="radio" id="radio4" name="radios" value="Semestre">
+                    <label for="radio4">Semestre</label>
+                </div>
+                <div class="col-sm-2">
+                    @if (Model.Entity.DataMinima == DateTime.MinValue)
+                    {
+                        <div class="form-group">
+                            <label>Data mínima</label>
+                            <input type="date" class="form-control" id="DataMinima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMinima">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>Data mínima</label>
+                            <input type="date" class="form-control" id="DataMinima" asp-for="@Model.Entity.DataMinima">
+                        </div>
+                    }
+                </div>
+                <div class="col-sm-2">
+                    @if (Model.Entity.DataMaxima == DateTime.MinValue)
+                    {
+                        <div class="form-group">
+                            <label>Data mínima</label>
+                            <input type="date" class="form-control" id="DataMaxima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMaxima">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>Data mínima</label>
+                            <input type="date" class="form-control" id="DataMaxima" asp-for="@Model.Entity.DataMaxima">
+                        </div>
+                    }
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="MetaSwitch" checked asp-for="@Model.Entity.Ativo">
+                            <label class="custom-control-label" for="MetaSwitch">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Meta de Valores Monetários</h4>
+            <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaValorEntity.IdKPIMetaValor" id="KPIMetaValorId">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Mínimo</label>
+                        <input type="text" class="form-control money2" id="minValor" placeholder="Valores em R$" asp-for="@Model.KPIMetaValorEntity.ValorMinimo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Máximo</label>
+                        <input type="text" class="form-control money2" id="maxValor" placeholder="Valores em R$" asp-for="@Model.KPIMetaValorEntity.ValorMaximo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Mês</label>
+                        <input type="number" class="form-control" placeholder="Mês" id="MesValor" asp-for="@Model.KPIMetaValorEntity.Mes">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" class="form-control" placeholder="Ano" id="AnoValor" asp-for="@Model.KPIMetaValorEntity.Ano">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Descrição de metas monetárias</label>
+                        <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaValorEntity.Descricao"></textarea>
+                    </div>
+                </div>
+            </div>
+            <h4>Meta de Valores de Vidas</h4>
+            <div class="row">
+                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaVidaEntity.IdKPIMetaVida" id="KPIMetaVidaId">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Mínimo de Vidas</label>
+                        <input type="text" class="form-control" id="minVidas" min="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="N° de vidas" asp-for="@Model.KPIMetaVidaEntity.ValorMinimo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Valor Máximo de Vidas</label>
+                        <input type="text" class="form-control" id="maxVidas" min="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="N° de vidas" asp-for="@Model.KPIMetaVidaEntity.ValorMaximo">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Mês</label>
+                        <input type="number" class="form-control" placeholder="Mês" id="MesVida" asp-for="@Model.KPIMetaVidaEntity.Mes">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" class="form-control" placeholder="Ano" id="AnoVida" asp-for="@Model.KPIMetaVidaEntity.Ano">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Descrição de Metas de Vidas</label>
+                        <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaVidaEntity.Descricao"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="reset" class="btn btn-default" onclick="javascript:window.location.href='/KPIGrupo'">Voltar</button>
+            </div>
+        </div>
+    </form>
+</div>
