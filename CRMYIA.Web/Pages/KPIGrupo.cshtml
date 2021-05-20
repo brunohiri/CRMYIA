@@ -88,39 +88,37 @@
                                                     </div>
                                                 </div>
                                                 <div class="card-body p-0 mb-0" style="display: block;">
-                                                    <a href="">
-                                                        <div class="card card-widget widget-user mb-0">
-                                                            <!-- Add the bg color to the header using any of the bg-* classes -->
-                                                            <div class="widget-user-header card-color">
-                                                                <h3 class="widget-user-username">@Item.DescricaoPerfil</h3>
-                                                            </div>
-                                                            <div class="widget-user-image">
-                                                                <img class="img-circle elevation-2" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()">
-                                                            </div>
-                                                            <div class="card-footer bg-gradient-light">
-                                                                <div class="row">
-                                                                    <!-- /.col -->
-                                                                    <div class="col-sm-6 border-right">
-                                                                        <div class="description-block">
-                                                                            <h5 class="description-header">0</h5>
-                                                                            <span class="description-text">Valores</span>
-                                                                        </div>
-                                                                        <!-- /.description-block -->
-                                                                    </div>
-                                                                    <!-- /.col -->
-                                                                    <div class="col-sm-6">
-                                                                        <div class="description-block">
-                                                                            <h5 class="description-header">0</h5>
-                                                                            <span class="description-text">Vidas</span>
-                                                                        </div>
-                                                                        <!-- /.description-block -->
-                                                                    </div>
-                                                                    <!-- /.col -->
-                                                                </div>
-                                                                <!-- /.row -->
-                                                            </div>
+                                                    <div class="card card-widget widget-user mb-0">
+                                                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                                                        <div class="widget-user-header card-color">
+                                                            <h3 class="widget-user-username">@Item.DescricaoPerfil <span style="color:aliceblue;">&#127894;</span></h3>
                                                         </div>
-                                                    </a>
+                                                        <div class="widget-user-image">
+                                                            <img class="img-circle elevation-2" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()">
+                                                        </div>
+                                                        <div class="card-footer bg-gradient-light">
+                                                            <div class="row">
+                                                                <!-- /.col -->
+                                                                <div class="col-sm-6 border-right">
+                                                                    <div class="description-block">
+                                                                        <h5 class="description-header">0</h5>
+                                                                        <span class="description-text">Valores</span>
+                                                                    </div>
+                                                                    <!-- /.description-block -->
+                                                                </div>
+                                                                <!-- /.col -->
+                                                                <div class="col-sm-6">
+                                                                    <div class="description-block">
+                                                                        <h5 class="description-header">0</h5>
+                                                                        <span class="description-text">Vidas</span>
+                                                                    </div>
+                                                                    <!-- /.description-block -->
+                                                                </div>
+                                                                <!-- /.col -->
+                                                            </div>
+                                                            <!-- /.row -->
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <!-- /.card-body -->
                                             </div>
@@ -296,8 +294,7 @@
                                 </div>
                                 @{long idM = 0; }
                                 @foreach (var id in @Item.KPIMeta) { idM = id.IdMeta; }
-                                <ul class="sortable ui-sortable grupo grupo-@Item.IdKPIGrupo" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo"
-                                    data-meta-id="@idM">
+                                <ul class="sortable ui-sortable grupo grupo-@Item.IdKPIGrupo" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo" data-meta-id="@idM">
                                     @if ((Model.ListKPIGrupoUsuario != null) && (Model.ListKPIGrupoUsuario.Count > 0))
                                     {
                                         foreach (var ItemListKPIGrupoUsuario in Model.ListKPIGrupoUsuario)
@@ -338,47 +335,45 @@
                                                             </div>
                                                         </div>
                                                         <div class="card-body p-0 mb-0" style="display: block;">
-                                                            <a asp-page="/NovaMeta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemListKPIGrupoUsuario.IdUsuario.ToString()))">
-                                                                <div class="card card-widget widget-user mb-0">
-                                                                    <!-- Add the bg color to the header using any of the bg-* classes -->
-                                                                    <div class="widget-user-header card-color">
-                                                                        <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil</h3>
-                                                                    </div>
-                                                                    <div class="widget-user-image">
-                                                                        <img class="img-circle elevation-2" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()">
-                                                                    </div>
-                                                                    <div class="card-footer bg-gradient-light">
-                                                                        <div class="row">
-                                                                            <!-- /.col -->
-                                                                            <div class="col-sm-6 border-right">
-                                                                                <div class="description-block">
-                                                                                    <h5 class="description-header" style="font-size:12px">@valores.ToString("C2")</h5>
-                                                                                    <span class="description-text">Valores</span>
-                                                                                    @if (true)
-                                                                                    {
-                                                                                        valores = 0;
-                                                                                    }
-                                                                                </div>
-                                                                                <!-- /.description-block -->
-                                                                            </div>
-                                                                            <!-- /.col -->
-                                                                            <div class="col-sm-6">
-                                                                                <div class="description-block">
-                                                                                    <h5 class="description-header">@vidas</h5>
-                                                                                    <span class="description-text">Vidas</span>
-                                                                                    @if (true)
-                                                                                    {
-                                                                                        vidas = 0;
-                                                                                    }
-                                                                                </div>
-                                                                                <!-- /.description-block -->
-                                                                            </div>
-                                                                            <!-- /.col -->
-                                                                        </div>
-                                                                        <!-- /.row -->
-                                                                    </div>
+                                                            <div class="card card-widget widget-user mb-0">
+                                                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                                                <div class="widget-user-header card-color">
+                                                                    <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil &#127894;</h3>
                                                                 </div>
-                                                            </a>
+                                                                <div class="widget-user-image">
+                                                                    <img class="img-circle elevation-2" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()">
+                                                                </div>
+                                                                <div class="card-footer bg-gradient-light">
+                                                                    <div class="row">
+                                                                        <!-- /.col -->
+                                                                        <div class="col-sm-6 border-right">
+                                                                            <div class="description-block">
+                                                                                <h5 class="description-header" style="font-size:12px">@valores.ToString("C2")</h5>
+                                                                                <span class="description-text">Valores</span>
+                                                                                @if (true)
+                                                                                {
+                                                                                    valores = 0;
+                                                                                }
+                                                                            </div>
+                                                                            <!-- /.description-block -->
+                                                                        </div>
+                                                                        <!-- /.col -->
+                                                                        <div class="col-sm-6">
+                                                                            <div class="description-block">
+                                                                                <h5 class="description-header">@vidas</h5>
+                                                                                <span class="description-text">Vidas</span>
+                                                                                @if (true)
+                                                                                {
+                                                                                    vidas = 0;
+                                                                                }
+                                                                            </div>
+                                                                            <!-- /.description-block -->
+                                                                        </div>
+                                                                        <!-- /.col -->
+                                                                    </div>
+                                                                    <!-- /.row -->
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <!-- /.card-body -->
                                                     </div>

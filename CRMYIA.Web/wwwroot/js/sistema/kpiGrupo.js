@@ -18,8 +18,8 @@ $(document).ready(function () {
             AtualizarRealizado();
         },
         change: function (event, ui) {
-            var url = ui.item.attr("data-url");
-            ui.item.children().children().children().attr("href", url);
+            //var gId = ui.item.attr("data-grupo-id");
+            //var mId = ui.item.attr("data-meta-id");
         },
         stop: function (event, ui) {
             AtualizarRealizado();
@@ -42,30 +42,21 @@ $("#IdUsuarioKPIGrupo").change(function () {
 });
 function AtualizarRealizado() {
     var grupos = CalcularGrupos();
-    var realizado = 0.00;
     var valor = 0.00;
     var vidas = 0;
     $.each(grupos, function (i, d) {
         $.each(d.itens, function (i, da) {
-            if (da.realizado == 0 && da.vidas == 0 && da.valores == 0) {
-                $("#realizado-" + d.grupo).html("");
-                $("#realizado-" + d.grupo).append(da.realizado);
-
+            if (da.vidas == 0 && da.valores == 0) {
                 $("#valor-" + d.grupo).html("");
                 $("#valor-" + d.grupo).append(da.valores);
 
                 $("#vidas-" + d.grupo).html("");
                 $("#vidas-" + d.grupo).append(da.vidas);
             } else {
-                realizado += realizado + parseFloat(da.realizado);
                 vidas += parseInt(da.vidas);
                 valor += parseFloat(da.valores);
             }
         });
-        if (realizado != 0) {
-            $("#realizado-" + d.grupo).html("");
-            $("#realizado-" + d.grupo).append(realizado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        }
 
         if (valor != 0) {
             $("#valor-" + d.grupo).html("");
@@ -77,7 +68,6 @@ function AtualizarRealizado() {
             $("#vidas-" + d.grupo).append(vidas);
         }
 
-        realizado = 0.00;
         valor = 0.00;
         vidas = 0;
     });
@@ -483,23 +473,29 @@ function CadastroGrupos() {
     $('ul[id^="sort"]').sortable(
         {
             connectWith: ".sortable",
+            revert: 300,
             receive: function (e, ui) {
                 var grupo_id = $(ui.item).parent(".sortable").data("grupo-id");
                 var meta_id = $(ui.item).parent(".sortable").data("meta-id");
                 var usuario_id = $(ui.item).data("user-id");
-                $.ajax({
-                    url: '/KPIGrupo?handler=Edit&grupoId=' + grupo_id + '&usuarioId=' + usuario_id + '&metaId=' + meta_id,
-                    success: function (data) {
-                        if (data.status) {
-                            for (var i = 0; i < $('#sort' + grupo_id + ' li').length; i++) {
-                                if ($('#sort' + grupo_id + ' li').eq(i).data('user-id') == "0") {
-                                    $('#sort' + grupo_id + ' li').eq(i).remove();
+                if (grupo_id == 0 || meta_id == 0 || usuario_id == 0) {
+                    $(ui.sender).sortable('cancel', 'revert');
+                    toastr.warning("Meta não foi cadastrada!");
+                } else {
+                    $.ajax({
+                        url: '/KPIGrupo?handler=Edit&grupoId=' + grupo_id + '&usuarioId=' + usuario_id + '&metaId=' + meta_id,
+                        success: function (data) {
+                            if (data.status) {
+                                for (var i = 0; i < $('#sort' + grupo_id + ' li').length; i++) {
+                                    if ($('#sort' + grupo_id + ' li').eq(i).data('user-id') == "0") {
+                                        $('#sort' + grupo_id + ' li').eq(i).remove();
+                                    }
                                 }
+                                toastr.success("Salvo com sucesso!");
                             }
-                            toastr.success("Salvo com sucesso!");
                         }
-                    }
-                });
+                    });
+                }
             }
 
         }).disableSelection();

@@ -2,6 +2,8 @@
     $('input:radio').change(function () {
         if ($("#radio1").prop("checked") == true) {
             $("#DataMinima").val("dd/mm/aaaa");
+            $("#DtInicio").val("");
+            $("#DtFinal").val("");
             $("#DataMaxima").val("dd/mm/aaaa");
             $("#DataMinima").prop("disabled", false);
             $("#DataMaxima").prop("disabled", false);
@@ -16,6 +18,8 @@
             if (verificar()) {
                 $("#DataMinima").val(convertNormalDate(ter[0]));
                 $("#DataMaxima").val(convertNormalDate(seg[0]));
+                $("#DtInicio").val(convertNormalDate(ter[0]));
+                $("#DtFinal").val(convertNormalDate(seg[0]));
                 $("#DataMinima").prop("disabled", true);
                 $("#DataMaxima").prop("disabled", true);
                 $("#MesValor").val(ter[0].getMonth() + 1);
@@ -32,6 +36,8 @@
             if (verificar()) {
                 $("#DataMinima").val(convertNormalDate(ter[0]));
                 $("#DataMaxima").val(convertNormalDate(seg[0]));
+                $("#DtInicio").val(convertNormalDate(ter[0]));
+                $("#DtFinal").val(convertNormalDate(seg[0]));
                 $("#DataMinima").prop("disabled", true);
                 $("#DataMaxima").prop("disabled", true);
                 $("#MesValor").val(ter[0].getMonth() + 1);
@@ -47,6 +53,8 @@
             if (verificar()) {
                 $("#DataMinima").val(convertNormalDate(ter[0]));
                 $("#DataMaxima").val(convertNormalDate(seg[0]));
+                $("#DtInicio").val(convertNormalDate(ter[0]));
+                $("#DtFinal").val(convertNormalDate(seg[0]));
                 $("#DataMinima").prop("disabled", true);
                 $("#DataMaxima").prop("disabled", true);
                 $("#MesValor").val(ter[0].getMonth() + 1);
