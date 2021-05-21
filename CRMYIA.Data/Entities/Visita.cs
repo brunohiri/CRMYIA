@@ -26,6 +26,9 @@ namespace CRMYIA.Data.Entities
         public string Cor { get; set; }
         public byte? Tipo { get; set; }
         public string GuidId { get; set; }
+        public byte? Repete { get; set; }
+        public byte? Frequencia { get; set; }
+        public int? Repetir { get; set; }
 
         public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
         public virtual Proposta IdPropostaNavigation { get; set; }
