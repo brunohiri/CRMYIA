@@ -72,7 +72,6 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnPostSearchByName(IFormCollection dados)
         {
-            int perfil = int.Parse(dados["perfil"]);
             int start = int.Parse(dados["start"]);
             string nome = dados["termo"];
             int take = int.Parse(dados["take"]);
@@ -155,7 +154,7 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
-               var req = Request.Form;
+                var req = Request.Form;
                 if (KPIGrupoEntity.IdKPIGrupo == 0)
                 {
                     KPIGrupoEntity.DataCadastro = DateTime.Now;
@@ -227,14 +226,11 @@ namespace CRMYIA.Web.Pages
         {
             ListKPIGrupo = KPIGrupoModel.GetList();
             ListKPIGrupoUsuario = KPIGrupoUsuarioModel.GetList();
-            //listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
-            //foreach (var item in ListKPIGrupoUsuario)
-            //{
-            //    foreach (var item2 in item.IdKPIGrupoNavigation.KPIMeta)
-            //    {
-            //        listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item2.DataMinima, item2.DataMaxima));
-            //    }
-            //}
+            listAllRealizado = new List<List<ListKPIRealizadoPropostaViewModel>>();
+            foreach (var item in ListKPIGrupoUsuario)
+            {
+                listAllRealizado.Add(PropostaModel.GetListKPIRealizadoProposta((long)item.IdUsuario, item.IdMetaNavigation.DataMinima, item.IdMetaNavigation.DataMaxima));
+            }
 
             ListSupervisor = UsuarioModel.GetListKPIUsuario((byte)(EnumeradorModel.Perfil.Supervisor), "Supervisor");
 

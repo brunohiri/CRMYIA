@@ -32,12 +32,14 @@
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMeta" id="MetaId">
                 <input type="hidden" class="form-control" asp-for="@Model.Mes" id="Mes">
-                <input type="hidden" class="form-control" name="IdKPIGrupo" asp-for="@Model.EntityKPIGrupo.IdKPIGrupo" id="IdKPIGrupo">
+                <input type="hidden" class="form-control" asp-for="@Model.DtInicio" id="DtInicio">
+                <input type="hidden" class="form-control" asp-for="@Model.DtFinal" id="DtFinal">
+                <input type="hidden" class="form-control" name="IdKPIGrupo" asp-for="@Model.EntityKPIGrupo.IdKPIGrupo"  id="IdKPIGrupo">
 
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label>Supervisor</label>
-                        <input type="text" class="form-control is-valid" value="@Model.EntityKPIGrupo.Nome" disabled="">
+                        <input type="text" class="form-control is-valid" value="@Model.EntityKPIGrupo.Nome" asp-for="@Model.EntityKPIGrupo.Nome" disabled="">
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -56,14 +58,14 @@
                     {
                         <div class="form-group">
                             <label>Data Mínima</label>
-                            <input type="date" class="form-control" id="DataMinima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMinima">
+                            <input type="date" class="form-control" id="DataMinima" name="DataMinima" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataMinima">
                         </div>
                     }
                     else
                     {
                         <div class="form-group">
                             <label>Data Mínima</label>
-                            <input type="date" class="form-control" id="DataMinima" asp-for="@Model.Entity.DataMinima">
+                            <input type="date" class="form-control" id="DataMinima" name="DataMinima" asp-for="@Model.Entity.DataMinima">
                         </div>
                     }
                 </div>
@@ -72,14 +74,14 @@
                     {
                         <div class="form-group">
                             <label>Data Máxima</label>
-                            <input type="date" class="form-control" id="DataMaxima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMaxima">
+                            <input type="date" class="form-control" id="DataMaxima" name="DataMaxima" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataMaxima">
                         </div>
                     }
                     else
                     {
                         <div class="form-group">
                             <label>Data Máxima</label>
-                            <input type="date" class="form-control" id="DataMaxima" asp-for="@Model.Entity.DataMaxima">
+                            <input type="date" class="form-control" id="DataMaxima" name="DataMaxima" asp-for="@Model.Entity.DataMaxima">
                         </div>
                     }
                 </div>
