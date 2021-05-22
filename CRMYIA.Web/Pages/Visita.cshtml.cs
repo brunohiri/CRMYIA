@@ -142,8 +142,6 @@ namespace CRMYIA.Web.Pages
             //DateTime DataFim = Convert.ToDateTime(Data[1]);
 
             long IdUsuario = GetIdUsuario();
-            if (dados.IdVisita == 0 && dados.Tipo == (byte)3)
-            {
                 if (dados.Repete == 1)//Nunca
                 {
                     Nunca(dados);
@@ -185,50 +183,31 @@ namespace CRMYIA.Web.Pages
                     PersonalizadoAnualmente(dados);
                 }
 
-                if (dados.IdCalendarioSazonal == 0)
-                {
-                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
-                    {
-                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
-                        {
-                            Descricao = dados.Descricao,
-                            Cor = dados.Cor,
-                            Tipo = dados.Tipo,
-                            DataSazonal = dados.DataSazonal,
-                            DataInicio = dados.DataInicio,
-                            DataFim = dados.DataFim,
-                            DataCadastro = DateTime.Now,
-                            ExisteCampanha = dados.ExisteCampanha,
-                            Ativo = dados.Ativo
-                        });
-                    }
-                }
-            }
-            else
-            {
+            //else
+            //{
                 //byte? Visivel = 0;
                 //Guid GuidId;
                 //Visivel = VisivelPara();
                 //GuidId = ObterGuidId();
                 //long IdUsuario = GetIdUsuario();
 
-                Business.VisitaModel.Update(new Visita()
-                {
-                    IdVisita = dados.IdVisita,
-                    Descricao = dados.Descricao,
-                    DataAgendamento = DateTime.Now,
-                    DataInicio = dados.DataInicio,
-                    DataFim = dados.DataFim,
-                    DataCadastro = DateTime.Now,
-                    Observacao = dados.Observacao,
-                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                    Visivel = dados.Visivel,
-                    Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
-                    Cor = dados.Cor,
-                    IdUsuario = IdUsuario
-                });
-            }
+            //    Business.VisitaModel.Update(new Visita()
+            //    {
+            //        IdVisita = dados.IdVisita,
+            //        Descricao = dados.Descricao,
+            //        DataAgendamento = DateTime.Now,
+            //        DataInicio = dados.DataInicio,
+            //        DataFim = dados.DataFim,
+            //        DataCadastro = DateTime.Now,
+            //        Observacao = dados.Observacao,
+            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+            //        Visivel = dados.Visivel,
+            //        Tipo = dados.Tipo,
+            //        GuidId = dados.GuidId,
+            //        Cor = dados.Cor,
+            //        IdUsuario = IdUsuario
+            //    });
+            //}
 
             //Business.CalendarioSazonalModel.Add(ListCalendarioSazonal1);
             //Business.VisitaModel.AddList(ListVisita);
@@ -239,11 +218,6 @@ namespace CRMYIA.Web.Pages
             //    return new JsonResult(new { status = false, mensagem = "Campo Data obrigatório em branco!" });
             //else
             //{
-
-            if (dados.IdVisita == 0)
-            {
-
-            }
                 //        else if (dados.Tipo == 3)
                 //        {
                 //            UsuarioPerfil EntityUsuarioPerfil =  PerfilModel.GetIdentificacaoPerfil(IdUsuario);
@@ -426,6 +400,15 @@ namespace CRMYIA.Web.Pages
             Visivel = VisivelPara();
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
+            byte? IdStatusVisita = 0;
+            if (dados.Tipo == (byte)3)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
+            }
+            else if (dados.Tipo == (byte)1 && dados.Tipo == (byte)2)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.FeriadoDataSazonal;
+            }
 
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
@@ -439,28 +422,7 @@ namespace CRMYIA.Web.Pages
             int AnoFim = DataFim.Year;
             int MesFim = DataFim.Month;
 
-            if (dados.Termina == 1)
-            {
-                Business.VisitaModel.Add(new Visita()
-                {
-                    Descricao = dados.Descricao,
-                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
-                    DataInicio = DataInicio,
-                    DataFim = DataFim,
-                    DataCadastro = DateTime.Now,
-                    Observacao = dados.Observacao,
-                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                    Visivel = Visivel,
-                    Tipo = dados.Tipo,
-                    GuidId = GuidId.ToString(),
-                    Cor = dados.Cor,
-                    IdUsuario = IdUsuario
-                });
-            }
-
             int j = 0;
-
-            //#
 
             if (dados.Termina == 1)
             {
@@ -468,75 +430,218 @@ namespace CRMYIA.Web.Pages
 
                 DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
 
-                do
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
                 {
-                    DataInicio = DataInicio.AddDays(dados.Repetir);
-                    Dia.Add(DataInicio);
-
-                    DataFim = DataFim.AddDays(dados.Repetir);
-                    Dia.Add(DataFim);
-                    Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
-
-                    Business.VisitaModel.Add(new Visita()
+                    Business.VisitaModel.Update(new Visita()
                     {
+                        IdVisita = dados.IdVisita,
                         Descricao = dados.Descricao,
-                        DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                        DataAgendamento = DateTime.Now,
                         DataInicio = DataInicio,
                         DataFim = DataFim,
                         DataCadastro = DateTime.Now,
                         Observacao = dados.Observacao,
-                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                        IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = GuidId.ToString(),
+                        GuidId = dados.GuidId,
                         Cor = dados.Cor,
-                        IdUsuario = IdUsuario
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina
                     });
+                }
+                else
+                {
+                    do
+                    {
+                        if (dados.IdVisita == 0)
+                        {
+                            Business.VisitaModel.Add(new Visita()
+                            {
+                                Descricao = dados.Descricao,
+                                DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                DataInicio = DataInicio,
+                                DataFim = DataFim,
+                                DataCadastro = DateTime.Now,
+                                Observacao = dados.Observacao,
+                                IdStatusVisita = IdStatusVisita,
+                                Visivel = Visivel,
+                                Tipo = dados.Tipo,
+                                GuidId = GuidId.ToString(),
+                                Cor = dados.Cor,
+                                IdUsuario = IdUsuario,
+                                Repete = dados.Repete,
+                                Frequencia = dados.Frequencia,
+                                Repetir = dados.Repetir,
+                                Termina = dados.Termina
+                            });
+                        }
+                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                        {
+                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                            {
+                                Descricao = dados.Descricao,
+                                DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                DataInicio = DataInicio,
+                                DataFim = DataFim,
+                                DataCadastro = DateTime.Now,
+                                Observacao = dados.Observacao,
+                                IdStatusVisita = IdStatusVisita,
+                                Visivel = Visivel,
+                                Tipo = dados.Tipo,
+                                GuidId = dados.GuidId,
+                                Cor = dados.Cor,
+                                IdUsuario = IdUsuario,
+                                Repete = dados.Repete,
+                                Frequencia = dados.Frequencia,
+                                Repetir = dados.Repetir,
+                                Termina = dados.Termina
+                            }, dados.IdVisita, dados.GuidId);
+                        }
+                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                        {
+                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                            {
+                                Descricao = dados.Descricao,
+                                DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                DataInicio = DataInicio,
+                                DataFim = DataFim,
+                                DataCadastro = DateTime.Now,
+                                Observacao = dados.Observacao,
+                                IdStatusVisita = IdStatusVisita,
+                                Visivel = Visivel,
+                                Tipo = dados.Tipo,
+                                GuidId = dados.GuidId,
+                                Cor = dados.Cor,
+                                IdUsuario = IdUsuario,
+                                Repete = dados.Repete,
+                                Frequencia = dados.Frequencia,
+                                Repetir = dados.Repetir,
+                                Termina = dados.Termina
+                            }, dados.GuidId);
+                        }
 
-                    j++;
+                        DataInicio = DataInicio.AddDays(dados.Repetir);
+                        Dia.Add(DataInicio);
 
-                } while (j < 730);
+                        DataFim = DataFim.AddDays(dados.Repetir);
+                        Dia.Add(DataFim);
+                        Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+
+                        j++;
+
+                    } while (j < 730);
+                }
 
             }else if (dados.Termina == 2)
             {
-                
-
-                //DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
-
-                //DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
-                //var a = (DataFim - DataInicio).Days;
-
-                while (new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day) <= dados.DataTerminaEm){
-                    
-                   
-                    //Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
-
-                    Business.VisitaModel.Add(new Visita()
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.Update(new Visita()
                     {
+                        IdVisita = dados.IdVisita,
                         Descricao = dados.Descricao,
-                        DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                        DataAgendamento = DateTime.Now,
                         DataInicio = DataInicio,
                         DataFim = DataFim,
                         DataCadastro = DateTime.Now,
                         Observacao = dados.Observacao,
-                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                        IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = GuidId.ToString(),
+                        GuidId = dados.GuidId,
                         Cor = dados.Cor,
-                        IdUsuario = IdUsuario
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        DataTerminaEm = dados.DataTerminaEm
                     });
-                    Dia.Add(DataInicio);
+                }
+                else
+                {
+                    while (new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day) <= dados.DataTerminaEm)
+                    {
+                        //Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                        if(dados.IdVisita == 0)
+                        {
+                            Business.VisitaModel.Add(new Visita()
+                            {
+                                Descricao = dados.Descricao,
+                                DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                DataInicio = DataInicio,
+                                DataFim = DataFim,
+                                DataCadastro = DateTime.Now,
+                                Observacao = dados.Observacao,
+                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                                Visivel = Visivel,
+                                Tipo = dados.Tipo,
+                                GuidId = GuidId.ToString(),
+                                Cor = dados.Cor,
+                                IdUsuario = IdUsuario,
+                                Repete = dados.Repete,
+                                Frequencia = dados.Frequencia,
+                                Repetir = dados.Repetir,
+                                DataTerminaEm = dados.DataTerminaEm
+                            }); 
+                        }
+                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                        {
+                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                            {
+                                Descricao = dados.Descricao,
+                                DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                DataInicio = DataInicio,
+                                DataFim = DataFim,
+                                DataCadastro = DateTime.Now,
+                                Observacao = dados.Observacao,
+                                IdStatusVisita = IdStatusVisita,
+                                Visivel = Visivel,
+                                Tipo = dados.Tipo,
+                                GuidId = dados.GuidId,
+                                Cor = dados.Cor,
+                                IdUsuario = IdUsuario,
+                                Repete = dados.Repete,
+                                Frequencia = dados.Frequencia,
+                                Repetir = dados.Repetir,
+                                DataTerminaEm = dados.DataTerminaEm
+                            }, dados.IdVisita, dados.GuidId);
+                        }
+                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                        {
+                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                            {
+                                Descricao = dados.Descricao,
+                                DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                DataInicio = DataInicio,
+                                DataFim = DataFim,
+                                DataCadastro = DateTime.Now,
+                                Observacao = dados.Observacao,
+                                IdStatusVisita = IdStatusVisita,
+                                Visivel = Visivel,
+                                Tipo = dados.Tipo,
+                                GuidId = dados.GuidId,
+                                Cor = dados.Cor,
+                                IdUsuario = IdUsuario,
+                                Repete = dados.Repete,
+                                Frequencia = dados.Frequencia,
+                                Repetir = dados.Repetir,
+                                DataTerminaEm = dados.DataTerminaEm
+                            }, dados.GuidId);
+                        }
+                        Dia.Add(DataInicio);
+                        Dia.Add(DataFim);
+                        DataFim = DataFim.AddDays(dados.Repetir);
+                        DataInicio = DataInicio.AddDays(dados.Repetir);
+                        j++;
 
-
-                    Dia.Add(DataFim);
-                    DataFim = DataFim.AddDays(dados.Repetir);
-                    DataInicio = DataInicio.AddDays(dados.Repetir);
-                    j++;
-
+                    }
                 }
             //} while (new DateTime(DataFim.Year, DataFim.Month, DataFim.Day) != new DateTime(dados.DataTerminaEm.Year, dados.DataTerminaEm.Month, dados.DataTerminaEm.Day)) ;
-        }
+            }
         }
     
         private void PersonalizadoSemanalmente(EnviarCalendarioSazonalViewModel dados)
@@ -548,6 +653,15 @@ namespace CRMYIA.Web.Pages
             Visivel = VisivelPara();
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
+            byte? IdStatusVisita = 0;
+            if (dados.Tipo == (byte)3)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
+            }
+            else if (dados.Tipo == (byte)1 && dados.Tipo == (byte)2)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.FeriadoDataSazonal;
+            }
 
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
@@ -565,87 +679,238 @@ namespace CRMYIA.Web.Pages
 
             if (dados.Termina == 1)
             {
-                do
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
                 {
-                    var a = DataInicio.DayOfWeek.ToString();
-                    var e = Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString()));
-                    if (Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString())) == true)
+                    Business.VisitaModel.Update(new Visita()
                     {
-                        
-
-                        Business.VisitaModel.Add(new Visita()
+                        IdVisita = dados.IdVisita,
+                        Descricao = dados.Descricao,
+                        DataAgendamento = DateTime.Now,
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = IdStatusVisita,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        GuidId = dados.GuidId,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina,
+                        Semana = dados.Semana
+                    });
+                }
+                else
+                {
+                    do
+                    {
+                        var a = DataInicio.DayOfWeek.ToString();
+                        var e = Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString()));
+                        if (Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString())) == true)
                         {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
-                            DataInicio = DataInicio,
-                            DataFim = DataFim,
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });;
 
-                        j++;
-                    }
-                    DataInicio = DataInicio.AddDays(1);
-                    Dia.Add(DataInicio);
+                            if (dados.IdVisita == 0)
+                            {
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = DataInicio,
+                                    DataFim = DataFim,
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                    Repetir = dados.Repetir,
+                                    Termina = dados.Termina,
+                                    Semana = dados.Semana
+                                });
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = DataInicio,
+                                    DataFim = DataFim,
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                    Repetir = dados.Repetir,
+                                    Termina = dados.Termina,
+                                    Semana = dados.Semana
+                                }, dados.IdVisita, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = DataInicio,
+                                    DataFim = DataFim,
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                    Repetir = dados.Repetir,
+                                    Termina = dados.Termina,
+                                    Semana = dados.Semana
+                                }, dados.GuidId);
+                            }
 
-                    DataFim = DataFim.AddDays(1);
-                    Dia.Add(DataFim);
-                    Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                            j++;
+                        }
+                        DataInicio = DataInicio.AddDays(1);
+                        Dia.Add(DataInicio);
 
-                } while (new DateTime(DateTime.Now.Year + 8, DateTime.Now.Month, DateTime.Now.Day) > new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                        DataFim = DataFim.AddDays(1);
+                        Dia.Add(DataFim);
+                        Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
 
+                    } while (new DateTime(DateTime.Now.Year + 8, DateTime.Now.Month, DateTime.Now.Day) > new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                }
             }else if (dados.Termina == 2)
             {
-
-
-                //DataInicio = new DateTime(AnoInicio, MesInicio, DateTime.DaysInMonth(AnoInicio, MesInicio), DataInicio.Hour, DataInicio.Minute, DataInicio.Second);
-
-                //DataFim = new DateTime(AnoFim, MesFim, DateTime.DaysInMonth(AnoFim, MesFim), DataFim.Hour, DataFim.Minute, DataFim.Second);
-                //var a = (DataFim - DataInicio).Days;
-
-                
-                    while (DataInicio <= dados.DataTerminaEm)
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
                 {
-
-
-                    //Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
-                    var a = DataInicio.DayOfWeek.ToString();
-                    var e = Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString()));
-                    if (Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString())) == true)
+                    Business.VisitaModel.Update(new Visita()
                     {
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
-                            DataInicio = DataInicio,
-                            DataFim = DataFim,
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-
-                       
-                    }
-                    Dia.Add(DataInicio);
-
-                    DataFim = DataFim.AddDays(1);
-                    Dia.Add(DataFim);
-
-                    DataInicio = DataInicio.AddDays(1);
-                    j++;
+                        IdVisita = dados.IdVisita,
+                        Descricao = dados.Descricao,
+                        DataAgendamento = DateTime.Now,
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = IdStatusVisita,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        GuidId = dados.GuidId,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina,
+                        DataTerminaEm = dados.DataTerminaEm,
+                        Semana = dados.Semana
+                    });
                 }
-                
+                else
+                {
+                    while (DataInicio <= dados.DataTerminaEm)
+                    {
+                        //Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                        var a = DataInicio.DayOfWeek.ToString();
+                        var e = Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString()));
+                        if (Array.Exists(Semana, element => element.StartsWith(DataInicio.DayOfWeek.ToString())) == true)
+                        {
+                            if (dados.IdVisita == 0)
+                            {
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = DataInicio,
+                                    DataFim = DataFim,
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                    Repetir = dados.Repetir,
+                                    Termina = dados.Termina,
+                                    DataTerminaEm = dados.DataTerminaEm,
+                                    Semana = dados.Semana
+                                });
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = DataInicio,
+                                    DataFim = DataFim,
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                    Repetir = dados.Repetir,
+                                    Termina = dados.Termina,
+                                    DataTerminaEm = dados.DataTerminaEm,
+                                    Semana = dados.Semana
+                                }, dados.IdVisita, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = DataInicio,
+                                    DataFim = DataFim,
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                    Repetir = dados.Repetir,
+                                    Termina = dados.Termina,
+                                    DataTerminaEm = dados.DataTerminaEm,
+                                    Semana = dados.Semana
+                                }, dados.GuidId);
+                            }
+                        }
+                        Dia.Add(DataInicio);
+
+                        DataFim = DataFim.AddDays(1);
+                        Dia.Add(DataFim);
+
+                        DataInicio = DataInicio.AddDays(1);
+                        j++;
+                    }
+                }
             }
         }
 
@@ -656,6 +921,15 @@ namespace CRMYIA.Web.Pages
             Visivel = VisivelPara();
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
+            byte? IdStatusVisita = 0;
+            if (dados.Tipo == (byte)3)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
+            }
+            else if (dados.Tipo == (byte)1 && dados.Tipo == (byte)2)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.FeriadoDataSazonal;
+            }
 
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
@@ -693,719 +967,2664 @@ namespace CRMYIA.Web.Pages
 
             if (dados.Termina == 1)//Terminar Nunca
             {
-                while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond))
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
                 {
-                    if (dados.SelectMensalmente == 1)//Mensalmente no dia X
+                    Business.VisitaModel.Update(new Visita()
                     {
-                        if (dados.MesDia == DataInicio.Day)
-                        {
-                            if (DataInicio.Day == 31 && dados.MesDia == DataInicio.Day)//Dia 31
-                            {
-                                if (DataInicio.Day == 31 && DataFim.Day == 31)
-                                {
-                                    //DataInicio igual a 31 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 31 && DataFim.Day == 30)
-                                {
-                                    //DataInicio igual a 31 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 31 && DataFim.Day == 29)
-                                {
-                                    //DataInicio igual a 31 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 31 && DataFim.Day == 28)
-                                {
-                                    //DataInicio igual a 31 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 31 && DataFim.Day < 28)
-                                {
-                                    //DataInicio igual a 31 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
-                                DataFim = DataFim.AddDays(-16);//Adicona um Dia 
-                            }
-                            else if (DataInicio.Day == 30 && dados.MesDia == DataInicio.Day)//Dia 30
-                            {
-                                if (DataInicio.Day == 30 && DataFim.Day == 30)
-                                {
-                                    //DataInicio igual a 30 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 30 && DataFim.Day == 29)
-                                {
-                                    //DataInicio igual a 30 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 30 && DataFim.Day == 28)
-                                {
-                                    //DataInicio igual a 30 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 30 && DataFim.Day < 28)
-                                {
-                                    //DataInicio igual a 30 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
-                                DataFim = DataFim.AddDays(-16);//Adicona um Dia 
-                            }
-                            else if (DataInicio.Day == 29 && dados.MesDia == DataInicio.Day)//Dia 29
-                            {
-                                var a = DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month);
-                                if (DataInicio.Day == 29 && DataFim.Day == 28)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 29 && DataFim.Day == 29)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 29 && DataFim.Day == 30)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 29 && DataFim.Day == 31)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                else if (DataInicio.Day == 29 && DataFim.Day < 28)
-                                {
-                                    //DataInicio igual a 29 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
-                                DataFim = DataFim.AddDays(-16);//Adicona um Dia 
-                            }
-                            else if (DataInicio.Day <= 28 && DataInicio.Day <= 28 && dados.MesDia == DataInicio.Day)//Dia 29
-                            {
-                                //DataInicio menor igual 28 e DataFim menor igual 28
-                                Business.VisitaModel.Add(new Visita()
-                                {
-                                    Descricao = dados.Descricao,
-                                    DataAgendamento = DateTime.Now,
-                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                    DataCadastro = DateTime.Now,
-                                    Observacao = dados.Observacao,
-                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                    Visivel = Visivel,
-                                    Tipo = dados.Tipo,
-                                    GuidId = GuidId.ToString(),
-                                    Cor = dados.Cor,
-                                    IdUsuario = IdUsuario
-                                });
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
-                                DataFim = DataFim.AddDays(-16);//Adicona um Dia 
-                            }
-                        }
-                        DataInicio = DataInicio.AddDays(1);//Adicona um Dia 
-                        DataFim = DataFim.AddDays(1);//Adicona um Dia 
-                        if (!DateTime.IsLeapYear(DataInicio.Year) && DataInicio.Month == 2 && DataInicio.Day == 28 && dados.MesDia == 29)//anos que não são bissexto, no mês de fevereiro e no dia 28
-                        {
-                            DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                            DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
-                        }
-                    }
-
-
-                    if (dados.SelectMensalmente == 2)//Se for selecionado a opção 2, buscando dia da semana e colocação do dia.
+                        IdVisita = dados.IdVisita,
+                        Descricao = dados.Descricao,
+                        DataAgendamento = DateTime.Now,
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = IdStatusVisita,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        GuidId = dados.GuidId,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina,
+                        DataTerminaEm = dados.DataTerminaEm,
+                        MesDia = dados.MesDia,
+                        MesDataColocacao = dados.MesDataColocacao,
+                        MesDiaDaSemana = dados.MesDiaDaSemana
+                    });
+                }
+                else
+                {
+                    while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond))
                     {
-                        DayOfWeek = DataInicio.DayOfWeek.ToString();
-                        if (dados.MesDataColocacao == Util.ObterClassificacao(DataInicio) && dados.MesDiaDaSemana == DayOfWeek)
+                        if (dados.SelectMensalmente == 1)//Mensalmente no dia X
                         {
-
-                            if (DataInicio.Day == 31)//Dia 31
+                            if (dados.MesDia == DataInicio.Day)
                             {
-                                if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
+                                if (DataInicio.Day == 31 && dados.MesDia == DataInicio.Day)//Dia 31
                                 {
-                                    //DataInicio igual a 31 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (DataInicio.Day == 31 && DataFim.Day == 31)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+                                        //DataInicio igual a 31 e DataFim igual a 31
 
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 31 && DataFim.Day == 30)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 30
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 31 && DataFim.Day == 29)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 29
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 31 && DataFim.Day == 28)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 31 && DataFim.Day < 28)
+                                    {
+                                        //DataInicio igual a 31 e DataFim menor que 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
+                                    DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
+                                else if (DataInicio.Day == 30 && dados.MesDia == DataInicio.Day)//Dia 30
                                 {
-                                    //DataInicio igual a 31 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (DataInicio.Day == 30 && DataFim.Day == 30)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
+                                        //DataInicio igual a 30 e DataFim igual a 30
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 30 && DataFim.Day == 29)
+                                    {
+                                        //DataInicio igual a 30 e DataFim igual a 29
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 30 && DataFim.Day == 28)
+                                    {
+                                        //DataInicio igual a 30 e DataFim igual a 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 30 && DataFim.Day < 28)
+                                    {
+                                        //DataInicio igual a 30 e DataFim menor que 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
+                                    DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
+                                else if (DataInicio.Day == 29 && dados.MesDia == DataInicio.Day)//Dia 29
                                 {
-                                    //DataInicio igual a 31 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    var a = DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month);
+                                    if (DataInicio.Day == 29 && DataFim.Day == 28)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
+                                        //DataInicio igual a 29 e DataFim igual a 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 29 && DataFim.Day == 29)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 29
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 29 && DataFim.Day == 30)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 30
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 29 && DataFim.Day == 31)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 31
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    else if (DataInicio.Day == 29 && DataFim.Day < 28)
+                                    {
+                                        //DataInicio igual a 29 e DataFim menor que 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                    }
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
+                                    DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
+                                else if (DataInicio.Day <= 28 && DataInicio.Day <= 28 && dados.MesDia == DataInicio.Day)//Dia 29
                                 {
-                                    //DataInicio igual a 31 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    //DataInicio menor igual 28 e DataFim menor igual 28
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
-                                {
-                                    //DataInicio igual a 31 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
+                                    DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
                             }
-                            else if (DataInicio.Day == 30)//Dia 30
+                            DataInicio = DataInicio.AddDays(1);//Adicona um Dia 
+                            DataFim = DataFim.AddDays(1);//Adicona um Dia 
+                            if (!DateTime.IsLeapYear(DataInicio.Year) && DataInicio.Month == 2 && DataInicio.Day == 28 && dados.MesDia == 29)//anos que não são bissexto, no mês de fevereiro e no dia 28
                             {
-                                if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
-                                {
-                                    //DataInicio igual a 30 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
-                                {
-                                    //DataInicio igual a 30 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
-                                {
-                                    //DataInicio igual a 30 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
-                                {
-                                    //DataInicio igual a 30 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-
-                            }
-                            else if (DataInicio.Day == 29)//Dia 29
-                            {
-                                if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
-                                {
-                                    //DataInicio igual a 29 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                                else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
-                                {
-                                    //DataInicio igual a 29 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
-                                    {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
-                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                    DataInicio = myCal.AddDays(DataInicio, -16);
-                                    DataFim = myCal.AddDays(DataFim, -16);
-                                }
-                            }
-                            else if (DataInicio.Day <= 28 && DataFim.Day <= 28)//Dia 28
-                            {
-                                //DataInicio menor igual 28 e DataFim menor igual 28
-                                Business.VisitaModel.Add(new Visita()
-                                {
-                                    Descricao = dados.Descricao,
-                                    DataAgendamento = DateTime.Now,
-                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                    DataCadastro = DateTime.Now,
-                                    Observacao = dados.Observacao,
-                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                    Visivel = Visivel,
-                                    Tipo = dados.Tipo,
-                                    GuidId = GuidId.ToString(),
-                                    Cor = dados.Cor,
-                                    IdUsuario = IdUsuario
-                                });
-                                DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
-                                DataFim = myCal.AddMonths(DataFim, dados.Repetir);
-
-                                DataInicio = myCal.AddDays(DataInicio, -16);
-                                DataFim = myCal.AddDays(DataFim, -16);
+                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
+                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
                             }
                         }
-                        DataInicio = myCal.AddDays(DataInicio, 1);//Adicona uma Semana 
-                        DataFim = myCal.AddDays(DataFim, 1); ;//Adicona uma Semana 
+
+
+                        if (dados.SelectMensalmente == 2)//Se for selecionado a opção 2, buscando dia da semana e colocação do dia.
+                        {
+                            DayOfWeek = DataInicio.DayOfWeek.ToString();
+                            if (dados.MesDataColocacao == Util.ObterClassificacao(DataInicio) && dados.MesDiaDaSemana == DayOfWeek)
+                            {
+
+                                if (DataInicio.Day == 31)//Dia 31
+                                {
+                                    if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 31
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 30
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 29
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
+                                    {
+                                        //DataInicio igual a 31 e DataFim igual a 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
+                                    {
+                                        //DataInicio igual a 31 e DataFim menor que 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                }
+                                else if (DataInicio.Day == 30)//Dia 30
+                                {
+                                    if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
+                                    {
+                                        //DataInicio igual a 30 e DataFim igual a 30
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
+                                    {
+                                        //DataInicio igual a 30 e DataFim igual a 29
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
+                                    {
+                                        //DataInicio igual a 30 e DataFim igual a 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
+                                    {
+                                        //DataInicio igual a 30 e DataFim menor que 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+
+                                }
+                                else if (DataInicio.Day == 29)//Dia 29
+                                {
+                                    if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 29
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 30
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
+                                    {
+                                        //DataInicio igual a 29 e DataFim igual a 31
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                    else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
+                                    {
+                                        //DataInicio igual a 29 e DataFim menor que 28
+                                        if (dados.IdVisita == 0)
+                                        {
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                        {
+                                            Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.IdVisita, dados.GuidId);
+                                        }
+                                        else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                        {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                        }
+                                        DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                        DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                        DataInicio = myCal.AddDays(DataInicio, -16);
+                                        DataFim = myCal.AddDays(DataFim, -16);
+                                    }
+                                }
+                                else if (DataInicio.Day <= 28 && DataFim.Day <= 28)//Dia 28
+                                {
+                                    //DataInicio menor igual 28 e DataFim menor igual 28
+                                    if (dados.IdVisita == 0)
+                                    {
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
+                                    DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
+                                    DataFim = myCal.AddMonths(DataFim, dados.Repetir);
+
+                                    DataInicio = myCal.AddDays(DataInicio, -16);
+                                    DataFim = myCal.AddDays(DataFim, -16);
+                                }
+                            }
+                            DataInicio = myCal.AddDays(DataInicio, 1);//Adicona uma Semana 
+                            DataFim = myCal.AddDays(DataFim, 1); ;//Adicona uma Semana 
+                        }
+
                     }
-                   
                 }
             }
             else if (dados.Termina == 2)//Termina na Data
             {
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.Update(new Visita()
+                    {
+                        IdVisita = dados.IdVisita,
+                        Descricao = dados.Descricao,
+                        DataAgendamento = DateTime.Now,
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = IdStatusVisita,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        GuidId = dados.GuidId,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina,
+                        DataTerminaEm = dados.DataTerminaEm,
+                        MesDia = dados.MesDia,
+                        MesDataColocacao = dados.MesDataColocacao,
+                        MesDiaDaSemana = dados.MesDiaDaSemana
+                    });
+                }
+                else 
+                { 
                 while (dados.DataTerminaEm >= new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day))
                 {
                     if (dados.SelectMensalmente == 1)//Mensalmente no dia X
@@ -1417,97 +3636,412 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 31 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                             }
                             else if (DataInicioDay == 30)//Dia 30
@@ -1515,78 +4049,330 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 30 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
 
                             }
@@ -1595,117 +4381,495 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                            Business.VisitaModel.Add(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = GuidId.ToString(),
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                            Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                            {
+                                                Descricao = dados.Descricao,
+                                                DataAgendamento = DateTime.Now,
+                                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                                DataCadastro = DateTime.Now,
+                                                Observacao = dados.Observacao,
+                                                IdStatusVisita = IdStatusVisita,
+                                                Visivel = Visivel,
+                                                Tipo = dados.Tipo,
+                                                GuidId = dados.GuidId,
+                                                Cor = dados.Cor,
+                                                IdUsuario = IdUsuario,
+                                                Repete = dados.Repete,
+                                                Frequencia = dados.Frequencia,
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                            }, dados.GuidId);
+                                    }
                                 }
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 29 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                 }
                             }
                             else if (DataInicioDay <= 28 && DataFimDay <= 28)//Dia 29
                             {
                                 //DataInicio menor igual 28 e DataFim menor igual 28
-                                Business.VisitaModel.Add(new Visita()
+                                if (dados.IdVisita == 0)
                                 {
-                                    Descricao = dados.Descricao,
-                                    DataAgendamento = DateTime.Now,
-                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicioDay, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                    DataCadastro = DateTime.Now,
-                                    Observacao = dados.Observacao,
-                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                    Visivel = Visivel,
-                                    Tipo = dados.Tipo,
-                                    GuidId = GuidId.ToString(),
-                                    Cor = dados.Cor,
-                                    IdUsuario = IdUsuario
-                                });
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicioDay, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm,
+                                        MesDia = dados.MesDia,
+                                        MesDataColocacao = dados.MesDataColocacao,
+                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicioDay, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm,
+                                        MesDia = dados.MesDia,
+                                        MesDataColocacao = dados.MesDataColocacao,
+                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicioDay, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm,
+                                        MesDia = dados.MesDia,
+                                        MesDataColocacao = dados.MesDataColocacao,
+                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                    }, dados.GuidId);
+                                }
                             }
                         }
                         DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
@@ -1724,21 +4888,84 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1748,21 +4975,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1772,21 +5062,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1796,21 +5149,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1820,21 +5236,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 31 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1847,21 +5326,84 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1871,21 +5413,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1895,21 +5500,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1919,21 +5587,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 30 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1947,21 +5678,84 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1971,21 +5765,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -1995,21 +5852,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -2019,21 +5939,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -2043,21 +6026,84 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 29 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                            Repetir = dados.Repetir,
+                                            Termina = dados.Termina,
+                                            DataTerminaEm = dados.DataTerminaEm,
+                                            MesDia = dados.MesDia,
+                                            MesDataColocacao = dados.MesDataColocacao,
+                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -2068,26 +6114,89 @@ namespace CRMYIA.Web.Pages
                             else if (DataInicio.Day <= 28 && DataFim.Day <= 28)//Dia 28
                             {
                                 //DataInicio menor igual 28 e DataFim menor igual 28
-                                Business.VisitaModel.Add(new Visita()
+                                if (dados.IdVisita == 0)
                                 {
-                                    Descricao = dados.Descricao,
-                                    DataAgendamento = DateTime.Now,
-                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                    DataCadastro = DateTime.Now,
-                                    Observacao = dados.Observacao,
-                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                    Visivel = Visivel,
-                                    Tipo = dados.Tipo,
-                                    GuidId = GuidId.ToString(),
-                                    Cor = dados.Cor,
-                                    IdUsuario = IdUsuario
-                                });
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm,
+                                        MesDia = dados.MesDia,
+                                        MesDataColocacao = dados.MesDataColocacao,
+                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm,
+                                        MesDia = dados.MesDia,
+                                        MesDataColocacao = dados.MesDataColocacao,
+                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm,
+                                        MesDia = dados.MesDia,
+                                        MesDataColocacao = dados.MesDataColocacao,
+                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                    }, dados.GuidId);
+                                }
                                 DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                 DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
                                 DataInicio = myCal.AddDays(DataInicio, -16);
-                                DataFim = myCal.AddDays(DataFim, -16);
+                                    DataFim = myCal.AddDays(DataFim, -16);
                             }
                         }
                         DataInicio = myCal.AddDays(DataInicio, 1);//Adicona uma Semana 
@@ -2095,6 +6204,7 @@ namespace CRMYIA.Web.Pages
                     }
 
                 }
+            }
             }
         }
 
@@ -2105,6 +6215,15 @@ namespace CRMYIA.Web.Pages
             Visivel = VisivelPara();
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
+            byte? IdStatusVisita = 0;
+            if (dados.Tipo == (byte)3)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
+            }
+            else if (dados.Tipo == (byte)1 && dados.Tipo == (byte)2)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.FeriadoDataSazonal;
+            }
 
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
@@ -2142,421 +6261,1555 @@ namespace CRMYIA.Web.Pages
 
             if (dados.Termina == 1)//Terminar Nunca
             {
-                while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond))
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
                 {
-                    if (DateTime.IsLeapYear(DataInicio.Year))
+                    Business.VisitaModel.Update(new Visita()
                     {
-                        if (DataInicioDay == 29)
-                        {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicioDay == 29 && DataFimDay >= 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor igual que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                            
-                        }
-                        else if (DataInicioDay == 29 && DataFimDay < 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                            
-                        }
-                        else if (DataInicioDay <= 28 && DataFimDay <= 28)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicioDay >= 30 && DataFimDay >= 30)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                    }
-                    else
+                        IdVisita = dados.IdVisita,
+                        Descricao = dados.Descricao,
+                        DataAgendamento = DateTime.Now,
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = IdStatusVisita,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        GuidId = dados.GuidId,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina,
+                        DataTerminaEm = dados.DataTerminaEm
+                    });
+                }
+                else
+                {
+                    while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond))
                     {
-                        if (DataInicio.Day == 29 && DataFim.Day == 29 && DataInicioDay == 29)
+                        if (DateTime.IsLeapYear(DataInicio.Year))
                         {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
+                            if (DataInicioDay == 29)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicio.Day == 29 && DataFim.Day >= 28 && DataInicioDay == 29 && DataFimDay >= 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor igual que 28
-                            Business.VisitaModel.Add(new Visita()
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicioDay == 29 && DataFimDay >= 28)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
+                                //DataInicio igual a 29 e DataFim menor igual que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
 
-                        }
-                        else if (DataInicio.Day == 29 && DataFim.Day < 28 && DataInicioDay == 29 && DataFimDay < 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
+                            }
+                            else if (DataInicioDay == 29 && DataFimDay < 28)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
 
-                        }
-                        else if (DataInicio.Day <= 28 && DataFim.Day <= 28 && DataInicioDay <= 28 && DataFimDay <= 28)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
+                            }
+                            else if (DataInicioDay <= 28 && DataFimDay <= 28)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicio.Day >= 30 && DataFim.Day >= 30 && DataInicioDay >= 30 && DataFimDay >= 30)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicioDay >= 30 && DataFimDay >= 30)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
                         }
+                        else
+                        {
+                            if (DataInicio.Day == 29 && DataFim.Day == 29 && DataInicioDay == 29)
+                            {
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicio.Day == 29 && DataFim.Day >= 28 && DataInicioDay == 29 && DataFimDay >= 28)
+                            {
+                                //DataInicio igual a 29 e DataFim menor igual que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+
+                            }
+                            else if (DataInicio.Day == 29 && DataFim.Day < 28 && DataInicioDay == 29 && DataFimDay < 28)
+                            {
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+
+                            }
+                            else if (DataInicio.Day <= 28 && DataFim.Day <= 28 && DataInicioDay <= 28 && DataFimDay <= 28)
+                            {
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicio.Day >= 30 && DataFim.Day >= 30 && DataInicioDay >= 30 && DataFimDay >= 30)
+                            {
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                        }
+
+                        DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
+                        DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
                     }
-
-                    DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
-                    DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
                 }
             }
             else if (dados.Termina == 2)//Termina na Data
             {
-                while (dados.DataTerminaEm >= new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day))
+                if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
                 {
-
-                    if (DateTime.IsLeapYear(DataInicio.Year))
+                    Business.VisitaModel.Update(new Visita()
                     {
-                        if (DataInicioDay == 29)
-                        {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicioDay == 29 && DataFimDay >= 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor igual que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-
-                        }
-                        else if (DataInicioDay == 29 && DataFimDay < 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-
-                        }
-                        else if (DataInicioDay <= 28 && DataFimDay <= 28)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicioDay >= 30 && DataFimDay >= 30)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                    }
-                    else
+                        IdVisita = dados.IdVisita,
+                        Descricao = dados.Descricao,
+                        DataAgendamento = DateTime.Now,
+                        DataInicio = DataInicio,
+                        DataFim = DataFim,
+                        DataCadastro = DateTime.Now,
+                        Observacao = dados.Observacao,
+                        IdStatusVisita = IdStatusVisita,
+                        Visivel = Visivel,
+                        Tipo = dados.Tipo,
+                        GuidId = dados.GuidId,
+                        Cor = dados.Cor,
+                        IdUsuario = IdUsuario,
+                        Repete = dados.Repete,
+                        Frequencia = dados.Frequencia,
+                        Repetir = dados.Repetir,
+                        Termina = dados.Termina,
+                        DataTerminaEm = dados.DataTerminaEm
+                    });
+                }
+                else
+                {
+                    while (dados.DataTerminaEm >= new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day))
                     {
-                        if (DataInicio.Day == 29 && DataFim.Day == 29 && DataInicioDay == 29)
-                        {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicio.Day == 29 && DataFim.Day >= 28 && DataInicioDay == 29 && DataFimDay >= 28)
-                        {
-                            //DataInicio igual a 29 e DataFim menor igual que 28
-                            Business.VisitaModel.Add(new Visita()
-                            {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
 
-                        }
-                        else if (DataInicio.Day == 29 && DataFim.Day < 28 && DataInicioDay == 29 && DataFimDay < 28)
+                        if (DateTime.IsLeapYear(DataInicio.Year))
                         {
-                            //DataInicio igual a 29 e DataFim menor que 28
-                            Business.VisitaModel.Add(new Visita()
+                            if (DataInicioDay == 29)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicioDay == 29 && DataFimDay >= 28)
+                            {
+                                //DataInicio igual a 29 e DataFim menor igual que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
 
-                        }
-                        else if (DataInicio.Day <= 28 && DataFim.Day <= 28 && DataInicioDay <= 28 && DataFimDay <= 28)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
+                            }
+                            else if (DataInicioDay == 29 && DataFimDay < 28)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
-                        }
-                        else if (DataInicio.Day >= 30 && DataFim.Day >= 30 && DataInicioDay >= 30 && DataFimDay >= 30)
-                        {
-                            //DataInicio e DataFim menor igual a 28
-                            Business.VisitaModel.Add(new Visita()
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+
+                            }
+                            else if (DataInicioDay <= 28 && DataFimDay <= 28)
                             {
-                                Descricao = dados.Descricao,
-                                DataAgendamento = DateTime.Now,
-                                DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                DataCadastro = DateTime.Now,
-                                Observacao = dados.Observacao,
-                                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                Visivel = Visivel,
-                                Tipo = dados.Tipo,
-                                GuidId = GuidId.ToString(),
-                                Cor = dados.Cor,
-                                IdUsuario = IdUsuario
-                            });
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicioDay >= 30 && DataFimDay >= 30)
+                            {
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
                         }
+                        else
+                        {
+                            if (DataInicio.Day == 29 && DataFim.Day == 29 && DataInicioDay == 29)
+                            {
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicio.Day == 29 && DataFim.Day >= 28 && DataInicioDay == 29 && DataFimDay >= 28)
+                            {
+                                //DataInicio igual a 29 e DataFim menor igual que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+
+                            }
+                            else if (DataInicio.Day == 29 && DataFim.Day < 28 && DataInicioDay == 29 && DataFimDay < 28)
+                            {
+                                //DataInicio igual a 29 e DataFim menor que 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+
+                            }
+                            else if (DataInicio.Day <= 28 && DataFim.Day <= 28 && DataInicioDay <= 28 && DataFimDay <= 28)
+                            {
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                       DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                            else if (DataInicio.Day >= 30 && DataFim.Day >= 30 && DataInicioDay >= 30 && DataFimDay >= 30)
+                            {
+                                //DataInicio e DataFim menor igual a 28
+                                if (dados.IdVisita == 0)
+                                {
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                        Frequencia = dados.Frequencia,
+                                        Repetir = dados.Repetir,
+                                        Termina = dados.Termina,
+                                        DataTerminaEm = dados.DataTerminaEm
+                                    }, dados.GuidId);
+                                }
+                            }
+                        }
+
+                        DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
+                        DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
                     }
-
-                    DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
-                    DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
                 }
             }
 
@@ -2593,7 +7846,8 @@ namespace CRMYIA.Web.Pages
                     Tipo = dados.Tipo,
                     GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
-                    IdUsuario = IdUsuario
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
                 });
             }
             else if(dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
@@ -2610,9 +7864,10 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = GuidId.ToString(),
+                    GuidId = dados.GuidId,
                     Cor = dados.Cor,
-                    IdUsuario = IdUsuario
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
                 });
             }
         }
@@ -2637,6 +7892,20 @@ namespace CRMYIA.Web.Pages
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
 
+            var DataInicioYear = DataInicio.Year + 2;
+            var DataInicioMonth = DataInicio.Month;
+            var DataInicioDay = DataInicio.Day;
+            var DataInicioHour = DataInicio.Hour;
+            var DataInicioMinute = DataInicio.Minute;
+            var DataInicioSecond = DataInicio.Second;
+
+            var DataFimYear = DataFim.Year + 8;
+            var DataFimMonth = DataFim.Month;
+            var DataFimDay = DataFim.Day;
+            var DataFimHour = DataFim.Hour;
+            var DataFimMinute = DataFim.Minute;
+            var DataFimSecond = DataFim.Second;
+
             dados.DataInicio = dados.DataInicio.AddYears(2);
 
             if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
@@ -2653,9 +7922,10 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = dados.Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = GuidId.ToString(),
+                    GuidId = dados.GuidId,
                     Cor = dados.Cor,
-                    IdUsuario = IdUsuario
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
                 });
             }
             else
@@ -2677,13 +7947,15 @@ namespace CRMYIA.Web.Pages
                             Tipo = dados.Tipo,
                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         });
                     }
                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
                     {
                         Business.VisitaModel.UpdateEventosSeguintes(new Visita()
                         {
+                            IdVisita = dados.IdVisita,
                             Descricao = dados.Descricao,
                             DataAgendamento = DateTime.Now,
                             DataInicio = DataInicio,
@@ -2695,13 +7967,15 @@ namespace CRMYIA.Web.Pages
                             Tipo = dados.Tipo,
                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         }, dados.IdVisita, dados.GuidId);
                     }
                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
                     {
                         Business.VisitaModel.UpdateTodosEventos(new Visita()
                         {
+                            IdVisita = dados.IdVisita,
                             Descricao = dados.Descricao,
                             DataAgendamento = DateTime.Now,
                             DataInicio = DataInicio,
@@ -2713,13 +7987,17 @@ namespace CRMYIA.Web.Pages
                             Tipo = dados.Tipo,
                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         }, dados.GuidId);
                     }
                     DataInicio = DataInicio.AddDays(1);
                     DataFim = DataFim.AddDays(1);
 
-                } while (dados.DataInicio < DataInicio);
+                } while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond));
+                
+                //Atualiza todos com o mesmo GuidId anterior
+                Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
             }
         }
 
@@ -2761,9 +8039,10 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = GuidId.ToString(),
+                    GuidId = dados.GuidId,
                     Cor = dados.Cor,
-                    IdUsuario = IdUsuario
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
                 });
             }
             else
@@ -2785,7 +8064,8 @@ namespace CRMYIA.Web.Pages
                             Tipo = dados.Tipo,
                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         });
                     }
                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2801,9 +8081,10 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
+                            GuidId = dados.GuidId,
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         }, dados.IdVisita, dados.GuidId);
                     }
                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2819,9 +8100,10 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
+                            GuidId = dados.GuidId,
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         }, dados.GuidId);
                     }
                     DataInicio = myCal.AddWeeks(DataInicio, 1);
@@ -2852,6 +8134,20 @@ namespace CRMYIA.Web.Pages
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
 
+            var DataInicioYear = DataInicio.Year + 8;
+            var DataInicioMonth = DataInicio.Month;
+            var DataInicioDay = DataInicio.Day;
+            var DataInicioHour = DataInicio.Hour;
+            var DataInicioMinute = DataInicio.Minute;
+            var DataInicioSecond = DataInicio.Second;
+
+            var DataFimYear = DataFim.Year + 8;
+            var DataFimMonth = DataFim.Month;
+            var DataFimDay = DataFim.Day;
+            var DataFimHour = DataFim.Hour;
+            var DataFimMinute = DataFim.Minute;
+            var DataFimSecond = DataFim.Second;
+
             dados.DataInicio = dados.DataInicio.AddYears(28);
 
             Calendar myCal = CultureInfo.InvariantCulture.Calendar;
@@ -2870,9 +8166,10 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = GuidId.ToString(),
+                    GuidId = dados.GuidId,
                     Cor = dados.Cor,
-                    IdUsuario = IdUsuario
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
                 });
             }
             else
@@ -2895,7 +8192,8 @@ namespace CRMYIA.Web.Pages
                             Tipo = dados.Tipo,
                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         });
                     }
                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2911,9 +8209,10 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
+                            GuidId = dados.GuidId,
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         }, dados.IdVisita, dados.GuidId);
                     }
                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2929,15 +8228,16 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
+                            GuidId = dados.GuidId,
                             Cor = dados.Cor,
-                            IdUsuario = IdUsuario
+                            IdUsuario = IdUsuario,
+                            Repete = dados.Repete,
                         }, dados.GuidId);
                     }
                     DataInicio = myCal.AddWeeks(DataInicio, 2);
                     DataFim = myCal.AddWeeks(DataFim, 2);
 
-                } while (dados.DataInicio < DataInicio); ;
+                } while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond));
             }
 
         }
@@ -2996,9 +8296,10 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = GuidId.ToString(),
+                    GuidId = dados.GuidId,
                     Cor = dados.Cor,
-                    IdUsuario = IdUsuario
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
                 });
             }
             else
@@ -3029,7 +8330,8 @@ namespace CRMYIA.Web.Pages
                                             Tipo = dados.Tipo,
                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3045,9 +8347,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3063,9 +8366,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3087,7 +8391,8 @@ namespace CRMYIA.Web.Pages
                                             Tipo = dados.Tipo,
                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3103,9 +8408,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3121,9 +8427,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3145,7 +8452,8 @@ namespace CRMYIA.Web.Pages
                                             Tipo = dados.Tipo,
                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3161,9 +8469,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3179,9 +8488,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3203,7 +8513,8 @@ namespace CRMYIA.Web.Pages
                                             Tipo = dados.Tipo,
                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3219,9 +8530,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3237,9 +8549,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3261,7 +8574,8 @@ namespace CRMYIA.Web.Pages
                                             Tipo = dados.Tipo,
                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3277,9 +8591,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3295,9 +8610,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3326,7 +8642,8 @@ namespace CRMYIA.Web.Pages
                                             Tipo = dados.Tipo,
                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3342,9 +8659,10 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3360,68 +8678,195 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = GuidId.ToString(),
+                                            GuidId = dados.GuidId,
                                             Cor = dados.Cor,
-                                            IdUsuario = IdUsuario
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
                                 else if (DataInicio.Day == 30 && DataFim.Day == 29)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DataInicio.Day == 30 && DataFim.Day == 28)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DataInicio.Day == 30 && DataFim.Day < 28)
                                 {
                                     //DataInicio igual a 30 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
                                 DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
@@ -3434,97 +8879,307 @@ namespace CRMYIA.Web.Pages
                                 if (DataInicio.Day == 29 && DataFim.Day == 28)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DataInicio.Day == 29 && DataFim.Day == 29)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DataInicio.Day == 29 && DataFim.Day == 30)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DataInicio.Day == 29 && DataFim.Day == 31)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 else if (DataInicio.Day == 29 && DataFim.Day < 28)
                                 {
                                     //DataInicio igual a 29 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                 }
                                 DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
                                 DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
@@ -3534,21 +9189,63 @@ namespace CRMYIA.Web.Pages
                             else if (DataInicio.Day <= 28 && DataInicio.Day <= 28 && dados.MesDia == DataInicio.Day)//Dia 29
                             {
                                 //DataInicio menor igual 28 e DataFim menor igual 28
-                                Business.VisitaModel.Add(new Visita()
+                                if (dados.IdVisita == 0)
                                 {
-                                    Descricao = dados.Descricao,
-                                    DataAgendamento = DateTime.Now,
-                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                    DataCadastro = DateTime.Now,
-                                    Observacao = dados.Observacao,
-                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                    Visivel = Visivel,
-                                    Tipo = dados.Tipo,
-                                    GuidId = GuidId.ToString(),
-                                    Cor = dados.Cor,
-                                    IdUsuario = IdUsuario
-                                });
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                    }, dados.GuidId);
+                                }
                                 DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
                                 DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
                                 DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
@@ -3576,21 +9273,63 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3600,21 +9339,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3624,21 +9405,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3648,21 +9471,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 31 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3672,21 +9537,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 31 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 31 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 31, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3699,21 +9606,63 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3723,21 +9672,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3747,21 +9738,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 30 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3771,21 +9804,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 30 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 30 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 30, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3799,21 +9874,63 @@ namespace CRMYIA.Web.Pages
                                 if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 28)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 28, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3823,21 +9940,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 29)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 29
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3847,21 +10006,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 30)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 30
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 30, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3871,21 +10072,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) == 31)
                                 {
                                     //DataInicio igual a 29 e DataFim igual a 31
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 31, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3895,21 +10138,63 @@ namespace CRMYIA.Web.Pages
                                 else if (DateTime.DaysInMonth(DataInicio.Year, DataInicio.Month) == 29 && DateTime.DaysInMonth(DataFim.Year, DataFim.Month) < 28)
                                 {
                                     //DataInicio igual a 29 e DataFim menor que 28
-                                    Business.VisitaModel.Add(new Visita()
+                                    if (dados.IdVisita == 0)
                                     {
-                                        Descricao = dados.Descricao,
-                                        DataAgendamento = DateTime.Now,
-                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                        DataCadastro = DateTime.Now,
-                                        Observacao = dados.Observacao,
-                                        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                        Visivel = Visivel,
-                                        Tipo = dados.Tipo,
-                                        GuidId = GuidId.ToString(),
-                                        Cor = dados.Cor,
-                                        IdUsuario = IdUsuario
-                                    });
+                                        Business.VisitaModel.Add(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = GuidId.ToString(),
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        });
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                    {
+                                        Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.IdVisita, dados.GuidId);
+                                    }
+                                    else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                    {
+                                        Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            DataAgendamento = DateTime.Now,
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                            DataCadastro = DateTime.Now,
+                                            Observacao = dados.Observacao,
+                                            IdStatusVisita = IdStatusVisita,
+                                            Visivel = Visivel,
+                                            Tipo = dados.Tipo,
+                                            GuidId = dados.GuidId,
+                                            Cor = dados.Cor,
+                                            IdUsuario = IdUsuario,
+                                            Repete = dados.Repete,
+                                        }, dados.GuidId);
+                                    }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                     DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3920,21 +10205,63 @@ namespace CRMYIA.Web.Pages
                             else if (DataInicio.Day <= 28 && DataFim.Day <= 28)//Dia 28
                             {
                                 //DataInicio menor igual 28 e DataFim menor igual 28
-                                Business.VisitaModel.Add(new Visita()
+                                if (dados.IdVisita == 0)
                                 {
-                                    Descricao = dados.Descricao,
-                                    DataAgendamento = DateTime.Now,
-                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                                    DataCadastro = DateTime.Now,
-                                    Observacao = dados.Observacao,
-                                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                                    Visivel = Visivel,
-                                    Tipo = dados.Tipo,
-                                    GuidId = GuidId.ToString(),
-                                    Cor = dados.Cor,
-                                    IdUsuario = IdUsuario
-                                });
+                                    Business.VisitaModel.Add(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = GuidId.ToString(),
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                    });
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                                {
+                                    Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                    }, dados.IdVisita, dados.GuidId);
+                                }
+                                else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                                {
+                                    Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                    {
+                                        Descricao = dados.Descricao,
+                                        DataAgendamento = DateTime.Now,
+                                        DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                        DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                        DataCadastro = DateTime.Now,
+                                        Observacao = dados.Observacao,
+                                        IdStatusVisita = IdStatusVisita,
+                                        Visivel = Visivel,
+                                        Tipo = dados.Tipo,
+                                        GuidId = dados.GuidId,
+                                        Cor = dados.Cor,
+                                        IdUsuario = IdUsuario,
+                                        Repete = dados.Repete,
+                                    }, dados.GuidId);
+                                }
                                 DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
                                 DataFim = myCal.AddMonths(DataFim, dados.Repetir);
 
@@ -3957,6 +10284,20 @@ namespace CRMYIA.Web.Pages
             Visivel = VisivelPara();
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
+            byte? IdStatusVisita = 0;
+            CalendarioSazonal CalendarioSazonal = null;
+            long? IdCalendarioSazonal;
+            int antes = 5;
+            int depois = 3;
+
+            if (dados.Tipo == (byte)3)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
+            }
+            else if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+            {
+                IdStatusVisita = (byte)EnumeradorModel.StatusVisita.FeriadoDataSazonal;
+            }
 
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
@@ -3979,212 +10320,1227 @@ namespace CRMYIA.Web.Pages
 
             //Usa o calendário padrão do InvariantCulture.
             Calendar myCal = CultureInfo.InvariantCulture.Calendar;
-
-            while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond))
+            if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
             {
-                if (DateTime.IsLeapYear(DataInicio.Year))
+                Business.VisitaModel.Update(new Visita()
                 {
-                    if (DataInicioDay == 29)
-                    {
-                        //DataInicio igual a 29 e DataFim menor que 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-                    }
-                    else if (DataInicioDay == 29 && DataFimDay >= 28)
-                    {
-                        //DataInicio igual a 29 e DataFim menor igual que 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-
-                    }
-                    else if (DataInicioDay == 29 && DataFimDay < 28)
-                    {
-                        //DataInicio igual a 29 e DataFim menor que 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-
-                    }
-                    else if (DataInicioDay <= 28 && DataFimDay <= 28)
-                    {
-                        //DataInicio e DataFim menor igual a 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-                    }
-                    else if (DataInicioDay >= 30 && DataFimDay >= 30)
-                    {
-                        //DataInicio e DataFim menor igual a 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-                    }
-                }
-                else
+                    IdVisita = dados.IdVisita,
+                    Descricao = dados.Descricao,
+                    DataAgendamento = DateTime.Now,
+                    DataInicio = DataInicio,
+                    DataFim = DataFim,
+                    DataCadastro = DateTime.Now,
+                    Observacao = dados.Observacao,
+                    IdStatusVisita = IdStatusVisita,
+                    Visivel = Visivel,
+                    Tipo = dados.Tipo,
+                    GuidId = dados.GuidId,
+                    Cor = dados.Cor,
+                    IdUsuario = IdUsuario,
+                    Repete = dados.Repete,
+                });
+            }
+            else
+            {
+                IdCalendarioSazonal = null;
+                while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond))
                 {
-                    if (DataInicio.Day == 29 && DataFim.Day == 29 && DataInicioDay == 29)
+                    if (DateTime.IsLeapYear(DataInicio.Year))
                     {
-                        //DataInicio igual a 29 e DataFim menor que 28
-                        Business.VisitaModel.Add(new Visita()
+                        if (DataInicioDay == 29)
                         {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-                    }
-                    else if (DataInicio.Day == 29 && DataFim.Day >= 28 && DataInicioDay == 29 && DataFimDay >= 28)
-                    {
-                        //DataInicio igual a 29 e DataFim menor igual que 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
+                            //DataInicio igual a 29 e DataFim menor que 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
 
-                    }
-                    else if (DataInicio.Day == 29 && DataFim.Day < 28 && DataInicioDay == 29 && DataFimDay < 28)
-                    {
-                        //DataInicio igual a 29 e DataFim menor que 28
-                        Business.VisitaModel.Add(new Visita()
-                        {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
 
-                    }
-                    else if (DataInicio.Day <= 28 && DataFim.Day <= 28 && DataInicioDay <= 28 && DataFimDay <= 28)
-                    {
-                        //DataInicio e DataFim menor igual a 28
-                        Business.VisitaModel.Add(new Visita()
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                        else if (DataInicioDay == 29 && DataFimDay >= 28)
                         {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
-                    }
-                    else if (DataInicio.Day >= 30 && DataFim.Day >= 30 && DataInicioDay >= 30 && DataFimDay >= 30)
-                    {
-                        //DataInicio e DataFim menor igual a 28
-                        Business.VisitaModel.Add(new Visita()
+                            //DataInicio igual a 29 e DataFim menor igual que 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if(dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+
+                        }
+                        else if (DataInicioDay == 29 && DataFimDay < 28)
                         {
-                            Descricao = dados.Descricao,
-                            DataAgendamento = DateTime.Now,
-                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
-                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
-                            DataCadastro = DateTime.Now,
-                            Observacao = dados.Observacao,
-                            IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                            Visivel = Visivel,
-                            Tipo = dados.Tipo,
-                            GuidId = GuidId.ToString(),
-                            Cor = dados.Cor,
-                            IdUsuario = IdUsuario
-                        });
+                            //DataInicio igual a 29 e DataFim menor que 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+                                
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                        else if (DataInicioDay <= 28 && DataFimDay <= 28)
+                        {
+                            //DataInicio e DataFim menor igual a 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                        else if (DataInicioDay >= 30 && DataFimDay >= 30)
+                        {
+                            //DataInicio e DataFim menor igual a 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
                     }
+                    else
+                    {
+                        if (DataInicio.Day == 29 && DataFim.Day == 29 && DataInicioDay == 29)
+                        {
+                            //DataInicio igual a 29 e DataFim menor que 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, 29, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                        else if (DataInicio.Day == 29 && DataFim.Day >= 28 && DataInicioDay == 29 && DataFimDay >= 28)
+                        {
+                            //DataInicio igual a 29 e DataFim menor igual que 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+
+                        }
+                        else if (DataInicio.Day == 29 && DataFim.Day < 28 && DataInicioDay == 29 && DataFimDay < 28)
+                        {
+                            //DataInicio igual a 29 e DataFim menor que 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                        else if (DataInicio.Day <= 28 && DataFim.Day <= 28 && DataInicioDay <= 28 && DataFimDay <= 28)
+                        {
+                            //DataInicio e DataFim menor igual a 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                        else if (DataInicio.Day >= 30 && DataFim.Day >= 30 && DataInicioDay >= 30 && DataFimDay >= 30)
+                        {
+                            //DataInicio e DataFim menor igual a 28
+                            if (dados.IdVisita == 0)
+                            {
+                                if (dados.IdCalendarioSazonal == 0)
+                                {
+                                    if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
+                                    {
+                                        Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Cor = dados.Cor,
+                                            Tipo = dados.Tipo,
+                                            DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, 29),
+                                            DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, 29, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                            DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFimDay, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                            DataCadastro = DateTime.Now,
+                                            ExisteCampanha = dados.ExisteCampanha,
+                                            Ativo = dados.Ativo,
+                                            GuidId = GuidId.ToString(),
+                                            Repete = dados.Repete,
+                                            Frequencia = dados.Frequencia,
+                                        });
+                                        CalendarioSazonal = Business.CalendarioSazonalModel.GetLastId();
+                                        IdCalendarioSazonal = CalendarioSazonal.IdCalendarioSazonal;
+                                    }
+                                }
+                                Business.VisitaModel.Add(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = GuidId.ToString(),
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                    IdCalendarioSazonal = IdCalendarioSazonal,
+                                });
+                                IdCalendarioSazonal = null;
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
+                            {
+                                Business.VisitaModel.UpdateEventosSeguintes(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.IdVisita, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateEventosSeguintes(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.IdCalendarioSazonal, dados.GuidId);
+                            }
+                            else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
+                            {
+                                Business.VisitaModel.UpdateTodosEventos(new Visita()
+                                {
+                                    Descricao = dados.Descricao,
+                                    DataAgendamento = DateTime.Now,
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second),
+                                    DataCadastro = DateTime.Now,
+                                    Observacao = dados.Observacao,
+                                    IdStatusVisita = IdStatusVisita,
+                                    Visivel = Visivel,
+                                    Tipo = dados.Tipo,
+                                    GuidId = dados.GuidId,
+                                    Cor = dados.Cor,
+                                    IdUsuario = IdUsuario,
+                                    Repete = dados.Repete,
+                                }, dados.GuidId);
+
+                                Business.CalendarioSazonalModel.UpdateTodosEventos(new CalendarioSazonal()
+                                {
+                                    Descricao = dados.Descricao,
+                                    Cor = dados.Cor,
+                                    Tipo = dados.Tipo,
+                                    DataSazonal = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day),
+                                    DataInicio = new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day, DataInicio.Hour, DataInicio.Minute, DataInicio.Second).AddDays(-antes),
+                                    DataFim = new DateTime(DataFim.Year, DataFim.Month, DataFim.Day, DataFim.Hour, DataFim.Minute, DataFim.Second).AddDays(depois),
+                                    DataCadastro = DateTime.Now,
+                                    ExisteCampanha = dados.ExisteCampanha,
+                                    Ativo = dados.Ativo,
+                                    GuidId = dados.GuidId,
+                                    Repete = dados.Repete,
+                                    Frequencia = dados.Frequencia,
+                                }, dados.GuidId);
+                            }
+                        }
+                    }
+
+                    DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
+                    DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
                 }
-
-                DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
-                DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
             }
         }
         
@@ -4269,8 +11625,5 @@ namespace CRMYIA.Web.Pages
         }
 
     }
-
-
-        #endregion
+   #endregion
 }
-

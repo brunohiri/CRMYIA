@@ -53,8 +53,10 @@ function AtualizarRealizado() {
                 $("#vidas-" + d.grupo).html("");
                 $("#vidas-" + d.grupo).append(da.vidas);
             } else {
+                var v = da.valores;
+                var vf = v.replace(",", ".");
                 vidas += parseInt(da.vidas);
-                valor += parseFloat(da.valores);
+                valor += parseFloat(vf);
             }
         });
 
