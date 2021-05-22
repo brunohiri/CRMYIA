@@ -2034,6 +2034,8 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataInicio).HasColumnType("datetime");
 
+                entity.Property(e => e.DataTerminaEm).HasColumnType("datetime");
+
                 entity.Property(e => e.DataVisitaRealizada).HasColumnType("datetime");
 
                 entity.Property(e => e.Descricao)
@@ -2044,8 +2046,16 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MesDiaDaSemana)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Observacao)
                     .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Semana)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdCalendarioSazonalNavigation)

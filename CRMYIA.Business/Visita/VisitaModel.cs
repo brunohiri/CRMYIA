@@ -357,7 +357,7 @@ namespace CRMYIA.Business
                                 {
                                     ListEntityViewModel.Add(new VisitaViewModel()
                                     {
-                                        sourceId = Item.IdVisita,
+                                        //sourceId = Item.IdVisita,
                                         backgroundColor = Item.IdCalendarioSazonalNavigation.Cor,
                                         borderColor = Item.IdCalendarioSazonalNavigation.Cor,
                                         start = Convert.ToDateTime(Item.IdCalendarioSazonalNavigation.DataInicio?.ToString("yyyy-MM-dd")),
@@ -523,11 +523,37 @@ namespace CRMYIA.Business
                     var alterarVisita = context.Visita
                   .Where(x => x.IdVisita >= IdVisita && x.GuidId == GuidId).First();
 
-                    alterarVisita = Entity;
-
-                    context.Visita.Attach(alterarVisita);
-                    context.Entry(alterarVisita).State = EntityState.Modified;
-                    context.SaveChanges();
+                    //foreach (Visita alterarVisita in ListVisita)
+                    //{
+                        alterarVisita.IdProposta = Entity.IdProposta;
+                        alterarVisita.IdStatusVisita = Entity.IdStatusVisita;
+                        alterarVisita.IdUsuario = Entity.IdUsuario;
+                        alterarVisita.Descricao = Entity.Descricao;
+                        alterarVisita.DataAgendamento = Entity.DataAgendamento;
+                        alterarVisita.DataCadastro = Entity.DataCadastro;
+                        alterarVisita.DataVisitaRealizada = Entity.DataVisitaRealizada;
+                        alterarVisita.Observacao = Entity.Observacao;
+                        alterarVisita.IdCalendarioSazonal = Entity.IdCalendarioSazonal;
+                        alterarVisita.DataInicio = Entity.DataInicio;
+                        alterarVisita.DataFim = Entity.DataFim;
+                        alterarVisita.Visivel = Entity.Visivel;
+                        alterarVisita.Cor = Entity.Cor;
+                        alterarVisita.Tipo = Entity.Tipo;
+                        alterarVisita.GuidId = Entity.GuidId;
+                        alterarVisita.Repete = Entity.Repete;
+                        alterarVisita.Frequencia = Entity.Frequencia;
+                        alterarVisita.Repetir = Entity.Repetir;
+                        alterarVisita.Termina = Entity.Termina;
+                        alterarVisita.Semana = Entity.Semana;
+                        alterarVisita.MesDataColocacao = Entity.MesDataColocacao;
+                        alterarVisita.MesDiaDaSemana = Entity.MesDiaDaSemana;
+                        alterarVisita.MesDia = Entity.MesDia;
+                        alterarVisita.SelectMensalmente = Entity.SelectMensalmente;
+                        alterarVisita.DataTerminaEm = Entity.DataTerminaEm;
+                        context.Visita.Attach(alterarVisita);
+                        context.Entry(alterarVisita).State = EntityState.Modified;
+                        context.SaveChanges();
+                    //}
                 }
             }
             catch (Exception)
@@ -545,11 +571,37 @@ namespace CRMYIA.Business
                     var alterarVisita = context.Visita
                   .Where(x => x.GuidId == GuidId).First();
 
-                    alterarVisita = Entity;
-
-                    context.Visita.Attach(alterarVisita);
-                    context.Entry(alterarVisita).State = EntityState.Modified;
-                    context.SaveChanges();
+                    //foreach (Visita alterarVisita in ListVisita)
+                    //{
+                        alterarVisita.IdProposta = Entity.IdProposta;
+                        alterarVisita.IdStatusVisita = Entity.IdStatusVisita;
+                        alterarVisita.IdUsuario = Entity.IdUsuario;
+                        alterarVisita.Descricao = Entity.Descricao;
+                        alterarVisita.DataAgendamento = Entity.DataAgendamento;
+                        alterarVisita.DataCadastro = Entity.DataCadastro;
+                        alterarVisita.DataVisitaRealizada = Entity.DataVisitaRealizada;
+                        alterarVisita.Observacao = Entity.Observacao;
+                        alterarVisita.IdCalendarioSazonal = Entity.IdCalendarioSazonal;
+                        alterarVisita.DataInicio = Entity.DataInicio;
+                        alterarVisita.DataFim = Entity.DataFim;
+                        alterarVisita.Visivel = Entity.Visivel;
+                        alterarVisita.Cor = Entity.Cor;
+                        alterarVisita.Tipo = Entity.Tipo;
+                        alterarVisita.GuidId = Entity.GuidId;
+                        alterarVisita.Repete = Entity.Repete;
+                        alterarVisita.Frequencia = Entity.Frequencia;
+                        alterarVisita.Repetir = Entity.Repetir;
+                        alterarVisita.Termina = Entity.Termina;
+                        alterarVisita.Semana = Entity.Semana;
+                        alterarVisita.MesDataColocacao = Entity.MesDataColocacao;
+                        alterarVisita.MesDiaDaSemana = Entity.MesDiaDaSemana;
+                        alterarVisita.MesDia = Entity.MesDia;
+                        alterarVisita.SelectMensalmente = Entity.SelectMensalmente;
+                        alterarVisita.DataTerminaEm = Entity.DataTerminaEm;
+                        context.Visita.Attach(alterarVisita);
+                        context.Entry(alterarVisita).State = EntityState.Modified;
+                        context.SaveChanges();
+                    //}
                 }
             }
             catch (Exception)
@@ -557,7 +609,35 @@ namespace CRMYIA.Business
                 throw;
             }
         }
+        public static void AtualizaGuiId(string GuidIdAtual, string GuidIdAlterar)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    var ListVisita = context.Visita
+                        .Where(x => x.GuidId == GuidIdAtual)
+                        .ToList();
 
+                    foreach (Visita Item in ListVisita) 
+                    {
+
+                        var alterarVisita = context.Visita
+                      .Where(x => x.GuidId == GuidIdAtual).First();
+
+                        alterarVisita.GuidId = GuidIdAlterar;
+
+                        context.Visita.Attach(alterarVisita);
+                        context.Entry(alterarVisita).State = EntityState.Modified;
+                        context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public static Visita GetLastId()
         {
             Visita Entity = null;

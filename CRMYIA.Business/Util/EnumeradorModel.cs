@@ -56,6 +56,23 @@ namespace CRMYIA.Business.Util
             Cancelada = 5,
             FeriadoDataSazonal = 6
         }
+        public enum Repete
+        {
+            Nunca = 1,
+            TodosDias = 2,
+            ACadaSemana = 3,
+            ACada2Semanas = 4,
+            ACadaMeses = 5,
+            ACadaAno = 6,
+            Personalizado = 7
+        }
+        public enum Frequencia
+        {
+            Diariamente = 1,
+            Semanalmente  =2,
+            Mensalmente = 3,
+            Anualmente = 4
+        }
         #endregion
 
         #region Proposta

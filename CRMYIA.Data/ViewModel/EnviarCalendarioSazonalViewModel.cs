@@ -22,14 +22,14 @@ namespace CRMYIA.Data.ViewModel
         public DateTime DataFim { get; set; }
         public string DataInicioFim { get; set; }
         public bool Ativo { get; set; }
+        public byte? Repete { get; set; }
+        public byte? Frequencia { get; set; }
         public int OpExcluirAlterar { get; set; }
+        public int Repetir { get; set; }
 
 
         ////Repetição
-        public int Repete { get; set; }
-        public int Frequencia { get; set; }
         public int Termina { get; set; }
-        public int Repetir { get; set; }
         public string Semana { get; set; }
 
         //Semanalmente
