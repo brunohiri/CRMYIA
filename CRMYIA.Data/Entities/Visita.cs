@@ -29,6 +29,13 @@ namespace CRMYIA.Data.Entities
         public byte? Repete { get; set; }
         public byte? Frequencia { get; set; }
         public int? Repetir { get; set; }
+        public int? Termina { get; set; }
+        public string Semana { get; set; }
+        public int? MesDataColocacao { get; set; }
+        public string MesDiaDaSemana { get; set; }
+        public int? MesDia { get; set; }
+        public int? SelectMensalmente { get; set; }
+        public DateTime? DataTerminaEm { get; set; }
 
         public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
         public virtual Proposta IdPropostaNavigation { get; set; }

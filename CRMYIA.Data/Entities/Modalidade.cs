@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public Modalidade()
         {
+            Operadora = new HashSet<Operadora>();
             Proposta = new HashSet<Proposta>();
         }
 
@@ -14,6 +15,7 @@ namespace CRMYIA.Data.Entities
         public string Descricao { get; set; }
         public bool Ativo { get; set; }
 
+        public virtual ICollection<Operadora> Operadora { get; set; }
         public virtual ICollection<Proposta> Proposta { get; set; }
     }
 }

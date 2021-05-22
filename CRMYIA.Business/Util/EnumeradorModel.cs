@@ -45,6 +45,12 @@ namespace CRMYIA.Business.Util
         }
         #endregion
 
+        #region Fornecedor
+        public enum Fornecedor
+        {
+            ShiftData = 1
+        }
+        #endregion
 
         #region StatusVisita
         public enum StatusVisita

@@ -32,19 +32,29 @@
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdOperadora">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.NomeArquivo">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
+                    <label>Modalidade</label>
+                    <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdModalidade" id="OperadoraIdModalidade">
+                        <option selected="selected" value="0">Selecione...</option>
+                        @foreach (var Item in Model.ListModalidade)
+                        {
+                            <option value="@Item.IdModalidade">@(Item.Descricao)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label>Descrição</label>
                         <input type="text" class="form-control" placeholder="Descrição" required asp-for="@Model.Entity.Descricao">
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label>Data de Cadastro</label>
                         <input type="text" class="form-control" placeholder="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" asp-for="@Model.Entity.DataCadastro" readonly>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <label>Status</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -56,21 +66,9 @@
             </div>
             <div class="row">
 
-                @*<div class="col-sm-6">
-                        <label>Grupo de Corretores</label>
-                        <div class="form-check">
-                            @foreach (var Item in Model.ListGrupoCorretor)
-                            {
-
-                                <input class="form-check-input" type="checkbox" name="IdGrupoCorretor" value="@Item.IdGrupoCorretor">
-                                <label class="form-check-label" for="IdGrupoCorretor">@(Item.Descricao)</label><br>
-                            }
-                        </div>
-                    </div>*@
-
                 @if (Model.ListGrupoCorretorOperadora == null || Model.ListGrupoCorretorOperadora.Count == 0)
                 {
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <label>Grupo de Corretores</label>
                         <div class="form-check">
                             @foreach (var Item in Model.ListGrupoCorretor)
@@ -87,7 +85,7 @@
                 }
                 else
                 {
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <label>Grupo de Corretores</label>
                         <div class="form-check">
                             @while (i < Model.ListGrupoCorretor.Count())
@@ -110,7 +108,7 @@
                     </div>
                 }
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <div class="form-group">
                         <label for="NomeArquivoBanner">Selecione uma Logo Marca:</label>
                         <div class="input-group">

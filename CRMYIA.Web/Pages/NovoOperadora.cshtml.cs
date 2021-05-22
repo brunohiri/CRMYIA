@@ -33,6 +33,9 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<GrupoCorretorOperadora> ListGrupoCorretorOperadora { get; set; }
 
+        [BindProperty]
+        public List<Modalidade> ListModalidade { get; set; }
+
         #endregion
 
         #region Construtores
@@ -75,7 +78,7 @@ namespace CRMYIA.Web.Pages
 
                 if (Entity.IdOperadora == 0)
                 {
-                    
+
 
                     NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
                     var file = Path.Combine(_environment.WebRootPath, _configuration["ArquivoOperadora"], NomeArquivo);
@@ -106,7 +109,7 @@ namespace CRMYIA.Web.Pages
 
                     if (File.Length > 0 && NomeArquivoOriginal != null)
                     {
-                        
+
 
                         if (!string.IsNullOrEmpty(NomeArquivo) && File != null)
                         {
@@ -160,10 +163,10 @@ namespace CRMYIA.Web.Pages
                     {
                         Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Informe uma Imagem");
                     }
-                    
+
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -175,6 +178,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListGrupoCorretor = Business.GrupoCorretorModel.GetList();
+            ListModalidade = ModalidadeModel.GetListIdDescricao();
         }
         #endregion
     }

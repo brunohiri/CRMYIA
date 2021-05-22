@@ -13,12 +13,14 @@ namespace CRMYIA.Data.Entities
         }
 
         public long IdOperadora { get; set; }
+        public byte? IdModalidade { get; set; }
         public string Descricao { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
 
+        public virtual Modalidade IdModalidadeNavigation { get; set; }
         public virtual ICollection<GrupoCorretorOperadora> GrupoCorretorOperadora { get; set; }
         public virtual ICollection<OperadoraDocumento> OperadoraDocumento { get; set; }
         public virtual ICollection<Produto> Produto { get; set; }

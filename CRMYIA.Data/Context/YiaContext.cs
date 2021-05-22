@@ -43,6 +43,8 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<FaixaEtaria> FaixaEtaria { get; set; }
         public virtual DbSet<FaseProposta> FaseProposta { get; set; }
         public virtual DbSet<Fechamento> Fechamento { get; set; }
+        public virtual DbSet<Fornecedor> Fornecedor { get; set; }
+        public virtual DbSet<FornecedorConsulta> FornecedorConsulta { get; set; }
         public virtual DbSet<Genero> Genero { get; set; }
         public virtual DbSet<GrupoCorretor> GrupoCorretor { get; set; }
         public virtual DbSet<GrupoCorretorCampanha> GrupoCorretorCampanha { get; set; }
@@ -95,11 +97,11 @@ namespace CRMYIA.Data.Context
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                .Build();
+                    .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
                 var connectionString = configuration.GetConnectionString("YiaConnection");
-                optionsBuilder.UseSqlServer(connectionString, builder => builder.EnableRetryOnFailure());
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
@@ -1033,6 +1035,64 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Fornecedor>(entity =>
+            {
+                entity.HasKey(e => e.IdFornecedor);
+
+                entity.Property(e => e.IdFornecedor).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Senha)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TokenAPI)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Usuario)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<FornecedorConsulta>(entity =>
+            {
+                entity.HasKey(e => e.IdFornecedorConsulta);
+
+                entity.Property(e => e.DataConsulta).HasColumnType("datetime");
+
+                entity.Property(e => e.Documento)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IP)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Metodo)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RetornoJson)
+                    .HasMaxLength(8000)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdFornecedorNavigation)
+                    .WithMany(p => p.FornecedorConsulta)
+                    .HasForeignKey(d => d.IdFornecedor)
+                    .HasConstraintName("Fornecedor_FornecedorConsulta");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.FornecedorConsulta)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_FornecedorConsulta");
+            });
+
             modelBuilder.Entity<Genero>(entity =>
             {
                 entity.HasKey(e => e.IdGenero);
@@ -1462,6 +1522,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.NomeArquivo)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdModalidadeNavigation)
+                    .WithMany(p => p.Operadora)
+                    .HasForeignKey(d => d.IdModalidade)
+                    .HasConstraintName("Modalidade_Operadora");
             });
 
             modelBuilder.Entity<OperadoraDocumento>(entity =>
@@ -2034,6 +2099,8 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataInicio).HasColumnType("datetime");
 
+                entity.Property(e => e.DataTerminaEm).HasColumnType("datetime");
+
                 entity.Property(e => e.DataVisitaRealizada).HasColumnType("datetime");
 
                 entity.Property(e => e.Descricao)
@@ -2044,8 +2111,16 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MesDiaDaSemana)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Observacao)
                     .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Semana)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdCalendarioSazonalNavigation)

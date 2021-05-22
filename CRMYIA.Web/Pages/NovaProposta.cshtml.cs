@@ -61,9 +61,6 @@ namespace CRMYIA.Web.Pages
         public List<Modalidade> ListModalidade { get; set; }
 
         [BindProperty]
-        public List<Operadora> ListOperadora { get; set; }
-
-        [BindProperty]
         public List<MotivoDeclinio> ListMotivoDeclinio { get; set; }
 
         [BindProperty]
@@ -143,6 +140,29 @@ namespace CRMYIA.Web.Pages
                 EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
 
             return new JsonResult(new { entityCliente = EntityCliente });
+        }
+
+        public IActionResult OnGetOperadora(string IdModalidade = null, string IdOperadora = null)
+        {
+            List<Operadora> ListOperadora = null;
+            long? IdModalidadeOperadora = 0;
+            if ((IdModalidade != "undefined") && (IdOperadora != "undenfined"))
+            {
+                if ((!IdModalidade.IsNullOrEmpty()) && (IdModalidade != "0"))
+                {
+                    ListOperadora = OperadoraModel.GetListIdDescricaoByModalidade(IdModalidade.ExtractLong());
+                }
+                else
+                    if ((!IdOperadora.IsNullOrEmpty()) && (IdOperadora != "0"))
+                {
+                    Operadora EntityOperadora = OperadoraModel.Get(IdOperadora.ExtractLong());
+                    IdModalidadeOperadora = EntityOperadora.IdModalidade;
+                    ListOperadora = OperadoraModel.GetListIdDescricaoByModalidade(IdModalidadeOperadora.Value);
+                }
+
+            }
+
+            return new JsonResult(new { status = true, listOperadora = ListOperadora, idModalidade = IdModalidadeOperadora });
         }
 
         public IActionResult OnGetProduto(string IdOperadora = null, string IdProduto = null)
@@ -410,7 +430,6 @@ namespace CRMYIA.Web.Pages
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             ListStatusProposta = StatusPropostaModel.GetListIdDescricao();
             ListModalidade = ModalidadeModel.GetListIdDescricao();
-            ListOperadora = OperadoraModel.GetListIdDescricao();
             ListMotivoDeclinio = MotivoDeclinioModel.GetListIdDescricao();
             ListFaixaEtaria = FaixaEtariaModel.GetListIdDescricao();
             ListPorte = PorteModel.GetListIdDescricao();

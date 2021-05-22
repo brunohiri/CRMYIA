@@ -54,6 +54,7 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.Operadora
                         .Include(y => y.Produto)
+                        .Include(y => y.IdModalidadeNavigation)
                         .AsNoTracking()
                         .Where(x => x.Ativo)
                         .AsNoTracking()
@@ -100,6 +101,31 @@ namespace CRMYIA.Business
                     ListEntity = context.Operadora
                         .AsNoTracking()
                         .Where(x => x.Ativo)
+                        .AsNoTracking()
+                        .Select(y => new Operadora()
+                        {
+                            IdOperadora = y.IdOperadora,
+                            Descricao = y.Descricao
+                        }).OrderBy(o => o.Descricao).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<Operadora> GetListIdDescricaoByModalidade(long IdModalidade)
+        {
+            List<Operadora> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Operadora
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.IdModalidade == IdModalidade)
                         .AsNoTracking()
                         .Select(y => new Operadora()
                         {

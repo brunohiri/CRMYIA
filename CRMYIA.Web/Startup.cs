@@ -116,92 +116,58 @@ namespace CRMYIA.Web
 
             //Usando conexão no Entity
             services.AddSingleton(provider => Configuration);
-            services.AddDbContext<YiaContext>(options => {
+            services.AddDbContext<YiaContext>(options =>
+            {
                 options.UseSqlServer(Configuration.GetConnectionString("YiaConnection"), builder => builder.EnableRetryOnFailure());
             });
             services.AddScoped<DbContext, YiaContext>();
 
         }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-
-        if (env.IsDevelopment())
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+
+                app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
+
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
+            app.UseForwardedHeaders();
+            app.UseSession();
+            app.UseResponseCompression();
+
+            //Habilitando CORS
+            app.UseCors(option => option.AllowAnyOrigin());
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapHub<NotificacaoController>("/notificacaohub");
+            });
+
+            //Set CultureInfo
+            var cultureInfo = new CultureInfo("pt-BR");
+            cultureInfo.NumberFormat.CurrencySymbol = "R$";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
-        else
-        {
-            app.UseExceptionHandler("/Error");
-
-            app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
-
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
-        }
-
-        app.UseRouting();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        app.UseCookiePolicy();
-        app.UseForwardedHeaders();
-        app.UseSession();
-        app.UseResponseCompression();
-
-        //Habilitando CORS
-        app.UseCors(option => option.AllowAnyOrigin());
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapRazorPages();
-            endpoints.MapHub<NotificacaoController>("/notificacaohub");
-        });
-
-        //Set CultureInfo
-        var cultureInfo = new CultureInfo("pt-BR");
-        cultureInfo.NumberFormat.CurrencySymbol = "R$";
-
-        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-
-
-
-        ////Criação do Calendário Sazonal 
-        ////Aténcão verificAr qual usuario será adicionado no IdUsuario referente a Classe Visita por padrão sera o IdUsuario => 2720
-
-        //List<Visita> ListVisita = new List<Visita>();
-        //int QuantidadeAnos = 2;
-        //List<CalendarioSazonal> ListCalendarioSazonal1 = Util.CalcularFeriado(DateTime.Now.Year, QuantidadeAnos);
-        //List<CalendarioSazonal> ListCalendarioSazonal2 = null;
-
-        //Business.CalendarioSazonalModel.AddList(ListCalendarioSazonal1);
-
-        //ListCalendarioSazonal2 = Business.CalendarioSazonalModel.GetList();
-
-        //foreach (CalendarioSazonal Item in ListCalendarioSazonal2)
-        //{
-        //    ListVisita.Add(new Visita()
-        //    {
-        //        IdStatusVisita = (byte)6,
-        //        Visivel = (byte)1,
-        //        Tipo = Item.Tipo,
-        //        GuidId = Item.GuidId,
-        //        Cor = Item.Cor,
-        //        IdUsuario = 2720,
-        //        IdCalendarioSazonal = Item.IdCalendarioSazonal,
-        //        Descricao = Item.Descricao,
-        //        DataAgendamento = Item.DataSazonal,
-        //        DataInicio = Item.DataInicio,
-        //        DataFim = Item.DataFim,
-        //        DataCadastro = DateTime.Now
-        //    });
-        //}
-
-        //Business.VisitaModel.AddList(ListVisita);
     }
-}
 }

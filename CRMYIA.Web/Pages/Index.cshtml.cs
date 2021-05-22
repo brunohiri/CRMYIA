@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
 using CRMYIA.Business.Dashboard;
+using CRMYIA.Business.ShiftData;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
@@ -348,6 +349,37 @@ namespace CRMYIA.Web.Pages
             return IdUsuario;
         }
 
+
+        #region Outros Métodos
+        public IActionResult OnGetDadosCadastrais(string documento = null)
+        {
+            ShiftDataResultPessoaFisica EntityPF = null;
+            ShiftDataResultPessoaJuridica EntityPJ = null;
+            string TipoPessoa = string.Empty;
+            if ((documento != "undefined") && (documento != "undenfined"))
+            {
+                if (Util.IsCpf(documento.Replace("-","").Replace(".","")))
+                {
+                    TipoPessoa = "PF";
+
+
+                    return new JsonResult(new { status = true, entity = EntityPF, tipoPessoa = TipoPessoa });
+                }
+                else
+                    if (Util.IsCpf(documento.Replace("-", "").Replace(".", "")))
+                {
+                    TipoPessoa = "PJ";
+
+                    return new JsonResult(new { status = true, entity = EntityPJ, tipoPessoa = TipoPessoa });
+                }
+                else
+                    return new JsonResult(new { status = false, message= "Documento não é um CPF ou CNPJ válido!" });
+
+            }
+            else
+                return new JsonResult(new { status = false, message = "Documento vazio!" });
+        }
+        #endregion
 
     }
 }

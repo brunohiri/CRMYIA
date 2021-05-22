@@ -18,6 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Modalidade</th>
                             <th>Operadora</th>
                             <th>Convênios</th>
                             <th>Cadastro</th>
@@ -32,6 +33,7 @@
                             {
                                 <tr>
                                     <td></td>
+                                    <td>@Item.IdModalidadeNavigation?.Descricao</td>
                                     <td>@Item.Descricao.ToUpper()</td>
                                     <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.Produto == null ? 0 : Item.Produto.Count())))</td>
                                     <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>

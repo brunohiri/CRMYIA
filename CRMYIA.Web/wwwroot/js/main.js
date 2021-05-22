@@ -636,6 +636,11 @@ function CadastroPropostas() {
         }
     });
 
+    $('#PropostaIdModalidade').change(function () {
+        var IdModalidade = $(this).val();
+        CarregarPropostaModalidadeOperadora(IdModalidade);
+    });
+
     $('#PropostaIdOperadora').change(function () {
         var IdOperadora = $(this).val();
         CarregarPropostaOperadoraProduto(IdOperadora);
@@ -680,6 +685,41 @@ function CarregarClientePropostaDocumento(IdCliente, Documento) {
                 $('#PropostaClienteCelular').val(data.entityCliente.celular);
                 $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
                 $('#PropostaClienteEmail').val(data.entityCliente.email);
+            }
+        }
+    });
+}
+
+function CarregarPropostaModalidadeOperadora(IdModalidade) {
+    var IdOperadora = 0;
+    if (IdModalidade == "0") {
+        IdOperadora = $('#PropostaIdOperadoraHidden').val();
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/NovaProposta?handler=Operadora&IdModalidade=" + IdModalidade + "&IdOperadora=" + IdOperadora,
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data) {
+            var result = '';
+            if (data.status) {
+                if (data.listOperadora.length > 0) {
+                    result = '<option value="0" selected>Selecione...</option>';
+                    for (var i = 0; i < data.listOperadora.length; i++) {
+                        result += '<option value="' + data.listOperadora[i].idOperadora + '">' + data.listOperadora[i].descricao + '</option>';
+                    }
+                    $('#PropostaIdOperadora').html(result);
+                    $('#ClienteIdOperadora').html(result);
+                }
+
+                if (IdModalidade == "0") {
+                    $('#PropostaIdOperadora').val(IdOperadora);
+                    $('#PropostaIdModalidade').val(data.idModalidade);
+                    $('#ClienteIdOperadora').val(IdOperadora);
+                    $('#ClienteIdModalidade').val(data.idModalidade);
+                    $('.select2').select2();
+                }
             }
         }
     });
