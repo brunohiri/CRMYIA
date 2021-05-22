@@ -89,5 +89,49 @@ namespace CRMYIA.Business
             }
         }
 
+        public static void UpdateEventosSeguintes(CalendarioSazonal Entity, long IdCalendarioSazonal, string GuidId)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    var alterarCalendarioSazonal = context.CalendarioSazonal
+                  .Where(x => x.IdCalendarioSazonal >= IdCalendarioSazonal && x.GuidId == GuidId).First();
+
+                    alterarCalendarioSazonal = Entity;
+
+                    context.CalendarioSazonal.Attach(alterarCalendarioSazonal);
+                    context.Entry(alterarCalendarioSazonal).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void UpdateTodosEventos(CalendarioSazonal Entity, string GuidId)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    var alterarCalendarioSazonal = context.CalendarioSazonal
+                  .Where(x => x.GuidId == GuidId).First();
+
+                    alterarCalendarioSazonal = Entity;
+
+                    context.CalendarioSazonal.Attach(alterarCalendarioSazonal);
+                    context.Entry(alterarCalendarioSazonal).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

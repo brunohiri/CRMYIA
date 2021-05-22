@@ -500,6 +500,11 @@ namespace CRMYIA.Data.Context
                     .HasForeignKey(d => d.IdCidade)
                     .HasConstraintName("Cidade_Cliente");
 
+                entity.HasOne(d => d.IdClienteReferenciaNavigation)
+                    .WithMany(p => p.InverseIdClienteReferenciaNavigation)
+                    .HasForeignKey(d => d.IdClienteReferencia)
+                    .HasConstraintName("Cliente_Cliente");
+
                 entity.HasOne(d => d.IdEstadoCivilNavigation)
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdEstadoCivil)
@@ -2024,6 +2029,8 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.DataInicio).HasColumnType("datetime");
 
+                entity.Property(e => e.DataTerminaEm).HasColumnType("datetime");
+
                 entity.Property(e => e.DataVisitaRealizada).HasColumnType("datetime");
 
                 entity.Property(e => e.Descricao)
@@ -2034,8 +2041,16 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MesDiaDaSemana)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Observacao)
                     .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Semana)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.IdCalendarioSazonalNavigation)

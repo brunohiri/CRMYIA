@@ -8,6 +8,7 @@ namespace CRMYIA.Data.Entities
         public Cliente()
         {
             Email = new HashSet<Email>();
+            InverseIdClienteReferenciaNavigation = new HashSet<Cliente>();
             Proposta = new HashSet<Proposta>();
             PropostaCliente = new HashSet<PropostaCliente>();
             Telefone = new HashSet<Telefone>();
@@ -15,10 +16,12 @@ namespace CRMYIA.Data.Entities
         }
 
         public long IdCliente { get; set; }
+        public long? IdClienteReferencia { get; set; }
         public int? IdCidade { get; set; }
         public byte? IdEstadoCivil { get; set; }
         public byte? IdGenero { get; set; }
         public byte? IdOrigem { get; set; }
+        public byte? IdTipoLead { get; set; }
         public long? IdArquivoLead { get; set; }
         public string Nome { get; set; }
         public string CPF { get; set; }
@@ -37,17 +40,19 @@ namespace CRMYIA.Data.Entities
         public bool StatusPlanoLead { get; set; }
         public DateTime? DataAdesaoLead { get; set; }
         public bool IsLead { get; set; }
+        public bool Titular { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
-        public byte? IdTipoLead { get; set; }
 
         public virtual ArquivoLead IdArquivoLeadNavigation { get; set; }
         public virtual Cidade IdCidadeNavigation { get; set; }
+        public virtual Cliente IdClienteReferenciaNavigation { get; set; }
         public virtual EstadoCivil IdEstadoCivilNavigation { get; set; }
         public virtual Genero IdGeneroNavigation { get; set; }
         public virtual Origem IdOrigemNavigation { get; set; }
         public virtual TipoLead IdTipoLeadNavigation { get; set; }
         public virtual ICollection<Email> Email { get; set; }
+        public virtual ICollection<Cliente> InverseIdClienteReferenciaNavigation { get; set; }
         public virtual ICollection<Proposta> Proposta { get; set; }
         public virtual ICollection<PropostaCliente> PropostaCliente { get; set; }
         public virtual ICollection<Telefone> Telefone { get; set; }

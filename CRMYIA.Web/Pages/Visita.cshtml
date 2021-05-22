@@ -226,7 +226,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Criar Evento</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Calendário Marketing - Criar</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -237,7 +237,7 @@
                     <input type="hidden" name="IdCalendarioSazonal" id="IdCalendarioSazonal" value="0" />
                     <input type="hidden" name="StartStr" id="StartStr" value="" />
                     <input type="hidden" name="EndStr" id="EndStr" value="" />
-
+                    <input type="hidden" name="OpExcluirAlterar" id="OpExcluirAlterar" value="0" />
 
                     <input type="hidden" asp-for="@DiaDaSemanaOriginal" />
                     <input type="hidden" asp-for="@Model.MesDataColocacao" />
@@ -315,11 +315,11 @@
 
                     <div class="row">
 
-                        <div class="col-sm-4" style="display: none;" data-tipo="3">
+                        <div class="col-sm-4" id="Repete" style="display: none;" data-tipo="3">
                             <label>Repete</label>
                             <div class="form-group">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="Nunca" data-radio="Repete" value="1" checked required>
+                                    <input class="form-check-input Tipo" type="radio" name="Repete[]" id="Nunca" data-radio="Repete" value="1" required>
                                     <label class="form-check-label" for="Nunca">Nunca</label>
                                 </div><br />
                                 <div class="form-check form-check-inline">
@@ -408,7 +408,7 @@
 
                     <div class="row" id="Termina" style="display: none">
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <label id="SelecaoTermina">Termina</label>
                             <div class="form-group">
                                 <div class="form-check form-check-inline">
@@ -424,7 +424,7 @@
                         </div>
 
 
-                        <div class="col-sm-6" id="Semana" style="display: none">
+                        <div class="col-sm-4" id="Semana" style="display: none">
                             <label>Repetir às/aos</label>
                             <div class="d-flex justify-content-start">
                                 <div class="m-1">
@@ -583,9 +583,10 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="card-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                        <button type="submit" class="btn btn-success alterar-eventos" style="display: none;">Salvar</button>
                     </div>
 
                 </form>
