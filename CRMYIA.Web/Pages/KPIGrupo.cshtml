@@ -6,7 +6,7 @@
 @using CRMYIA.Business.Util;
 @using CRMYIA.Business;
 @using System.Security.Claims;
-@{ decimal valores = 0; int vidas = 0; }
+@{ decimal valorMaximo, valores = 0; int vidas = 0; }
 
 <div class="card card-default">
     <div class="card-header">
@@ -91,7 +91,7 @@
                                                     <div class="card card-widget widget-user mb-0">
                                                         <!-- Add the bg color to the header using any of the bg-* classes -->
                                                         <div class="widget-user-header card-color">
-                                                            <h3 class="widget-user-username">@Item.DescricaoPerfil <span style="color:aliceblue;">&#127894;</span></h3>
+                                                            <h3 class="widget-user-username">@Item.DescricaoPerfil <i class="fas fa-medal" style="font-size:30px;"></i></h3>
                                                         </div>
                                                         <div class="widget-user-image">
                                                             <img class="img-circle elevation-2" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()">
@@ -101,7 +101,7 @@
                                                                 <!-- /.col -->
                                                                 <div class="col-sm-6 border-right">
                                                                     <div class="description-block">
-                                                                        <h5 class="description-header">0</h5>
+                                                                        <h5 class="description-header">@(0.ToString("C2"))</h5>
                                                                         <span class="description-text">Valores</span>
                                                                     </div>
                                                                     <!-- /.description-block -->
@@ -184,8 +184,11 @@
                                                     {
                                                         <div class="col-sm-6 border-bottom">
                                                             <div class="description-block">
+                                                                @{ 
+                                                                    valorMaximo = (decimal)valorItem.ValorMaximo;
+                                                                }
                                                                 <div class="col-sm-12">
-                                                                    <span>@valorItem.ValorMaximo</span>
+                                                                    <span>@(valorMaximo > 0 ? valorMaximo.ToString("C2") : 0.ToString("C2"))</span>
                                                                 </div>
                                                                 <div class="col-sm-12">
                                                                     <span>Meta R$ grupo</span>
@@ -240,7 +243,7 @@
                                                 <div class="col-sm-6 border-bottom">
                                                     <div class="description-block">
                                                         <div class="col-sm-12">
-                                                            <span>0</span>
+                                                            <span>@(0.ToString("C2"))</span>
                                                         </div>
                                                         <div class="col-sm-12">
                                                             <span>Realizado</span>
@@ -252,7 +255,7 @@
                                                 <div class="col-sm-6 border-bottom">
                                                     <div class="description-block">
                                                         <div class="col-sm-12">
-                                                            <span>0</span>
+                                                            <span>@(0.ToString("C2"))</span>
                                                         </div>
                                                         <div class="col-sm-12">
                                                             <span>Meta R$ grupo</span>
@@ -338,7 +341,7 @@
                                                             <div class="card card-widget widget-user mb-0">
                                                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                                                 <div class="widget-user-header card-color">
-                                                                    <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil &#127894;</h3>
+                                                                    <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil <i class="fas fa-medal" style="font-size:30px;"></i></h3>
                                                                 </div>
                                                                 <div class="widget-user-image">
                                                                     <img class="img-circle elevation-2" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()">
