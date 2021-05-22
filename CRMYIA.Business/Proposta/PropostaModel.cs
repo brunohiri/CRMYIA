@@ -311,6 +311,7 @@ namespace CRMYIA.Business
                             IdUsuario = (long)s.IdUsuarioCorretor,
                             DataSolicitacao = s.DataSolicitacao,
                             ValorPrevisto = s.ValorPrevisto,
+                            QuantidadeVidas = s.QuantidadeVidas
                         }).ToList();
                 }
             }

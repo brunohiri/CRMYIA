@@ -6,7 +6,7 @@
 @using CRMYIA.Business.Util;
 @using CRMYIA.Business;
 @using System.Security.Claims;
-@{ decimal realizado = 0, valores = 0; int vidas = 0; }
+@{ decimal valores = 0; int vidas = 0; }
 
 <div class="card card-default">
     <div class="card-header">
@@ -33,7 +33,7 @@
                 <p class="text-black text-bold"><u>Dica: Use o botão de rolagem do mouse + SHIFT para navegar para direita e esquerda.</u></p>
                 <div class="task-board" style="background-color: #9E2800">
 
-                    <div class="status-card " style="background-color: #9E2800">
+                    <div class="status-card " style="background-color: #9E2800;">
                         <div class="card card-primary">
                             <div class="card-header">
                                 <h3 class="card-title">Perfis</h3>
@@ -46,7 +46,7 @@
                                 <!-- /.card-tools -->
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body mb-5 mt-1" style="display: block;">
+                            <div class="card-body mt-1" style="display: block;">
                                 <div class="input-group input-group-sm">
                                     <input class="form-control btn-outline-dark" id="searchKPIGrupo" type="text" placeholder="Nome..." aria-label="Nome">
                                     <div class="input-group-append">
@@ -55,23 +55,21 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="row m-2 text-center">
+                                <div class="row mt-1 text-center">
                                     <button type="button" data-toggle="modal" data-target="#modal-Grupo" class="btn btn-block btn-outline-dark btn-xs">Novo grupo +</button>
                                 </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
                         <div class="containerLoad">
-                            <ul class="sortable ui-sortable TODO" id="Pefis" data-grupo-id="Pefis">
+                            <ul class="sortable ui-sortable TODO" id="Pefis" style="height:605px;" data-grupo-id="Pefis">
                                 @if ((Model.ListCorretor != null) && (Model.ListCorretor.Count > 0))
                                 {
                                     foreach (var Item in Model.ListCorretor)
                                     {
                                         <li class="text-row ui-sortable-handle"
-                                            data-realizado="0"
                                             data-vidas="0"
                                             data-valores="0"
-                                            data-url="/NovaMeta?id=@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))"
                                             data-user-id="@Item.IdUsuario" id="@("id-" + @Item.IdUsuario)">
                                             <div class="card card-color" style="position: relative; left: 0px; top: 0px;">
                                                 <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
@@ -90,39 +88,37 @@
                                                     </div>
                                                 </div>
                                                 <div class="card-body p-0 mb-0" style="display: block;">
-                                                    <a href="">
-                                                        <div class="card card-widget widget-user mb-0">
-                                                            <!-- Add the bg color to the header using any of the bg-* classes -->
-                                                            <div class="widget-user-header card-color">
-                                                                <h3 class="widget-user-username">@Item.DescricaoPerfil</h3>
-                                                            </div>
-                                                            <div class="widget-user-image">
-                                                                <img class="img-circle elevation-2" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()">
-                                                            </div>
-                                                            <div class="card-footer bg-gradient-light">
-                                                                <div class="row">
-                                                                    <!-- /.col -->
-                                                                    <div class="col-sm-6 border-right">
-                                                                        <div class="description-block">
-                                                                            <h5 class="description-header">0</h5>
-                                                                            <span class="description-text">Valores</span>
-                                                                        </div>
-                                                                        <!-- /.description-block -->
-                                                                    </div>
-                                                                    <!-- /.col -->
-                                                                    <div class="col-sm-6">
-                                                                        <div class="description-block">
-                                                                            <h5 class="description-header">0</h5>
-                                                                            <span class="description-text">Vidas</span>
-                                                                        </div>
-                                                                        <!-- /.description-block -->
-                                                                    </div>
-                                                                    <!-- /.col -->
-                                                                </div>
-                                                                <!-- /.row -->
-                                                            </div>
+                                                    <div class="card card-widget widget-user mb-0">
+                                                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                                                        <div class="widget-user-header card-color">
+                                                            <h3 class="widget-user-username">@Item.DescricaoPerfil <span style="color:aliceblue;">&#127894;</span></h3>
                                                         </div>
-                                                    </a>
+                                                        <div class="widget-user-image">
+                                                            <img class="img-circle elevation-2" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()">
+                                                        </div>
+                                                        <div class="card-footer bg-gradient-light">
+                                                            <div class="row">
+                                                                <!-- /.col -->
+                                                                <div class="col-sm-6 border-right">
+                                                                    <div class="description-block">
+                                                                        <h5 class="description-header">0</h5>
+                                                                        <span class="description-text">Valores</span>
+                                                                    </div>
+                                                                    <!-- /.description-block -->
+                                                                </div>
+                                                                <!-- /.col -->
+                                                                <div class="col-sm-6">
+                                                                    <div class="description-block">
+                                                                        <h5 class="description-header">0</h5>
+                                                                        <span class="description-text">Vidas</span>
+                                                                    </div>
+                                                                    <!-- /.description-block -->
+                                                                </div>
+                                                                <!-- /.col -->
+                                                            </div>
+                                                            <!-- /.row -->
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <!-- /.card-body -->
                                             </div>
@@ -140,12 +136,12 @@
                     {
                         foreach (var Item in Model.ListKPIGrupo)
                         {
-                            <div class="status-card" style="background-color: #3E3E3E">
+                            <div class="status-card" style="background-color: #3E3E3E;">
                                 <div class="card card-primary">
                                     <div class="card-header">
                                         <h3 id="nome-grupo-@Item.IdKPIGrupo" class="card-title">@Item.Nome.Trim()</h3>
                                         <div class="card-tools">
-                                            <button type="button"style="border:none;" class="btn btn-outline-light btn-sm" data-card-widget="collapse">
+                                            <button type="button" style="border:none;" class="btn btn-outline-light btn-sm" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                             <button type="button" onclick="ExcluirKPICard(@Item.IdUsuario)" style="border:none;" class="btn btn-outline-light btn-sm" id="btnRemove-@Item.IdUsuario" name="btnRemove-@Item.IdUsuario">
@@ -156,15 +152,18 @@
                                     </div>
                                     <!-- /.card-header -->
                                     <div class="card-body" style="display: block;">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <a asp-page="/NovaMetaGrupo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))">
-                                                    <button type="button" class="btn btn-block btn-outline-dark btn-xs">Nova meta +</button>
-                                                </a>
+
+                                        @if (Item.KPIMeta.Count > 0)
+                                        {
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <a asp-page="/NovaMetaGrupo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))">
+                                                        <button type="button" class="btn btn-block btn-outline-dark btn-xs">Editar meta &#10000;</button>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        @{
-                                            foreach (var MetaItem in Item.KPIMeta)
+
+                                            @foreach (var MetaItem in Item.KPIMeta)
                                             {
                                                 var MetaItems = KPIMetaModel.GetByMeta(MetaItem.IdMeta);
 
@@ -172,7 +171,7 @@
                                                     <div class="col-sm-6 border-bottom">
                                                         <div class="description-block">
                                                             <div class="col-sm-12">
-                                                                <span id="realizado-grupo-@Item.IdKPIGrupo">0</span>
+                                                                <span id="valor-grupo-@Item.IdKPIGrupo">0</span>
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <span>Realizado</span>
@@ -186,7 +185,7 @@
                                                         <div class="col-sm-6 border-bottom">
                                                             <div class="description-block">
                                                                 <div class="col-sm-12">
-                                                                    <span id="valor-grupo-@Item.IdKPIGrupo">@valorItem.ValorMaximo</span>
+                                                                    <span>@valorItem.ValorMaximo</span>
                                                                 </div>
                                                                 <div class="col-sm-12">
                                                                     <span>Meta R$ grupo</span>
@@ -201,7 +200,7 @@
                                                     <div class="col-sm-6">
                                                         <div class="description-block">
                                                             <div class="col-sm-12">
-                                                                <span id="realizadoVidas-grupo-@Item.IdKPIGrupo">0</span>
+                                                                <span id="vidas-grupo-@Item.IdKPIGrupo">0</span>
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <span>Realizado</span>
@@ -215,7 +214,7 @@
                                                         <div class="col-sm-6">
                                                             <div class="description-block">
                                                                 <div class="col-sm-12">
-                                                                    <span id="vidas-grupo-@Item.IdKPIGrupo">@((int)vidaItem.ValorMaximo)</span>
+                                                                    <span>@((int)vidaItem.ValorMaximo)</span>
                                                                 </div>
                                                                 <div class="col-sm-12">
                                                                     <span>Vidas Grupo</span>
@@ -228,19 +227,93 @@
                                                 </div>
                                             }
                                         }
+                                        else
+                                        {
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <a asp-page="/NovaMetaGrupo" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))">
+                                                        <button type="button" class="btn btn-block btn-outline-dark btn-xs">Nova meta +</button>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6 border-bottom">
+                                                    <div class="description-block">
+                                                        <div class="col-sm-12">
+                                                            <span>0</span>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <span>Realizado</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.description-block -->
+                                                </div>
+                                                <!-- /.col -->
+                                                <div class="col-sm-6 border-bottom">
+                                                    <div class="description-block">
+                                                        <div class="col-sm-12">
+                                                            <span>0</span>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <span>Meta R$ grupo</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.description-block -->
+                                                </div>
+                                                <!-- /.col -->
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="description-block">
+                                                        <div class="col-sm-12">
+                                                            <span>0</span>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <span>Realizado</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.description-block -->
+                                                </div>
+                                                <!-- /.col -->
+                                                <div class="col-sm-6">
+                                                    <div class="description-block">
+                                                        <div class="col-sm-12">
+                                                            <span>0</span>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <span>Vidas Grupo</span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.description-block -->
+                                                </div>
+                                                <!-- /.col -->
+                                            </div>
+                                        }
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
                                 @{long idM = 0; }
                                 @foreach (var id in @Item.KPIMeta) { idM = id.IdMeta; }
-                                <ul class="sortable ui-sortable grupo grupo-@Item.IdKPIGrupo" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo"
-                                    data-meta-id="@idM">
+                                <ul class="sortable ui-sortable grupo grupo-@Item.IdKPIGrupo" id="@("sort" + Item.IdKPIGrupo)" data-grupo-id="@Item.IdKPIGrupo" data-meta-id="@idM">
                                     @if ((Model.ListKPIGrupoUsuario != null) && (Model.ListKPIGrupoUsuario.Count > 0))
                                     {
                                         foreach (var ItemListKPIGrupoUsuario in Model.ListKPIGrupoUsuario)
                                         {
                                             @if (ItemListKPIGrupoUsuario.IdKPIGrupo == Item.IdKPIGrupo)
                                             {
+                                                @foreach (var itemListRealizado in Model.listAllRealizado)
+                                                {
+                                                    @foreach (var itemRealizado in itemListRealizado)
+                                                    {
+                                                        @if (itemRealizado.IdUsuario == ItemListKPIGrupoUsuario.IdUsuario)
+                                                        {
+                                                            if (itemRealizado.ValorPrevisto != null)
+                                                                valores = valores + (decimal)itemRealizado.ValorPrevisto;
+                                                            if (itemRealizado.QuantidadeVidas != null)
+                                                                vidas = vidas + (int)itemRealizado.QuantidadeVidas;
+                                                        }
+                                                    }
+                                                }
                                                 <li class="text-row ui-sortable-handle"
                                                     data-vidas="@vidas"
                                                     data-valores="@valores"
@@ -262,47 +335,45 @@
                                                             </div>
                                                         </div>
                                                         <div class="card-body p-0 mb-0" style="display: block;">
-                                                            <a asp-page="/NovaMeta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemListKPIGrupoUsuario.IdUsuario.ToString()))">
-                                                                <div class="card card-widget widget-user mb-0">
-                                                                    <!-- Add the bg color to the header using any of the bg-* classes -->
-                                                                    <div class="widget-user-header card-color">
-                                                                        <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil</h3>
-                                                                    </div>
-                                                                    <div class="widget-user-image">
-                                                                        <img class="img-circle elevation-2" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()">
-                                                                    </div>
-                                                                    <div class="card-footer bg-gradient-light">
-                                                                        <div class="row">
-                                                                            <!-- /.col -->
-                                                                            <div class="col-sm-6 border-right">
-                                                                                <div class="description-block">
-                                                                                    <h5 class="description-header" style="font-size:12px">@valores.ToString("C2")</h5>
-                                                                                    <span class="description-text">Valores</span>
-                                                                                    @if (true)
-                                                                                    {
-                                                                                        valores = 0;
-                                                                                    }
-                                                                                </div>
-                                                                                <!-- /.description-block -->
-                                                                            </div>
-                                                                            <!-- /.col -->
-                                                                            <div class="col-sm-6">
-                                                                                <div class="description-block">
-                                                                                    <h5 class="description-header">@vidas</h5>
-                                                                                    <span class="description-text">Vidas</span>
-                                                                                    @if (true)
-                                                                                    {
-                                                                                        vidas = 0;
-                                                                                    }
-                                                                                </div>
-                                                                                <!-- /.description-block -->
-                                                                            </div>
-                                                                            <!-- /.col -->
-                                                                        </div>
-                                                                        <!-- /.row -->
-                                                                    </div>
+                                                            <div class="card card-widget widget-user mb-0">
+                                                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                                                <div class="widget-user-header card-color">
+                                                                    <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil &#127894;</h3>
                                                                 </div>
-                                                            </a>
+                                                                <div class="widget-user-image">
+                                                                    <img class="img-circle elevation-2" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()">
+                                                                </div>
+                                                                <div class="card-footer bg-gradient-light">
+                                                                    <div class="row">
+                                                                        <!-- /.col -->
+                                                                        <div class="col-sm-6 border-right">
+                                                                            <div class="description-block">
+                                                                                <h5 class="description-header" style="font-size:12px">@valores.ToString("C2")</h5>
+                                                                                <span class="description-text">Valores</span>
+                                                                                @if (true)
+                                                                                {
+                                                                                    valores = 0;
+                                                                                }
+                                                                            </div>
+                                                                            <!-- /.description-block -->
+                                                                        </div>
+                                                                        <!-- /.col -->
+                                                                        <div class="col-sm-6">
+                                                                            <div class="description-block">
+                                                                                <h5 class="description-header">@vidas</h5>
+                                                                                <span class="description-text">Vidas</span>
+                                                                                @if (true)
+                                                                                {
+                                                                                    vidas = 0;
+                                                                                }
+                                                                            </div>
+                                                                            <!-- /.description-block -->
+                                                                        </div>
+                                                                        <!-- /.col -->
+                                                                    </div>
+                                                                    <!-- /.row -->
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <!-- /.card-body -->
                                                     </div>

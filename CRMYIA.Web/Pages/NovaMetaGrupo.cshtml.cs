@@ -42,9 +42,10 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<Usuario> ListUsuario { get; set; }
         #endregion
-        public string Origem { get; set; }
         public long idUser { get; set; }
         public int Mes { get; set; }
+        public string DtFinal { get; set; }
+        public string DtInicio { get; set; }
         #endregion
 
         #region Construtores
@@ -64,24 +65,20 @@ namespace CRMYIA.Web.Pages
             }
             else
             {
-                Origem = HttpContext.Request.Headers["Referer"].ToString();
                 idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
 
                 Mes = DateTime.Now.Month;
 
-                if (Origem.Contains("KPIGrupo"))
+                EntityKPIGrupo = KPIGrupoModel.Get(idUser);
+                Entity = KPIMetaModel.Get((long)EntityKPIGrupo.IdKPIGrupo);
+                if (Entity != null)
                 {
-                    EntityKPIGrupo = KPIGrupoModel.Get(idUser);
-                    Entity = KPIMetaModel.Get((long)EntityKPIGrupo.IdKPIGrupo);
-                    if (Entity != null)
-                    {
-                        KPIMetaValorEntity = KPIMetaValorModel.Get(Entity.IdMeta);
-                        KPIMetaVidaEntity = KPIMetaVidaModel.Get(Entity.IdMeta);
-                    }
-                    else
-                    {
-                        Entity = new KPIMeta();
-                    }
+                    KPIMetaValorEntity = KPIMetaValorModel.Get(Entity.IdMeta);
+                    KPIMetaVidaEntity = KPIMetaVidaModel.Get(Entity.IdMeta);
+                }
+                else
+                {
+                    Entity = new KPIMeta();
                 }
             }
             //CarregarLists();
@@ -106,6 +103,16 @@ namespace CRMYIA.Web.Pages
                 {
 
                     Entity.IdKPIGrupo = EntityKPIGrupo.IdKPIGrupo;
+                    if (DateTime.TryParse(Request.Form["DataMinima"], out DateTime data))
+                    {
+                        Entity.DataMinima = DateTime.Parse(Request.Form["DataMinima"]);
+                        Entity.DataMaxima = DateTime.Parse(Request.Form["DataMaxima"]);
+                    }
+                    else
+                    {
+                        Entity.DataMinima = DateTime.Parse(Request.Form["DtInicio"]);
+                        Entity.DataMaxima = DateTime.Parse(Request.Form["DtFinal"]);
+                    }
                     KPIMetaModel.Add(Entity);
                     KPIMetaValorEntity.IdMeta = Entity.IdMeta;
                     KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
@@ -115,9 +122,21 @@ namespace CRMYIA.Web.Pages
                 }
                 else
                 {
-                    Entity.IdKPIGrupoNavigation.IdUsuario = EntityKPIGrupo.IdKPIGrupo;
+                    Entity.IdKPIGrupo = EntityKPIGrupo.IdKPIGrupo;
+
+                    if(DateTime.TryParse(Request.Form["DataMinima"], out DateTime data))
+                    {
+                        Entity.DataMinima = DateTime.Parse(Request.Form["DataMinima"]);
+                        Entity.DataMaxima = DateTime.Parse(Request.Form["DataMaxima"]);
+                    }
+                    else
+                    {
+                        Entity.DataMinima = DateTime.Parse(Request.Form["DtInicio"]);
+                        Entity.DataMaxima = DateTime.Parse(Request.Form["DtFinal"]);
+                    }
                     KPIMetaValorEntity.IdMeta = Entity.IdMeta;
                     KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
+                    
                     KPIMetaModel.Update(Entity);
                     KPIMetaValorModel.Update(KPIMetaValorEntity);
                     KPIMetaVidaModel.Update(KPIMetaVidaEntity);
@@ -128,7 +147,6 @@ namespace CRMYIA.Web.Pages
             catch (Exception ex)
             {
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
-
             }
             return Page();
         }

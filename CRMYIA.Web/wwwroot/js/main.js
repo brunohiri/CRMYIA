@@ -4,110 +4,8 @@ $(document).ready(function () {
     //Carregar DataTable
     InitDatatables();
 
-    //Initialize Select2 Elements
-    $('.select2').select2();
-
-    //Timepicker
-    $('#timepicker').datetimepicker({
-        format: 'H:m',
-        icons: {
-            time: 'far fa-clock'
-        }
-    });
-
-
-    $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
-        format: 'DD/MM/YYYY HH:mm',
-        locale: moment.locale('pt-br'),
-        date: moment()
-    });
-
-    //Masks
-    $('.cep').blur(function () {
-        $.ajax({
-            type: "GET",
-            url: "https://viacep.com.br/ws/" + $(this).val().replace('-', '') + "/json/",
-            dataType: "json",
-            success: function (data) {
-                $('.endereco').attr('disabled', false);
-                $('.endereco').val('');
-                $('select[id="IdEstado"]').val(' ');
-                if (data !== '') {
-                    $('.endereco').val(data.logradouro);
-                    $('.bairro').val(data.bairro);
-                    $('.cidade').val(data.ibge);
-                    $('.uf').val(data.uf.toUpperCase());
-                    $('.numero').focus();
-                }
-            }
-        });
-    });
-
-    $(".telefone").inputmask({
-        mask: ["(99) 9999-9999", "(99) 99999-9999"],
-        keepStatic: true
-    });
-
-    $(".onlyNumber").inputmask({
-        mask: ["99999999", "99999999"],
-        keepStatic: true
-    });
-
-    $(".cep").inputmask({
-        mask: ["99999-999"],
-        keepStatic: true
-    });
-
-    $(".data").inputmask({
-        mask: ["99/99/9999"],
-        keepStatic: true
-    });
-
-    $('.money').mask("#.##0,00", { reverse: true });
-    $('.money2').mask('000.000.000.000.000,00', { reverse: true });
-
-    $('.quantidade').mask('##0.000', { reverse: true });
-
-
-    //================ Máscara CPF/CNPJ ====================
-    var CpfCnpjMaskBehavior = function (val) {
-        mascara = val !== '' ? (val.replace(/\D/g, '').length <= 11 ? '000.000.000-009' : '00.000.000/0000-00') : '00.000.000/0000-00';
-        return mascara;
-    },
-        cpfCnpjpOptions = {
-            onKeyPress: function (val, e, field, options) {
-                field.mask(CpfCnpjMaskBehavior.apply({}, arguments), options);
-            }
-        };
-
-    $('.cpf-cnpj').mask(CpfCnpjMaskBehavior, cpfCnpjpOptions);
-
-    //================ Máscara CPF ====================
-    var CpfMaskBehavior = function (val) {
-        mascara = '000.000.000-00';
-        return mascara;
-    },
-        CpfOptions = {
-            onKeyPress: function (val, e, field, options) {
-                field.mask(CpfMaskBehavior.apply({}, arguments), options);
-            }
-        };
-
-    $('.cpf').mask(CpfMaskBehavior, CpfOptions);
-
-
-    //================ Máscara CNPJ ====================
-    var CnpjMaskBehavior = function (val) {
-        mascara = '00.000.000/0000-00';
-        return mascara;
-    },
-        CnpjOptions = {
-            onKeyPress: function (val, e, field, options) {
-                field.mask(CnpjMaskBehavior.apply({}, arguments), options);
-            }
-        };
-
-    $('.cnpj').mask(CnpjMaskBehavior, CnpjOptions);
+    //Atualizar Máscaras
+    AtualizarMascaras();
 
     //Cadastro de Usuários
     CadastroUsuario();
@@ -208,6 +106,7 @@ $(document).ready(function () {
     }
 
 });
+
 function FormatarData(data) {
     var date = new Date(data);
     day = date.getDate() + 1;
@@ -339,7 +238,114 @@ function InitDatatables() {
     uiDatatable();
 }
 
-/* ========================== Usuário =================================== */
+function AtualizarMascaras() {
+    //Initialize Select2 Elements
+    $('.select2').select2();
+
+    //Timepicker
+    $('#timepicker').datetimepicker({
+        format: 'H:m',
+        icons: {
+            time: 'far fa-clock'
+        }
+    });
+
+
+    $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+        format: 'DD/MM/YYYY HH:mm',
+        locale: moment.locale('pt-br'),
+        date: moment()
+    });
+
+    //Masks
+    $('.cep').blur(function () {
+        $.ajax({
+            type: "GET",
+            url: "https://viacep.com.br/ws/" + $(this).val().replace('-', '') + "/json/",
+            dataType: "json",
+            success: function (data) {
+                $('.endereco').attr('disabled', false);
+                $('.endereco').val('');
+                $('select[id="IdEstado"]').val(' ');
+                if (data !== '') {
+                    $('.endereco').val(data.logradouro);
+                    $('.bairro').val(data.bairro);
+                    $('.cidade').val(data.ibge);
+                    $('.uf').val(data.uf.toUpperCase());
+                    $('.numero').focus();
+                }
+            }
+        });
+    });
+
+    $(".telefone").inputmask({
+        mask: ["(99) 9999-9999", "(99) 99999-9999"],
+        keepStatic: true
+    });
+
+    $(".onlyNumber").inputmask({
+        mask: ["99999999", "99999999"],
+        keepStatic: true
+    });
+
+    $(".cep").inputmask({
+        mask: ["99999-999"],
+        keepStatic: true
+    });
+
+    $(".data").inputmask({
+        mask: ["99/99/9999"],
+        keepStatic: true
+    });
+
+    $('.money').mask("#.##0,00", { reverse: true });
+    $('.money2').mask('000.000.000.000.000,00', { reverse: true });
+
+    $('.quantidade').mask('##0.000', { reverse: true });
+
+
+    //================ Máscara CPF/CNPJ ====================
+    var CpfCnpjMaskBehavior = function (val) {
+        mascara = val !== '' ? (val.replace(/\D/g, '').length <= 11 ? '000.000.000-009' : '00.000.000/0000-00') : '00.000.000/0000-00';
+        return mascara;
+    },
+        cpfCnpjpOptions = {
+            onKeyPress: function (val, e, field, options) {
+                field.mask(CpfCnpjMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+    $('.cpf-cnpj').mask(CpfCnpjMaskBehavior, cpfCnpjpOptions);
+
+    //================ Máscara CPF ====================
+    var CpfMaskBehavior = function (val) {
+        mascara = '000.000.000-00';
+        return mascara;
+    },
+        CpfOptions = {
+            onKeyPress: function (val, e, field, options) {
+                field.mask(CpfMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+    $('.cpf').mask(CpfMaskBehavior, CpfOptions);
+
+
+    //================ Máscara CNPJ ====================
+    var CnpjMaskBehavior = function (val) {
+        mascara = '00.000.000/0000-00';
+        return mascara;
+    },
+        CnpjOptions = {
+            onKeyPress: function (val, e, field, options) {
+                field.mask(CnpjMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+    $('.cnpj').mask(CnpjMaskBehavior, CnpjOptions);
+}
+
+//#region Usuário
 function CadastroUsuario() {
     $('#UsuarioIdPerfil').change(function () {
         CarregarUsuarioHierarquia($(this).val());
@@ -394,8 +400,9 @@ function CarregarUsuarioHierarquia(IdPerfil) {
     else
         $('#IdUsuarioHierarquia').attr('disabled', 'disabled');
 }
+//#endregion
 
-/* ========================== Telefone =================================== */
+//#region Telefone
 function CarregarListaTelefone() {
     var Id = $('#ClienteIdCliente').val();
     if (Id !== undefined) {
@@ -501,8 +508,9 @@ function SalvarHistoricoLigacao() {
         });
     });
 }
+//#endregion
 
-/* ========================== Email =================================== */
+//#region Email
 function CarregarListaEmail() {
     var Id = $('#ClienteIdCliente').val();
     if (Id !== undefined) {
@@ -583,8 +591,9 @@ function SalvarCadastroEmail() {
         });
     });
 }
+//#endregion
 
-/* ========================== Cadastro de Propostas =================================== */
+//#region Cadastro de Propostas
 function CadastroPropostas() {
 
     if ($('#Entity_IdProposta').val() != 0) {
@@ -640,7 +649,7 @@ function CadastroPropostas() {
     $('#PropostaIdLinha').change(function () {
         var IdLinha = $(this).val();
         CarregarPropostaLinhaCategoria(IdLinha);
-    });                                                       
+    });
 
     CalcularQuantidadeVidas();
 }
@@ -793,31 +802,101 @@ function CalcularQuantidadeVidas() {
 }
 
 function CarregarButtonDependentes() {
-    //$('div[id*="divDependente"]').hide();
-
-    //function ContarDependentes() {
-    //    var qtd = $('div[id*="divDependente-"]:visible').length;
-    //    return qtd;
-    //}
-
-    //$('#ButtonAdicionarDependente').click(function () {
-    //    console.log('qtd ' + ContarDependentes());
-    //    var i = ContarDependentes();
-    //    $('div[id="divDependente-' + (i + 1).toString() + '"]').show();
-    //});
-
-    //$('#ButtonRemoverDependente').click(function () {
-
-    //});
 
     $('#ButtonAdicionarDependente').click(function () {
         var i = $('div[id*="divDependente-"]').length + 1;
-        console.log(i);
         AddDependente(i);
-    })
+        AtualizarMascaras();
+        RemoveDependente();
+    });
 }
 
+function AddDependente(i) {
+    var html = '';
+    html += '<div id="divDependente-' + i.toString() + '">';
+    html += '		<div class="card-header">';
+    html += '			<h3 class="card-title">Dependente ' + i.toString() + '</h3>';
+    html += '		</div>';
+    html += '		<div class="card-body">';
+    html += '			<div class="row">';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>CPF*</label>';
+    html += '						<input type="text" class="form-control cpf-cnpj" placeholder="CPF" required id="PropostaDocumentoCliente-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-6">';
+    html += '					<div class="form-group">';
+    html += '						<input type="hidden" class="form-control" id="PropostaIdClienteHidden-' + i.toString() + '" />';
+    html += '						<label>Nome*</label>';
+    html += '						<input type="text" class="form-control" placeholder="Nome" readonly id="PropostaClienteNome-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Data de Nascimento</label>';
+    html += '						<input type="text" class="form-control" placeholder="Data de Nascimento" readonly id="PropostaClienteDataNascAbertura-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-1">';
+    html += '					<div class="form-group">';
+    html += '						<label>Situação</label>';
+    html += '						<input type="text" class="form-control" placeholder="Situação" readonly id="PropostaClienteSituacao-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-1">';
+    html += '					<div class="form-group" style="margin-top:38px;">';
+    html += '						<a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))"><i class="fas fa-search" title="Ver Cadastro"></i></a>';
+    html += '					</div>';
+    html += '				</div>';
+    html += '			</div>';
+    html += '			<div class="row">';
+    html += '				<div class="col-sm-4">';
+    html += '					<div class="form-group">';
+    html += '						<label>Nome da Mãe</label>';
+    html += '						<input type="text" class="form-control" placeholder="Nome da Mãe" id="PropostaNomeMae-' + i.toString() + '" readonly />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Compra Carência?*</label>';
+    html += '						<div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">';
+    html += '							<input type="checkbox" class="custom-control-input" id="PropostaCompraCarencia-' + i.toString() + '">';
+    html += '							<label class="custom-control-label" for="PropostaCompraCarencia-' + i.toString() + '">Sim</label>';
+    html += '						</div>';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Nome Plano Origem</label>';
+    html += '						<input type="text" class="form-control" placeholder="Nome Plano Origem" id="PropostaNomePlanoOrigem-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2">';
+    html += '					<div class="form-group">';
+    html += '						<label>Vigência Contrato</label>';
+    html += '						<input type="text" class="form-control" placeholder="Vigência Contrato" id="PropostaVigenciaContrato-' + i.toString() + '" />';
+    html += '					</div>';
+    html += '				</div>';
+    html += '				<div class="col-sm-2 text-right">';
+    html += '					<div class="form-group" style="margin-top:38px;">';
+    html += '						<button type="button" class="btn btn-danger" id="ButtonRemoverDependente-' + i.toString() + '" data-id="' + i.toString() + '"><i class="fa fa-minus-circle"></i>  Remover</button>';
+    html += '					</div>';
+    html += '				</div>';
+    html += '			</div>';
+    html += '		</div>';
+    html += '	</div>';
+    $('#DivDependentes').append(html);
+}
 
+function RemoveDependente() {
+    $('button[id*="ButtonRemoverDependente"]').click(function () {
+        $('#divDependente-' + $(this).data('id').toString()).remove();
+    });
+}
+//#endregion
+
+//#region Abordagem
 function CarregarAbordagem() {
 
     $('#ButtonAbordagemAnterior,#ButtonAbordagemProximo').click(function () {
@@ -827,7 +906,7 @@ function CarregarAbordagem() {
     $('#ButtonOpenModalAbordagem').click(function () {
         NavegarAbordagem(1);
     });
-   
+
 }
 
 function NavegarAbordagem(Direcao) {
@@ -851,7 +930,7 @@ function NavegarAbordagem(Direcao) {
         }
     });
 }
-
+//#endregion
 
 
 
@@ -871,34 +950,6 @@ function CarregarCampanha(Id) {
 }
 
 
-//$(document).on('click', '[data-toggle="lightbox"]', function (event) {
-//    event.preventDefault();
-//    $(this).ekkoLightbox({
-//        alwaysShowClose: true
-//    });
-//});
-
-//$(document).on('click', '.img-fluid.mb-2', function () {
-//    let Descricao = $(this).data('descricao');
-//    let Caminho = $(this).data('caminho');
-//    setTimeout(function () {
-//        $('.modal-body').append('<div class="d-flex justify-content-center m-3"><a class="btn btn-success" href="' + Caminho + '" download="' + Caminho + '">Download</a></div>\
-//                                 <div class="form-group">\
-//                                    <label for="Descricao">Descrição</label>\
-//                                    <textarea class="form-control" id="TextDescricao" rows="3">' + Descricao + '</textarea>\
-//                                 </div>\
-//                                 <div class="d-flex justify-content-center m-3"><button class="btn btn-success copiar-descricao">COPIAR</button></div>');
-//    }, 500);
-//});
-//$(document).on('click', '.copiar-descricao', function () {
-//    /* Pega o texto do textArea */
-//    var copyText = document.getElementById("TextDescricao");
-//    /* Seleciona o textArea */
-//    copyText.select();
-//    copyText.setSelectionRange(0, 99999); /*Para dispositivos móveis*/
-//    /* Copie o texto dentro do campo de texto */
-//    document.execCommand("copy");
-//});
 /* ========================== Loading =================================== */
 
 if (!(window.location.href.indexOf('Visita') > 0)) {
@@ -1041,83 +1092,4 @@ function VerificaNomeArquivoAssinaturaCartao(data) {
     } else {
         return false;
     }
-}
-
-
-function AddDependente(i) {
-    var html = '';
-    html += '<div id="divDependente-' + i.toString() + '">';
-    html += '		<div class="card-header">';
-    html += '			<h3 class="card-title">Dependente ' + i.toString() + '</h3>';
-    html += '		</div>';
-    html += '		<div class="card-body">';
-    html += '			<div class="row">';
-    html += '				<div class="col-sm-2">';
-    html += '					<div class="form-group">';
-    html += '						<label>CPF*</label>';
-    html += '						<input type="text" class="form-control cpf-cnpj" placeholder="CPF" required id="PropostaDocumentoCliente-' + i.toString() + '" />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-6">';
-    html += '					<div class="form-group">';
-    html += '						<input type="hidden" class="form-control" id="PropostaIdClienteHidden-' + i.toString() + '" />';
-    html += '						<label>Nome*</label>';
-    html += '						<input type="text" class="form-control" placeholder="Nome" readonly id="PropostaClienteNome-' + i.toString() + '" />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-2">';
-    html += '					<div class="form-group">';
-    html += '						<label>Data de Nascimento</label>';
-    html += '						<input type="text" class="form-control" placeholder="Data de Nascimento" readonly id="PropostaClienteDataNascAbertura-' + i.toString() + '" />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-1">';
-    html += '					<div class="form-group">';
-    html += '						<label>Situação</label>';
-    html += '						<input type="text" class="form-control" placeholder="Situação" readonly id="PropostaClienteSituacao-' + i.toString() + '" />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-1">';
-    html += '					<div class="form-group" style="margin-top:38px;">';
-    html += '						<a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))"><i class="fas fa-search" title="Ver Cadastro"></i></a>';
-    html += '					</div>';
-    html += '				</div>';
-    html += '			</div>';
-    html += '			<div class="row">';
-    html += '				<div class="col-sm-4">';
-    html += '					<div class="form-group">';
-    html += '						<label>Nome da Mãe</label>';
-    html += '						<input type="text" class="form-control" placeholder="Nome da Mãe" id="PropostaNomeMae-' + i.toString() + '" readonly />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-2">';
-    html += '					<div class="form-group">';
-    html += '						<label>Compra Carência?*</label>';
-    html += '						<div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">';
-    html += '							<input type="checkbox" class="custom-control-input" id="PropostaCompraCarencia-' + i.toString() + '">';
-    html += '							<label class="custom-control-label" for="PropostaCompraCarencia-' + i.toString() + '">Sim</label>';
-    html += '						</div>';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-2">';
-    html += '					<div class="form-group">';
-    html += '						<label>Nome Plano Origem</label>';
-    html += '						<input type="text" class="form-control" placeholder="NomePlanoOrigem" id="PropostaNomePlanoOrigem-' + i.toString() + '" />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-2">';
-    html += '					<div class="form-group">';
-    html += '						<label>Vigência Contrato</label>';
-    html += '						<input type="text" class="form-control" placeholder="Vigência Contrato" id="PropostaVigenciaContrato-' + i.toString() + '" />';
-    html += '					</div>';
-    html += '				</div>';
-    html += '				<div class="col-sm-2 text-right">';
-    html += '					<div class="form-group" style="margin-top:38px;">';
-    html += '						<button type="button" class="btn btn-danger" id="ButtonRemoverDependente-' + i.toString() + '"><i class="fa fa-minus-circle"></i>  Remover</button>';
-    html += '					</div>';
-    html += '				</div>';
-    html += '			</div>';
-    html += '		</div>';
-    html += '	</div>';
-    $('#DivDependentes').append(html);
 }

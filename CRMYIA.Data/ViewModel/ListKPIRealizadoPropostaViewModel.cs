@@ -9,5 +9,6 @@ namespace CRMYIA.Data.ViewModel
         public long IdUsuario { get; set; }
         public decimal? ValorPrevisto { get; set; }
         public DateTime? DataSolicitacao { get; set; }
+        public int? QuantidadeVidas { get; set; }
     }
 }
