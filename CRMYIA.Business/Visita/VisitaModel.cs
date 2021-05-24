@@ -521,17 +521,17 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     var alterarVisita = context.Visita
-                  .Where(x => x.IdVisita >= IdVisita && x.GuidId == GuidId).First();
+                  .Where(x => x.IdVisita >= IdVisita && x.GuidId == GuidId).FirstOrDefault();
 
                     //foreach (Visita alterarVisita in ListVisita)
                     //{
-                        alterarVisita.IdProposta = Entity.IdProposta;
+                    if (alterarVisita != null)
+                    {
                         alterarVisita.IdStatusVisita = Entity.IdStatusVisita;
                         alterarVisita.IdUsuario = Entity.IdUsuario;
                         alterarVisita.Descricao = Entity.Descricao;
                         alterarVisita.DataAgendamento = Entity.DataAgendamento;
                         alterarVisita.DataCadastro = Entity.DataCadastro;
-                        alterarVisita.DataVisitaRealizada = Entity.DataVisitaRealizada;
                         alterarVisita.Observacao = Entity.Observacao;
                         alterarVisita.IdCalendarioSazonal = Entity.IdCalendarioSazonal;
                         alterarVisita.DataInicio = Entity.DataInicio;
@@ -553,6 +553,7 @@ namespace CRMYIA.Business
                         context.Visita.Attach(alterarVisita);
                         context.Entry(alterarVisita).State = EntityState.Modified;
                         context.SaveChanges();
+                    }
                     //}
                 }
             }
@@ -569,17 +570,17 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     var alterarVisita = context.Visita
-                  .Where(x => x.GuidId == GuidId).First();
+                  .Where(x => x.GuidId == GuidId).FirstOrDefault();
 
                     //foreach (Visita alterarVisita in ListVisita)
                     //{
-                        alterarVisita.IdProposta = Entity.IdProposta;
+                    if (alterarVisita != null)
+                    {
                         alterarVisita.IdStatusVisita = Entity.IdStatusVisita;
                         alterarVisita.IdUsuario = Entity.IdUsuario;
                         alterarVisita.Descricao = Entity.Descricao;
                         alterarVisita.DataAgendamento = Entity.DataAgendamento;
                         alterarVisita.DataCadastro = Entity.DataCadastro;
-                        alterarVisita.DataVisitaRealizada = Entity.DataVisitaRealizada;
                         alterarVisita.Observacao = Entity.Observacao;
                         alterarVisita.IdCalendarioSazonal = Entity.IdCalendarioSazonal;
                         alterarVisita.DataInicio = Entity.DataInicio;
@@ -601,7 +602,8 @@ namespace CRMYIA.Business
                         context.Visita.Attach(alterarVisita);
                         context.Entry(alterarVisita).State = EntityState.Modified;
                         context.SaveChanges();
-                    //}
+                    }
+                //}
                 }
             }
             catch (Exception)
@@ -623,7 +625,7 @@ namespace CRMYIA.Business
                     {
 
                         var alterarVisita = context.Visita
-                      .Where(x => x.GuidId == GuidIdAtual).First();
+                      .Where(x => x.GuidId == GuidIdAtual).FirstOrDefault();
 
                         alterarVisita.GuidId = GuidIdAlterar;
 
@@ -638,6 +640,91 @@ namespace CRMYIA.Business
                 throw;
             }
         }
+
+        public static void Remove(Visita Entity)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    if (Entity != null)
+                    {
+                        context.Visita
+                            .Remove(Entity);
+                        context.SaveChanges();
+                    }  
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void RemoveEventosSeguintes(long IdVisita, string GuidId)
+        {
+            List<Visita> Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Visita
+                        .Where(x => x.IdVisita >= IdVisita && x.GuidId == GuidId)
+                        .ToList();
+
+                    if(Entity != null)
+                    {
+                        foreach (Visita Item in Entity)
+                        {
+                            if(Item != null)
+                            {
+                                context.Visita
+                                .Remove(Item);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void RemoveTodosEventos(string GuidId)
+        {
+            List<Visita> Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Visita
+                        .Where(x => x.GuidId == GuidId)
+                        .ToList();
+
+                    if (Entity != null)
+                    {
+                        foreach (Visita Item in Entity)
+                        {
+                            if (Item != null)
+                            {
+                                context.Visita
+                                .Remove(Item);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public static Visita GetLastId()
         {
             Visita Entity = null;
