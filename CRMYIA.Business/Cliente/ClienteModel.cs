@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Context;
 using CRMYIA.Data.Entities;
@@ -119,10 +120,11 @@ namespace CRMYIA.Business
                         .Select(c => new ClienteViewModel()
                         {
                             IdCliente = c.IdCliente,
+                            IdClienteCriptografado = HttpUtility.UrlEncode(Criptography.Encrypt(c.IdCliente.ToString())),
                             Documento = c.CPF,
                             Nome = c.Nome,
                             DataNascAbertura = c.DataNascimento.HasValue ? c.DataNascimento.Value.ToString("dd/MM/yyyy") : string.Empty,
-                            Situacao = "Regular",
+                            Situacao = c.SituacaoCadastral ?? "REGULAR",
                             Celular = (c.Telefone.Where(ct => ct.Ativo && ct.WhatsApp).Count() > 0 ? c.Telefone.Where(ct => ct.Ativo && ct.WhatsApp).OrderByDescending(o => o.DataCadastro).Select(ct => new { Celular = ct.DDD + ct.Telefone1 }).FirstOrDefault().Celular : string.Empty),
                             Telefone = (c.Telefone.Where(ct => ct.Ativo && !ct.WhatsApp).Count() > 0 ? c.Telefone.Where(ct => ct.Ativo && !ct.WhatsApp).OrderByDescending(o => o.DataCadastro).Select(ct => new { Telefone = ct.DDD + ct.Telefone1 }).FirstOrDefault().Telefone : string.Empty),
                             Email = (c.Email.Where(ct => ct.Ativo).Count() > 0 ? c.Email.Where(et => et.Ativo).OrderByDescending(o => o.DataCadastro).Select(et => new { Email = et.EmailConta }).FirstOrDefault().Email : string.Empty),

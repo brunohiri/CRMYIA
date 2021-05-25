@@ -8,6 +8,8 @@ namespace CRMYIA.Data.ViewModel
     {
         public long IdCliente { get; set; }
 
+        public string IdClienteCriptografado { get; set; }
+
         public string Documento { get; set; }
 
         public string Nome { get; set; }

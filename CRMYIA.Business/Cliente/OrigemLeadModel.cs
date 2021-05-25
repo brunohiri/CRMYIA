@@ -42,6 +42,31 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Origem GetByDescricao(string Descricao)
+        {
+            Origem Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Origem
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.Descricao.ToUpper().Contains(Descricao.RemoverAcentuacao().ToUpper()))
+                        .AsNoTracking()
+                        .FirstOrDefault();
+
+                    //Se não encontrar, retorna OUTRO
+                    if (Entity == null)
+                        Entity = context.Origem.Where(x => x.IdOrigem == 1).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static Origem GetByCode(long code)
         {
             Origem Entity = null;

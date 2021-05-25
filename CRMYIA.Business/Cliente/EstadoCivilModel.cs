@@ -42,6 +42,31 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static EstadoCivil GetByDescricao(string Descricao)
+        {
+            EstadoCivil Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.EstadoCivil
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.Descricao.ToUpper().Contains(Descricao.RemoverAcentuacao().ToUpper()))
+                        .AsNoTracking()
+                        .FirstOrDefault();
+
+                    //Se não encontrar, retorna OUTROS
+                    if (Entity == null)
+                        Entity = context.EstadoCivil.Where(x => x.IdEstadoCivil == 5).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<EstadoCivil> GetList()
         {
             List<EstadoCivil> ListEntity = null;

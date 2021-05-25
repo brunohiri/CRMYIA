@@ -87,6 +87,28 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Cidade GetByDescricaoAndUF(string Descricao, string UF)
+        {
+            Cidade Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Cidade
+                        .Include(p => p.IdEstadoNavigation)
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.Descricao.ToUpper() ==(Descricao.RemoverAcentuacao().ToUpper()) && x.IdEstadoNavigation.Sigla == UF)
+                        .AsEnumerable()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<Cidade> GetList()
         {
             List<Cidade> ListEntity = null;

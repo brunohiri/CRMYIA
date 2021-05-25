@@ -67,11 +67,45 @@ namespace CRMYIA.Business.ShiftData
             {
                 RestClient client = new RestClient(UrlDominio);
                 RestRequest request = new RestRequest(UrlMetodo + cpf, Method.GET);
+                request.AddParameter("Authorization", "Bearer " + AccessToken, ParameterType.HttpHeader);
                 var response = client.Execute(request);
 
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     EntityApi = JsonConvert.DeserializeObject<ShiftDataResultApiPessoaFisica>(response.Content);
+
+                    if (EntityApi.Code == (int)System.Net.HttpStatusCode.OK)
+                        Entity = EntityApi.Result;
+                    else
+                        Message = EntityApi.CodeMessage + " - " + EntityApi.Message;
+                }
+                else
+                    Message = response.StatusCode.ToString();
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+            }
+            return Entity;
+        }
+
+        public ShiftDataResultPessoaJuridica ExecutePessoaJuridica(string AccessToken, string cnpj, out string Message)
+        {
+            ShiftDataResultApiPessoaJuridica EntityApi = null;
+            ShiftDataResultPessoaJuridica Entity = null;
+            string UrlMetodo = "/PessoaJuridica?cnpj=";
+
+            Message = string.Empty;
+            try
+            {
+                RestClient client = new RestClient(UrlDominio);
+                RestRequest request = new RestRequest(UrlMetodo + cnpj, Method.GET);
+                request.AddParameter("Authorization", "Bearer " + AccessToken, ParameterType.HttpHeader);
+                var response = client.Execute(request);
+
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    EntityApi = JsonConvert.DeserializeObject<ShiftDataResultApiPessoaJuridica>(response.Content);
 
                     if (EntityApi.Code == (int)System.Net.HttpStatusCode.OK)
                         Entity = EntityApi.Result;

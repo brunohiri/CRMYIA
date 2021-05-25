@@ -52,9 +52,9 @@ namespace CRMYIA.Business.ShiftData
 
         public List<ShiftDataResultEndereco> Enderecos { get; set; }
 
-        public List<TelefoneModel> Telefones { get; set; }
+        public List<ShiftDataResultTelefone> Telefones { get; set; }
 
-        public List<EmailModel> Emails { get; set; }
+        public List<ShiftDataResultEmail> Emails { get; set; }
     }
 
     public class ShiftDataResultApiPessoaJuridica
@@ -96,9 +96,9 @@ namespace CRMYIA.Business.ShiftData
 
         public List<ShiftDataResultEndereco> Enderecos { get; set; }
 
-        public List<TelefoneModel> Telefones { get; set; }
+        public List<ShiftDataResultTelefone> Telefones { get; set; }
 
-        public List<EmailModel> Emails { get; set; }
+        public List<ShiftDataResultEmail> Emails { get; set; }
     }
 
     public class ShiftDataResultEndereco

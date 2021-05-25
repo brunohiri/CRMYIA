@@ -226,9 +226,9 @@ namespace CRMYIA.Web.Pages
             string Name = HttpContext.User.FindFirst(ClaimTypes.Name).Value.ToString();
             string Email = HttpContext.User.FindFirst(ClaimTypes.Email).Value.ToString();
             string PrimarySid = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ToString();
-            
+
             HttpContext.SignOutAsync();
-           
+
             //#region Autenticação
             var userClaims = new List<Claim>()
                     {
@@ -353,31 +353,83 @@ namespace CRMYIA.Web.Pages
         #region Outros Métodos
         public IActionResult OnGetDadosCadastrais(string documento = null)
         {
+            ShiftDataEngine Engine = null;
             ShiftDataResultPessoaFisica EntityPF = null;
             ShiftDataResultPessoaJuridica EntityPJ = null;
             string TipoPessoa = string.Empty;
-            if ((documento != "undefined") && (documento != "undenfined"))
+            string Mensagem = string.Empty;
+            string AccessToken = string.Empty;
+
+            try
             {
-                if (Util.IsCpf(documento.Replace("-","").Replace(".","")))
+                if ((documento != "undefined") && (documento != "undenfined"))
                 {
-                    TipoPessoa = "PF";
+                    Engine = new ShiftDataEngine();
+                    AccessToken = Engine.Login(out Mensagem);
 
+                    if (Mensagem.IsNullOrEmpty())
+                    {
+                        if (Util.IsCpf(documento.Replace("-", "").Replace(".", "")))
+                        {
+                            TipoPessoa = "PF";
+                            EntityPF = Engine.ExecutePessoaFisica(AccessToken, documento, out Mensagem);
 
-                    return new JsonResult(new { status = true, entity = EntityPF, tipoPessoa = TipoPessoa });
+                            #region Salvar na FornecedorConsulta
+                            FornecedorConsultaModel.Add(new FornecedorConsulta()
+                            {
+                                DataConsulta = DateTime.Now,
+                                Documento = documento,
+                                IdFornecedor = (byte)(EnumeradorModel.Fornecedor.ShiftData),
+                                Metodo = "PessoaFisica",
+                                IdUsuario = GetIdUsuario(),
+                                RetornoJson = JsonConvert.SerializeObject(EntityPF),
+                                IP = HttpContext.Connection.RemoteIpAddress.ToString()
+                            });
+                            #endregion
+
+                            if (Mensagem.IsNullOrEmpty())
+                                return new JsonResult(new { status = true, entity = EntityPF, tipoPessoa = TipoPessoa });
+                            else
+                                return new JsonResult(new { status = false, message = Mensagem });
+                        }
+                        else
+                            if (Util.IsCpf(documento.Replace("-", "").Replace(".", "")))
+                        {
+                            TipoPessoa = "PJ";
+                            EntityPJ = Engine.ExecutePessoaJuridica(AccessToken, documento, out Mensagem);
+
+                            #region Salvar na FornecedorConsulta
+                            FornecedorConsultaModel.Add(new FornecedorConsulta()
+                            {
+                                DataConsulta = DateTime.Now,
+                                Documento = documento,
+                                IdFornecedor = (byte)(EnumeradorModel.Fornecedor.ShiftData),
+                                Metodo = "PessoaJuridica",
+                                IdUsuario = GetIdUsuario(),
+                                RetornoJson = JsonConvert.SerializeObject(EntityPJ),
+                                IP = HttpContext.Connection.RemoteIpAddress.ToString()
+                            });
+                            #endregion
+
+                            if (Mensagem.IsNullOrEmpty())
+                                return new JsonResult(new { status = true, entity = EntityPJ, tipoPessoa = TipoPessoa });
+                            else
+                                return new JsonResult(new { status = false, message = Mensagem });
+                        }
+                        else
+                            return new JsonResult(new { status = false, message = "Documento não é um CPF ou CNPJ válido!" });
+                    }
+                    else
+                        return new JsonResult(new { status = false, message = Mensagem });
+
                 }
                 else
-                    if (Util.IsCpf(documento.Replace("-", "").Replace(".", "")))
-                {
-                    TipoPessoa = "PJ";
-
-                    return new JsonResult(new { status = true, entity = EntityPJ, tipoPessoa = TipoPessoa });
-                }
-                else
-                    return new JsonResult(new { status = false, message= "Documento não é um CPF ou CNPJ válido!" });
-
+                    return new JsonResult(new { status = false, message = "Documento vazio!" });
             }
-            else
-                return new JsonResult(new { status = false, message = "Documento vazio!" });
+            catch (Exception ex)
+            {
+                return new JsonResult(new { status = false, message = ex.Message });
+            }
         }
         #endregion
 

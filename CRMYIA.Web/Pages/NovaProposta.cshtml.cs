@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
+using CRMYIA.Business.ShiftData;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
@@ -13,6 +14,7 @@ using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace CRMYIA.Web.Pages
 {
@@ -130,16 +132,170 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
 
-        public IActionResult OnGetCliente(string Id = null, string Documento = null)
+        public IActionResult OnGetCliente(string Id = null, string Documento = null, bool? Titular = null)
         {
             ClienteViewModel EntityCliente = null;
             if ((!Id.IsNullOrEmpty()) && (Id.Replace("null", "undefined") != "undefined"))
+            {
                 EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(Id.ExtractLong(), null);
+            }
             else
             if ((!Documento.IsNullOrEmpty()) && (Documento.Replace("null", "undefined") != "undefined"))
+            {
                 EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
+                if (EntityCliente == null)
+                {
+                    ShiftDataResultPessoaFisica EntityPF = null;
+                    ShiftDataResultPessoaJuridica EntityPJ = null;
+                    string Mensagem = string.Empty;
+                    bool status = GetDadosCadastrais(Documento, out EntityPF, out EntityPJ, out Mensagem);
 
-            return new JsonResult(new { entityCliente = EntityCliente });
+                    if (status)
+                    {
+                        Cliente EntityClienteNovo = new Cliente();
+                        if (EntityPF != null)
+                        {
+                            #region Inserir e obter Cliente
+                            EntityClienteNovo = new Cliente()
+                            {
+                                IdCidade = CidadeModel.GetByDescricaoAndUF(EntityPF.Enderecos?.FirstOrDefault().Cidade, EntityPF.Enderecos?.FirstOrDefault().UF)?.IdCidade,
+                                IdEstadoCivil = EstadoCivilModel.GetByDescricao(EntityPF.EstadoCivil)?.IdEstadoCivil,
+                                IdGenero = GeneroModel.GetByDescricao(EntityPF.Sexo)?.IdGenero,
+                                IdOrigem = OrigemLeadModel.GetByDescricao("Prospecção")?.IdOrigem,
+                                IdArquivoLead = null,
+                                Nome = EntityPF.Nome,
+                                CPF = EntityPF.CPF.FormatarCPF(),
+                                RG = null,
+                                CartaoSus = null,
+                                DataNascimento = EntityPF.DataNascimento,
+                                Idade = EntityPF.Idade,
+                                CEP = EntityPF.Enderecos?.FirstOrDefault().CEP,
+                                Endereco = ((EntityPF.Enderecos?.FirstOrDefault().Tipo ?? string.Empty) + " " + (EntityPF.Enderecos?.FirstOrDefault().Titulo ?? string.Empty) + " " + (EntityPF.Enderecos?.FirstOrDefault().Logradouro ?? string.Empty))?.RemoveMultipleSpaces(),
+                                Numero = EntityPF.Enderecos?.FirstOrDefault().Numero,
+                                Bairro = EntityPF.Enderecos?.FirstOrDefault().Bairro,
+                                Complemento = EntityPF.Enderecos?.FirstOrDefault().Complemento,
+                                SituacaoCadastral = "REGULAR",
+                                Observacao = null,
+                                OperadoraLead = null,
+                                ProdutoLead = null,
+                                StatusPlanoLead = false,
+                                DataAdesaoLead = null,
+                                IsLead = false,
+                                Titular = Titular.HasValue ? Titular.Value : false,
+                                DataCadastro = DateTime.Now,
+                                Ativo = true
+                            };
+
+                            ClienteModel.Add(EntityClienteNovo);
+
+                            if (EntityClienteNovo.IdCliente > 0)
+                            {
+                                EntityPF.Telefones?.ToList().ForEach(delegate (ShiftDataResultTelefone Item)
+                                {
+                                    TelefoneModel.Add(new Telefone()
+                                    {
+                                        Ativo = true,
+                                        DataCadastro = DateTime.Now,
+                                        DDD = Item.DDD,
+                                        Telefone1 = Item.Telefone,
+                                        IdCliente = EntityClienteNovo.IdCliente,
+                                        IdOperadoraTelefone = OperadoraTelefoneModel.GetByDescricao(Item.Operadora).IdOperadoraTelefone,
+                                        WhatsApp = Item.WhatsApp ?? false
+                                    });
+                                });
+
+                                EntityPF.Emails?.ToList().ForEach(delegate (ShiftDataResultEmail Item)
+                                {
+                                    EmailModel.Add(new Email()
+                                    {
+                                        Ativo = true,
+                                        DataCadastro = DateTime.Now,
+                                        IdCliente = EntityClienteNovo.IdCliente,
+                                        EmailConta = Item.Email
+                                    });
+                                });
+                            }
+
+                            EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
+                            #endregion
+
+                            return new JsonResult(new { status = true, entityCliente = EntityCliente });
+                        }
+                        else
+                            if (EntityPJ != null)
+                        {
+                            #region Inserir e obter Cliente
+                            EntityClienteNovo = new Cliente()
+                            {
+                                IdCidade = CidadeModel.GetByDescricaoAndUF(EntityPJ.Enderecos?.FirstOrDefault().Cidade, EntityPJ.Enderecos?.FirstOrDefault().UF)?.IdCidade,
+                                IdEstadoCivil = null,
+                                IdGenero = null,
+                                IdOrigem = OrigemLeadModel.GetByDescricao("Prospecção")?.IdOrigem,
+                                IdArquivoLead = null,
+                                Nome = EntityPJ.NomeRazao,
+                                CPF = EntityPJ.CNPJ.FormatarCNPJ(),
+                                RG = null,
+                                CartaoSus = null,
+                                DataNascimento = EntityPJ.DataAbertura,
+                                Idade = EntityPJ.Idade,
+                                CEP = EntityPJ.Enderecos?.FirstOrDefault().CEP,
+                                Endereco = ((EntityPJ.Enderecos?.FirstOrDefault().Tipo ?? string.Empty) + " " + (EntityPJ.Enderecos?.FirstOrDefault().Titulo ?? string.Empty) + " " + (EntityPJ.Enderecos?.FirstOrDefault().Logradouro ?? string.Empty))?.RemoveMultipleSpaces(),
+                                Numero = EntityPJ.Enderecos?.FirstOrDefault().Numero,
+                                Bairro = EntityPJ.Enderecos?.FirstOrDefault().Bairro,
+                                Complemento = EntityPJ.Enderecos?.FirstOrDefault().Complemento,
+                                SituacaoCadastral = EntityPJ.DescricaoSituacaoCadastral,
+                                Observacao = null,
+                                OperadoraLead = null,
+                                ProdutoLead = null,
+                                StatusPlanoLead = false,
+                                DataAdesaoLead = null,
+                                IsLead = false,
+                                Titular = Titular.HasValue ? Titular.Value : false,
+                                DataCadastro = DateTime.Now,
+                                Ativo = true
+                            };
+
+                            ClienteModel.Add(EntityClienteNovo);
+
+                            if (EntityClienteNovo.IdCliente > 0)
+                            {
+                                EntityPJ.Telefones?.ToList().ForEach(delegate (ShiftDataResultTelefone Item)
+                                {
+                                    TelefoneModel.Add(new Telefone()
+                                    {
+                                        Ativo = true,
+                                        DataCadastro = DateTime.Now,
+                                        DDD = Item.DDD,
+                                        Telefone1 = Item.Telefone,
+                                        IdCliente = EntityClienteNovo.IdCliente,
+                                        IdOperadoraTelefone = OperadoraTelefoneModel.GetByDescricao(Item.Operadora).IdOperadoraTelefone,
+                                        WhatsApp = Item.WhatsApp ?? false
+                                    });
+                                });
+
+                                EntityPJ.Emails?.ToList().ForEach(delegate (ShiftDataResultEmail Item)
+                                {
+                                    EmailModel.Add(new Email()
+                                    {
+                                        Ativo = true,
+                                        DataCadastro = DateTime.Now,
+                                        IdCliente = EntityClienteNovo.IdCliente,
+                                        EmailConta = Item.Email
+                                    });
+                                });
+                            }
+
+                            EntityCliente = ClienteModel.GetWithCidadeEstadoTelefoneEmailEndereco(null, Documento);
+                            #endregion
+
+                            return new JsonResult(new { status = true, entityCliente = EntityCliente });
+                        }
+                    }
+                    else
+                        return new JsonResult(new { status = false, mensagem = Mensagem });
+                }
+            }
+            return new JsonResult(new { status = true, entityCliente = EntityCliente });
         }
 
         public IActionResult OnGetOperadora(string IdModalidade = null, string IdOperadora = null)
@@ -261,7 +417,7 @@ namespace CRMYIA.Web.Pages
             }
             return new JsonResult(new { mensagem = Mensagem });
         }
-        
+
         public IActionResult OnPost()
         {
             string Observacao = string.Empty;
@@ -421,7 +577,7 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
-                                                                             
+
         #region Outros Métodos
         private void CarregarLists()
         {
@@ -435,6 +591,96 @@ namespace CRMYIA.Web.Pages
             ListPorte = PorteModel.GetListIdDescricao();
             ListBanco = BancoModel.GetListIdDescricao();
         }
+
+        private bool GetDadosCadastrais(string documento, out ShiftDataResultPessoaFisica EntityPF, out ShiftDataResultPessoaJuridica EntityPJ, out string Mensagem)
+        {
+            ShiftDataEngine Engine = null;
+
+            string AccessToken = string.Empty;
+            EntityPF = null;
+            EntityPJ = null;
+            Mensagem = null;
+            try
+            {
+                if (!documento.IsNullOrEmpty())
+                {
+                    Engine = new ShiftDataEngine();
+                    AccessToken = Engine.Login(out Mensagem);
+
+                    if (Mensagem.IsNullOrEmpty())
+                    {
+                        if (Util.IsCpf(documento))
+                        {
+                            EntityPF = Engine.ExecutePessoaFisica(AccessToken, documento, out Mensagem);
+
+                            #region Salvar na FornecedorConsulta
+                            FornecedorConsultaModel.Add(new FornecedorConsulta()
+                            {
+                                DataConsulta = DateTime.Now,
+                                Documento = documento,
+                                IdFornecedor = (byte)(EnumeradorModel.Fornecedor.ShiftData),
+                                Metodo = "PessoaFisica",
+                                IdUsuario = GetIdUsuario(),
+                                RetornoJson = JsonConvert.SerializeObject(EntityPF),
+                                IP = HttpContext.Connection.RemoteIpAddress.ToString()
+                            });
+                            #endregion
+
+                            if (Mensagem.IsNullOrEmpty())
+                                return true;
+                            else
+                                return false;
+                        }
+                        else
+                            if (Util.IsCnpj(documento))
+                        {
+                            EntityPJ = Engine.ExecutePessoaJuridica(AccessToken, documento, out Mensagem);
+
+                            #region Salvar na FornecedorConsulta
+                            FornecedorConsultaModel.Add(new FornecedorConsulta()
+                            {
+                                DataConsulta = DateTime.Now,
+                                Documento = documento,
+                                IdFornecedor = (byte)(EnumeradorModel.Fornecedor.ShiftData),
+                                Metodo = "PessoaJuridica",
+                                IdUsuario = GetIdUsuario(),
+                                RetornoJson = JsonConvert.SerializeObject(EntityPJ),
+                                IP = HttpContext.Connection.RemoteIpAddress.ToString()
+                            });
+                            #endregion
+
+                            if (Mensagem.IsNullOrEmpty())
+                                return true;
+                            else
+                                return false;
+                        }
+                        else
+                        {
+                            Mensagem = "Documento não é um CPF ou CNPJ válido!";
+                            return false;
+                        }
+
+                    }
+                    else
+                    {
+                        Mensagem = "Documento não é um CPF ou CNPJ válido!";
+                        return false;
+                    }
+                }
+                else
+                {
+                    Mensagem = "Documento vazio!";
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensagem = ex.Message;
+                return false;
+            }
+        }
+
+
         public long GetIdUsuario()
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();

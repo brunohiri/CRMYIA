@@ -178,7 +178,7 @@
                 </div>
                 <div class="col-sm-1">
                     <div class="form-group" style="margin-top:38px;">
-                        <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))"><i class="fas fa-search" title="Ver Cadastro"></i></a>
+                        <a id="PropostaIdClienteLink" asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Model.Entity.IdCliente.ToString()))"><i class="fas fa-search" title="Ver Cadastro"></i></a>
                     </div>
                 </div>
             </div>
@@ -223,13 +223,13 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>Nome Plano Origem</label>
-                        <input type="text" class="form-control" placeholder="Nome Plano Origem" id="PropostaClienteTelefone" />
+                        <input type="text" class="form-control" placeholder="Nome Plano Origem" id="PropostaNomePlanoOrigem" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>Vigência Contrato</label>
-                        <input type="text" class="form-control" placeholder="Vigência Contrato" id="PropostaClienteTelefone" />
+                        <input type="text" class="form-control" placeholder="Vigência Contrato" id="PropostaVigenciaContrato" />
                     </div>
                 </div>
                 <div class="col-sm-2">

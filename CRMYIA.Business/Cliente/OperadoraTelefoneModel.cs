@@ -42,6 +42,32 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+
+        public static OperadoraTelefone GetByDescricao(string Descricao)
+        {
+            OperadoraTelefone Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.OperadoraTelefone
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.Descricao.ToUpper().Contains(Descricao.RemoverAcentuacao().ToUpper()))
+                        .AsNoTracking()
+                        .FirstOrDefault();
+
+                    //Se não encontrar, retorna OUTRO
+                    if (Entity == null)
+                        Entity = context.OperadoraTelefone.Where(x => x.IdOperadoraTelefone == 5).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<OperadoraTelefone> GetList()
         {
             List<OperadoraTelefone> ListEntity = null;

@@ -8,7 +8,6 @@ namespace CRMYIA.Data.Entities
         public Cliente()
         {
             Email = new HashSet<Email>();
-            InverseIdClienteReferenciaNavigation = new HashSet<Cliente>();
             Proposta = new HashSet<Proposta>();
             PropostaCliente = new HashSet<PropostaCliente>();
             Telefone = new HashSet<Telefone>();
@@ -29,6 +28,7 @@ namespace CRMYIA.Data.Entities
         public string CartaoSus { get; set; }
         public DateTime? DataNascimento { get; set; }
         public int? Idade { get; set; }
+        public string SituacaoCadastral { get; set; }
         public string CEP { get; set; }
         public string Endereco { get; set; }
         public string Numero { get; set; }
@@ -46,13 +46,11 @@ namespace CRMYIA.Data.Entities
 
         public virtual ArquivoLead IdArquivoLeadNavigation { get; set; }
         public virtual Cidade IdCidadeNavigation { get; set; }
-        public virtual Cliente IdClienteReferenciaNavigation { get; set; }
         public virtual EstadoCivil IdEstadoCivilNavigation { get; set; }
         public virtual Genero IdGeneroNavigation { get; set; }
         public virtual Origem IdOrigemNavigation { get; set; }
         public virtual TipoLead IdTipoLeadNavigation { get; set; }
         public virtual ICollection<Email> Email { get; set; }
-        public virtual ICollection<Cliente> InverseIdClienteReferenciaNavigation { get; set; }
         public virtual ICollection<Proposta> Proposta { get; set; }
         public virtual ICollection<PropostaCliente> PropostaCliente { get; set; }
         public virtual ICollection<Telefone> Telefone { get; set; }

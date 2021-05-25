@@ -609,7 +609,7 @@ function CadastroPropostas() {
 
     $('#PropostaDocumentoCliente').blur(function () {
         var Documento = $(this).val();
-        CarregarClientePropostaDocumento(null, Documento);
+        CarregarClientePropostaDocumento(null, Documento, true);
     });
 
     $('#PropostaIdMotivoDeclinio').attr('disabled', 'disabled');
@@ -657,6 +657,7 @@ function CadastroPropostas() {
     });
 
     CalcularQuantidadeVidas();
+    GetAPIDadosCadastrais();
 }
 
 function CarregarPossuiPlano() {
@@ -668,10 +669,10 @@ function CarregarPossuiPlano() {
     $('#PropostaPreferenciaHospitalar').val('');
 }
 
-function CarregarClientePropostaDocumento(IdCliente, Documento) {
+function CarregarClientePropostaDocumento(IdCliente, Documento, Titular) {
     $.ajax({
         type: "GET",
-        url: "/NovaProposta?handler=Cliente&Id=" + IdCliente + "&Documento=" + Documento,
+        url: "/NovaProposta?handler=Cliente&Id=" + IdCliente + "&Documento=" + Documento + "&Titular=" + Titular,
         contentType: "application/json",
         dataType: "json",
         success: function (data) {
@@ -685,6 +686,7 @@ function CarregarClientePropostaDocumento(IdCliente, Documento) {
                 $('#PropostaClienteCelular').val(data.entityCliente.celular);
                 $('#PropostaClienteTelefone').val(data.entityCliente.telefone);
                 $('#PropostaClienteEmail').val(data.entityCliente.email);
+                $('#PropostaIdClienteLink').attr('href', '/NovoCliente?Id=' + data.entityCliente.idClienteCriptografado);
             }
         }
     });
@@ -848,6 +850,11 @@ function CarregarButtonDependentes() {
         AddDependente(i);
         AtualizarMascaras();
         RemoveDependente();
+
+        $('input[id*="PropostaDocumentoCliente-"]').blur(function () {
+            var Documento = $(this).val();
+            CarregarClientePropostaDocumento(null, Documento, false);
+        });
     });
 }
 
@@ -972,8 +979,7 @@ function NavegarAbordagem(Direcao) {
 }
 //#endregion
 
-
-
+//#region Campanha
 function CarregarCampanha(Id) {
     Id = Id;
     $.ajax({
@@ -988,8 +994,9 @@ function CarregarCampanha(Id) {
 
     });
 }
+//#endregion
 
-
+//#region Loading
 /* ========================== Loading =================================== */
 
 if (!(window.location.href.indexOf('Visita') > 0)) {
@@ -1017,6 +1024,9 @@ if (!(window.location.href.indexOf('Visita') > 0)) {
         $('.loading').hide();
     }
 }
+//#endregion
+
+//#region Usuário
 
 function StatusUsuario(Status) {
     if (Status != undefined) {
@@ -1133,3 +1143,29 @@ function VerificaNomeArquivoAssinaturaCartao(data) {
         return false;
     }
 }
+//#endregion
+
+//#region API Dados Cadastrais
+function GetAPIDadosCadastrais() {
+
+    $('.consultar-api').blur(function () {
+        console.log('aqui');
+        var documento = $(this).val();
+        $.ajax({
+            type: "GET",
+            url: "/Index?handler=DadosCadastrais&documento=" + documento,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                if (data.status) {
+                    return data;
+                }
+                else {
+                    alert(data.message);
+                }
+            }
+        });
+    });
+}
+
+//#endregion

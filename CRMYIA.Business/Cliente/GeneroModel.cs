@@ -42,6 +42,31 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static Genero GetByDescricao(string Descricao)
+        {
+            Genero Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Genero
+                        .AsNoTracking()
+                        .Where(x => x.Ativo && x.Descricao.ToUpper().Contains(Descricao.RemoverAcentuacao().ToUpper()))
+                        .AsNoTracking()
+                        .FirstOrDefault();
+
+                    //Se não encontrar, retorna OUTRO
+                    if (Entity == null)
+                        Entity = context.Genero.Where(x => x.IdGenero == 3).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
         public static List<Genero> GetList()
         {
             List<Genero> ListEntity = null;

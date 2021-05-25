@@ -97,9 +97,9 @@ namespace CRMYIA.Data.Context
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
+                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json")
+                 .Build();
                 var connectionString = configuration.GetConnectionString("YiaConnection");
                 optionsBuilder.UseSqlServer(connectionString);
             }
@@ -497,6 +497,10 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.SituacaoCadastral)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.IdArquivoLeadNavigation)
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdArquivoLead)
@@ -506,11 +510,6 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Cliente)
                     .HasForeignKey(d => d.IdCidade)
                     .HasConstraintName("Cidade_Cliente");
-
-                entity.HasOne(d => d.IdClienteReferenciaNavigation)
-                    .WithMany(p => p.InverseIdClienteReferenciaNavigation)
-                    .HasForeignKey(d => d.IdClienteReferencia)
-                    .HasConstraintName("Cliente_Cliente");
 
                 entity.HasOne(d => d.IdEstadoCivilNavigation)
                     .WithMany(p => p.Cliente)
