@@ -1,6 +1,7 @@
 ﻿var DataTerminaEm = '';
 var Calendar = FullCalendar.Calendar;
 var obj = {};
+var submit = true;
 
 window.mobilecheck = function () {
     var check = false;
@@ -210,98 +211,6 @@ $(function () {
         }
     });
 
-    //$('input[name="DataInicioFim"]').daterangepicker({
-    //    timePicker: true,
-    //    timePicker24Hour: true,
-    //    timePickerIncrement: 30,
-    //    startDate: moment().startOf('hour'),
-    //    endDate: moment().startOf('hour').add(32, 'hour'),
-    //    "locale": {
-    //        "format": "DD/MM/YYYY hh:mm A",
-    //        "separator": " - ",
-    //        "applyLabel": "Aplicar",
-    //        "cancelLabel": "Cancelar",
-    //        "daysOfWeek": [
-    //            "Dom",
-    //            "Seg",
-    //            "Ter",
-    //            "Qua",
-    //            "Qui",
-    //            "Sex",
-    //            "Sab"
-    //        ],
-    //        "daysOfWeek": [
-    //            "Dom",
-    //            "Seg",
-    //            "Ter",
-    //            "Qua",
-    //            "Qui",
-    //            "Sex",
-    //            "Sab"
-    //        ],
-    //        "monthNames": [
-    //            "Janeiro",
-    //            "Fevereiro",
-    //            "Março",
-    //            "Abril",
-    //            "Maio",
-    //            "Junho",
-    //            "Julho",
-    //            "Agosto",
-    //            "Setembro",
-    //            "Outubro",
-    //            "Novembro",
-    //            "Dezembro"
-    //        ],
-    //        "firstDay": 1
-    //    }
-    //});
-
-    //$('input[name="DataSazonal"]').daterangepicker({
-    //    singleDatePicker: true,
-    //    showDropdowns: true,
-    //    //minYear: 1901,
-    //    "locale": {
-    //        "format": "DD/MM/YYYY",
-    //        "applyLabel": "Aplicar",
-    //        "cancelLabel": "Cancelar",
-    //        "daysOfWeek": [
-    //            "Dom",
-    //            "Seg",
-    //            "Ter",
-    //            "Qua",
-    //            "Qui",
-    //            "Sex",
-    //            "Sab"
-    //        ],
-    //        cancelLabel: 'Clear',
-    //        "daysOfWeek": [
-    //            "Dom",
-    //            "Seg",
-    //            "Ter",
-    //            "Qua",
-    //            "Qui",
-    //            "Sex",
-    //            "Sab"
-    //        ],
-    //        "monthNames": [
-    //            "Janeiro",
-    //            "Fevereiro",
-    //            "Março",
-    //            "Abril",
-    //            "Maio",
-    //            "Junho",
-    //            "Julho",
-    //            "Agosto",
-    //            "Setembro",
-    //            "Outubro",
-    //            "Novembro",
-    //            "Dezembro"
-    //        ],
-    //        "firstDay": 1
-    //    }
-    //});
-
     PreencherRadio();
     BuscarVisita();
 
@@ -349,13 +258,6 @@ $(document).ready(function () {
                         }
                     }
                 },
-                //Tipo: {
-                //    validators: {
-                //        notEmpty: {
-                //            message: 'Tipo é um campo obrigatório e não pode estar vazio.'
-                //        }
-                //    }
-                //},
                 DataSazonal: {
                     validators: {
                         notEmpty: {
@@ -385,26 +287,6 @@ $(document).ready(function () {
                         }
                     }
                 },
-                //DataInicio: {
-                //    validators: {
-                //        notEmpty: {
-                //            message: 'Data Início é um campo obrigatório e não pode estar vazio.'
-                //        },
-                //        date: {
-                //            format: 'DD/MM/YYYY h:m'
-                //        }
-                //    }
-                //},
-                //DataFim: {
-                //    validators: {
-                //        notEmpty: {
-                //            message: 'Data Início é um campo obrigatório e não pode estar vazio.'
-                //        },
-                //        date: {
-                //            format: 'DD/MM/YYYY h:m'
-                //        }
-                //    }
-                //},
                 Ativo: {
                     validators: {
                         notEmpty: {
@@ -416,18 +298,11 @@ $(document).ready(function () {
         }).on('success.form.bv', function (e) {
             // Prevent form submission
             e.preventDefault();
-
             // Get the form instance
             var $form = $(e.target),
                 form_data = new FormData();
             // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
-
-            // Use Ajax to submit form data
-            //$.post($form.attr('action'), $form.serialize(), function (result) {
-            //    console.log(result);
-            //}, 'json');
-
 
             //Verificacao de Repetição
             if ($('input[type="radio"][name="Tipo[]"]:checked').length > 0) {
@@ -452,8 +327,6 @@ $(document).ready(function () {
                 form_data.append('MesDia', $('#MesDia').val());
                 form_data.append('SelectMensalmente', $('#SelectMensalmente').val());
             }
-
-
             form_data.append('IdVisita', $('#IdVisita').val());
             form_data.append('IdCalendarioSazonal', $('#IdCalendarioSazonal').val());
             form_data.append('Descricao', $('#Descricao').val());
@@ -486,36 +359,6 @@ $(document).ready(function () {
                 }
                 form_data.append('Semana', semamadia);
             }
-
-
-
-            //$.ajax({
-            //    type: 'POST',
-            //    url: "/Visita?handler=Visitas",
-            //    data: form_data,
-            //    cache: false,
-            //    contentType: false,
-            //    processData: false,
-            //    beforeSend: function (xhr) {
-            //        xhr.setRequestHeader("XSRF-TOKEN",
-            //            $('input:hidden[name="__RequestVerificationToken"]').val());
-            //    },
-            //    success: function (data) {
-            //        if (data.status) {
-            //            //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
-            //            //    $('#Titulo').val(data.entityLista.titulo);
-            //            //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
-            //            //    $('#Titulo').focus();
-
-            //            //    $('.salvar-texto').css('display', 'block');
-            //            //    $('.upload-assinatura-cartao').css('display', 'none');
-            //            //    $('.btn-adicionar-imagem').css('display', 'none');
-            //        }
-            //    },
-            //    error: function () {
-            //        swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
-            //    }
-            //});
             $('#calendar').html('');
             var calendar = new Calendar(calendarEl, {
                 plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
@@ -539,12 +382,9 @@ $(document).ready(function () {
                     alert('clicked ' + date.format());
                 },
                 select: function (startDate, endDate) {
-                    //alert(startDate.startStr.length + ' ' + startDate.endStr.length);
-
                     $('#formVisita')
                         .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
                         .bootstrapValidator('resetForm', true);             // Reset the form
-
 
                     $('#Ativo').prop('checked', true);
                     $('#Repetir').val('1');
@@ -581,7 +421,6 @@ $(document).ready(function () {
                     DataFim.setMinutes(DataFim.getMinutes() - DataFim.getTimezoneOffset()); DataFim.setMinutes(DataFim.getMinutes() + 30);
                     document.getElementById('DataFim').value = DataFim.toISOString().slice(0, 16);
 
-
                     var DataTerminaEm = new Date();
                     Hora = DataTerminaEm.getHours();
                     Minutos = DataTerminaEm.getMinutes();
@@ -589,52 +428,9 @@ $(document).ready(function () {
                     DataTerminaEm.setHours(Hora);
                     DataTerminaEm.setMinutes(Minutos);
                     DataTerminaEm.setSeconds(00);
-
                     DataTerminaEm.setMinutes(DataTerminaEm.getMinutes() - DataTerminaEm.getTimezoneOffset());
                     document.getElementById('DataTerminaEm').value = DataTerminaEm.toISOString().slice(0, 16);
-
-
-                    //} else {
-                    //    var DataInicio = new Date();
-                    //    DataInicio.setDate(StartStr[2]);
-                    //    DataInicio.setMonth(parseInt(StartStr[1]) - 1);
-                    //    DataInicio.setYear(StartStr[0]);
-                    //    DataInicio.setMinutes(DataInicio.getMinutes() - DataInicio.getTimezoneOffset());
-                    //    document.getElementById('DataInicio').value = DataInicio.toISOString().slice(0, 16);
-
-                    //    var DataFim = new Date();
-                    //    DataFim.setDate(StartStr[2])
-                    //    DataFim.setMonth(parseInt(StartStr[1]) - 1);
-                    //    DataFim.setYear(StartStr[0]);
-                    //    DataFim.setMinutes(DataFim.getMinutes() - DataFim.getTimezoneOffset()); DataFim.setMinutes(DataFim.getMinutes() + 30);
-                    //    document.getElementById('DataFim').value = DataFim.toISOString().slice(0, 16);
-                    //}
-
-                    //var DataInicioFim = $('#DataInicioFim').val();
-                    //var DataInicioFimAMPM = DataInicioFim.split('-');
-                    //var DataInicioFimAM = DataInicioFimAMPM[0].trim().split(' ');
-
-                    ////var DataInicioFimPM1 = DataInicioFim.split('-');
-                    //var DataInicioFimPM = DataInicioFimAMPM[1].trim().split(' ');
-
-
-                    //var StartStr = startDate.startStr.split('-');
-                    //var EndStr = startDate.endStr.split('-');
-                    ////2021-04-24
-
-                    //var hora = Date().split(' ');
-                    //var horaVet = hora[4].split(':')
-                    //var horaInicio = horaVet[0] + ':' + '30';
-                    //var horaFim = (parseInt(horaVet[0]) + 1) + ':' + '30';
-
-                    //$('#DataInicioFim').val(StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaInicio + ' ' + DataInicioFimAM[2] + ' - ' + StartStr[2] + '/' + StartStr[1] + '/' + StartStr[0] + ' ' + horaFim + ' ' + DataInicioFimPM[2])
-                    ////"30/04/2021 12:00 AM - 30/04/2021 11:59 PM" 
-
                     $('#DataTerminaEm').val(startDate.startStr);
-
-                    //var VetStartStr = startDate.startStr.split('-');
-                    //console.log(VetStartStr[2] + '/' + VetStartStr[1] + '/' + VetStartStr[0])
-
                     ObterDataColocacaoDiaDaSemana(startDate.startStr);
 
                     $('#formVisita').bootstrapValidator('addField', 'Tipo[]', {
@@ -655,137 +451,148 @@ $(document).ready(function () {
 
                     $('#Sim').prop('checked', false);
                     $('#Nao').prop('checked', false);
-
-                    //if (DataTerminaEm > startDate.startStr) {
-                    //    $('#DataTerminaEm').val(DataTerminaEm);
-                    //} else {
-                    //    $('#DataTerminaEm').val(startDate.startStr);
-                    //}
-
-
                 },
                 'themeSystem': 'bootstrap',
                 //Random default events
                 events: function (info, successCallback, failureCallback) {
+                   
                     form_data.append('StartStr', info.startStr);
                     form_data.append('EndStr', info.endStr);
+                    //Ajax
+                    if ($('input[type="radio"][name="Repete[]"]:checked').val() != undefined) {
+                        swal({
+                            title: 'Aguarde',
+                            text: 'Estamos agendando seus eventos...',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            onOpen: () => {
 
-                    $.ajax({
-                        type: 'POST',
-                        url: "/Visita?handler=Visitas",
-                        data: form_data,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("XSRF-TOKEN",
-                                $('input:hidden[name="__RequestVerificationToken"]').val());
-                        },
-                        success: function (data) {
-                                if (data.status) {
-                                    var events = [];
-                                    $.map(data.listVisita, function (r) {
-                                        if (r.tipo == 1) {
-                                            //Feriado
-                                            events.push({
-                                                sourceId: r.sourceId,
-                                                title: r.title,
-                                                backgroundColor: r.backgroundColor,
-                                                borderColor: r.borderColor,
-                                                start: r.start,
-                                                //end: r.end,
-                                                allDay: r.allDay,
-                                                //overlap: false,
-                                                //rendering: 'background',
-                                                //color: '#ff9f89'
-                                            });
+                                //Inicia o Loading
+                                swal.showLoading();
 
-                                            var s = r.start.split('T');
-                                            var e = r.end.split('T');
-                                            events.push({
-                                                title: r.title,
-                                                start: s[0],
-                                                end: e[0],
-                                                overlap: false,
-                                                rendering: 'background'
-                                            });
-                                        } else if (r.tipo == 2) {
-                                            //Data Comemorativa
-                                            events.push({
-                                                sourceId: r.sourceId,
-                                                title: r.title,
-                                                backgroundColor: r.backgroundColor,
-                                                borderColor: r.borderColor,
-                                                start: r.start,
-                                                //end: r.end,
-                                                allDay: r.allDay,
-                                                //overlap: false,
-                                                //rendering: 'background',
-                                                //color: '#ff9f89'
-                                            });
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "/Visita?handler=Visitas",
+                                    data: form_data,
+                                    cache: false,
+                                    contentType: false,
+                                    processData: false,
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader("XSRF-TOKEN",
+                                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                                    },
+                                    success: function (data) {
+                                        if (data.status) {
+                                            var events = [];
+                                            $.map(data.listVisita, function (r) {
+                                                if (r.tipo == 1) {
+                                                    //Feriado
+                                                    events.push({
+                                                        sourceId: r.sourceId,
+                                                        title: r.title,
+                                                        backgroundColor: r.backgroundColor,
+                                                        borderColor: r.borderColor,
+                                                        start: r.start,
+                                                        //end: r.end,
+                                                        allDay: r.allDay,
+                                                        //overlap: false,
+                                                        //rendering: 'background',
+                                                        //color: '#ff9f89'
+                                                    });
 
-                                            var s = r.start.split('T');
-                                            var e = r.end.split('T');
-                                            events.push({
-                                                title: r.title,
-                                                start: s[0],
-                                                end: e[0],
-                                                overlap: false,
-                                                rendering: 'background'
+                                                    var s = r.start.split('T');
+                                                    var e = r.end.split('T');
+                                                    events.push({
+                                                        title: r.title,
+                                                        start: s[0],
+                                                        end: e[0],
+                                                        overlap: false,
+                                                        rendering: 'background'
+                                                    });
+                                                } else if (r.tipo == 2) {
+                                                    //Data Comemorativa
+                                                    events.push({
+                                                        sourceId: r.sourceId,
+                                                        title: r.title,
+                                                        backgroundColor: r.backgroundColor,
+                                                        borderColor: r.borderColor,
+                                                        start: r.start,
+                                                        //end: r.end,
+                                                        allDay: r.allDay,
+                                                        //overlap: false,
+                                                        //rendering: 'background',
+                                                        //color: '#ff9f89'
+                                                    });
+
+                                                    var s = r.start.split('T');
+                                                    var e = r.end.split('T');
+                                                    events.push({
+                                                        title: r.title,
+                                                        start: s[0],
+                                                        end: e[0],
+                                                        overlap: false,
+                                                        rendering: 'background'
+                                                    });
+                                                } else if (r.tipo == 3) {
+                                                    //Evento
+                                                    events.push({
+                                                        sourceId: r.sourceId,
+                                                        title: r.title,
+                                                        backgroundColor: r.backgroundColor,
+                                                        borderColor: r.borderColor,
+                                                        start: r.start,
+                                                        end: r.end,
+                                                        allDay: r.allDay,
+                                                        //overlap: false,
+                                                        //rendering: 'background',
+                                                        //color: '#ff9f89'
+                                                    });
+                                                }
+
+                                                //Fecha e finaliza o Loading
+                                                swal.close(); swal.hideLoading();
                                             });
-                                        } else if (r.tipo == 3) {
-                                            //Evento
-                                            events.push({
-                                                sourceId: r.sourceId,
-                                                title: r.title,
-                                                backgroundColor: r.backgroundColor,
-                                                borderColor: r.borderColor,
-                                                start: r.start,
-                                                end: r.end,
-                                                allDay: r.allDay,
-                                                //overlap: false,
-                                                //rendering: 'background',
-                                                //color: '#ff9f89'
-                                            });
+                                            $('input[type="radio"][name="Repete[]"]:checked').prop('checked', false);
+                                            $('#FeriadoDataComemorativa').modal('hide');
+                                            form_data.delete('Tipo');
+                                            form_data.delete('Repete');
+                                            form_data.delete('Frequencia');
+                                            form_data.delete('Termina');
+                                            form_data.delete('MesDataColocacao');
+                                            form_data.delete('MesDiaDaSemana');
+                                            form_data.delete('MesDia');
+                                            form_data.delete('SelectMensalmente');
+                                            form_data.delete('IdCalendarioSazonal');
+                                            form_data.delete('Descricao');
+                                            form_data.delete('Cor');
+                                            form_data.delete('OpExcluirAlterar');
+                                            form_data.delete('GuidId');
+                                            form_data.delete('ExisteCampanha');
+                                            form_data.delete('Repetir');
+                                            form_data.delete('DataSazonal');
+                                            form_data.delete('DataTerminaEm');
+                                            form_data.delete('DataInicio');
+                                            form_data.delete('DataFim');
+                                            form_data.delete('Ativo');
+                                            form_data.delete('Observacao');
+                                            form_data.delete('Semana');
+                                            //form_data.delete('StartStr');
+                                            //form_data.delete('EndStr');
+                                            successCallback(events);
+                                            location.reload(true);
                                         }
-                                        //if (r.end != null) {
-                                        //    var s = r.start.split('T');
-                                        //    var e = r.end.split('T');
-                                        //    events.push({
-                                        //        sourceId: r.sourceId,
-                                        //        title: r.title,
-                                        //        //backgroundColor: r.backgroundColor,
-                                        //        //borderColor: r.borderColor,
-                                        //        start: s[0],
-                                        //        end: e[0],
-                                        //        //allDay: r.allDay,
-                                        //        overlap: false,
-                                        //        rendering: 'background',
-                                        //        color: '#ff9f89'
-                                        //    });
-                                        //} else {
-                                        //    events.push({
-                                        //        sourceId: r.sourceId,
-                                        //        title: r.title,
-                                        //        backgroundColor: r.backgroundColor,
-                                        //        borderColor: r.borderColor,
-                                        //        start: r.start,
-                                        //        allDay: r.allDay,
-                                        //        //overlap: false,
-                                        //        //rendering: 'background',
-                                        //        //color: '#ff9f89'
-                                        //    });
-                                        //}
-                                    });
-                                    successCallback(events);
-                                    $('#FeriadoDataComemorativa').modal('hide');
-                                }
-                        },
-                        error: function () {
-                            swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
-                        }
-                    });
-                    //$('#calendar').html('');
+
+                                    },
+                                    error: function () {
+                                        swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+                                    }
+                                });
+                            }
+
+                        });
+                    }
+
+                    
                 },
                 eventRender(info) {
                     let tooltip = new Tooltip(info.el, {
@@ -910,15 +717,6 @@ $(document).ready(function () {
                                         $('#AlterarExcluirIdVisita').val(data.entityVisita.idVisita);
                                         $('#GuidId').val(data.entityVisita.guidId);
                                         $('#AlterarExcluir').modal('show');
-
-                                        //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
-                                        //    $('#Titulo').val(data.entityLista.titulo);
-                                        //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
-                                        //    $('#Titulo').focus();
-
-                                        //    $('.salvar-texto').css('display', 'block');
-                                        //    $('.upload-assinatura-cartao').css('display', 'none');
-                                        //    $('.btn-adicionar-imagem').css('display', 'none');
                                     }
                                     $('#modalAlterarExcluir').html(html);
                                 },
@@ -929,22 +727,6 @@ $(document).ready(function () {
 
 
                         }
-                        //$.ajax({
-                        //    url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
-                        //    cache: false,
-                        //    async: false,
-                        //    contentType: "application/json",
-                        //    dataType: "json",
-                        //    type: "GET",
-                        //    success: function (data) {
-                        //        if (data.status) {
-                        //            $('#VisitaTitulo').val(data.entityVisita.descricao);
-                        //            $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
-                        //            $('#VisitaObservacao').val(data.entityVisita.observacao);
-                        //            $('#VisitaIdVisita').val(data.entityVisita.idVisita);
-                        //        }
-                        //    }
-                        //});
                     });
                 },
                 editable: false,
@@ -990,20 +772,10 @@ $(document).ready(function () {
             AdicionarValidacao($this);
         });
 
-    // $(document).on('click', '.select2-results__option', function () {
-    //    $("#select2-menuItems-container").val($(this).html());
-    //});
-
-});
-
-$('#FeriadoDataComemorativas').on('hidden.bs.modal', function () {
-    alert('foi')
 });
 
 
 $('.select2').on('change', function () {
-    //var data = $(".select2 option:selected").text();
-    //$("#test").val(data);
     VisitasPesquisa();
 });
 
@@ -1031,7 +803,7 @@ $(document).on('click', 'input[name="Tipo[]"]', function () {
         $('#Nao').attr("disabled", true);
         $('#Sim').prop('checked', false);
         $('#Nao').prop('checked', false);
-        $('.Observacao').css('display', 'none');
+        $('.Observacao').css('display', 'block');
     }
     else {
         $('.DataSazonal').html('Data');
@@ -1065,8 +837,6 @@ $(document).on('click', '.todos-perfil', function () {
 });
 
 $(document).on('change', '#DataInicioFim', function () {
-
-    //alert($(this).val());
     var data = $(this).val();
 
     var dataVet = data.split('-');
@@ -1090,23 +860,6 @@ $(document).on('click', 'input[type="radio"][name="ExcluirAlterar[]"]:checked', 
     }
 
 });
-
-//$(document).on('click', '.btn-alterar-excluir', function () {
-       
-//    var form_data = new FormData();
-
-//    if ($(this).data('btn') == 'alterar') {
-//        form_data.append('ExcluirAlterar', $(this).data('btn'));
-//    } else if ($(this).data('btn') == 'excluir') {
-//        form_data.append('ExcluirAlterar', $(this).data('btn'));
-//    }
-//    form_data.append('OpExcluirAlterar', $('input[type="radio"][name="OpExcluirAlterar[]"]:checked').val());
-//    form_data.append('IdVisita', $('#AlterarExcluirIdVisita').val());
-//    form_data.append('GuidId', $('#GuidId').val());
-//    form_data.append('Visivel', $('#Visivel').val());
-
-
-//});
 
 $(document).on('click', '.btn-alterar-excluir', function () {
     if ($(this).data('btn') == 'alterar') {
@@ -1192,11 +945,142 @@ $(document).on('click', '.btn-alterar-excluir', function () {
             $('.BlocoRepetir').css('display', 'block');
         }
 
+        if (obj.Termina == 1) {
+            $('#TerminaNunca').prop("checked", true);
+            $('#Termina').css('display', 'block');
+        } else if (obj.Termina == 2) {
+            $('#Em').prop("checked", true);
+            $('#Termina').css('display', 'block');
+            var vetDataTerminaEm = obj.DataTerminaEm.split('T');
+            $('#DataTerminaEm').val(vetDataTerminaEm[0].toString());
+        }
+
+        if (obj.Semana != undefined && obj.Semana != '') {
+            $('#Semana').css('display', 'block');
+            var HtmlSemana = $('.Semana');
+            for (var j = 0; j < HtmlSemana.length; j++) {
+                    HtmlSemana[j].classList.remove('btn-success');
+                    HtmlSemana[j].classList.add('btn-secondary');
+                    HtmlSemana[j].value = false;
+            }
+            if (obj.Semana.indexOf(',') > -1) {
+                var Semana = obj.Semana.split(',');
+                
+                for (var i = 0; i < Semana.length; i++) {
+                    for (var j = 0; j < HtmlSemana.length; j++) {
+                        if (HtmlSemana[j].dataset.posicao == Semana[i]) {
+                            HtmlSemana[j].classList.remove('btn-secondary');
+                            HtmlSemana[j].classList.add('btn-success');
+                            HtmlSemana[j].value = true;
+                        }
+                    }
+                }
+
+            } else {
+                for (var j = 0; j < HtmlSemana.length; j++) {
+                    if (HtmlSemana[j].dataset.posicao == obj.Semana) {
+                        HtmlSemana[j].classList.remove('btn-secondary');
+                        HtmlSemana[j].classList.add('btn-success');
+                        HtmlSemana[j].value = true;
+                    }
+                }
+            }
+        }
+
+        if (obj.SelectMensalmente == 1 || obj.SelectMensalmente == 2) {
+            $('#Mes').css('display', 'block');
+            var DiaDaSemana = "";
+            if ("Sunday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "no " + obj.MesDataColocacao + "&ordm;" + " domingo";
+            } else if ("Monday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "na " + obj.MesDataColocacao + "&ordf;" + " segunda";
+            }
+            else if ("Tuesday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "na " + obj.MesDataColocacao + "&ordf;" + " terça";
+            }
+            else if ("Wednesday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "na " + obj.MesDataColocacao + "&ordf;" + " quarta";
+            }
+            else if ("Thursday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "na " + obj.MesDataColocacao + "&ordf;" + " quinta";
+            }
+            else if ("Friday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "na " + obj.MesDataColocacao + "&ordf;" + " sexta";
+            }
+            else if ("Saturday" == obj.MesDiaDaSemana) {
+                DiaDaSemana = "no " + obj.MesDataColocacao + "&ordm;" + " sabado";
+            }
+
+            var html = '';
+            $('#Mes').html(html);
+            html += '<div class="col-sm-6">\
+                <label>Mensalmente</label>\
+                <div class="form-group">\
+                    <select class="form-control" id="SelectMensalmente">';
+            html += '<option value=1>Mensalmente no dia ' + obj.MesDia + '</option>';
+            html += '<option value=2>Mensalmente ' + DiaDaSemana + '</option>';
+
+            html += '</select>\
+                </div>\
+                </div >';
+            $('#DiaDaSemanaOriginal').val(obj.MesDiaDaSemana);
+            $('#MesDataColocacao').val(obj.MesDataColocacao);
+            $('#MesDia').val(obj.MesDia);
+
+            $('#Mes').html(html);
+        }
+
     }
     else if($(this).data('btn') == 'excluir')
     {
         $('#AlterarExcluir').modal('hide');
-        console.log(obj);
+        //Remove
+        var form_data = new FormData();
+        form_data.append('IdVisita', $('#IdVisita').val());
+        form_data.append('GuidId', $('#GuidId').val());
+        form_data.append('OpExcluirAlterar', $('input[type="radio"][name="OpExcluirAlterar[]"]:checked').val());
+
+        swal({
+        title: 'Aguarde',
+        text: 'Estamos Excluindo os seus eventos...',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+            onOpen: () => {
+
+                swal.showLoading();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/Visita?handler=Excluir",
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    success: function (data) {
+                        swal.close(); swal.hideLoading();
+                        if (data.status) {
+                            swal({
+                                type: "success",
+                                title: 'Perfeito',
+                                html: 'Eventos excluidos com sucesso!!!',
+                                showConfirmButton: false,
+                            });
+                            CarregarCalendarMkt(Calendar, calendarEl);
+                        }
+                        form_data.remove('IdVisita');
+                        form_data.remove('GuidId');
+                        form_data.remove('OpExcluirAlterar');
+                    },
+                    error: function () {
+                        swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+                    }
+                });
+            }
+        });
     }
 
 });
@@ -1267,22 +1151,6 @@ async function ObterDataColocacaoDiaDaSemana(Data) {
         },
         success: function (data) {
             if (data.status) {
-                ////Dia em numero
-                //var dia = Date().split(' ');
-
-                ////Dia da Semana
-                //var d = new Date();
-                //var weekday = new Array(7);
-                //weekday[0] = "Domingo";
-                //weekday[1] = "Segunda";
-                //weekday[2] = "Terca";
-                //weekday[3] = "Quarta";
-                //weekday[4] = "Quinta";
-                //weekday[5] = "Sexta";
-                //weekday[6] = "Sabado";
-
-                //var n = weekday[d.getDay()];
-                //$('#MesDia').val(dia[2]);
                 var DiaDaSemana = "";
                 if ("Sunday" == data.mesDiaDaSemana) {
                     DiaDaSemana = "no " + data.mesDataColocacao + "&ordm;" + " domingo";
@@ -1322,9 +1190,6 @@ async function ObterDataColocacaoDiaDaSemana(Data) {
                 $('#MesDia').val(data.dia);
 
                 $('#Mes').html(html);
-
-                //$('#MesDataColocacao').val(data.mesDataColocacao);
-                //$('#DiaDaSemana').val(data.mesDiaDaSemana);
             }
         },
         error: function () {
@@ -1448,6 +1313,7 @@ function CarregarCalendar(Calendar, calendarEl) {
         'themeSystem': 'bootstrap',
         //Random default events
         events: function (info, successCallback, failureCallback) {
+            $('#formVisita').click(function () {
             $.ajax({
                 url: '/Visita?handler=Visitas',
                 cache: false,
@@ -1479,6 +1345,7 @@ function CarregarCalendar(Calendar, calendarEl) {
                     });
                     successCallback(events);
                 }
+            });
             });
         },
         eventRender(info) {
@@ -1522,7 +1389,6 @@ function CarregarCalendar(Calendar, calendarEl) {
     });
 
     calendar.render();
-    // $('#calendar').fullCalendar()
 }
 
 /*#########################################################################*/
@@ -1626,19 +1492,12 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
             $('#Evento').prop('checked', false);
 
             $('#Sim').prop('checked', false);
-            $('#Nao').prop('checked', false);
-
-            //if (DataTerminaEm > startDate.startStr) {
-            //    $('#DataTerminaEm').val(DataTerminaEm);
-            //} else {
-            //    $('#DataTerminaEm').val(startDate.startStr);
-            //}
-            
-            
+            $('#Nao').prop('checked', false);           
         },
         'themeSystem': 'bootstrap',
         //Random default events
         events: function (info, successCallback, failureCallback) {
+            //Ao recarregar a pagina
             $.ajax({
                 type: "POST",
                 url: '/Visita?handler=ObterVisitas',
@@ -1715,38 +1574,11 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                                 //color: '#ff9f89'
                             });
                         }
-                        //if (r.end != null) {
-                        //    var s = r.start.split('T');
-                        //    var e = r.end.split('T');
-                        //    events.push({
-                        //        sourceId: r.sourceId,
-                        //        title: r.title,
-                        //        //backgroundColor: r.backgroundColor,
-                        //        //borderColor: r.borderColor,
-                        //        start: s[0],
-                        //        end: e[0],
-                        //        //allDay: r.allDay,
-                        //        overlap: false,
-                        //        rendering: 'background',
-                        //        color: '#ff9f89'
-                        //    });
-                        //} else {
-                        //    events.push({
-                        //        sourceId: r.sourceId,
-                        //        title: r.title,
-                        //        backgroundColor: r.backgroundColor,
-                        //        borderColor: r.borderColor,
-                        //        start: r.start,
-                        //        allDay: r.allDay,
-                        //        //overlap: false,
-                        //        //rendering: 'background',
-                        //        //color: '#ff9f89'
-                        //    });
-                        //}
                     });
                     successCallback(events);
                 }
-            });
+            });;
+
         },
         eventRender(info) {
             let tooltip = new Tooltip(info.el, {
@@ -1763,7 +1595,6 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                 if (eventObj.extendedProps.sourceId != undefined && eventObj.extendedProps.sourceId != 0 && eventObj.extendedProps.sourceId != null)
                 {
                     //Aciona no duplo Clique
-                    
                     $('#Descricao').focus();
                     $('#DataSazonal').attr("disabled", true);
                     $('.help-block').attr('style', 'display: none !important; color: red !important;');
@@ -1791,10 +1622,7 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                         success: function (data) {
                             var html = '';
                             //2021-05-09T05:24:00
-                            
-
                             if (data.status) {
-
                                 //add Valores aos hidden
                                 obj.GuidId = data.entityVisita.guidId;
                                 obj.Cor = data.entityVisita.cor;
@@ -1805,14 +1633,19 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                                 obj.GuidId = data.entityVisita.guidId;
                                 obj.IdCalendarioSazonal = data.entityVisita.idCalendarioSazonal;
                                 obj.IdStatusVisita = data.entityVisita.idStatusVisita;
-
                                 obj.IdVisita = data.entityVisita.idVisita;
                                 obj.Observacao = data.entityVisita.observacao;
                                 obj.Repete = data.entityVisita.repete;
                                 obj.Tipo = data.entityVisita.tipo;
                                 obj.Visivel = data.entityVisita.visivel;
                                 obj.Repetir = data.entityVisita.repetir;
-
+                                obj.Termina = data.entityVisita.termina;
+                                obj.DataTerminaEm = data.entityVisita.dataTerminaEm;
+                                obj.Semana = data.entityVisita.semana;
+                                obj.MesDataColocacao = data.entityVisita.mesDataColocacao;
+                                obj.MesDiaDaSemana = data.entityVisita.mesDiaDaSemana;
+                                obj.MesDia = data.entityVisita.mesDia;
+                                obj.SelectMensalmente = data.entityVisita.selectMensalmente;
 
                                 var StrData = '';
 
@@ -1828,9 +1661,6 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                                 var DataInicio = new Date(data.entityVisita.dataInicio);
                                 var DataFim = new Date(data.entityVisita.dataFim);
                                 var DataMoment = moment(data.entityVisita.dataInicio, "MM-DD-YYYY");
-
-                                //DataMoment._locale._months[11] mes
-                                //DataMoment._locale._weekdays[6] dia da semana
 
                                 if (VetDataInicio[0] == VetDataFim[0] && DataHojeFormatada == VetDataInicio[0] && DataHojeFormatada == VetDataFim[0]) {
                                     //Hoje
@@ -1892,16 +1722,8 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                                 $('#AlterarExcluirIdVisita').val(data.entityVisita.idVisita);
                                 $('#GuidId').val(data.entityVisita.guidId);
                                 $('#Visivel').val(data.entityVisita.visivel);
+                                $('#IdVisita').val(data.entityVisita.idVisita);
                                 $('#AlterarExcluir').modal('show');
-                               
-                                //    $('#IdAssinaturaCartao').val(data.entityLista.idAssinaturaCartao);
-                                //    $('#Titulo').val(data.entityLista.titulo);
-                                //    $("#IdCampanha").val(data.entityLista.idCampanha).trigger('change');
-                                //    $('#Titulo').focus();
-
-                                //    $('.salvar-texto').css('display', 'block');
-                                //    $('.upload-assinatura-cartao').css('display', 'none');
-                                //    $('.btn-adicionar-imagem').css('display', 'none');
                             }
                             $('#modalAlterarExcluir').html(html);
                         },
@@ -1912,22 +1734,6 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
 
                    
                 }
-                    //$.ajax({
-                    //    url: '/Visita?handler=ByIdVisita&IdVisita=' + eventObj.extendedProps.sourceId,
-                    //    cache: false,
-                    //    async: false,
-                    //    contentType: "application/json",
-                    //    dataType: "json",
-                    //    type: "GET",
-                    //    success: function (data) {
-                    //        if (data.status) {
-                    //            $('#VisitaTitulo').val(data.entityVisita.descricao);
-                    //            $('#VisitaEventoDataHora').val(new Date(data.entityVisita.dataAgendamento).toLocaleDateString('pt-br') + ' ' + new Date(data.entityVisita.dataAgendamento).toLocaleTimeString('pt-br'));
-                    //            $('#VisitaObservacao').val(data.entityVisita.observacao);
-                    //            $('#VisitaIdVisita').val(data.entityVisita.idVisita);
-                    //        }
-                    //    }
-                    //});
             });
         },
         editable: false,
@@ -1963,7 +1769,6 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
     });
 
     calendar.render();
-    // $('#calendar').fullCalendar()
 }
 
 function CarregarCalendarPesquisa(Calendar, calendarEl, Event) {
@@ -2025,14 +1830,6 @@ function CarregarCalendarPesquisa(Calendar, calendarEl, Event) {
 }
 
 function AdicionarValidacao($this) {
-    //input[type="radio"][name="Repete[]"]
-    //var topic = $(this).val(),
-    //    $container = $('[data-repete="' + topic + '"]');
-    //$container.toggle();
-
-    //var display = $container.css('display');
-    //alert($(this).data('radio'))
-
     var topic = $($this).val();
 
     //Tipo
@@ -2045,20 +1842,7 @@ function AdicionarValidacao($this) {
         }
 
         var display = $container.css('display');
-        //if (3 == topic && 'block' == display) {
-        //    $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
-        //        validators: {
-        //            notEmpty: {
-        //                message: 'O Campo Frequência é um campo obrigatório.'
-        //            }
-        //        }
-        //    });
-        //}
-        //else if (1 == topic || 2 == topic) {
-        //    $('#Frequencia').css('display', 'none');
-        //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-        //}
-    }//
+    }
 
     //Repete
     $('input[type="radio"][name="Tipo[]"]').css('display', 'block');
@@ -2221,37 +2005,6 @@ function AdicionarValidacao($this) {
             }
         });
     }
-
-            //else {
-            //    $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]'); $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-            //}
-
-            //switch (true) {
-            //    case (7 == topic && 'block' == display):
-            //        $('#formVisita').bootstrapValidator('addField', 'Frequencia[]', {
-            //            validators: {
-            //                notEmpty: {
-            //                    message: 'Please choose at least 1 framework'
-            //                }
-            //            }
-            //        });
-            //        break;
-            //    case (7 == topic && 'none' == display):
-            //        $('#formVisita').bootstrapValidator('removeField', 'Frequencia[]');
-            //        break;
-            //case ('javascript' == topic && 'block' == display):
-            //    $('#interviewForm').bootstrapValidator('addField', 'js_frameworks[]', {
-            //        validators: {
-            //            notEmpty: {
-            //                message: 'The name of framework is required'
-            //            }
-            //        }
-            //    });
-            //    break;
-            //case ('javascript' == topic && 'none' == display):
-            //    $('#interviewForm').bootstrapValidator('removeField', 'js_frameworks[]');
-            //    break;
-            //}
 }
 
 function AnoBissexto(year) {

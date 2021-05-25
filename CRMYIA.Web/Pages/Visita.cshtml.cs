@@ -42,7 +42,7 @@ namespace CRMYIA.Web.Pages
         #region Construtores
         #endregion
 
-        #region Métodos
+        #region Mï¿½todos
         public IActionResult OnGet()
         {
             long IdUsuario = GetIdUsuario();
@@ -133,13 +133,6 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnPostVisitas(EnviarCalendarioSazonalViewModel dados)
         {
             List<VisitaViewModel> ListVisita = null;
-            CalendarioSazonal EntityCalendarioSazonal = null;
-
-             
-
-            //var Data = dados.DataInicioFim.Split('-');
-            //DateTime DataInicio = Convert.ToDateTime(Data[0]);
-            //DateTime DataFim = Convert.ToDateTime(Data[1]);
 
             long IdUsuario = GetIdUsuario();
                 if (dados.Repete == 1)//Nunca
@@ -158,7 +151,7 @@ namespace CRMYIA.Web.Pages
                 {
                     CadaDuasSemana(dados);
                 }
-                else if (dados.Repete == 5)//A Cada Mês
+                else if (dados.Repete == 5)//A Cada Mï¿½s
                 {
                     CadaMes(dados);
                 }
@@ -183,138 +176,41 @@ namespace CRMYIA.Web.Pages
                     PersonalizadoAnualmente(dados);
                 }
 
-            //else
-            //{
-                //byte? Visivel = 0;
-                //Guid GuidId;
-                //Visivel = VisivelPara();
-                //GuidId = ObterGuidId();
-                //long IdUsuario = GetIdUsuario();
-
-            //    Business.VisitaModel.Update(new Visita()
-            //    {
-            //        IdVisita = dados.IdVisita,
-            //        Descricao = dados.Descricao,
-            //        DataAgendamento = DateTime.Now,
-            //        DataInicio = dados.DataInicio,
-            //        DataFim = dados.DataFim,
-            //        DataCadastro = DateTime.Now,
-            //        Observacao = dados.Observacao,
-            //        IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-            //        Visivel = dados.Visivel,
-            //        Tipo = dados.Tipo,
-            //        GuidId = dados.GuidId,
-            //        Cor = dados.Cor,
-            //        IdUsuario = IdUsuario
-            //    });
-            //}
-
-            //Business.CalendarioSazonalModel.Add(ListCalendarioSazonal1);
-            //Business.VisitaModel.AddList(ListVisita);
-
-            //if (dados.Descricao.IsNullOrEmpty())
-            //   return new JsonResult(new { status = false, mensagem = "Campo Título obrigatório em branco!" });
-            //else if (dados.DataSazonal == null)
-            //    return new JsonResult(new { status = false, mensagem = "Campo Data obrigatório em branco!" });
-            //else
-            //{
-                //        else if (dados.Tipo == 3)
-                //        {
-                //            UsuarioPerfil EntityUsuarioPerfil =  PerfilModel.GetIdentificacaoPerfil(IdUsuario);
-                //            byte? Visivel = 0;
-                //            if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Administrador)
-                //            {
-                //                Visivel = (byte)EnumeradorModel.Visualizacao.Administrador;
-                //            }
-                //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Gerente)
-                //            {
-                //                Visivel = (byte)EnumeradorModel.Visualizacao.Gerente;
-                //            }
-                //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Supervisor)
-                //            {
-                //                Visivel = (byte)EnumeradorModel.Visualizacao.Supervisor;
-                //            }
-                //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Corretor)
-                //            {
-                //                Visivel = (byte)EnumeradorModel.Visualizacao.Corretor;
-                //            }
-                //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Vendedor)
-                //            {
-                //                Visivel = (byte)EnumeradorModel.Visualizacao.Vendedor;
-                //            }
-                //            else if (EntityUsuarioPerfil.IdPerfil == (byte)EnumeradorModel.Perfil.Marketing)
-                //            {
-                //                Visivel = (byte)EnumeradorModel.Visualizacao.Marketing;
-                //            }
-
-                //            if (dados.DataInicio != null && dados.DataFim != null)
-                //            {
-                //                Business.VisitaModel.Add(new Visita()
-                //                {
-                //                    Descricao = dados.Descricao,
-                //                    DataAgendamento = dados.DataSazonal,
-                //                    DataInicio = dados.DataInicio,
-                //                    DataFim =dados.DataFim,
-                //                    DataCadastro = DateTime.Now,
-                //                    Observacao = dados.Observacao,
-                //                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                //                    Visivel = Visivel,
-                //                    Cor = dados.Cor,
-                //                    IdUsuario = IdUsuario
-                //                });
-                //            }
-                //            else
-                //            {
-                //                Business.VisitaModel.Add(new Visita()
-                //                {
-                //                    Descricao = dados.Descricao,
-                //                    DataAgendamento = dados.DataSazonal,
-                //                    DataCadastro = DateTime.Now,
-                //                    Observacao = dados.Observacao,
-                //                    IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada,
-                //                    Visivel = Visivel,
-                //                    Cor = dados.Cor,
-                //                    IdUsuario = IdUsuario
-                //                });
-                //            }
-
-                //            //Notificação
-                //            UsuarioHierarquia EntityUsuarioHierarquia = UsuarioHierarquiaModel.GetSlave(IdUsuario);
-                //            if (EntityUsuarioHierarquia != null)
-                //            {
-                //                Visita EntityVisita = Business.VisitaModel.GetLastId();
-                //                Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
-                //                {
-                //                    IdUsuarioCadastro = IdUsuario,
-                //                    IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
-                //                    Titulo = null,
-                //                    Descricao = dados.Descricao,
-                //                    Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
-                //                    Visualizado = false,
-                //                    DataCadastro = DateTime.Now,
-                //                    Ativo = true
-                //                });
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        //UpDate
-
-                //        //Visita EntityVisita = Business.VisitaModel.Get(Entity.IdVisita);
-                //        //EntityVisita.Descricao = Entity.Descricao;
-                //        //EntityVisita.DataAgendamento = Entity.DataAgendamento;
-                //        //EntityVisita.DataCadastro = DateTime.Now;
-                //        //EntityVisita.Observacao = Entity.Observacao;
-                //        //EntityVisita.IdStatusVisitaNavigation = null;
-                //        //EntityVisita.IdStatusVisita = (Entity.IdStatusVisita == null ? (byte)EnumeradorModel.StatusVisita.Agendada : Entity.IdStatusVisita);
-                //        //Business.VisitaModel.Update(EntityVisita);
-                //    }
-
+                if(dados.Tipo == 3)
+                {
+                    GeraNotificacao(dados);
+                }
                 ListVisita = Business.VisitaModel.GetListByDataAgendamentoReturnsViewModel(IdUsuario, dados.StartStr, dados.EndStr);
 
             return new JsonResult(new { status = true, listVisita = ListVisita });
-            //}
+        }
+        public IActionResult OnPostExcluir(EnviarCalendarioSazonalViewModel dados)
+        {
+            bool status = false;
+            try
+            {
+                if (dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.Remove(Business.VisitaModel.Get(dados.IdVisita));
+                    status = true;
+                }
+                else if (dados.OpExcluirAlterar == 2)
+                {
+                    Business.VisitaModel.RemoveEventosSeguintes(dados.IdVisita, dados.GuidId);
+                    status = true;
+                }
+                else if (dados.OpExcluirAlterar == 3)
+                {
+                    Business.VisitaModel.RemoveTodosEventos(dados.GuidId);
+                    status = true;
+                }
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+            return new JsonResult(new { status = status });
+            
         }
         public IActionResult OnGetTodosPerfil()
         {
@@ -444,7 +340,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                         GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -452,6 +348,11 @@ namespace CRMYIA.Web.Pages
                         Repetir = dados.Repetir,
                         Termina = dados.Termina
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else
                 {
@@ -492,7 +393,7 @@ namespace CRMYIA.Web.Pages
                                 IdStatusVisita = IdStatusVisita,
                                 Visivel = Visivel,
                                 Tipo = dados.Tipo,
-                                GuidId = dados.GuidId,
+                                 GuidId = GuidId.ToString(),
                                 Cor = dados.Cor,
                                 IdUsuario = IdUsuario,
                                 Repete = dados.Repete,
@@ -514,7 +415,7 @@ namespace CRMYIA.Web.Pages
                                 IdStatusVisita = IdStatusVisita,
                                 Visivel = Visivel,
                                 Tipo = dados.Tipo,
-                                GuidId = dados.GuidId,
+                                 GuidId = GuidId.ToString(),
                                 Cor = dados.Cor,
                                 IdUsuario = IdUsuario,
                                 Repete = dados.Repete,
@@ -534,6 +435,11 @@ namespace CRMYIA.Web.Pages
                         j++;
 
                     } while (j < 730);
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
 
             }else if (dados.Termina == 2)
@@ -552,7 +458,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                         GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -585,7 +491,8 @@ namespace CRMYIA.Web.Pages
                                 Repete = dados.Repete,
                                 Frequencia = dados.Frequencia,
                                 Repetir = dados.Repetir,
-                                DataTerminaEm = dados.DataTerminaEm
+                                DataTerminaEm = dados.DataTerminaEm,
+                                Termina = dados.Termina
                             }); 
                         }
                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -601,13 +508,14 @@ namespace CRMYIA.Web.Pages
                                 IdStatusVisita = IdStatusVisita,
                                 Visivel = Visivel,
                                 Tipo = dados.Tipo,
-                                GuidId = dados.GuidId,
+                                 GuidId = GuidId.ToString(),
                                 Cor = dados.Cor,
                                 IdUsuario = IdUsuario,
                                 Repete = dados.Repete,
                                 Frequencia = dados.Frequencia,
                                 Repetir = dados.Repetir,
-                                DataTerminaEm = dados.DataTerminaEm
+                                DataTerminaEm = dados.DataTerminaEm,
+                                Termina = dados.Termina
                             }, dados.IdVisita, dados.GuidId);
                         }
                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -623,13 +531,14 @@ namespace CRMYIA.Web.Pages
                                 IdStatusVisita = IdStatusVisita,
                                 Visivel = Visivel,
                                 Tipo = dados.Tipo,
-                                GuidId = dados.GuidId,
+                                 GuidId = GuidId.ToString(),
                                 Cor = dados.Cor,
                                 IdUsuario = IdUsuario,
                                 Repete = dados.Repete,
                                 Frequencia = dados.Frequencia,
                                 Repetir = dados.Repetir,
-                                DataTerminaEm = dados.DataTerminaEm
+                                DataTerminaEm = dados.DataTerminaEm,
+                                Termina = dados.Termina
                             }, dados.GuidId);
                         }
                         Dia.Add(DataInicio);
@@ -638,6 +547,11 @@ namespace CRMYIA.Web.Pages
                         DataInicio = DataInicio.AddDays(dados.Repetir);
                         j++;
 
+                    }
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
                     }
                 }
             //} while (new DateTime(DataFim.Year, DataFim.Month, DataFim.Day) != new DateTime(dados.DataTerminaEm.Year, dados.DataTerminaEm.Month, dados.DataTerminaEm.Day)) ;
@@ -669,11 +583,25 @@ namespace CRMYIA.Web.Pages
             List<DateTime> Dia = new List<DateTime>();
             int meses = 0;
 
-            int AnoInicio = DataInicio.Year;
-            int MesInicio = DataInicio.Month;
+            //int AnoInicio = DataInicio.Year;
+            //int MesInicio = DataInicio.Month;
 
-            int AnoFim = DataFim.Year;
-            int MesFim = DataFim.Month;
+            //int AnoFim = DataFim.Year;
+            //int MesFim = DataFim.Month;
+
+            var DataInicioYear = DataInicio.Year + 8;
+            var DataInicioMonth = DataInicio.Month;
+            var DataInicioDay = DataInicio.Day;
+            var DataInicioHour = DataInicio.Hour;
+            var DataInicioMinute = DataInicio.Minute;
+            var DataInicioSecond = DataInicio.Second;
+
+            var DataFimYear = DataFim.Year + 8;
+            var DataFimMonth = DataFim.Month;
+            var DataFimDay = DataFim.Day;
+            var DataFimHour = DataFim.Hour;
+            var DataFimMinute = DataFim.Minute;
+            var DataFimSecond = DataFim.Second;
 
             int j = 0;
 
@@ -693,15 +621,23 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                        GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
                         Frequencia = dados.Frequencia,
                         Repetir = dados.Repetir,
                         Termina = dados.Termina,
-                        Semana = dados.Semana
+                        Semana = dados.Semana,
+                        MesDataColocacao = dados.MesDataColocacao,
+                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                        MesDia = dados.MesDia
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else
                 {
@@ -732,7 +668,10 @@ namespace CRMYIA.Web.Pages
                                     Frequencia = dados.Frequencia,
                                     Repetir = dados.Repetir,
                                     Termina = dados.Termina,
-                                    Semana = dados.Semana
+                                    Semana = dados.Semana,
+                                    MesDataColocacao = dados.MesDataColocacao,
+                                    MesDiaDaSemana = dados.MesDiaDaSemana,
+                                    MesDia = dados.MesDia
                                 });
                             }
                             else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -748,14 +687,17 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                    GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                     Repetir = dados.Repetir,
                                     Termina = dados.Termina,
-                                    Semana = dados.Semana
+                                    Semana = dados.Semana,
+                                    MesDataColocacao = dados.MesDataColocacao,
+                                    MesDiaDaSemana = dados.MesDiaDaSemana,
+                                    MesDia = dados.MesDia
                                 }, dados.IdVisita, dados.GuidId);
                             }
                             else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -771,14 +713,17 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                    GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                     Repetir = dados.Repetir,
                                     Termina = dados.Termina,
-                                    Semana = dados.Semana
+                                    Semana = dados.Semana,
+                                    MesDataColocacao = dados.MesDataColocacao,
+                                    MesDiaDaSemana = dados.MesDiaDaSemana,
+                                    MesDia = dados.MesDia
                                 }, dados.GuidId);
                             }
 
@@ -791,7 +736,12 @@ namespace CRMYIA.Web.Pages
                         Dia.Add(DataFim);
                         Dia.Add(new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
 
-                    } while (new DateTime(DateTime.Now.Year + 8, DateTime.Now.Month, DateTime.Now.Day) > new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day));
+                    } while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond));
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
             }else if (dados.Termina == 2)
             {
@@ -809,7 +759,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                        GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -817,8 +767,16 @@ namespace CRMYIA.Web.Pages
                         Repetir = dados.Repetir,
                         Termina = dados.Termina,
                         DataTerminaEm = dados.DataTerminaEm,
-                        Semana = dados.Semana
+                        Semana = dados.Semana,
+                        MesDataColocacao = dados.MesDataColocacao,
+                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                        MesDia = dados.MesDia
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else
                 {
@@ -850,7 +808,10 @@ namespace CRMYIA.Web.Pages
                                     Repetir = dados.Repetir,
                                     Termina = dados.Termina,
                                     DataTerminaEm = dados.DataTerminaEm,
-                                    Semana = dados.Semana
+                                    Semana = dados.Semana,
+                                    MesDataColocacao = dados.MesDataColocacao,
+                                    MesDiaDaSemana = dados.MesDiaDaSemana,
+                                    MesDia = dados.MesDia
                                 });
                             }
                             else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -866,7 +827,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                    GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -874,7 +835,10 @@ namespace CRMYIA.Web.Pages
                                     Repetir = dados.Repetir,
                                     Termina = dados.Termina,
                                     DataTerminaEm = dados.DataTerminaEm,
-                                    Semana = dados.Semana
+                                    Semana = dados.Semana,
+                                    MesDataColocacao = dados.MesDataColocacao,
+                                    MesDiaDaSemana = dados.MesDiaDaSemana,
+                                    MesDia = dados.MesDia
                                 }, dados.IdVisita, dados.GuidId);
                             }
                             else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -890,7 +854,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                    GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -898,7 +862,10 @@ namespace CRMYIA.Web.Pages
                                     Repetir = dados.Repetir,
                                     Termina = dados.Termina,
                                     DataTerminaEm = dados.DataTerminaEm,
-                                    Semana = dados.Semana
+                                    Semana = dados.Semana,
+                                    MesDataColocacao = dados.MesDataColocacao,
+                                    MesDiaDaSemana = dados.MesDiaDaSemana,
+                                    MesDia = dados.MesDia
                                 }, dados.GuidId);
                             }
                         }
@@ -909,6 +876,11 @@ namespace CRMYIA.Web.Pages
 
                         DataInicio = DataInicio.AddDays(1);
                         j++;
+                    }
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
                     }
                 }
             }
@@ -962,7 +934,7 @@ namespace CRMYIA.Web.Pages
 
             var DayOfWeek = DataInicio.DayOfWeek.ToString();
 
-            //Usa o calendário padrão do InvariantCulture.
+            //Usa o calendï¿½rio padrï¿½o do InvariantCulture.
             Calendar myCal = CultureInfo.InvariantCulture.Calendar;
 
             if (dados.Termina == 1)//Terminar Nunca
@@ -981,7 +953,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                         GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -991,8 +963,14 @@ namespace CRMYIA.Web.Pages
                         DataTerminaEm = dados.DataTerminaEm,
                         MesDia = dados.MesDia,
                         MesDataColocacao = dados.MesDataColocacao,
-                        MesDiaDaSemana = dados.MesDiaDaSemana
+                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                        SelectMensalmente = dados.SelectMensalmente
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else
                 {
@@ -1031,7 +1009,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1047,7 +1026,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1057,7 +1036,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1073,7 +1053,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1083,7 +1063,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1113,7 +1094,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1129,7 +1111,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1139,7 +1121,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1155,7 +1138,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1165,7 +1148,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1195,7 +1179,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1211,7 +1196,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1221,7 +1206,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1237,7 +1223,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1247,7 +1233,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1277,7 +1264,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1293,7 +1281,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1303,7 +1291,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1319,7 +1308,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1329,7 +1318,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1359,7 +1349,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1375,7 +1366,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1385,7 +1376,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1401,7 +1393,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1411,12 +1403,13 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
-                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                     DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                     DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
@@ -1448,7 +1441,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1464,7 +1458,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1474,7 +1468,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1490,7 +1485,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1500,7 +1495,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1530,7 +1526,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1546,7 +1543,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1556,7 +1553,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1572,7 +1570,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1582,7 +1580,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1612,7 +1611,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1628,7 +1628,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1638,7 +1638,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1654,7 +1655,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1664,7 +1665,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1694,7 +1696,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1710,7 +1713,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1720,7 +1723,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1736,7 +1740,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1746,12 +1750,13 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
-                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                     DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                     DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
@@ -1784,7 +1789,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1800,7 +1806,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1810,7 +1816,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1826,7 +1833,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1836,7 +1843,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1866,7 +1874,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1882,7 +1891,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1892,7 +1901,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1908,7 +1918,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1918,7 +1928,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -1948,7 +1959,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -1964,12 +1976,18 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
                                                 Frequencia = dados.Frequencia,
-                                                Repetir = dados.Repetir
+                                                Repetir = dados.Repetir,
+                                                Termina = dados.Termina,
+                                                DataTerminaEm = dados.DataTerminaEm,
+                                                MesDia = dados.MesDia,
+                                                MesDataColocacao = dados.MesDataColocacao,
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -1985,7 +2003,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -1995,7 +2013,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -2025,7 +2044,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2041,7 +2061,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2051,7 +2071,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2067,7 +2088,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2077,7 +2098,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
@@ -2107,7 +2129,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2123,7 +2146,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2133,7 +2156,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2149,7 +2173,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2159,12 +2183,13 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                     }
-                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                     DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                     DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
@@ -2194,7 +2219,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2210,7 +2236,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -2220,7 +2246,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2236,7 +2263,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -2246,26 +2273,27 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
-                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                    DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                    DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                     DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                     DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                                 }
                             }
                             DataInicio = DataInicio.AddDays(1);//Adicona um Dia 
                             DataFim = DataFim.AddDays(1);//Adicona um Dia 
-                            if (!DateTime.IsLeapYear(DataInicio.Year) && DataInicio.Month == 2 && DataInicio.Day == 28 && dados.MesDia == 29)//anos que não são bissexto, no mês de fevereiro e no dia 28
+                            if (!DateTime.IsLeapYear(DataInicio.Year) && DataInicio.Month == 2 && DataInicio.Day == 28 && dados.MesDia == 29)//anos que nï¿½o sï¿½o bissexto, no mï¿½s de fevereiro e no dia 28
                             {
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                             }
                         }
 
 
-                        if (dados.SelectMensalmente == 2)//Se for selecionado a opção 2, buscando dia da semana e colocação do dia.
+                        if (dados.SelectMensalmente == 2)//Se for selecionado a opï¿½ï¿½o 2, buscando dia da semana e colocaï¿½ï¿½o do dia.
                         {
                             DayOfWeek = DataInicio.DayOfWeek.ToString();
                             if (dados.MesDataColocacao == Util.ObterClassificacao(DataInicio) && dados.MesDiaDaSemana == DayOfWeek)
@@ -2299,7 +2327,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2315,7 +2344,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2325,7 +2354,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2341,7 +2371,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2351,7 +2381,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2386,7 +2417,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2402,7 +2434,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2412,7 +2444,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2428,7 +2461,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2438,7 +2471,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2473,7 +2507,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2489,7 +2524,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2499,7 +2534,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2515,7 +2551,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2525,7 +2561,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2560,7 +2597,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2576,7 +2614,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2586,7 +2624,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2602,7 +2641,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2612,7 +2651,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2647,7 +2687,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2663,7 +2704,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2673,7 +2714,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2689,7 +2731,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2699,7 +2741,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2737,7 +2780,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2753,7 +2797,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2763,7 +2807,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2779,7 +2824,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2789,7 +2834,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2824,7 +2870,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2840,7 +2887,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2850,7 +2897,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2866,7 +2914,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2876,7 +2924,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2911,7 +2960,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -2927,7 +2977,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2937,7 +2987,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -2953,7 +3004,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -2963,7 +3014,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -2998,7 +3050,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3014,7 +3067,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3024,7 +3077,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3040,7 +3094,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3050,7 +3104,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3089,7 +3144,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3105,7 +3161,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3115,7 +3171,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3131,7 +3188,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3141,7 +3198,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3176,7 +3234,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3192,7 +3251,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3202,7 +3261,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3218,7 +3278,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3228,7 +3288,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3263,7 +3324,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3279,7 +3341,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3289,7 +3351,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3305,7 +3368,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3315,7 +3378,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3350,7 +3414,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3366,7 +3431,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3376,7 +3441,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3392,7 +3458,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3402,7 +3468,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3437,7 +3504,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3453,7 +3521,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3463,7 +3531,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.IdVisita, dados.GuidId);
                                         }
                                         else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3479,7 +3548,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -3489,7 +3558,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                         }
                                         DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3525,7 +3595,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3541,7 +3612,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3551,7 +3622,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3567,7 +3639,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3577,7 +3649,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -3591,6 +3664,11 @@ namespace CRMYIA.Web.Pages
                             DataFim = myCal.AddDays(DataFim, 1); ;//Adicona uma Semana 
                         }
 
+                    }
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
                     }
                 }
             }
@@ -3610,7 +3688,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                         GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -3620,12 +3698,18 @@ namespace CRMYIA.Web.Pages
                         DataTerminaEm = dados.DataTerminaEm,
                         MesDia = dados.MesDia,
                         MesDataColocacao = dados.MesDataColocacao,
-                        MesDiaDaSemana = dados.MesDiaDaSemana
+                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                        SelectMensalmente = dados.SelectMensalmente
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else 
                 { 
-                while (dados.DataTerminaEm >= new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day))
+                    while (dados.DataTerminaEm >= new DateTime(DataInicio.Year, DataInicio.Month, DataInicio.Day))
                 {
                     if (dados.SelectMensalmente == 1)//Mensalmente no dia X
                     {
@@ -3659,7 +3743,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3675,7 +3760,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3685,7 +3770,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3701,7 +3787,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3711,7 +3797,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3741,7 +3828,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3757,7 +3845,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3767,7 +3855,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3783,7 +3872,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3793,7 +3882,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3823,7 +3913,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3839,7 +3930,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3849,7 +3940,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3865,7 +3957,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3875,7 +3967,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3905,7 +3998,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -3921,7 +4015,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3931,7 +4025,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -3947,7 +4042,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -3957,7 +4052,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -3987,7 +4083,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4003,7 +4100,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4013,7 +4110,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4029,7 +4127,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4039,7 +4137,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4072,7 +4171,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4088,7 +4188,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4098,7 +4198,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4114,7 +4215,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4124,7 +4225,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4154,7 +4256,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4170,7 +4273,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4180,7 +4283,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4196,7 +4300,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4206,7 +4310,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4236,7 +4341,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4252,7 +4358,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4262,7 +4368,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4278,7 +4385,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4288,7 +4395,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4318,7 +4426,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4334,7 +4443,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4344,7 +4453,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4360,7 +4470,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4370,7 +4480,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4404,7 +4515,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4420,7 +4532,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4430,7 +4542,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4446,7 +4559,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4456,7 +4569,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4486,7 +4600,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4502,7 +4617,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4512,7 +4627,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4528,7 +4644,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4538,7 +4654,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4568,7 +4685,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4584,7 +4702,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4594,7 +4712,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4610,7 +4729,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4620,7 +4739,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4650,7 +4770,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4666,7 +4787,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4676,7 +4797,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4692,7 +4814,7 @@ namespace CRMYIA.Web.Pages
                                                 IdStatusVisita = IdStatusVisita,
                                                 Visivel = Visivel,
                                                 Tipo = dados.Tipo,
-                                                GuidId = dados.GuidId,
+                                                 GuidId = GuidId.ToString(),
                                                 Cor = dados.Cor,
                                                 IdUsuario = IdUsuario,
                                                 Repete = dados.Repete,
@@ -4702,7 +4824,8 @@ namespace CRMYIA.Web.Pages
                                                 DataTerminaEm = dados.DataTerminaEm,
                                                 MesDia = dados.MesDia,
                                                 MesDataColocacao = dados.MesDataColocacao,
-                                                MesDiaDaSemana = dados.MesDiaDaSemana
+                                                MesDiaDaSemana = dados.MesDiaDaSemana,
+                                                SelectMensalmente = dados.SelectMensalmente
                                             }, dados.GuidId);
                                     }
                                 }
@@ -4732,7 +4855,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4748,7 +4872,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4758,7 +4882,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4774,7 +4899,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4784,7 +4909,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                 }
@@ -4815,7 +4941,8 @@ namespace CRMYIA.Web.Pages
                                         DataTerminaEm = dados.DataTerminaEm,
                                         MesDia = dados.MesDia,
                                         MesDataColocacao = dados.MesDataColocacao,
-                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                                        SelectMensalmente = dados.SelectMensalmente
                                     });
                                 }
                                 else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4831,7 +4958,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -4841,7 +4968,8 @@ namespace CRMYIA.Web.Pages
                                         DataTerminaEm = dados.DataTerminaEm,
                                         MesDia = dados.MesDia,
                                         MesDataColocacao = dados.MesDataColocacao,
-                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                                        SelectMensalmente = dados.SelectMensalmente
                                     }, dados.IdVisita, dados.GuidId);
                                 }
                                 else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4857,7 +4985,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -4867,17 +4995,18 @@ namespace CRMYIA.Web.Pages
                                         DataTerminaEm = dados.DataTerminaEm,
                                         MesDia = dados.MesDia,
                                         MesDataColocacao = dados.MesDataColocacao,
-                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                                        SelectMensalmente = dados.SelectMensalmente
                                     }, dados.GuidId);
                                 }
                             }
                         }
-                        DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                        DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                        DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                        DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                     }
 
 
-                    if (dados.SelectMensalmente == 2)//Se for selecionado a opção 2, buscando dia da semana e colocação do dia.
+                    if (dados.SelectMensalmente == 2)//Se for selecionado a opï¿½ï¿½o 2, buscando dia da semana e colocaï¿½ï¿½o do dia.
                     {
                         DayOfWeek = DataInicio.DayOfWeek.ToString();
                         if (dados.MesDataColocacao == Util.ObterClassificacao(DataInicio) && dados.MesDiaDaSemana == DayOfWeek)
@@ -4911,7 +5040,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -4927,7 +5057,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4937,7 +5067,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -4953,7 +5084,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -4963,7 +5094,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -4998,7 +5130,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5014,7 +5147,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5024,7 +5157,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5040,7 +5174,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5050,7 +5184,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5085,7 +5220,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5101,7 +5237,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5111,7 +5247,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5127,7 +5264,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5137,7 +5274,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5172,7 +5310,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5188,7 +5327,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5198,7 +5337,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5214,7 +5354,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5224,7 +5364,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5259,7 +5400,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5275,7 +5417,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5285,7 +5427,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5301,7 +5444,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5311,7 +5454,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5349,7 +5493,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5365,7 +5510,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5375,7 +5520,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5391,7 +5537,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5401,7 +5547,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5436,7 +5583,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5452,7 +5600,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5462,7 +5610,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5478,7 +5627,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5488,7 +5637,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5523,7 +5673,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5539,7 +5690,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5549,7 +5700,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5565,7 +5717,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5575,7 +5727,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5610,7 +5763,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5626,7 +5780,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5636,7 +5790,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5652,7 +5807,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5662,7 +5817,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5701,7 +5857,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5717,7 +5874,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5727,7 +5884,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5743,7 +5901,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5753,7 +5911,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5788,7 +5947,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5804,7 +5964,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5814,7 +5974,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5830,7 +5991,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5840,7 +6001,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5875,7 +6037,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5891,7 +6054,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5901,7 +6064,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -5917,7 +6081,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5927,7 +6091,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -5962,7 +6127,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -5978,7 +6144,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -5988,7 +6154,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -6004,7 +6171,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -6014,7 +6181,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -6049,7 +6217,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         });
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -6065,7 +6234,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -6075,7 +6244,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.IdVisita, dados.GuidId);
                                     }
                                     else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -6091,7 +6261,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -6101,7 +6271,8 @@ namespace CRMYIA.Web.Pages
                                             DataTerminaEm = dados.DataTerminaEm,
                                             MesDia = dados.MesDia,
                                             MesDataColocacao = dados.MesDataColocacao,
-                                            MesDiaDaSemana = dados.MesDiaDaSemana
+                                            MesDiaDaSemana = dados.MesDiaDaSemana,
+                                            SelectMensalmente = dados.SelectMensalmente
                                         }, dados.GuidId);
                                     }
                                     DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -6137,7 +6308,8 @@ namespace CRMYIA.Web.Pages
                                         DataTerminaEm = dados.DataTerminaEm,
                                         MesDia = dados.MesDia,
                                         MesDataColocacao = dados.MesDataColocacao,
-                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                                        SelectMensalmente = dados.SelectMensalmente
                                     });
                                 }
                                 else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 2)
@@ -6153,7 +6325,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6163,7 +6335,8 @@ namespace CRMYIA.Web.Pages
                                         DataTerminaEm = dados.DataTerminaEm,
                                         MesDia = dados.MesDia,
                                         MesDataColocacao = dados.MesDataColocacao,
-                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                                        SelectMensalmente = dados.SelectMensalmente
                                     }, dados.IdVisita, dados.GuidId);
                                 }
                                 else if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 3)
@@ -6179,7 +6352,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6189,7 +6362,8 @@ namespace CRMYIA.Web.Pages
                                         DataTerminaEm = dados.DataTerminaEm,
                                         MesDia = dados.MesDia,
                                         MesDataColocacao = dados.MesDataColocacao,
-                                        MesDiaDaSemana = dados.MesDiaDaSemana
+                                        MesDiaDaSemana = dados.MesDiaDaSemana,
+                                        SelectMensalmente = dados.SelectMensalmente
                                     }, dados.GuidId);
                                 }
                                 DataInicio = myCal.AddMonths(DataInicio, dados.Repetir);
@@ -6204,7 +6378,12 @@ namespace CRMYIA.Web.Pages
                     }
 
                 }
-            }
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
+                }
             }
         }
 
@@ -6256,7 +6435,7 @@ namespace CRMYIA.Web.Pages
 
             var DayOfWeek = DataInicio.DayOfWeek.ToString();
 
-            //Usa o calendário padrão do InvariantCulture.
+            //Usa o calendï¿½rio padrï¿½o do InvariantCulture.
             Calendar myCal = CultureInfo.InvariantCulture.Calendar;
 
             if (dados.Termina == 1)//Terminar Nunca
@@ -6275,7 +6454,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                         GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -6284,6 +6463,11 @@ namespace CRMYIA.Web.Pages
                         Termina = dados.Termina,
                         DataTerminaEm = dados.DataTerminaEm
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else
                 {
@@ -6330,7 +6514,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6353,7 +6537,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6403,7 +6587,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6426,7 +6610,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6477,7 +6661,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6500,7 +6684,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6551,7 +6735,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6574,7 +6758,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6624,7 +6808,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6647,7 +6831,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6700,7 +6884,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6723,7 +6907,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6773,7 +6957,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6796,7 +6980,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6847,7 +7031,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6870,7 +7054,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6921,7 +7105,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6944,7 +7128,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -6994,7 +7178,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7017,7 +7201,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7032,6 +7216,11 @@ namespace CRMYIA.Web.Pages
 
                         DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
                         DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
+                    }
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
                     }
                 }
             }
@@ -7051,7 +7240,7 @@ namespace CRMYIA.Web.Pages
                         IdStatusVisita = IdStatusVisita,
                         Visivel = Visivel,
                         Tipo = dados.Tipo,
-                        GuidId = dados.GuidId,
+                         GuidId = GuidId.ToString(),
                         Cor = dados.Cor,
                         IdUsuario = IdUsuario,
                         Repete = dados.Repete,
@@ -7060,6 +7249,11 @@ namespace CRMYIA.Web.Pages
                         Termina = dados.Termina,
                         DataTerminaEm = dados.DataTerminaEm
                     });
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 1)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                    }
                 }
                 else
                 {
@@ -7107,7 +7301,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7130,7 +7324,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7180,7 +7374,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7203,7 +7397,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7254,7 +7448,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7277,7 +7471,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7328,7 +7522,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7351,7 +7545,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7401,7 +7595,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7424,7 +7618,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7477,7 +7671,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7500,7 +7694,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7550,7 +7744,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7573,7 +7767,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7624,7 +7818,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7647,7 +7841,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7698,7 +7892,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7721,7 +7915,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7771,7 +7965,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7794,7 +7988,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -7809,6 +8003,11 @@ namespace CRMYIA.Web.Pages
 
                         DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
                         DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
+                    }
+                    //Atualiza todos com o mesmo GuidId anterior
+                    if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                    {
+                        Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
                     }
                 }
             }
@@ -7864,7 +8063,7 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
+                     GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario,
                     Repete = dados.Repete,
@@ -7922,11 +8121,16 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = dados.Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
+                    GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario,
                     Repete = dados.Repete,
                 });
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
             else
             {
@@ -7995,9 +8199,11 @@ namespace CRMYIA.Web.Pages
                     DataFim = DataFim.AddDays(1);
 
                 } while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond));
-                
                 //Atualiza todos com o mesmo GuidId anterior
-                Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
         }
 
@@ -8009,6 +8215,7 @@ namespace CRMYIA.Web.Pages
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
             byte? IdStatusVisita = 0;
+            int j = 0;
             if (dados.Tipo == (byte)3)
             {
                 IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
@@ -8039,11 +8246,16 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
+                    GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario,
                     Repete = dados.Repete,
                 });
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
             else
             {
@@ -8081,7 +8293,7 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = dados.GuidId,
+                            GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
                             IdUsuario = IdUsuario,
                             Repete = dados.Repete,
@@ -8100,7 +8312,7 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = dados.GuidId,
+                            GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
                             IdUsuario = IdUsuario,
                             Repete = dados.Repete,
@@ -8108,8 +8320,13 @@ namespace CRMYIA.Web.Pages
                     }
                     DataInicio = myCal.AddWeeks(DataInicio, 1);
                     DataFim = myCal.AddWeeks(DataFim, 1);
-
-                } while (dados.DataInicio < DataInicio);
+                    j++;
+                } while (j < 200);
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
            
         }
@@ -8122,6 +8339,7 @@ namespace CRMYIA.Web.Pages
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
             byte? IdStatusVisita = 0;
+            int j = 0;
             if (dados.Tipo == (byte)3)
             {
                 IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
@@ -8134,7 +8352,7 @@ namespace CRMYIA.Web.Pages
             DateTime DataInicio = dados.DataInicio;
             DateTime DataFim = dados.DataFim;
 
-            var DataInicioYear = DataInicio.Year + 8;
+            var DataInicioYear = DataInicio.Year;
             var DataInicioMonth = DataInicio.Month;
             var DataInicioDay = DataInicio.Day;
             var DataInicioHour = DataInicio.Hour;
@@ -8166,11 +8384,16 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
+                    GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario,
                     Repete = dados.Repete,
                 });
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
             else
             {
@@ -8209,7 +8432,7 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = dados.GuidId,
+                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
                             IdUsuario = IdUsuario,
                             Repete = dados.Repete,
@@ -8228,7 +8451,7 @@ namespace CRMYIA.Web.Pages
                             IdStatusVisita = IdStatusVisita,
                             Visivel = Visivel,
                             Tipo = dados.Tipo,
-                            GuidId = dados.GuidId,
+                             GuidId = GuidId.ToString(),
                             Cor = dados.Cor,
                             IdUsuario = IdUsuario,
                             Repete = dados.Repete,
@@ -8236,8 +8459,13 @@ namespace CRMYIA.Web.Pages
                     }
                     DataInicio = myCal.AddWeeks(DataInicio, 2);
                     DataFim = myCal.AddWeeks(DataFim, 2);
-
-                } while (DataInicio < new DateTime(DataInicioYear, DataInicioMonth, DataInicioDay, DataInicioHour, DataInicioMinute, DataInicioSecond));
+                    j++;
+                } while (j < 200);
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
 
         }
@@ -8250,6 +8478,7 @@ namespace CRMYIA.Web.Pages
             GuidId = ObterGuidId();
             long IdUsuario = GetIdUsuario();
             byte? IdStatusVisita = 0;
+            int j = 0;
             if (dados.Tipo == (byte)3)
             {
                 IdStatusVisita = (byte)EnumeradorModel.StatusVisita.Agendada;
@@ -8280,7 +8509,7 @@ namespace CRMYIA.Web.Pages
 
             var DayOfWeek = DataInicio.DayOfWeek.ToString();
 
-            //Usa o calendário padrão do InvariantCulture.
+            //Usa o calendï¿½rio padrï¿½o do InvariantCulture.
             Calendar myCal = CultureInfo.InvariantCulture.Calendar;
             if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
             {
@@ -8296,11 +8525,16 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
+                    GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario,
                     Repete = dados.Repete,
                 });
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
             else
             {
@@ -8347,7 +8581,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                            GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8366,7 +8600,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                            GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8408,7 +8642,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                            GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8427,7 +8661,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8469,7 +8703,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8488,7 +8722,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8530,7 +8764,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8549,7 +8783,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8591,7 +8825,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8610,15 +8844,15 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                 DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                 DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                             }
@@ -8659,7 +8893,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8678,7 +8912,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8720,7 +8954,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8739,7 +8973,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8781,7 +9015,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8800,7 +9034,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8842,7 +9076,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8861,15 +9095,15 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                 DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                 DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                             }
@@ -8911,7 +9145,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8930,7 +9164,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8972,7 +9206,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -8991,7 +9225,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9033,7 +9267,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9052,7 +9286,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9094,7 +9328,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9113,7 +9347,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9155,7 +9389,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9174,15 +9408,15 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
                                         }, dados.GuidId);
                                     }
                                 }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                 DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                 DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                             }
@@ -9221,7 +9455,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -9240,29 +9474,29 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
                                     }, dados.GuidId);
                                 }
-                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                                DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                                DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                                 DataInicio = DataInicio.AddDays(-16);//Adicona um Dia 
                                 DataFim = DataFim.AddDays(-16);//Adicona um Dia 
                             }
                         }
                         DataInicio = DataInicio.AddDays(1);//Adicona um Dia 
                         DataFim = DataFim.AddDays(1);//Adicona um Dia 
-                        if (!DateTime.IsLeapYear(DataInicio.Year) && DataInicio.Month == 2 && DataInicio.Day == 28 && dados.MesDia == 29)//anos que não são bissexto, no mês de fevereiro e no dia 28
+                        if (!DateTime.IsLeapYear(DataInicio.Year) && DataInicio.Month == 2 && DataInicio.Day == 28 && dados.MesDia == 29)//anos que nï¿½o sï¿½o bissexto, no mï¿½s de fevereiro e no dia 28
                         {
-                            DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mês 
-                            DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mês 
+                            DataInicio = DataInicio.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
+                            DataFim = DataFim.AddMonths(dados.Repetir);//Adicona um Mï¿½s 
                         }
                     }
 
 
-                    if (dados.SelectMensalmente == 2)//Se for selecionado a opção 2, buscando dia da semana e colocação do dia.
+                    if (dados.SelectMensalmente == 2)//Se for selecionado a opï¿½ï¿½o 2, buscando dia da semana e colocaï¿½ï¿½o do dia.
                     {
                         DayOfWeek = DataInicio.DayOfWeek.ToString();
                         if (dados.MesDataColocacao == Util.ObterClassificacao(DataInicio) && dados.MesDiaDaSemana == DayOfWeek)
@@ -9305,7 +9539,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9324,7 +9558,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9371,7 +9605,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9390,7 +9624,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9437,7 +9671,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9456,7 +9690,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9503,7 +9737,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9522,7 +9756,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9569,7 +9803,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9588,7 +9822,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9638,7 +9872,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9657,7 +9891,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9704,7 +9938,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9723,7 +9957,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9770,7 +10004,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9789,7 +10023,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9836,7 +10070,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9855,7 +10089,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9906,7 +10140,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9925,7 +10159,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9972,7 +10206,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -9991,7 +10225,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10038,7 +10272,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10057,7 +10291,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10104,7 +10338,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10123,7 +10357,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10170,7 +10404,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10189,7 +10423,7 @@ namespace CRMYIA.Web.Pages
                                             IdStatusVisita = IdStatusVisita,
                                             Visivel = Visivel,
                                             Tipo = dados.Tipo,
-                                            GuidId = dados.GuidId,
+                                             GuidId = GuidId.ToString(),
                                             Cor = dados.Cor,
                                             IdUsuario = IdUsuario,
                                             Repete = dados.Repete,
@@ -10237,7 +10471,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -10256,7 +10490,7 @@ namespace CRMYIA.Web.Pages
                                         IdStatusVisita = IdStatusVisita,
                                         Visivel = Visivel,
                                         Tipo = dados.Tipo,
-                                        GuidId = dados.GuidId,
+                                         GuidId = GuidId.ToString(),
                                         Cor = dados.Cor,
                                         IdUsuario = IdUsuario,
                                         Repete = dados.Repete,
@@ -10273,6 +10507,11 @@ namespace CRMYIA.Web.Pages
                         DataFim = myCal.AddDays(DataFim, 1); ;//Adicona uma Semana 
                     }
 
+                }
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
                 }
             }
         }
@@ -10318,7 +10557,7 @@ namespace CRMYIA.Web.Pages
 
             var DayOfWeek = DataInicio.DayOfWeek.ToString();
 
-            //Usa o calendário padrão do InvariantCulture.
+            //Usa o calendï¿½rio padrï¿½o do InvariantCulture.
             Calendar myCal = CultureInfo.InvariantCulture.Calendar;
             if (dados.IdVisita > 0 && dados.OpExcluirAlterar == 1)
             {
@@ -10334,11 +10573,16 @@ namespace CRMYIA.Web.Pages
                     IdStatusVisita = IdStatusVisita,
                     Visivel = Visivel,
                     Tipo = dados.Tipo,
-                    GuidId = dados.GuidId,
+                     GuidId = GuidId.ToString(),
                     Cor = dados.Cor,
                     IdUsuario = IdUsuario,
                     Repete = dados.Repete,
                 });
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 1)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
             else
             {
@@ -10408,7 +10652,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10425,7 +10669,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -10443,7 +10687,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10460,7 +10704,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -10527,7 +10771,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10544,7 +10788,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -10562,7 +10806,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10579,7 +10823,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -10646,7 +10890,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10663,7 +10907,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -10681,7 +10925,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10698,7 +10942,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -10765,7 +11009,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10782,7 +11026,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -10800,7 +11044,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10817,7 +11061,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -10883,7 +11127,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10900,7 +11144,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -10918,7 +11162,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -10935,7 +11179,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -11005,7 +11249,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11022,7 +11266,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -11040,7 +11284,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11057,7 +11301,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -11123,7 +11367,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11140,7 +11384,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -11158,7 +11402,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11175,7 +11419,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -11242,7 +11486,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11259,7 +11503,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -11277,7 +11521,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11294,7 +11538,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -11360,7 +11604,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11377,7 +11621,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -11395,7 +11639,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11412,7 +11656,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -11478,7 +11722,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11495,7 +11739,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.IdCalendarioSazonal, dados.GuidId);
@@ -11513,7 +11757,7 @@ namespace CRMYIA.Web.Pages
                                     IdStatusVisita = IdStatusVisita,
                                     Visivel = Visivel,
                                     Tipo = dados.Tipo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Cor = dados.Cor,
                                     IdUsuario = IdUsuario,
                                     Repete = dados.Repete,
@@ -11530,7 +11774,7 @@ namespace CRMYIA.Web.Pages
                                     DataCadastro = DateTime.Now,
                                     ExisteCampanha = dados.ExisteCampanha,
                                     Ativo = dados.Ativo,
-                                    GuidId = dados.GuidId,
+                                     GuidId = GuidId.ToString(),
                                     Repete = dados.Repete,
                                     Frequencia = dados.Frequencia,
                                 }, dados.GuidId);
@@ -11541,9 +11785,14 @@ namespace CRMYIA.Web.Pages
                     DataInicio = DataInicio.AddYears(dados.Repetir);//Adicona ano 
                     DataFim = DataFim.AddYears(dados.Repetir);//Adicona ano
                 }
+                //Atualiza todos com o mesmo GuidId anterior
+                if (dados.OpExcluirAlterar == 2 || dados.OpExcluirAlterar == 3)
+                {
+                    Business.VisitaModel.AtualizaGuiId(GuidId.ToString(), dados.GuidId);
+                }
             }
         }
-        
+
         private bool DataExiste(DateTime Data)
         {
             bool status = false;
