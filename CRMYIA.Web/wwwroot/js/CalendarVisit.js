@@ -488,7 +488,7 @@ $(document).ready(function () {
                                                 if (r.tipo == 1) {
                                                     //Feriado
                                                     events.push({
-                                                        sourceId: r.sourceId,
+                                                       /* sourceId: r.sourceId,*/
                                                         title: r.title,
                                                         backgroundColor: r.backgroundColor,
                                                         borderColor: r.borderColor,
@@ -512,7 +512,7 @@ $(document).ready(function () {
                                                 } else if (r.tipo == 2) {
                                                     //Data Comemorativa
                                                     events.push({
-                                                        sourceId: r.sourceId,
+                                                        /*sourceId: r.sourceId,*/
                                                         title: r.title,
                                                         backgroundColor: r.backgroundColor,
                                                         borderColor: r.borderColor,
@@ -1514,7 +1514,7 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                         if (r.tipo == 1) {
                             //Feriado
                             events.push({
-                                sourceId: r.sourceId,
+                                /*sourceId: r.sourceId,*/
                                 title: r.title,
                                 backgroundColor: r.backgroundColor,
                                 borderColor: r.borderColor,
@@ -1538,7 +1538,7 @@ function CarregarCalendarMkt(Calendar, calendarEl) {
                         } else if (r.tipo == 2) {
                             //Data Comemorativa
                             events.push({
-                                sourceId: r.sourceId,
+                                /*sourceId: r.sourceId,*/
                                 title: r.title,
                                 backgroundColor: r.backgroundColor,
                                 borderColor: r.borderColor,
