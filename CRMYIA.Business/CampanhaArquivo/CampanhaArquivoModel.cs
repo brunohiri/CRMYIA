@@ -142,12 +142,18 @@ namespace CRMYIA.Business
         public static List<CampanhaArquivo> GetListaCampanhaArquivo(long IdCampanha, byte IdGrupoCorretor)
         {
             List<CampanhaArquivo> ListEntity = new List<CampanhaArquivo>();
-            List<GrupoCorretorCampanha> AuxListEntity = null;//GrupoCorretorCampanha
+            List<CampanhaArquivo> ListCampanhaArquivo = new List<CampanhaArquivo>();
+            List<Visita> ListVisita = null;//GrupoCorretorCampanha
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.CampanhaArquivo
+                    ListVisita = context.Visita
+                        .Include(x => x.IdCalendarioSazonalNavigation)
+                        .AsNoTracking()
+                        .ToList();
+
+                    ListCampanhaArquivo = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
                         .Include(x => x.IdInformacaoNavigation)
                         .Include(x => x.IdCalendarioNavigation)
@@ -156,6 +162,19 @@ namespace CRMYIA.Business
                         .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
                         .AsNoTracking()
                         .ToList();
+
+                    foreach(Visita ItemVisita in ListVisita)
+                    {
+                        foreach (CampanhaArquivo ItemCampanhaArquivo in ListCampanhaArquivo)
+                        {
+                            if(ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario && 
+                                ItemVisita.DataInicio >= DateTime.Now && ItemVisita.DataFim <= DateTime.Now)
+                            {
+                                ListEntity.Add(ItemCampanhaArquivo);
+                            }
+                        }
+                    }
+                   
                 }
             }
             catch (Exception)

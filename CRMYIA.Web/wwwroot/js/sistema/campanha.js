@@ -70,6 +70,7 @@ $(document).ready(function () {
                         formData.append("IdInformacao", $('#IdInformacao').val())
                         formData.append("Titulo", $('#Titulo').val())
                         formData.append("Descricao", $('#Descricao').val());
+                        formData.append("IdCalendario", $('#IdCalendario').val());
                         $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
                     } else {
                         myDropzone.removeAllFiles(true);

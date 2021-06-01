@@ -43,6 +43,8 @@ namespace CRMYIA.Web.Pages
         public string ImagemDiferente { get; set; }
         [BindProperty]
         public string CaminhoImagem { get; set; }
+        [BindProperty]
+        public List<Calendario> ListCalendario { get; set; }
         #endregion
 
         #region Construtores
@@ -159,6 +161,7 @@ namespace CRMYIA.Web.Pages
                                     {
                                         IdCampanha = formData.IdCampanha,
                                         IdInformacao = EntityInformacao.IdInformacao,
+                                        IdCalendario = formData.IdCalendario,
                                         CaminhoArquivo = "ArquivoCampanhaArquivo/",
                                         NomeArquivo = NomeArquivo,
                                         Width = Width,
@@ -192,6 +195,7 @@ namespace CRMYIA.Web.Pages
                                         IdCampanhaArquivo = formData.IdCampanhaArquivo,
                                         IdCampanha = formData.IdCampanha,
                                         IdInformacao = formData.IdInformacao,
+                                        IdCalendario = formData.IdCalendario,
                                         CaminhoArquivo = EntityCampanhaArquivo.CaminhoArquivo,
                                         NomeArquivo = EntityCampanhaArquivo.NomeArquivo,
                                         Width = EntityCampanhaArquivo.Width,
@@ -382,6 +386,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListEntity = CampanhaArquivoModel.GetList();
+            ListCalendario = Business.CalendarioModel.GetList();
             ListCampanha = Business.CampanhaModel.GetList();
         }
         #endregion
