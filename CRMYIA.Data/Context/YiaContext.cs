@@ -95,6 +95,7 @@ namespace CRMYIA.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -353,6 +354,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Titulo)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.Capa)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_Capa");
             });
 
             modelBuilder.Entity<CapaRedeSocial>(entity =>

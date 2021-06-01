@@ -220,6 +220,7 @@ $(document).on('click', '#btn-salvar-texto', function () {
     formData.append('IdCapa', $('#IdCapa').val());
     formData.append('Titulo', $('#Titulo').val());
     formData.append('IdRedeSocial', $("#IdRedeSocial").val());
+    formData.append('IdCalendario', $('#IdCalendario').val());
     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
     if ($('#IdCapa').val() != undefined && $('#Titulo').val() != undefined && $("#IdRedeSocial").val() != undefined)
         displayBusyIndicator()
