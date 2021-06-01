@@ -24,9 +24,7 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public long? QuantidadeDownload { get; set; }
-        public long? IdCalendarioSazonal { get; set; }
 
-        public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
         public virtual ICollection<AssinaturaCartao> AssinaturaCartao { get; set; }
         public virtual ICollection<Banner> Banner { get; set; }

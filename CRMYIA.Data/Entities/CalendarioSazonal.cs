@@ -7,11 +7,11 @@ namespace CRMYIA.Data.Entities
     {
         public CalendarioSazonal()
         {
-            Campanha = new HashSet<Campanha>();
             Visita = new HashSet<Visita>();
         }
 
         public long IdCalendarioSazonal { get; set; }
+        public long? IdCalendario { get; set; }
         public string Descricao { get; set; }
         public string Cor { get; set; }
         public byte? Tipo { get; set; }
@@ -25,7 +25,7 @@ namespace CRMYIA.Data.Entities
         public byte? Repete { get; set; }
         public byte? Frequencia { get; set; }
 
-        public virtual ICollection<Campanha> Campanha { get; set; }
+        public virtual Calendario IdCalendarioNavigation { get; set; }
         public virtual ICollection<Visita> Visita { get; set; }
     }
 }

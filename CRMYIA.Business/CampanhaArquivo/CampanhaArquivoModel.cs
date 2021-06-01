@@ -150,6 +150,9 @@ namespace CRMYIA.Business
                     ListEntity = context.CampanhaArquivo
                         .Include(x => x.IdCampanhaNavigation)
                         .Include(x => x.IdInformacaoNavigation)
+                        .Include(x => x.IdCalendarioNavigation)
+                            .ThenInclude(x => x.CalendarioSazonal)
+                            .ThenInclude(x => x.Visita)
                         .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
                         .AsNoTracking()
                         .ToList();

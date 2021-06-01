@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public long IdCampanhaArquivo { get; set; }
         public long? IdCampanha { get; set; }
+        public long? IdCalendario { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
         public int? Width { get; set; }
@@ -17,6 +18,7 @@ namespace CRMYIA.Data.Entities
         public bool Ativo { get; set; }
         public long? IdInformacao { get; set; }
 
+        public virtual Calendario IdCalendarioNavigation { get; set; }
         public virtual Campanha IdCampanhaNavigation { get; set; }
         public virtual Informacao IdInformacaoNavigation { get; set; }
     }

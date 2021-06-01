@@ -10526,6 +10526,7 @@ namespace CRMYIA.Web.Pages
             byte? IdStatusVisita = 0;
             CalendarioSazonal CalendarioSazonal = null;
             long? IdCalendarioSazonal;
+            long? IdCalendario;
             int antes = 5;
             int depois = 3;
 
@@ -10600,8 +10601,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario() 
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -10719,8 +10727,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -10839,8 +10854,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -10957,8 +10979,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -11076,8 +11105,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -11197,8 +11233,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -11316,8 +11359,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -11435,8 +11485,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -11553,8 +11610,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
@@ -11671,8 +11735,15 @@ namespace CRMYIA.Web.Pages
                                 {
                                     if (dados.Tipo == (byte)1 || dados.Tipo == (byte)2)
                                     {
+                                        IdCalendario = Business.CalendarioModel.Add(new Calendario()
+                                        {
+                                            Descricao = dados.Descricao,
+                                            Ativo = true,
+                                            DataCadastro = DateTime.Now
+                                        });
                                         Business.CalendarioSazonalModel.Add(new CalendarioSazonal()
                                         {
+                                            IdCalendario = IdCalendario,
                                             Descricao = dados.Descricao,
                                             Cor = dados.Cor,
                                             Tipo = dados.Tipo,
