@@ -1,4 +1,7 @@
 ﻿using CRMYIA.Data.Entities;
+using ICSharpCode.SharpZipLib.Checksum;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -722,6 +725,147 @@ namespace CRMYIA.Business.Util
             //
             int fator = diaDaSemanaDt >= diaDaSemanaPrimeiroDiaDoMes ? 1 : 0;
             return (semanaDoAnoDt - semanaDoAnoPrimeiroDiaDoMes) + fator;
+        }
+
+        #endregion
+
+        #region Compactar e Descompactar
+        public static bool CompactarArquivo(string nomeArquivoZip, string[] nomeArquivo)
+        {
+            bool retorno = false;
+            try
+            {
+                if (System.IO.File.Exists(nomeArquivoZip))
+                {
+                    System.IO.File.Delete(nomeArquivoZip);
+                }
+
+                using (ZipOutputStream strmZipOutputStream = new ZipOutputStream(System.IO.File.Create(nomeArquivoZip)))
+                {
+                    foreach (var Item in nomeArquivo)
+                    {
+                        Crc32 crc = new Crc32();
+                        System.IO.FileStream fs = new System.IO.FileStream(Item, FileMode.Open);
+                        ZipEntry entry = new ZipEntry(Path.GetFileName(fs.Name));
+                        entry.DateTime = DateTime.Now;
+                        byte[] buffer = new byte[fs.Length];
+                        fs.Read(buffer, 0, buffer.Length);
+                        entry.Size = fs.Length;
+                        fs.Close();
+                        crc.Reset();
+                        crc.Update(buffer);
+                        entry.Crc = crc.Value;
+                        strmZipOutputStream.PutNextEntry(entry);
+                        strmZipOutputStream.Write(buffer, 0, buffer.Length);
+                    }
+                    retorno = true;
+                }
+            }
+            catch (Exception)
+            {
+                retorno = false;
+                throw;
+            }
+            return retorno;
+        }
+
+        public static bool DescompactarArquivo(string caminhoPendente, string nomeArquivoZip, ref string nomeArquivoRetorno, ref string nomeArquivoConteudoZip)
+        {
+            bool descompactado = false;
+            string caminhoRelativoArquivo = string.Empty;
+            string caminhoDescompactacao;
+            string caminhoArquivoASerDescompactado;
+
+            try
+            {
+
+                using (FileStream fs = System.IO.File.OpenRead(Path.Combine(@caminhoPendente, @nomeArquivoZip)))
+                {
+                    ZipFile arquivoZip = null;
+                    try
+                    {
+                        arquivoZip = new ZipFile(fs);
+                        byte[] buffer = new byte[4096];
+                        int i = 0;
+
+                        foreach (ZipEntry zipEntry in arquivoZip)
+                        {
+                            if (!zipEntry.IsFile)
+                                continue;
+
+                            string flname = Path.GetFileNameWithoutExtension(zipEntry.Name);
+                            string flextension = Path.GetExtension(zipEntry.Name);
+                            string file = flname.Replace(".", "") + flextension;
+
+                            caminhoRelativoArquivo = TratarNomeArquivo(file, i);
+                            nomeArquivoConteudoZip += caminhoRelativoArquivo + "|";
+                            caminhoArquivoASerDescompactado = Path.Combine(@caminhoPendente, @caminhoRelativoArquivo);
+                            caminhoDescompactacao = Path.GetDirectoryName(@caminhoArquivoASerDescompactado);
+
+                            if (caminhoDescompactacao.Length > 0 &&
+                                !Directory.Exists(caminhoDescompactacao))
+                                Directory.CreateDirectory(caminhoDescompactacao);
+
+                            Stream zipStream = arquivoZip.GetInputStream(zipEntry);
+                            using (FileStream streamWriter = System.IO.File.Create(caminhoArquivoASerDescompactado))
+                            {
+                                StreamUtils.Copy(zipStream, streamWriter, buffer);
+                                streamWriter.Flush();
+                            }
+
+                            i++;
+                        }
+                    }
+                    finally
+                    {
+                        if (arquivoZip != null)
+                        {
+                            arquivoZip.IsStreamOwner = true;
+                            arquivoZip.Close();
+                            nomeArquivoRetorno = caminhoRelativoArquivo;
+                            descompactado = true;
+                        }
+                    }
+
+
+                    fs.Close();
+                }
+            }
+            catch (Exception)
+            {
+                caminhoRelativoArquivo = string.Empty;
+                descompactado = false;
+                throw;
+            }
+
+            return descompactado;
+        }
+
+        public static string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        public static Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats  officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"},
+                {".rar", "application/x-rar-compressed, application/octet-stream" },
+                {".zip", "application/zip"}//application/octet-stream, application/x-zip-compressed, multipart/x-zip
+            };
         }
 
         #endregion

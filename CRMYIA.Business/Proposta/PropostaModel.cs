@@ -104,6 +104,47 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Proposta> GetList(long IdUsuario, DateTime DataInicio, DateTime DataFim)
+        {
+            List<Proposta> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(h => h.IdLinhaNavigation)
+                                .ThenInclude(h => h.IdProdutoNavigation)
+                                    .ThenInclude(h => h.IdOperadoraNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                            .ThenInclude(h => h.IdEstadoCivilNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                            .ThenInclude(h => h.IdGeneroNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                            .ThenInclude(h => h.IdCidadeNavigation)
+                                .ThenInclude(h => h.IdEstadoNavigation)
+                        .Include(y => y.HistoricoProposta)
+                         .ThenInclude(y => y.IdUsuarioNavigation)
+                        .Where(x => x.Ativo && x.IdUsuario == IdUsuario && x.HistoricoProposta != null
+                                    && x.DataSolicitacao.Value >= DataInicio
+                                    && x.DataSolicitacao.Value <= DataFim)
+                        .OrderByDescending(o => o.DataCadastro)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static List<List<Proposta>> GetListListCardProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim, string Descricao, string Nome, byte Fase, int Salto)
         {
             List<List<Proposta>> ListEntity = new List<List<Proposta>>();
