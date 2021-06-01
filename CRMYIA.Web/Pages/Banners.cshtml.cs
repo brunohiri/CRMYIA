@@ -76,6 +76,7 @@ namespace CRMYIA.Web.Pages
             Informacao IdInformacaoNavigation = new Informacao();
 
             List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
+            var a = Criptography.Decrypt(Id).ExtractLong();
             List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(Id).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
             List<Informacao> EntityInformacao = InformacaoModel.Get();
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);

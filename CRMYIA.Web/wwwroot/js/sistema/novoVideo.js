@@ -41,6 +41,7 @@ $(document).ready(function () {
                 formData.append("IdentificadorVideo", $('#IdentificadorVideo').val());
                 $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
                 formData.append("IdCampanha", $('#IdCampanha').val());
+                formData.append("IdCalendario", $('#IdCalendario').val());
             });
             this.on("success", function (files, data) {
                 // Gets triggered when the files have successfully been sent.
@@ -116,6 +117,7 @@ $(document).ready(function () {
                 //params: { IdCampanhaArquivo: idcampanhaarquivo, NomeArquivo: nomearquivo },
                 formData.append("IdVideo", idvideo);
                 formData.append("NomeVideo", nomevideo);
+                formData.append("IdCalendario", $('#IdCalendario').val());
             });
             this.on("success", function (files, data) {
                 // Gets triggered when the files have successfully been sent.

@@ -9,6 +9,7 @@ namespace CRMYIA.Data.Entities
         {
             CalendarioSazonal = new HashSet<CalendarioSazonal>();
             CampanhaArquivo = new HashSet<CampanhaArquivo>();
+            Video = new HashSet<Video>();
         }
 
         public long IdCalendario { get; set; }
@@ -18,5 +19,6 @@ namespace CRMYIA.Data.Entities
 
         public virtual ICollection<CalendarioSazonal> CalendarioSazonal { get; set; }
         public virtual ICollection<CampanhaArquivo> CampanhaArquivo { get; set; }
+        public virtual ICollection<Video> Video { get; set; }
     }
 }

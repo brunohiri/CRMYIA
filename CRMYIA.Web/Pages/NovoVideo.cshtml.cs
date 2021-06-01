@@ -36,7 +36,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<Campanha> ListCampanha { get; set; }
-
+        [BindProperty]
+        public List<Calendario> ListCalendario { get; set; }
         [BindProperty]
         public List<VideoViewModel> ListEntity { get; set; }
         [BindProperty]
@@ -123,6 +124,7 @@ namespace CRMYIA.Web.Pages
                                 IdUsuario = IdUsuario,
                                 IdCampanha = formData.IdCampanha,
                                 IdentificadorVideo = formData.IdentificadorVideo,
+                                IdCalendario = formData.IdCalendario,
                                 CaminhoArquivo = "ArquivoVideo/",
                                 NomeVideo = NomeArquivo,
                                 DataCadastro = DateTime.Now,
@@ -162,6 +164,7 @@ namespace CRMYIA.Web.Pages
                 string IdVideo = Request.Form["IdVideo"].ToString();
                 string NomeVideo = Request.Form["NomeVideo"].ToString();
                 string IdentificadorVideo = Request.Form["ModalIdVideo"].ToString();
+                string IdCalendario = Request.Form["IdCalendario"].ToString();
                 Video Entity = null;
                 Entity = VideoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(IdVideo)).ExtractLong());
                 string msg = "Alterado";
@@ -191,6 +194,7 @@ namespace CRMYIA.Web.Pages
                         IdVideo = Entity.IdVideo,
                         IdUsuario = IdUsuario,
                         IdCampanha = Entity.IdCampanha,
+                        IdCalendario = IdCalendario.ExtractLong(),
                         IdentificadorVideo = IdentificadorVideo,
                         CaminhoArquivo = Entity.CaminhoArquivo,
                         NomeVideo = Entity.NomeVideo,
@@ -304,6 +308,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListEntity = VideoModel.GetList();
+            ListCalendario = Business.CalendarioModel.GetList();
             ListCampanha = Business.CampanhaModel.GetList();
         }
         #endregion

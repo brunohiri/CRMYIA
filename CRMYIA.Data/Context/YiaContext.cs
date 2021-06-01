@@ -2088,6 +2088,11 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.Video)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_Video");
+
                 entity.HasOne(d => d.IdCampanhaNavigation)
                     .WithMany(p => p.Video)
                     .HasForeignKey(d => d.IdCampanha)

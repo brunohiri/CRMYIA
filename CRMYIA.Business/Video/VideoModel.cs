@@ -65,15 +65,39 @@ namespace CRMYIA.Business
         public static List<Video> GetListaVideos(long IdCampanha, byte IdGrupoCorretor)
         {
             List<Video> ListEntity = new List<Video>();
-            List<Video> AuxListEntity = null;
+            List<Visita> ListVisita = null;
+            List<Video> ListVideo = new List<Video>();
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Video
-                    .Where(x => x.IdCampanha == IdCampanha)
-                    .AsNoTracking()
-                    .ToList();
+                    ListVisita = context.Visita
+                       .Include(x => x.IdCalendarioSazonalNavigation)
+                       .OrderBy(x => x.DataAgendamento)
+                       .AsNoTracking()
+                       .ToList();
+
+                    ListVideo = context.Video
+                        .Include(x => x.IdCampanhaNavigation)
+                        .Include(x => x.IdCalendarioNavigation)
+                            .ThenInclude(x => x.CalendarioSazonal)
+                            .ThenInclude(x => x.Visita)
+                        .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                        .AsNoTracking()
+                        .ToList();
+
+                    foreach (Visita ItemVisita in ListVisita)
+                    {
+                        foreach (Video ItemVideo in ListVideo)
+                        {
+                            if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemVideo.IdCalendario &&
+                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                            {
+                                ListEntity.Add(ItemVideo);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception)

@@ -144,12 +144,15 @@ namespace CRMYIA.Business
             List<CampanhaArquivo> ListEntity = new List<CampanhaArquivo>();
             List<CampanhaArquivo> ListCampanhaArquivo = new List<CampanhaArquivo>();
             List<Visita> ListVisita = null;//GrupoCorretorCampanha
+            //DateTime DataInicio;
+            //DateTime DataFim;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     ListVisita = context.Visita
                         .Include(x => x.IdCalendarioSazonalNavigation)
+                        .OrderBy(x => x.DataAgendamento)
                         .AsNoTracking()
                         .ToList();
 
@@ -167,8 +170,9 @@ namespace CRMYIA.Business
                     {
                         foreach (CampanhaArquivo ItemCampanhaArquivo in ListCampanhaArquivo)
                         {
-                            if(ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario && 
-                                ItemVisita.DataInicio >= DateTime.Now && ItemVisita.DataFim <= DateTime.Now)
+                            if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario &&
+                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
                             {
                                 ListEntity.Add(ItemCampanhaArquivo);
                             }
