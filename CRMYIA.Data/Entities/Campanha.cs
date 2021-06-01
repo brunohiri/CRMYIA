@@ -18,15 +18,15 @@ namespace CRMYIA.Data.Entities
 
         public long IdCampanha { get; set; }
         public long? IdUsuario { get; set; }
+        public long? IdCalendario { get; set; }
         public string Descricao { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public long? QuantidadeDownload { get; set; }
-        public long? IdCalendarioSazonal { get; set; }
 
-        public virtual CalendarioSazonal IdCalendarioSazonalNavigation { get; set; }
+        public virtual Calendario IdCalendarioNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
         public virtual ICollection<AssinaturaCartao> AssinaturaCartao { get; set; }
         public virtual ICollection<Banner> Banner { get; set; }

@@ -23,6 +23,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<AssinaturaCartao> AssinaturaCartao { get; set; }
         public virtual DbSet<Banco> Banco { get; set; }
         public virtual DbSet<Banner> Banner { get; set; }
+        public virtual DbSet<Calendario> Calendario { get; set; }
         public virtual DbSet<CalendarioSazonal> CalendarioSazonal { get; set; }
         public virtual DbSet<Campanha> Campanha { get; set; }
         public virtual DbSet<CampanhaArquivo> CampanhaArquivo { get; set; }
@@ -232,6 +233,17 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("Usuario_Banner");
             });
 
+            modelBuilder.Entity<Calendario>(entity =>
+            {
+                entity.HasKey(e => e.IdCalendario);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<CalendarioSazonal>(entity =>
             {
                 entity.HasKey(e => e.IdCalendarioSazonal);
@@ -255,6 +267,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.GuidId)
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.CalendarioSazonal)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_CalendarioSazonal");
             });
 
             modelBuilder.Entity<Campanha>(entity =>
@@ -275,10 +292,10 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.IdCalendarioSazonalNavigation)
+                entity.HasOne(d => d.IdCalendarioNavigation)
                     .WithMany(p => p.Campanha)
-                    .HasForeignKey(d => d.IdCalendarioSazonal)
-                    .HasConstraintName("CalendarioSazonal_Campanha");
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_Campanha");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Campanha)

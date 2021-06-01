@@ -20,7 +20,7 @@ namespace CRMYIA.Business
                 {
                     ListEntity = context.CalendarioSazonal
                        .Include(x => x.Visita)
-                       .Include(x => x.Campanha)
+                       //.Include(x => x.Campanha)
                        .AsNoTracking()
                        .Where(x => x.Ativo)
                        .AsNoTracking()

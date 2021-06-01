@@ -869,6 +869,10 @@
     {
         <script src="~/js/sistema/videos.js"></script>
     }
+    @if (ViewData["Pagina"].ToString().Equals("Exportar para SisWeb"))
+    {
+        <script src="../js/sistema/exportSisWeb.js"></script>
+    }
     @if (ViewData["Pagina"].ToString().Equals("Marketing"))
     {
         <!-- jQuery UI -->
