@@ -134,17 +134,35 @@ namespace CRMYIA.Web.Pages
                                     Height = image.Height;
                                 }
                                 //Grava um registro Capa
-                                var retorno = CapaModel.Add(new Capa()
+                                var retorno = false;
+                                if (formData.IdCalendario == 0)
                                 {
-                                   IdCalendario = formData.IdCalendario,
-                                   Titulo = formData.Titulo,
-                                   CaminhoArquivo = "ArquivoCapaRedeSocial/",
-                                   NomeArquivo = NomeArquivo,
-                                   Width = Width,
-                                   Height = Height,
-                                   DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
-                                   Ativo = formData.Ativo
-                              });
+                                     retorno = CapaModel.Add(new Capa()
+                                    {
+                                        IdCalendario = null,
+                                        Titulo = formData.Titulo,
+                                        CaminhoArquivo = "ArquivoCapaRedeSocial/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = formData.Ativo
+                                    });
+                                }
+                                else
+                                {
+                                     retorno = CapaModel.Add(new Capa()
+                                    {
+                                        IdCalendario = formData.IdCalendario,
+                                        Titulo = formData.Titulo,
+                                        CaminhoArquivo = "ArquivoCapaRedeSocial/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = formData.Ativo
+                                    });
+                                }
 
                                 //Pega o ultimo valor
                                 EntityCapa = CapaModel.GetLastId();

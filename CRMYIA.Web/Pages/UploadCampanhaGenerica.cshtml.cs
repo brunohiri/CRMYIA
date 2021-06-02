@@ -157,6 +157,25 @@ namespace CRMYIA.Web.Pages
                                     }
                                     i++;
 
+                                if (formData.IdCalendario == 0)
+                                {
+                                    CampanhaArquivoModel.Add(new CampanhaArquivo()
+                                    {
+                                        IdCampanha = formData.IdCampanha,
+                                        IdInformacao = EntityInformacao.IdInformacao,
+                                        IdCalendario = null,
+                                        CaminhoArquivo = "ArquivoCampanhaArquivo/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        RedesSociais = RedesSociais,
+                                        TipoPostagem = TipoPostagem,
+                                        DataCadastro = DateTime.Now,
+                                        Ativo = formData.Ativo
+                                    });
+                                }
+                                else
+                                {
                                     CampanhaArquivoModel.Add(new CampanhaArquivo()
                                     {
                                         IdCampanha = formData.IdCampanha,
@@ -171,6 +190,8 @@ namespace CRMYIA.Web.Pages
                                         DataCadastro = DateTime.Now,
                                         Ativo = formData.Ativo
                                     });
+                                }
+                                    
                                 }
                                 EntityLista = CampanhaArquivoModel.GetList();
                                 status = true;

@@ -70,8 +70,14 @@ $(document).ready(function () {
                         formData.append("IdInformacao", $('#IdInformacao').val())
                         formData.append("Titulo", $('#Titulo').val())
                         formData.append("Descricao", $('#Descricao').val());
-                        formData.append("IdCalendario", $('#IdCalendario').val());
+                       
                         $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
+
+                        if (Number.isInteger(parseInt($('#IdCalendario').val()))) {
+                            formData.append("IdCalendario", $('#IdCalendario').val());
+                        } else {
+                            formData.append("IdCalendario", 0);
+                        }
                     } else {
                         myDropzone.removeAllFiles(true);
                         swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO - REDES_SOCIAIS - [LOCAL_DA_POSTAGEM].EXTENSAO</span>", "error");

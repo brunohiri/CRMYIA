@@ -119,17 +119,36 @@ namespace CRMYIA.Web.Pages
                                 }
                                 i++;
                             }
-                            VideoModel.Add(new Video()
+
+                            if(formData.IdCalendario == 0)
                             {
-                                IdUsuario = IdUsuario,
-                                IdCampanha = formData.IdCampanha,
-                                IdentificadorVideo = formData.IdentificadorVideo,
-                                IdCalendario = formData.IdCalendario,
-                                CaminhoArquivo = "ArquivoVideo/",
-                                NomeVideo = NomeArquivo,
-                                DataCadastro = DateTime.Now,
-                                Ativo = formData.Ativo
-                            });
+                                VideoModel.Add(new Video()
+                                {
+                                    IdUsuario = IdUsuario,
+                                    IdCampanha = formData.IdCampanha,
+                                    IdentificadorVideo = formData.IdentificadorVideo,
+                                    IdCalendario = null,
+                                    CaminhoArquivo = "ArquivoVideo/",
+                                    NomeVideo = NomeArquivo,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = formData.Ativo
+                                });
+                            }
+                            else
+                            {
+                                VideoModel.Add(new Video()
+                                {
+                                    IdUsuario = IdUsuario,
+                                    IdCampanha = formData.IdCampanha,
+                                    IdentificadorVideo = formData.IdentificadorVideo,
+                                    IdCalendario = formData.IdCalendario,
+                                    CaminhoArquivo = "ArquivoVideo/",
+                                    NomeVideo = NomeArquivo,
+                                    DataCadastro = DateTime.Now,
+                                    Ativo = formData.Ativo
+                                });
+                            }
+                            
                             EntityLista = VideoModel.GetList();
                             status = true;
                             mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
@@ -194,7 +213,6 @@ namespace CRMYIA.Web.Pages
                         IdVideo = Entity.IdVideo,
                         IdUsuario = IdUsuario,
                         IdCampanha = Entity.IdCampanha,
-                        IdCalendario = IdCalendario.ExtractLong(),
                         IdentificadorVideo = IdentificadorVideo,
                         CaminhoArquivo = Entity.CaminhoArquivo,
                         NomeVideo = Entity.NomeVideo,

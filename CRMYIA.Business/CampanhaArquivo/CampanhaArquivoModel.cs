@@ -143,9 +143,7 @@ namespace CRMYIA.Business
         {
             List<CampanhaArquivo> ListEntity = new List<CampanhaArquivo>();
             List<CampanhaArquivo> ListCampanhaArquivo = new List<CampanhaArquivo>();
-            List<Visita> ListVisita = null;//GrupoCorretorCampanha
-            //DateTime DataInicio;
-            //DateTime DataFim;
+            List<Visita> ListVisita = null;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -165,20 +163,25 @@ namespace CRMYIA.Business
                         .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
                         .AsNoTracking()
                         .ToList();
-
-                    foreach(Visita ItemVisita in ListVisita)
-                    {
                         foreach (CampanhaArquivo ItemCampanhaArquivo in ListCampanhaArquivo)
-                        {
-                            if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario &&
-                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
-                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                        { 
+                            if(ItemCampanhaArquivo.IdCalendario == null)
                             {
                                 ListEntity.Add(ItemCampanhaArquivo);
                             }
+                            if (ItemCampanhaArquivo.IdCalendario != null)
+                            {
+                                foreach (Visita ItemVisita in ListVisita)
+                                {
+                                    if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario &&
+                                      new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                                      new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                                    {
+                                        ListEntity.Add(ItemCampanhaArquivo);
+                                    }
+                                }
+                            }
                         }
-                    }
-                   
                 }
             }
             catch (Exception)

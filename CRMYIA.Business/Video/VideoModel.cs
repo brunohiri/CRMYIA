@@ -86,17 +86,25 @@ namespace CRMYIA.Business
                         .AsNoTracking()
                         .ToList();
 
-                    foreach (Visita ItemVisita in ListVisita)
+                    foreach (Video ItemVideo in ListVideo)
                     {
-                        foreach (Video ItemVideo in ListVideo)
+                        if (ItemVideo.IdCalendario == null)
                         {
-                            if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemVideo.IdCalendario &&
-                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
-                              new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                            ListEntity.Add(ItemVideo);
+                        }
+                        if(ItemVideo.IdCalendario != null) 
+                        { 
+                            foreach (Visita ItemVisita in ListVisita)
                             {
-                                ListEntity.Add(ItemVideo);
+                                if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemVideo.IdCalendario &&
+                                  new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                                  new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                                {
+                                    ListEntity.Add(ItemVideo);
+                                }
                             }
                         }
+                        
                     }
                 }
             }
