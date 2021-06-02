@@ -15,7 +15,7 @@ using System.Web;
 namespace CRMYIA.Landing.Pages
 {
     public class IndexModel : PageModel
-    {    
+    {
         #region Propriedades
         readonly IConfiguration _configuration;
 
@@ -24,6 +24,8 @@ namespace CRMYIA.Landing.Pages
         public LandingPage Entity { get; set; }
         [BindProperty]
         public Usuario Corretor { get; set; }
+        [BindProperty]
+        public List<LandingPageCarrossel> Carrossel { get; set; }
         #endregion
 
         #region Construtores
@@ -39,13 +41,14 @@ namespace CRMYIA.Landing.Pages
             //?id=S%252bMVSor2q%252bNSABf%252f6fwRng%253d%253d
             if (Id.IsNullOrEmpty())
             {
-                Usuario usuario = new Usuario();
-                Corretor = usuario;
+                Corretor = new Usuario();
+                Carrossel = new List<LandingPageCarrossel>();
             }
             else
             {
-               var idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
+                var idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
                 Corretor = UsuarioModel.Get(idUser);
+                Carrossel = LandingPageCarrosselModel.GetList(idUser);
             }
             return Page();
         }
@@ -54,7 +57,7 @@ namespace CRMYIA.Landing.Pages
         {
             try
             {
-              var a =  Request.Form;
+                var a = Request.Form;
                 var IpCliente = HttpContext.Connection.RemoteIpAddress.ToString();
                 var idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
 

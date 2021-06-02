@@ -58,72 +58,200 @@
         </div>*@
 
     <div class="tp-banner-container">
-        <div class="tp-banner">
-            <ul>
-                <!-- THE FIRST SLIDE -->
 
-                <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
-                    <img src="~/lib/template/images/1.png" alt="" />
-                    <div class="just_pattern"></div>
+        @if (Model.Carrossel.Count == 0)
+        {
+            <div class="tp-banner">
+                <ul>
+                    <!-- THE FIRST SLIDE -->
 
-                    <!-- THE CAPTIONS IN THIS SLIDE -->
-                    <div class="caption big-text lft ltt"
-                         data-x="center"
-                         data-y="center"
-                         data-speed="500"
-                         data-start="500"
-                         data-easing="easeOutExpo">
-                        <div class="big-text">
-                            <p class="p1">Com um corretor YIA</p>
-                            <p class="p2">Ter um plano de Saúde</p>
-                            <p class="p3">ficou ainda mais simples!</p>
+                    <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                        <img src="~/lib/template/images/1.png" alt="" />
+                        <div class="just_pattern"></div>
+
+                        <!-- THE CAPTIONS IN THIS SLIDE -->
+                        <div class="caption big-text lft ltt"
+                             data-x="center"
+                             data-y="center"
+                             data-speed="500"
+                             data-start="500"
+                             data-easing="easeOutExpo">
+                            <div class="big-text">
+                                <p class="p1">Com um corretor YIA</p>
+                                <p class="p2">Ter um plano de Saúde</p>
+                                <p class="p3">ficou ainda mais simples!</p>
+                            </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
 
-                <!-- THE SECOND SLIDE -->
+                    <!-- THE SECOND SLIDE -->
 
-                <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
-                    <img src="~/lib/template/images/1.png" alt="" />
-                    <div class="just_pattern"></div>
-                    <div class="caption big-text lft ltt"
-                         data-x="center"
-                         data-y="center"
-                         data-speed="500"
-                         data-start="500"
-                         data-easing="easeOutExpo">
-                        <div class="big-text">
-                            <p class="p1">Com um corretor YIA</p>
-                            <p class="p2">Ter um plano de Saúde</p>
-                            <p class="p3">ficou ainda mais simples!</p>
+                    <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                        <img src="~/lib/template/images/1.png" alt="" />
+                        <div class="just_pattern"></div>
+                        <div class="caption big-text lft ltt"
+                             data-x="center"
+                             data-y="center"
+                             data-speed="500"
+                             data-start="500"
+                             data-easing="easeOutExpo">
+                            <div class="big-text">
+                                <p class="p1">Com um corretor YIA</p>
+                                <p class="p2">Ter um plano de Saúde</p>
+                                <p class="p3">ficou ainda mais simples!</p>
+                            </div>
                         </div>
-                    </div>
 
-                </li>
+                    </li>
 
-                <!-- THE THIRD SLIDE -->
+                    <!-- THE THIRD SLIDE -->
 
-                <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
-                    <img src="~/lib/template/images/1.png" alt="" />
-                    <div class="just_pattern"></div>
+                    <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                        <img src="~/lib/template/images/1.png" alt="" />
+                        <div class="just_pattern"></div>
 
-                    <!-- THE CAPTIONS IN THIS SLDIE -->
-                    <div class="caption big-text lft ltt"
-                         data-x="center"
-                         data-y="center"
-                         data-speed="500"
-                         data-start="500"
-                         data-easing="easeOutExpo">
-                        <div class="big-text">
-                            <p class="p1">Com um corretor YIA</p>
-                            <p class="p2">Ter um plano de Saúde</p>
-                            <p class="p3">ficou ainda mais simples!</p>
+                        <!-- THE CAPTIONS IN THIS SLDIE -->
+                        <div class="caption big-text lft ltt"
+                             data-x="center"
+                             data-y="center"
+                             data-speed="500"
+                             data-start="500"
+                             data-easing="easeOutExpo">
+                            <div class="big-text">
+                                <p class="p1">Com um corretor YIA</p>
+                                <p class="p2">Ter um plano de Saúde</p>
+                                <p class="p3">ficou ainda mais simples!</p>
+                            </div>
                         </div>
-                    </div>
 
-                </li>
-            </ul>
-        </div>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="tp-banner">
+                <ul>
+                    @if (Model.Carrossel.Count == 1)
+                    {
+                        @foreach (var itens in Model.Carrossel)
+                        {
+                            <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                                <div class="just_pattern"></div>
+                                <img src="http://crm.q2bn.com.br/@itens.CaminhoArquivo@itens.NomeArquivo" alt="" />
+                                <div class="caption big-text lft ltt"
+                                     data-x="center"
+                                     data-y="center"
+                                     data-speed="500"
+                                     data-start="500"
+                                     data-easing="easeOutExpo">
+                                    <div class="big-text">
+                                        <p class="p1">Com um corretor YIA</p>
+                                        <p class="p2">Ter um plano de Saúde</p>
+                                        <p class="p3">ficou ainda mais simples!</p>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                        <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                            <img src="http://crm.q2bn.com.br/ArquivoCarrosselLanding/YIA_BaanerLP-Corretor-Desk_20210506193857_0.png" alt="" />
+                            <div class="just_pattern"></div>
+                            <!-- THE CAPTIONS IN THIS SLIDE -->
+                            <div class="caption big-text lft ltt"
+                                 data-x="center"
+                                 data-y="center"
+                                 data-speed="500"
+                                 data-start="500"
+                                 data-easing="easeOutExpo">
+                                <div class="big-text">
+                                    <p class="p1">Com um corretor YIA</p>
+                                    <p class="p2">Ter um plano de Saúde</p>
+                                    <p class="p3">ficou ainda mais simples!</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                            <img src="http://crm.q2bn.com.br/ArquivoCarrosselLanding/YIA_BaanerLP-Corretor-Desk_20210506193857_0.png" alt="" />
+                            <div class="just_pattern"></div>
+                            <!-- THE CAPTIONS IN THIS SLIDE -->
+                            <div class="caption big-text lft ltt"
+                                 data-x="center"
+                                 data-y="center"
+                                 data-speed="500"
+                                 data-start="500"
+                                 data-easing="easeOutExpo">
+                                <div class="big-text">
+                                    <p class="p1">Com um corretor YIA</p>
+                                    <p class="p2">Ter um plano de Saúde</p>
+                                    <p class="p3">ficou ainda mais simples!</p>
+                                </div>
+                            </div>
+                        </li>
+                    }@if (Model.Carrossel.Count == 2)
+                    {
+                        @foreach (var itens in Model.Carrossel)
+                        {
+                            <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                                <div class="just_pattern"></div>
+                                <img src="http://crm.q2bn.com.br/@itens.CaminhoArquivo@itens.NomeArquivo" alt="" />
+                                <div class="caption big-text lft ltt"
+                                     data-x="center"
+                                     data-y="center"
+                                     data-speed="500"
+                                     data-start="500"
+                                     data-easing="easeOutExpo">
+                                    <div class="big-text">
+                                        <p class="p1">Com um corretor YIA</p>
+                                        <p class="p2">Ter um plano de Saúde</p>
+                                        <p class="p3">ficou ainda mais simples!</p>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                        <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                            <img src="http://crm.q2bn.com.br/ArquivoCarrosselLanding/YIA_BaanerLP-Corretor-Desk_20210506193857_0.png" alt="" />
+                            <div class="just_pattern"></div>
+                            <!-- THE CAPTIONS IN THIS SLIDE -->
+                            <div class="caption big-text lft ltt"
+                                 data-x="center"
+                                 data-y="center"
+                                 data-speed="500"
+                                 data-start="500"
+                                 data-easing="easeOutExpo">
+                                <div class="big-text">
+                                    <p class="p1">Com um corretor YIA</p>
+                                    <p class="p2">Ter um plano de Saúde</p>
+                                    <p class="p3">ficou ainda mais simples!</p>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        @foreach (var itens in Model.Carrossel)
+                        {
+                            <li data-transition="fade" data-slotamount="1" data-masterspeed="400">
+                                <div class="just_pattern"></div>
+                                <img src="http://crm.q2bn.com.br/@itens.CaminhoArquivo@itens.NomeArquivo" alt="" />
+                                <div class="caption big-text lft ltt"
+                                     data-x="center"
+                                     data-y="center"
+                                     data-speed="500"
+                                     data-start="500"
+                                     data-easing="easeOutExpo">
+                                    <div class="big-text">
+                                        <p class="p1">Com um corretor YIA</p>
+                                        <p class="p2">Ter um plano de Saúde</p>
+                                        <p class="p3">ficou ainda mais simples!</p>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+
     </div>
     <a class="scroll" href="#contact"><div class="scroll-btn tipped" data-title="Faça uma cortação" data-tipper-options='{"direction":"top","follow":"true"}'></div></a>
 </div>

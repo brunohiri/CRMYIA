@@ -138,6 +138,20 @@ namespace CRMYIA.Web.Pages
                     EntityKPIGrupoUsuario.CaminhoFoto = UsuarioCargo.CaminhoFoto;
                     EntityKPIGrupoUsuario.Grupo = true;
                     EntityKPIGrupoUsuario.Ativo = true;
+
+
+                    //Notificacao EntityNotificacao = NotificacaoModel.Add(new Notificacao()
+                    //{
+                    //    IdUsuarioCadastro = IdUsuario,
+                    //    IdUsuarioVisualizar = EntityUsuarioHierarquia.IdUsuarioMaster,
+                    //    Titulo = null,
+                    //    Descricao = dados.Descricao,
+                    //    Url = "/Visita?Id=" + HttpUtility.UrlEncode(Criptography.Encrypt(EntityVisita.IdVisita.ToString())),
+                    //    Visualizado = false,
+                    //    DataCadastro = DateTime.Now,
+                    //    Ativo = true
+                    //});
+
                     try
                     {
                         KPIGrupoUsuarioModel.Add(EntityKPIGrupoUsuario);
