@@ -60,6 +60,24 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+        public static List<LandingPageCarrossel> GetList(long IdUsuario)
+        {
+            List<LandingPageCarrossel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.LandingPageCarrossel.Include(x => x.IdUsuarioNavigation).Where(x => x.IdUsuario == IdUsuario && x.Ativo)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
         public static void Add(LandingPageCarrossel Entity)
         {
             try
