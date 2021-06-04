@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public Calendario()
         {
+            AssinaturaCartao = new HashSet<AssinaturaCartao>();
             CalendarioSazonal = new HashSet<CalendarioSazonal>();
             CampanhaArquivo = new HashSet<CampanhaArquivo>();
             Capa = new HashSet<Capa>();
@@ -18,6 +19,7 @@ namespace CRMYIA.Data.Entities
         public bool Ativo { get; set; }
         public DateTime DataCadastro { get; set; }
 
+        public virtual ICollection<AssinaturaCartao> AssinaturaCartao { get; set; }
         public virtual ICollection<CalendarioSazonal> CalendarioSazonal { get; set; }
         public virtual ICollection<CampanhaArquivo> CampanhaArquivo { get; set; }
         public virtual ICollection<Capa> Capa { get; set; }
