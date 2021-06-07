@@ -28,7 +28,7 @@ namespace CRMYIA.Web.Pages
         public UsuarioCorretorViewModel UsuarioEntity { get; set; }
         public IActionResult OnGet(string Id)
         {
-            if (Id.IsNullOrEmpty()) 
+            if (!Id.IsNullOrEmpty()) 
             {
             } 
             else
@@ -36,7 +36,7 @@ namespace CRMYIA.Web.Pages
                 long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
                 Usuario UsuarioCorretor = UsuarioModel.Get(IdUsuario);
                 UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
-                ListAssinaturaCartao = AssinaturaCartaoModel.GetListaAssinatura(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(), (byte)UsuarioCorretor.IdGrupoCorretor);
+                ListAssinaturaCartao = AssinaturaCartaoModel.GetListaAssinatura(/*Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(),*/ (byte)UsuarioCorretor.IdGrupoCorretor);
             }
           
             return Page();

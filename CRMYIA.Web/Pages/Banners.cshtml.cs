@@ -52,7 +52,7 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnPostListarCampanha()
         {
-            string Id = Request.Form["Id"].ToString();
+            //string Id = Request.Form["Id"].ToString();
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             Usuario EntityUsuario = null;
             EntityUsuario = UsuarioModel.Get(IdUsuario);
@@ -76,8 +76,7 @@ namespace CRMYIA.Web.Pages
             Informacao IdInformacaoNavigation = new Informacao();
 
             List<CampanhaArquivoViewModel> AuxCampanhaArquivo = new List<CampanhaArquivoViewModel>();
-            var a = Criptography.Decrypt(Id).ExtractLong();
-            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(Id).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
+            List<CampanhaArquivo> CampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(/*Criptography.Decrypt(Id).ExtractLong(),*/ (byte)EntityUsuario.IdGrupoCorretor);
             List<Informacao> EntityInformacao = InformacaoModel.Get();
             UsuarioCorretorViewModel UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
 

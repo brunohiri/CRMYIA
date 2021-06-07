@@ -9,6 +9,7 @@ namespace CRMYIA.Data.ViewModel
     {
         public string IdAssinaturaCartao { get; set; }
         public string IdCampanha { get; set; }
+        public long? IdCalendario { get; set; }
         public string Titulo { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }

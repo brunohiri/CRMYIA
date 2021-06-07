@@ -68,12 +68,20 @@ namespace CRMYIA.Business
 
         public static List<BannerOperadoraViewModel> GetAllBanner(List<long> IdBanner, byte IdGrupoCorretor)
         {
-            List<BannerOperadoraViewModel> Entity = null;
+            List<BannerOperadoraViewModel> ListEntity = new List<BannerOperadoraViewModel>();
+            List<BannerOperadoraViewModel> ListBannerOperadora = null;
+            List<Visita> ListVisita = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.Banner
+                    ListVisita = context.Visita
+                    .Include(x => x.IdCalendarioSazonalNavigation)
+                    .OrderBy(x => x.DataAgendamento)
+                    .AsNoTracking()
+                    .ToList();
+
+                    ListBannerOperadora = context.Banner
                         .Include(x => x.IdInformacaoNavigation)
                         .Include(x => x.IdCampanhaNavigation)
                             .ThenInclude(x => x.GrupoCorretorCampanha)
@@ -94,66 +102,34 @@ namespace CRMYIA.Business
                             IdInformacaoNavigation = x.IdInformacaoNavigation
                         })
                         .ToList();
+                    foreach (BannerOperadoraViewModel Item in ListBannerOperadora)
+                    {
+                        if (Item.IdCalendario == null)
+                        {
+                            ListEntity.Add(Item);
+                        }
+                        foreach (var ItemVisita in ListVisita)
+                        {
+                            if (Item.IdCalendario != null && ItemVisita.IdCalendarioSazonalNavigation != null)
+                            {
+                                if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == Item.IdCalendario &&
+                                  new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                                  new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                                {
+                                    ListEntity.Add(Item);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception)
             {
                 throw;
             }
-            return Entity;
+            return ListEntity;
         }
 
-        //public static BannerOperadora Get(string IdBanner)
-        //{
-        //    BannerOperadora Entity = null;
-        //    try
-        //    {
-        //        using (YiaContext context = new YiaContext())
-        //        {
-        //            Entity = context.Banner
-        //                .Where(x => x.IdBanner == IdBanner.ExtractLong())
-        //                .FirstOrDefault();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return Entity;
-        //}
-        //public static List<BannerOperadoraViewModel> GetList()
-        //{
-        //    List<BannerOperadoraViewModel> ListEntity = null;
-        //    try
-        //    {
-        //        using (YiaContext context = new YiaContext())
-        //        {
-        //            ListEntity = context.Banner
-        //                .Include(x => x.IdInformacaoNavigation)
-        //                .Include(x => x.BannerOperadora)
-        //                .AsNoTracking()
-        //                .Where(x => x.Ativo)
-        //                .Select(x => new BannerOperadoraViewModel()
-        //                {
-        //                    IdBanner = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdBanner.ToString()).ToString()),
-        //                    Descricao = x.IdInformacaoNavigation.Descricao,
-        //                    CaminhoArquivo = x.CaminhoArquivo,
-        //                    NomeArquivo = x.NomeArquivo,
-        //                    Width = x.Width,
-        //                    Height = x.Height,
-        //                    DataCadastro = x.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss"),
-        //                    Ativo = x.Ativo
-        //                })
-        //                .OrderBy(o => o.Descricao)
-        //                .ToList();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return ListEntity;
-        //}
         public static bool AddBool(Banner Entity)
         {
             bool retorno = false;
@@ -177,21 +153,6 @@ namespace CRMYIA.Business
             return retorno;
         }
 
-        //public static void Add(BannerOperadora Entity)
-        //{
-        //    using (YiaContext context = new YiaContext())
-        //    {
-        //        try
-        //        {
-        //            context.BannerOperadora.Add(Entity);
-        //            context.SaveChanges();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
         public static void Update(Banner Entity)
         {
             try
@@ -207,21 +168,7 @@ namespace CRMYIA.Business
                 throw;
             }
         }
-        //public static void Update(BannerOperadora Entity)
-        //{
-        //    try
-        //    {
-        //        using (YiaContext context = new YiaContext())
-        //        {
-        //            context.BannerOperadora.Update(Entity);
-        //            context.SaveChanges();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+   
         public static Banner GetLastId()
         {
             Banner Entity = null;

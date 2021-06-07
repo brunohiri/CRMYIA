@@ -160,7 +160,15 @@ $(document).ready(function () {
         //}
     });
 
+    ExisteDataSazonal();
+
 });
+
+$(document).on('change', '#ExisteDataSazonal', function () {
+    ExisteDataSazonal();
+
+});
+
 
 $(document).on('click', '.alterar-imagem', function () {
     $('#modalAlterarImagem').modal();
@@ -392,6 +400,16 @@ $(document).on('click', '.excluir-imagem', function () {
         return false;
     });
 });
+
+function ExisteDataSazonal() {
+    if ($('#ExisteDataSazonal').is(":checked") == true) {
+        $('#EstadoExisteDataSazonal').html('Sim');
+        $('#BlocoDataSazonal').css('display', 'block');
+    } else {
+        $('#EstadoExisteDataSazonal').html('Não');
+        $('#BlocoDataSazonal').css('display', 'none');
+    }
+}
 
 function CarregarTabela(data) {
    var html = '';

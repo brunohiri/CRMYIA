@@ -42,6 +42,12 @@ $(document).ready(function () {
                     //formData.append('IdAssinaturaCartao', $('#IdAssinaturaCartao').val());
                     //formData.append('Titulo', $('#Titulo').val());
                     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
+
+                    if (Number.isInteger(parseInt($('#IdCalendario').val()))) {
+                        formData.append("IdCalendario", $('#IdCalendario').val());
+                    } else {
+                        formData.append("IdCalendario", 0);
+                    }
                 } else {
                     myDropzone.removeAllFiles(true);
                     swal("Erro!", "<span>Nome do arquivo não esta no padrão!</span><br><span>Exemplo:</span><br> <span>NOME_DO_ARQUIVO - REDES_SOCIAIS - [LOCAL_DA_POSTAGEM].EXTENSAO</span>", "error");
@@ -145,6 +151,13 @@ $(document).ready(function () {
         //    console.log(response);
         //}
     });
+
+    ExisteDataSazonal();
+
+});
+
+$(document).on('change', '#ExisteDataSazonal', function () {
+    ExisteDataSazonal();
 
 });
 
@@ -298,6 +311,16 @@ $(document).on('click', '.excluir-imagem', function () {
         return false;
     });
 });
+
+function ExisteDataSazonal() {
+    if ($('#ExisteDataSazonal').is(":checked") == true) {
+        $('#EstadoExisteDataSazonal').html('Sim');
+        $('#BlocoDataSazonal').css('display', 'block');
+    } else {
+        $('#EstadoExisteDataSazonal').html('Não');
+        $('#BlocoDataSazonal').css('display', 'none');
+    }
+}
 
 function CarregarTabela(data) {
     var html = '';

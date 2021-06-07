@@ -43,6 +43,8 @@ namespace CRMYIA.Web.Pages
         public string ImagemDiferente { get; set; }
         [BindProperty]
         public string CaminhoImagem { get; set; }
+        [BindProperty]
+        public List<Calendario> ListCalendario { get; set; }
         #endregion
 
         #region Construtores
@@ -79,6 +81,7 @@ namespace CRMYIA.Web.Pages
                 string Titulo = dados["Titulo"];
                 bool Ativo = Convert.ToBoolean(dados["Ativo"].Contains("true"));
                 string IdCampanha = dados["IdCampanha"].ToString();
+                string IdCalendario = dados["IdCalendario"][0].ToString();
                 var documentFile = Request.Form.Files.ToList();
                 AssinaturaCartao Entity = null;
                 List<AssinaturaCartaoViewModel> EntityLista = null;
@@ -126,18 +129,38 @@ namespace CRMYIA.Web.Pages
                                     Height = image.Height;
                                 }
                                 //Grava um registro Capa
-                                AssinaturaCartaoModel.Add(new AssinaturaCartao()
+                                if (IdCalendario == "0")
                                 {
-                                    IdUsuario = IdUsuario,
-                                    IdCampanha = IdCampanha.ExtractLong(),
-                                    Titulo = Titulo,
-                                    CaminhoArquivo = "ArquivoAssinaturaCartao/",
-                                    NomeArquivo = NomeArquivo,
-                                    Width = Width,
-                                    Height = Height,
-                                    DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
-                                    Ativo = Ativo
-                                });
+                                    AssinaturaCartaoModel.Add(new AssinaturaCartao()
+                                    {
+                                        IdUsuario = IdUsuario,
+                                        IdCampanha = IdCampanha.ExtractLong(),
+                                        IdCalendario = null,
+                                        Titulo = Titulo,
+                                        CaminhoArquivo = "ArquivoAssinaturaCartao/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = Ativo
+                                    });
+                                }
+                                else
+                                {
+                                    AssinaturaCartaoModel.Add(new AssinaturaCartao()
+                                    {
+                                        IdUsuario = IdUsuario,
+                                        IdCampanha = IdCampanha.ExtractLong(),
+                                        IdCalendario = IdCalendario.ExtractLong(),
+                                        Titulo = Titulo,
+                                        CaminhoArquivo = "ArquivoAssinaturaCartao/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = Ativo
+                                    });
+                                }
                             }
                             EntityLista = AssinaturaCartaoModel.GetList();
                             status = true;
@@ -321,6 +344,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListAssinaturaCartao = AssinaturaCartaoModel.GetList();
+            ListCalendario = Business.CalendarioModel.GetList();
             ListCampanha = Business.CampanhaModel.GetList();
         }
         #endregion

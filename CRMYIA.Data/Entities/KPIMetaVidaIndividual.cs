@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace CRMYIA.Data.Entities
 {
-    public partial class KPIMetaVida
+    public partial class KPIMetaVidaIndividual
     {
-        public long IdKPIMetaVida { get; set; }
-        public long? IdMeta { get; set; }
+        public long IdKPIMetaVidaIndividual { get; set; }
+        public long? IdMetaIndividual { get; set; }
         public string Descricao { get; set; }
         public int? ValorMinimo { get; set; }
         public int? ValorMaximo { get; set; }
@@ -14,6 +14,6 @@ namespace CRMYIA.Data.Entities
         public int? Ano { get; set; }
         public bool Ativo { get; set; }
 
-        public virtual KPIMeta IdMetaNavigation { get; set; }
+        public virtual KPIMetaIndividual IdMetaIndividualNavigation { get; set; }
     }
 }

@@ -5,6 +5,11 @@ namespace CRMYIA.Data.Entities
 {
     public partial class KPIGrupoUsuario
     {
+        public KPIGrupoUsuario()
+        {
+            KPIMetaIndividual = new HashSet<KPIMetaIndividual>();
+        }
+
         public long IdKPIGrupoUsuario { get; set; }
         public long? IdKPIGrupo { get; set; }
         public long? IdUsuario { get; set; }
@@ -22,5 +27,6 @@ namespace CRMYIA.Data.Entities
         public virtual KPIGrupo IdKPIGrupoNavigation { get; set; }
         public virtual KPIMeta IdMetaNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
+        public virtual ICollection<KPIMetaIndividual> KPIMetaIndividual { get; set; }
     }
 }

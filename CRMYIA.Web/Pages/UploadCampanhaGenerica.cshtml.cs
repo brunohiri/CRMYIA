@@ -212,21 +212,42 @@ namespace CRMYIA.Web.Pages
                                         Ativo = formData.Ativo
                                     });
 
-                                    CampanhaArquivoModel.Update(new CampanhaArquivo() {
-                                        IdCampanhaArquivo = formData.IdCampanhaArquivo,
-                                        IdCampanha = formData.IdCampanha,
-                                        IdInformacao = formData.IdInformacao,
-                                        IdCalendario = formData.IdCalendario,
-                                        CaminhoArquivo = EntityCampanhaArquivo.CaminhoArquivo,
-                                        NomeArquivo = EntityCampanhaArquivo.NomeArquivo,
-                                        Width = EntityCampanhaArquivo.Width,
-                                        Height = EntityCampanhaArquivo.Height,
-                                        RedesSociais = EntityCampanhaArquivo.RedesSociais,
-                                        TipoPostagem = EntityCampanhaArquivo.TipoPostagem,
-                                        DataCadastro = DateTime.Now,
-                                        Ativo = formData.Ativo
-                                    }); 
-
+                                    if (formData.IdCalendario == 0)
+                                    {
+                                        CampanhaArquivoModel.Update(new CampanhaArquivo()
+                                        {
+                                            IdCampanhaArquivo = formData.IdCampanhaArquivo,
+                                            IdCampanha = formData.IdCampanha,
+                                            IdInformacao = formData.IdInformacao,
+                                            IdCalendario = null,
+                                            CaminhoArquivo = EntityCampanhaArquivo.CaminhoArquivo,
+                                            NomeArquivo = EntityCampanhaArquivo.NomeArquivo,
+                                            Width = EntityCampanhaArquivo.Width,
+                                            Height = EntityCampanhaArquivo.Height,
+                                            RedesSociais = EntityCampanhaArquivo.RedesSociais,
+                                            TipoPostagem = EntityCampanhaArquivo.TipoPostagem,
+                                            DataCadastro = DateTime.Now,
+                                            Ativo = formData.Ativo
+                                        });
+                                    }
+                                    else
+                                    {
+                                        CampanhaArquivoModel.Update(new CampanhaArquivo()
+                                        {
+                                            IdCampanhaArquivo = formData.IdCampanhaArquivo,
+                                            IdCampanha = formData.IdCampanha,
+                                            IdInformacao = formData.IdInformacao,
+                                            IdCalendario = formData.IdCalendario,
+                                            CaminhoArquivo = EntityCampanhaArquivo.CaminhoArquivo,
+                                            NomeArquivo = EntityCampanhaArquivo.NomeArquivo,
+                                            Width = EntityCampanhaArquivo.Width,
+                                            Height = EntityCampanhaArquivo.Height,
+                                            RedesSociais = EntityCampanhaArquivo.RedesSociais,
+                                            TipoPostagem = EntityCampanhaArquivo.TipoPostagem,
+                                            DataCadastro = DateTime.Now,
+                                            Ativo = formData.Ativo
+                                        });
+                                    }
                                 }
 
                                 mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Registro atualizado com Sucesso!!!");
