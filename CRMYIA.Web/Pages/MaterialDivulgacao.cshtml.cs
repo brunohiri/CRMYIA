@@ -209,7 +209,7 @@ namespace CRMYIA.Web.Pages
 
         private void ListsCampanhaId(string Id, byte IdCorretor)
         {
-            ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(), IdCorretor);
+            ListCampanhaArquivo = CampanhaArquivoModel.GetListaCampanhaArquivo(/*Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(),*/ IdCorretor);
         }
 
         private void ListsCampanhaId()

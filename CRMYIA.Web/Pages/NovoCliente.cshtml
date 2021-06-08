@@ -216,17 +216,26 @@
                     <div class="form-group">
                         <label>Produto</label>
                         <input type="hidden" id="ClienteIdProdutoHidden" value="" />
-                        <select class="form-control select2" style="width: 100%;" id="ClienteIdProduto"  asp-for="@Model.Entity.ProdutoLead">
+                        <select class="form-control select2" style="width: 100%;" id="ClienteIdProduto" asp-for="@Model.Entity.ProdutoLead">
                             <option selected="selected" value="0">Selecione...</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <div class="form-group">
                         <label>Status do Plano</label>
                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                             <input type="checkbox" class="custom-control-input" id="customSwitchStatusPlano" checked asp-for="@Model.Entity.StatusPlanoLead">
                             <label class="custom-control-label" for="customSwitchStatusPlano">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <label>Não Incomodar</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="customSwitchNaoIncomodar" asp-for="@Model.Entity.StatusNaoIncomodar">
+                            <label class="custom-control-label" for="customSwitchNaoIncomodar">Ativo</label>
                         </div>
                     </div>
                 </div>

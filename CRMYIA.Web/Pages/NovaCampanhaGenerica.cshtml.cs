@@ -40,6 +40,8 @@ namespace CRMYIA.Web.Pages
         public Campanha Entity { get; set; }
         [BindProperty]
         public List<Campanha> ListCampanha { get; set; }
+        [BindProperty]
+        public List<Calendario> ListCalendario { get; set; }
 
         #endregion
 
@@ -205,6 +207,7 @@ namespace CRMYIA.Web.Pages
         public void CarregarLists()
         {
             ListCampanha = Business.CampanhaModel.GetList();
+            ListCalendario = Business.CalendarioModel.GetList();
             ListGrupoCorretor = Business.GrupoCorretorModel.GetList();
         }
 

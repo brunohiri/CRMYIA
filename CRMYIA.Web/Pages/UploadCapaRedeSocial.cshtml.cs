@@ -52,6 +52,8 @@ namespace CRMYIA.Web.Pages
         public string ImagemDiferente { get; set; }
         [BindProperty]
         public string CaminhoImagem { get; set; }
+        [BindProperty]
+        public List<Calendario> ListCalendario { get; set; }
         #endregion
 
         #region Construtores
@@ -132,16 +134,35 @@ namespace CRMYIA.Web.Pages
                                     Height = image.Height;
                                 }
                                 //Grava um registro Capa
-                                var retorno = CapaModel.Add(new Capa()
+                                var retorno = false;
+                                if (formData.IdCalendario == 0)
                                 {
-                                   Titulo = formData.Titulo,
-                                   CaminhoArquivo = "ArquivoCapaRedeSocial/",
-                                   NomeArquivo = NomeArquivo,
-                                   Width = Width,
-                                   Height = Height,
-                                   DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
-                                   Ativo = formData.Ativo
-                              });
+                                     retorno = CapaModel.Add(new Capa()
+                                    {
+                                        IdCalendario = null,
+                                        Titulo = formData.Titulo,
+                                        CaminhoArquivo = "ArquivoCapaRedeSocial/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = formData.Ativo
+                                    });
+                                }
+                                else
+                                {
+                                     retorno = CapaModel.Add(new Capa()
+                                    {
+                                        IdCalendario = formData.IdCalendario,
+                                        Titulo = formData.Titulo,
+                                        CaminhoArquivo = "ArquivoCapaRedeSocial/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = formData.Ativo
+                                    });
+                                }
 
                                 //Pega o ultimo valor
                                 EntityCapa = CapaModel.GetLastId();
@@ -181,6 +202,7 @@ namespace CRMYIA.Web.Pages
                                 CapaModel.Update(new Capa()
                                 {
                                     IdCapa = formData.IdCapa,
+                                    IdCalendario = formData.IdCalendario,
                                     Titulo = formData.Titulo,
                                     CaminhoArquivo = EntityCapa.CaminhoArquivo,
                                     NomeArquivo = EntityCapa.NomeArquivo,
@@ -376,6 +398,7 @@ namespace CRMYIA.Web.Pages
         {
             ListRedeSocial = RedeSocialModel.GetList();
             ListCapa = CapaModel.GetList();
+            ListCalendario = Business.CalendarioModel.GetList();
             ListCampanha = Business.CampanhaModel.GetList();
         }
     #endregion

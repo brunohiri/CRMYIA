@@ -160,7 +160,15 @@ $(document).ready(function () {
         //}
     });
 
+    ExisteDataSazonal();
+
 });
+
+$(document).on('change', '#ExisteDataSazonal', function () {
+    ExisteDataSazonal();
+
+});
+
 
 $(document).on('click', '.alterar-imagem', function () {
     $('#modalAlterarImagem').modal();
@@ -220,6 +228,7 @@ $(document).on('click', '#btn-salvar-texto', function () {
     formData.append('IdCapa', $('#IdCapa').val());
     formData.append('Titulo', $('#Titulo').val());
     formData.append('IdRedeSocial', $("#IdRedeSocial").val());
+    formData.append('IdCalendario', $('#IdCalendario').val());
     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
     if ($('#IdCapa').val() != undefined && $('#Titulo').val() != undefined && $("#IdRedeSocial").val() != undefined)
         displayBusyIndicator()
@@ -391,6 +400,16 @@ $(document).on('click', '.excluir-imagem', function () {
         return false;
     });
 });
+
+function ExisteDataSazonal() {
+    if ($('#ExisteDataSazonal').is(":checked") == true) {
+        $('#EstadoExisteDataSazonal').html('Sim');
+        $('#BlocoDataSazonal').css('display', 'block');
+    } else {
+        $('#EstadoExisteDataSazonal').html('Não');
+        $('#BlocoDataSazonal').css('display', 'none');
+    }
+}
 
 function CarregarTabela(data) {
    var html = '';

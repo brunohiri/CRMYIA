@@ -11,6 +11,7 @@ namespace CRMYIA.Data.Entities
         }
 
         public long IdCapa { get; set; }
+        public long? IdCalendario { get; set; }
         public string Titulo { get; set; }
         public string CaminhoArquivo { get; set; }
         public string NomeArquivo { get; set; }
@@ -19,6 +20,7 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
+        public virtual Calendario IdCalendarioNavigation { get; set; }
         public virtual ICollection<CapaRedeSocial> CapaRedeSocial { get; set; }
     }
 }

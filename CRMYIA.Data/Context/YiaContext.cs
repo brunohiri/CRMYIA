@@ -57,8 +57,11 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<KPIGrupo> KPIGrupo { get; set; }
         public virtual DbSet<KPIGrupoUsuario> KPIGrupoUsuario { get; set; }
         public virtual DbSet<KPIMeta> KPIMeta { get; set; }
+        public virtual DbSet<KPIMetaIndividual> KPIMetaIndividual { get; set; }
         public virtual DbSet<KPIMetaValor> KPIMetaValor { get; set; }
+        public virtual DbSet<KPIMetaValorIndividual> KPIMetaValorIndividual { get; set; }
         public virtual DbSet<KPIMetaVida> KPIMetaVida { get; set; }
+        public virtual DbSet<KPIMetaVidaIndividual> KPIMetaVidaIndividual { get; set; }
         public virtual DbSet<LandingPage> LandingPage { get; set; }
         public virtual DbSet<LandingPageCarrossel> LandingPageCarrossel { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
@@ -177,6 +180,11 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.AssinaturaCartao)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_AssinaturaCartao");
+
                 entity.HasOne(d => d.IdCampanhaNavigation)
                     .WithMany(p => p.AssinaturaCartao)
                     .HasForeignKey(d => d.IdCampanha)
@@ -292,11 +300,6 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.IdCalendarioNavigation)
-                    .WithMany(p => p.Campanha)
-                    .HasForeignKey(d => d.IdCalendario)
-                    .HasConstraintName("Calendario_Campanha");
-
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Campanha)
                     .HasForeignKey(d => d.IdUsuario)
@@ -324,6 +327,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.TipoPostagem)
                     .HasMaxLength(300)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.CampanhaArquivo)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_CampanhaArquivo");
 
                 entity.HasOne(d => d.IdCampanhaNavigation)
                     .WithMany(p => p.CampanhaArquivo)
@@ -353,6 +361,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Titulo)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.Capa)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_Capa");
             });
 
             modelBuilder.Entity<CapaRedeSocial>(entity =>
@@ -1308,6 +1321,20 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("KPIGrupo_KPIMeta");
             });
 
+            modelBuilder.Entity<KPIMetaIndividual>(entity =>
+            {
+                entity.HasKey(e => e.IdMetaIndividual);
+
+                entity.Property(e => e.DataMaxima).HasColumnType("datetime");
+
+                entity.Property(e => e.DataMinima).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdKPIGrupoUsuarioNavigation)
+                    .WithMany(p => p.KPIMetaIndividual)
+                    .HasForeignKey(d => d.IdKPIGrupoUsuario)
+                    .HasConstraintName("KPIGrupoUsuario_KPIMetaIndividual");
+            });
+
             modelBuilder.Entity<KPIMetaValor>(entity =>
             {
                 entity.HasKey(e => e.IdKPIMetaValor);
@@ -1326,9 +1353,9 @@ namespace CRMYIA.Data.Context
                     .HasConstraintName("KPIMeta_KPIMetaValor");
             });
 
-            modelBuilder.Entity<KPIMetaVida>(entity =>
+            modelBuilder.Entity<KPIMetaValorIndividual>(entity =>
             {
-                entity.HasKey(e => e.IdKPIMetaVida);
+                entity.HasKey(e => e.IdKPIMetaValorIndividual);
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
@@ -1338,10 +1365,38 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.ValorMinimo).HasColumnType("decimal(18, 2)");
 
+                entity.HasOne(d => d.IdMetaIndividualNavigation)
+                    .WithMany(p => p.KPIMetaValorIndividual)
+                    .HasForeignKey(d => d.IdMetaIndividual)
+                    .HasConstraintName("KPIMetaIndividual_KPIMetaValorIndividual");
+            });
+
+            modelBuilder.Entity<KPIMetaVida>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIMetaVida);
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.IdMetaNavigation)
                     .WithMany(p => p.KPIMetaVida)
                     .HasForeignKey(d => d.IdMeta)
                     .HasConstraintName("KPIMeta_KPIMetaVida");
+            });
+
+            modelBuilder.Entity<KPIMetaVidaIndividual>(entity =>
+            {
+                entity.HasKey(e => e.IdKPIMetaVidaIndividual);
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdMetaIndividualNavigation)
+                    .WithMany(p => p.KPIMetaVidaIndividual)
+                    .HasForeignKey(d => d.IdMetaIndividual)
+                    .HasConstraintName("KPIMetaIndividual_KPIMetaVidaIndividual");
             });
 
             modelBuilder.Entity<LandingPage>(entity =>
@@ -2087,6 +2142,11 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.NomeVideo)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.Video)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("Calendario_Video");
 
                 entity.HasOne(d => d.IdCampanhaNavigation)
                     .WithMany(p => p.Video)

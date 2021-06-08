@@ -139,20 +139,50 @@ namespace CRMYIA.Business
         //    return ListEntity;
         //}
 
-        public static List<CampanhaArquivo> GetListaCampanhaArquivo(long IdCampanha, byte IdGrupoCorretor)
+        public static List<CampanhaArquivo> GetListaCampanhaArquivo(byte IdGrupoCorretor)
         {
             List<CampanhaArquivo> ListEntity = new List<CampanhaArquivo>();
-            List<GrupoCorretorCampanha> AuxListEntity = null;//GrupoCorretorCampanha
+            List<CampanhaArquivo> ListCampanhaArquivo = new List<CampanhaArquivo>();
+            List<Visita> ListVisita = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.CampanhaArquivo
-                        .Include(x => x.IdCampanhaNavigation)
-                        .Include(x => x.IdInformacaoNavigation)
-                        .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                    ListVisita = context.Visita
+                        .Include(x => x.IdCalendarioSazonalNavigation)
+                        .OrderBy(x => x.DataAgendamento)
                         .AsNoTracking()
                         .ToList();
+
+                    ListCampanhaArquivo = context.CampanhaArquivo
+                        .Include(x => x.IdCampanhaNavigation)
+                        .Include(x => x.IdInformacaoNavigation)
+                        .Include(x => x.IdCalendarioNavigation)
+                            .ThenInclude(x => x.CalendarioSazonal)
+                            .ThenInclude(x => x.Visita)
+                        .Where(x => x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                        .AsNoTracking()
+                        .ToList();
+                        foreach (CampanhaArquivo ItemCampanhaArquivo in ListCampanhaArquivo)
+                        { 
+                            if(ItemCampanhaArquivo.IdCalendario == null)
+                            {
+                                ListEntity.Add(ItemCampanhaArquivo);
+                            }
+                            foreach (Visita ItemVisita in ListVisita)
+                            {
+                                if (ItemCampanhaArquivo.IdCalendario != null && ItemVisita.IdCalendarioSazonalNavigation != null)
+                                {
+                                    if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario &&
+                                            new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                                            new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                                    {
+                                        ListEntity.Add(ItemCampanhaArquivo);
+                                    }
+                                }
+                            }
+                        }
+                        
                 }
             }
             catch (Exception)

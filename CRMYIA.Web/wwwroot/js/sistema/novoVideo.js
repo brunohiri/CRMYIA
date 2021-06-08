@@ -41,6 +41,13 @@ $(document).ready(function () {
                 formData.append("IdentificadorVideo", $('#IdentificadorVideo').val());
                 $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
                 formData.append("IdCampanha", $('#IdCampanha').val());
+                formData.append("IdCalendario", $('#IdCalendario').val());
+
+                if (Number.isInteger(parseInt($('#IdCalendario').val()))) {
+                    formData.append("IdCalendario", $('#IdCalendario').val());
+                } else {
+                    formData.append("IdCalendario", 0);
+                }
             });
             this.on("success", function (files, data) {
                 // Gets triggered when the files have successfully been sent.
@@ -116,6 +123,7 @@ $(document).ready(function () {
                 //params: { IdCampanhaArquivo: idcampanhaarquivo, NomeArquivo: nomearquivo },
                 formData.append("IdVideo", idvideo);
                 formData.append("NomeVideo", nomevideo);
+                formData.append("IdCalendario", $('#IdCalendario').val());
             });
             this.on("success", function (files, data) {
                 // Gets triggered when the files have successfully been sent.
@@ -142,6 +150,13 @@ $(document).ready(function () {
         //    console.log(response);
         //}
     });
+
+    ExisteDataSazonal();
+
+});
+
+$(document).on('change', '#ExisteDataSazonal', function () {
+    ExisteDataSazonal();
 
 });
 
@@ -208,7 +223,6 @@ $(document).on('click', '.editar-formulario', function () {
     //alert($(this).data('idvideo'));
     var obj = {};
     obj.IdVideo = $(this).data('idvideo');
-    displayBusyIndicator();
     $.ajax({
         type: "POST",
         url: "/NovoVideo?handler=EditarFormulario",
@@ -225,6 +239,20 @@ $(document).on('click', '.editar-formulario', function () {
                 $('#IdVideo').val(data.entity.idVideo);
                 $('#IdentificadorVideo').val(data.entity.identificadorVideo);
                 $("#IdCampanha").val(data.entity.idCampanha).trigger('change');
+               
+
+                if (data.entity.idCalendario == null) {
+                    $("#IdCalendario").select2('val', '0');
+                    $("#IdCalendario").select2({
+                        placeholder: "Selecione...",
+                        allowClear: true
+                    });
+                }
+                else
+                {
+                    $('#IdCalendario').val(data.entity.idCalendario).trigger('change');
+                }
+                
 
                 if (data.entity.ativo == true) {
                     $('#Ativo').prop('checked', true);
@@ -251,6 +279,12 @@ $(document).on('click', '#btn-salvar-alteracao-video', function () {
     obj.IdentificadorVideo = $('#IdentificadorVideo').val();
     obj.IdCampanha = $('#IdCampanha').val();
     $('#Ativo').is(":checked") == true ? obj.Ativo = 'true' : obj.Ativo = 'false';
+    if (Number.isInteger(parseInt($('#IdCalendario').val()))) {
+        obj.IdCalendario = $('#IdCalendario').val();
+    } else {
+        obj.IdCalendario = 0;
+    }
+    displayBusyIndicator();
     $.ajax({
         type: "POST",
         url: "/NovoVideo?handler=SalvarAlteracaoVideo",
@@ -295,6 +329,16 @@ $(document).on('click', '#btn-salvar-alteracao-video', function () {
     });
 
 });
+
+function ExisteDataSazonal() {
+    if ($('#ExisteDataSazonal').is(":checked") == true) {
+        $('#EstadoExisteDataSazonal').html('Sim');
+        $('#BlocoDataSazonal').css('display', 'block');
+    } else {
+        $('#EstadoExisteDataSazonal').html('Não');
+        $('#BlocoDataSazonal').css('display', 'none');
+    }
+}
 
 function CarregarTabela(data) {
     var html = '<div class="card-body table-responsive">\

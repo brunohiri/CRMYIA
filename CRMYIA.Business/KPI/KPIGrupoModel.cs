@@ -115,7 +115,8 @@ namespace CRMYIA.Business
                     }
                     if (bancoEntity != null)
                     {
-                        if (bancoEntityUsuarios != null)
+                        bancoEntity.Ativo = false;
+                        if (bancoEntityUsuarios.Count > 0)
                             foreach (var item in bancoEntityUsuarios)
                             {
                                 item.Motivo = "Exclusão grupo " + Entity.Nome.ToString();

@@ -30,17 +30,17 @@
 
                     <div class="row">
                         <input type="hidden" id="IdCapa" name="IdCapa" value="0" />
-                        <div class="col-sm-5">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Titulo</label>
                                 <input class="form-control" placeholder="Titulo" name="Titulo" id="Titulo">
                             </div>
                         </div>
 
-                        <div class="col-sm-5">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Campanha</label>
-                                <select class="form-control select2" style="width: 100%;"  name="IdCampanha" id="IdCampanha">
+                                <select class="form-control select2" style="width: 100%;" name="IdCampanha" id="IdCampanha">
                                     <option selected="selected">Selecione...</option>
                                     @foreach (var Item in Model.ListCampanha)
                                     {
@@ -50,21 +50,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Status</label>
-                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                    <input type="checkbox" class="custom-control-input" name="Ativo" id="Ativo" checked asp-for="@Model.Entity.Ativo">
-                                    <label class="custom-control-label" for="Ativo">Ativo</label>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-sm-6 idRedeSocial">
+                        <div class="col-sm-3 idRedeSocial">
                             <div class="form-group">
                                 <label>Selecione uma Rede</label>
                                 <select class="form-control select2" style="width: 100%;" name="IdRedeSocial" id="IdRedeSocial" required>
@@ -85,6 +71,41 @@
                                 <label>Cadastrar Rede Social</label>
                                 <div class="input-group">
                                     <i title="Cadastrar Rede Social" class="fas fa-plus-circle" data-toggle="modal" data-target="#modalCadastrarRedeSocial"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Existe Data Sazonal</label>
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" name="ExisteDataSazonal" id="ExisteDataSazonal">
+                                    <label class="custom-control-label" for="ExisteDataSazonal" id="EstadoExisteDataSazonal"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6" id="BlocoDataSazonal">
+                            <div class="form-group">
+                                <label>Feriado / Data Comemorativa</label>
+                                <select class="form-control select2" style="width: 100%;" name="IdCalendario" id="IdCalendario">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListCalendario)
+                                    {
+                                        <option value="@Item.IdCalendario">@(Item.Descricao)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" name="Ativo" id="Ativo" checked asp-for="@Model.Entity.Ativo">
+                                    <label class="custom-control-label" for="Ativo">Ativo</label>
                                 </div>
                             </div>
                         </div>

@@ -16,7 +16,52 @@
 <div>
     <div class="d-flex flex-wrap">
 
-        @foreach (var Item in Model.ListaCampanhaArquivo)
+        <div class="card m-2 card-operadora" style="width: 14rem;">
+            <div class="card-body text-center">
+                <img src="~/img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo">
+
+            </div>
+
+            <a href="/AssinaturaCartao" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Assinatura Cartão</strong></h5></a>
+        </div>
+
+        <div class="card m-2 card-operadora" style="width: 14rem;">
+            <div class="card-body text-center">
+                <img src="~/img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo">
+
+            </div>
+
+            <a href="/Banners" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Banners Gerais</strong></h5></a>
+        </div>
+
+        <div class="card m-2 card-operadora" style="width: 14rem;">
+            <div class="card-body text-center">
+                <img src="~/img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo">
+
+            </div>
+
+            <a href="/OperadoraSeguradora" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Banners de Operadora</strong></h5></a>
+        </div>
+
+        <div class="card m-2 card-operadora" style="width: 14rem;">
+            <div class="card-body text-center">
+                <img src="~/img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo">
+
+            </div>
+
+            <a href="/CapasRedeSocial" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Capas de Rede Social</strong></h5></a>
+        </div>
+
+        <div class="card m-2 card-operadora" style="width: 14rem;">
+            <div class="card-body text-center">
+                <img src="~/img/fotoCadastro/imagem_vazia.png" class="img-fluid" alt="Logo">
+
+            </div>
+
+            <a href="/Videos" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>Vídeos</strong></h5></a>
+        </div>
+
+        @*@foreach (var Item in Model.ListaCampanhaArquivo)
         {
 
             if (Item.CampanhaArquivo.Count > 0)
@@ -144,7 +189,7 @@
                     <a asp-page="@url" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCampanha.ToString()))" class="stretched-link"><h5 class="card-footer text-center bg-white stretched-link"><strong>@Item.Descricao</strong></h5></a>
                 </div>
             }
-        }
+        }*@
 
     </div>
 </div>
