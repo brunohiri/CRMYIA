@@ -47,13 +47,13 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnPostListarVideos()
         {
-            string Id = Request.Form["Id"].ToString();
+            //string Id = Request.Form["Id"].ToString();
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             Usuario EntityUsuario = null;
             EntityUsuario = UsuarioModel.Get(IdUsuario);
 
             bool status = false;
-            List<Video> EntityVideo = VideoModel.GetListaVideos(Criptography.Decrypt(Id).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
+            List<Video> EntityVideo = VideoModel.GetListaVideos(/*Criptography.Decrypt(Id).ExtractLong(),*/ (byte)EntityUsuario.IdGrupoCorretor);
             if (EntityVideo.Count > 0)
             {
                 status = true;

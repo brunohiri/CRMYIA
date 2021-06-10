@@ -139,7 +139,7 @@ namespace CRMYIA.Business
         //    return ListEntity;
         //}
 
-        public static List<CampanhaArquivo> GetListaCampanhaArquivo(long IdCampanha, byte IdGrupoCorretor)
+        public static List<CampanhaArquivo> GetListaCampanhaArquivo(byte IdGrupoCorretor)
         {
             List<CampanhaArquivo> ListEntity = new List<CampanhaArquivo>();
             List<CampanhaArquivo> ListCampanhaArquivo = new List<CampanhaArquivo>();
@@ -160,7 +160,7 @@ namespace CRMYIA.Business
                         .Include(x => x.IdCalendarioNavigation)
                             .ThenInclude(x => x.CalendarioSazonal)
                             .ThenInclude(x => x.Visita)
-                        .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                        .Where(x => x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
                         .AsNoTracking()
                         .ToList();
                         foreach (CampanhaArquivo ItemCampanhaArquivo in ListCampanhaArquivo)
@@ -169,19 +169,20 @@ namespace CRMYIA.Business
                             {
                                 ListEntity.Add(ItemCampanhaArquivo);
                             }
-                            if (ItemCampanhaArquivo.IdCalendario != null)
+                            foreach (Visita ItemVisita in ListVisita)
                             {
-                                foreach (Visita ItemVisita in ListVisita)
+                                if (ItemCampanhaArquivo.IdCalendario != null && ItemVisita.IdCalendarioSazonalNavigation != null)
                                 {
                                     if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == ItemCampanhaArquivo.IdCalendario &&
-                                      new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
-                                      new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                                            new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                                            new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
                                     {
                                         ListEntity.Add(ItemCampanhaArquivo);
                                     }
                                 }
                             }
                         }
+                        
                 }
             }
             catch (Exception)

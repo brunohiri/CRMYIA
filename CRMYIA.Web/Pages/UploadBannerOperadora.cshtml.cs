@@ -55,6 +55,8 @@ namespace CRMYIA.Web.Pages
         public string ImagemDiferente { get; set; }
         [BindProperty]
         public string CaminhoImagem { get; set; }
+        [BindProperty]
+        public List<Calendario> ListCalendario { get; set; }
         #endregion
 
         #region Construtores
@@ -94,6 +96,7 @@ namespace CRMYIA.Web.Pages
                 long IdInformacao = formData.IdInformacao.ToString().ExtractLong();
                 long IdCampanha = formData.IdCampanha.ExtractLong();
                 string Titulo = formData.Titulo;
+                long? IdCalendario = formData.IdCalendario;
                 var documentFile = Request.Form.Files.ToList();
                 List<BannerOperadoraViewModel> EntityLista = null;
                 MensagemModel mensagem = null;
@@ -149,18 +152,38 @@ namespace CRMYIA.Web.Pages
                                 }
                                 //Grava um registro Banner
                                 EntityInformacao = InformacaoModel.GetLastId();
-                                var retorno = BannerOperadoraModel.AddBool(new Banner()
+                                if (formData.IdCalendario == 0)
                                 {
-                                    IdInformacao = EntityInformacao.IdInformacao,
-                                    IdCampanha = IdCampanha,
-                                    IdUsuario = IdUsuario,
-                                    CaminhoArquivo = "ArquivoBannerOperadora/",
-                                    NomeArquivo = NomeArquivo,
-                                    Width = Width,
-                                    Height = Height,
-                                    DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
-                                    Ativo = Ativo
-                                });
+                                    var retorno = BannerOperadoraModel.AddBool(new Banner()
+                                    {
+                                        IdInformacao = EntityInformacao.IdInformacao,
+                                        IdCampanha = IdCampanha,
+                                        IdUsuario = IdUsuario,
+                                        IdCalendario = null,
+                                        CaminhoArquivo = "ArquivoBannerOperadora/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = Ativo
+                                    });
+                                }
+                                else
+                                {
+                                    var retorno = BannerOperadoraModel.AddBool(new Banner()
+                                    {
+                                        IdInformacao = EntityInformacao.IdInformacao,
+                                        IdCampanha = IdCampanha,
+                                        IdUsuario = IdUsuario,
+                                        IdCalendario = IdCalendario,
+                                        CaminhoArquivo = "ArquivoBannerOperadora/",
+                                        NomeArquivo = NomeArquivo,
+                                        Width = Width,
+                                        Height = Height,
+                                        DataCadastro = DateTime.Parse(DateTime.Now.ToString()),
+                                        Ativo = Ativo
+                                    });
+                                }
                             }
                             EntityLista = BannerOperadoraModel.GetList();
                             status = true;
@@ -392,6 +415,7 @@ namespace CRMYIA.Web.Pages
         {
             ListOperadora = OperadoraModel.GetListIdDescricao();
             ListBannerOperadora = BannerOperadoraModel.GetList();
+            ListCalendario = Business.CalendarioModel.GetList();
             ListCampanha = CampanhaModel.GetList();
         }
         #endregion

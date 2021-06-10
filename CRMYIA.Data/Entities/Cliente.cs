@@ -38,6 +38,7 @@ namespace CRMYIA.Data.Entities
         public string OperadoraLead { get; set; }
         public string ProdutoLead { get; set; }
         public bool StatusPlanoLead { get; set; }
+        public bool StatusNaoIncomodar { get; set; }
         public DateTime? DataAdesaoLead { get; set; }
         public bool IsLead { get; set; }
         public bool Titular { get; set; }

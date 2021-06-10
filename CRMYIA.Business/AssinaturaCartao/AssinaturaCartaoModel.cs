@@ -64,22 +64,30 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<AssinaturaCartaoViewModel> GetListaAssinatura(long IdCampanha, byte IdGrupoCorretor)
+        public static List<AssinaturaCartaoViewModel> GetListaAssinatura(/*long IdCampanha,*/ byte IdGrupoCorretor)
         {
-            //List<AssinaturaCartaoViewModel> ListEntity = new List<CapaViewModel>();
+            List<AssinaturaCartaoViewModel> ListEntity = new List<AssinaturaCartaoViewModel>();
             List<AssinaturaCartaoViewModel> ListAssinaturaCartao = null;
+            List<Visita> ListVisita = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
+                    ListVisita = context.Visita
+                     .Include(x => x.IdCalendarioSazonalNavigation)
+                     .OrderBy(x => x.DataAgendamento)
+                     .AsNoTracking()
+                     .ToList();
+
                     ListAssinaturaCartao = context.AssinaturaCartao
                     .Include(x => x.IdCampanhaNavigation)
                         .ThenInclude(x => x.GrupoCorretorCampanha)
-                    .Where(x => x.IdCampanha == IdCampanha && x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
+                    .Where(x => x.IdCampanhaNavigation.GrupoCorretorCampanha.Where(x => x.IdGrupoCorretor == IdGrupoCorretor).Count() > 0)
                     .Select(x => new AssinaturaCartaoViewModel()
                         {
                             IdAssinaturaCartao = x.IdAssinaturaCartao.ToString(),
                             IdCampanha = x.IdCampanhaNavigation.IdCampanha.ToString(),
+                            IdCalendario = x.IdCalendario,
                             Titulo = x.Titulo,
                             CaminhoArquivo = x.CaminhoArquivo,
                             NomeArquivo = x.NomeArquivo,
@@ -91,13 +99,33 @@ namespace CRMYIA.Business
                         })
                     .AsNoTracking()
                     .ToList();
-            }
+
+                    foreach (AssinaturaCartaoViewModel Item in ListAssinaturaCartao)
+                    {
+                        if (Item.IdCalendario == null)
+                        {
+                            ListEntity.Add(Item);
+                        }
+                        foreach (var ItemVisita in ListVisita)
+                        {
+                            if (Item.IdCalendario != null && ItemVisita.IdCalendarioSazonalNavigation != null)
+                            {
+                                if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == Item.IdCalendario &&
+                                  new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&
+                                  new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) <= new DateTime(Convert.ToInt32(ItemVisita.DataFim?.Year), Convert.ToInt32(ItemVisita.DataFim?.Month), Convert.ToInt32(ItemVisita.DataFim?.Day)))
+                                {
+                                    ListEntity.Add(Item);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 throw;
             }
-            return ListAssinaturaCartao;
+            return ListEntity;
         }
         public static void Add(AssinaturaCartao Entity)
         {

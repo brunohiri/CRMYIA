@@ -62,14 +62,14 @@ function Videos() {
     var urlString = window.location.href;
     var url = new URL(urlString);
     var hash = url.searchParams.get("id");
-    if (hash != undefined && hash != '') {
-        console.log(hash.toString());
-        formData = new FormData();
-        formData.append('Id', decodeURIComponent(hash));
+    //if (hash != undefined && hash != '') {
+    //    console.log(hash.toString());
+    //    formData = new FormData();
+    //    formData.append('Id', decodeURIComponent(hash));
     $.ajax({
         type: 'POST',
         url: "/Videos?handler=ListarVideos",
-        data: formData,
+        //data: formData,
         cache: false,
         contentType: false,
         processData: false,
@@ -120,7 +120,7 @@ function Videos() {
             swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
         }
     });
-}
+//}
 
 
     //$.getJSON('/Videos?handler=ListarVideos', function (data) {

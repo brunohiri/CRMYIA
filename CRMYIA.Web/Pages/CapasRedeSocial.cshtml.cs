@@ -28,7 +28,7 @@ namespace CRMYIA.Web.Pages
         public UsuarioCorretorViewModel UsuarioEntity { get; set; }
         public IActionResult OnGet(string Id)
         {
-            if (Id.IsNullOrEmpty())
+            if (!Id.IsNullOrEmpty())
             {
             }
             else
@@ -37,7 +37,7 @@ namespace CRMYIA.Web.Pages
                 UsuarioEntity = UsuarioModel.GetUsuarioCorretor(IdUsuario);
                 Usuario EntityUsuario = null;
                 EntityUsuario = UsuarioModel.Get(IdUsuario);
-                ListCapa = CapaModel.GetListaCapa(Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(), (byte)EntityUsuario.IdGrupoCorretor);
+                ListCapa = CapaModel.GetListaCapa(/*Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong(),*/ (byte)EntityUsuario.IdGrupoCorretor);
             }
                
             return Page();

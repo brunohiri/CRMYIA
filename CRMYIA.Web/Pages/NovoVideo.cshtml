@@ -31,7 +31,7 @@
 
                 <input type="hidden" name="IdVideo" id="IdVideo" value="" />
 
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label for="IdentificadorVideo">Identificador do Video</label>
                         <input type="text" class="form-control" placeholder="Id Video YouTube. Exemplo: tgbNymZ7vqY" name="IdentificadorVideo" id="IdentificadorVideo" required>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Campanha</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCampanha" name="IdCampanha" id="IdCampanha">
@@ -54,7 +54,20 @@
                     </div>
                 </div>
 
+            </div>
+
+            <div class="row">
                 <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Existe Data Sazonal</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" name="ExisteDataSazonal" id="ExisteDataSazonal">
+                            <label class="custom-control-label" for="ExisteDataSazonal" id="EstadoExisteDataSazonal"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6" id="BlocoDataSazonal">
                     <div class="form-group">
                         <label>Feriado / Data Comemorativa</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdCalendario" name="IdCalendario" id="IdCalendario">

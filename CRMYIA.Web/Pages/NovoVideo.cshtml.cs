@@ -207,18 +207,18 @@ namespace CRMYIA.Web.Pages
                         Entity.NomeVideo = NovoNomeArquivo;
                         Entity.DataCadastro = DateTime.Now;
                     }
-                
+
                     VideoModel.Update(new Video()
-                    {
-                        IdVideo = Entity.IdVideo,
-                        IdUsuario = IdUsuario,
-                        IdCampanha = Entity.IdCampanha,
-                        IdentificadorVideo = IdentificadorVideo,
-                        CaminhoArquivo = Entity.CaminhoArquivo,
-                        NomeVideo = Entity.NomeVideo,
-                        DataCadastro = DateTime.Now,
-                        Ativo = Entity.Ativo
-                    });
+                        {
+                            IdVideo = Entity.IdVideo,
+                            IdUsuario = IdUsuario,
+                            IdCampanha = Entity.IdCampanha,
+                            IdentificadorVideo = IdentificadorVideo,
+                            CaminhoArquivo = Entity.CaminhoArquivo,
+                            NomeVideo = Entity.NomeVideo,
+                            DataCadastro = DateTime.Now,
+                            Ativo = Entity.Ativo
+                     });
                     
                     EntityLista = VideoModel.GetList();
                     status = true;
@@ -275,11 +275,21 @@ namespace CRMYIA.Web.Pages
                 if (obj.IdVideo.ToString() != null)
                 {
                     Entity = VideoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(obj.IdVideo)).ExtractLong());
-
+                   
                     VideoModel.Update(Entity);
                     status = true;
                 }
-                return new JsonResult(new { status = status, entity = new VideoViewModel{IdCampanha = Entity.IdCampanha.ToString().ExtractLong(), IdVideo = HttpUtility.UrlEncode(Criptography.Encrypt(Entity.IdVideo.ToString()).ToString()), IdentificadorVideo = Entity.IdentificadorVideo, Ativo = Entity.Ativo} });
+                return new JsonResult(new { 
+                        status = status,
+                        entity = new VideoViewModel{
+                                                        
+                                                        IdCampanha = Entity.IdCampanha.ToString().ExtractLong(),
+                                                        IdVideo = HttpUtility.UrlEncode(Criptography.Encrypt(Entity.IdVideo.ToString()).ToString()),
+                                                        IdentificadorVideo = Entity.IdentificadorVideo,
+                                                        Ativo = Entity.Ativo,
+                                                        IdCalendario = Entity.IdCalendario
+                        } 
+                    });
             }
             catch (Exception ex)
             {
@@ -300,17 +310,38 @@ namespace CRMYIA.Web.Pages
                 if (obj.IdVideo.ToString() != null)
                 {
                     Entity = VideoModel.Get(Criptography.Decrypt(HttpUtility.UrlDecode(obj.IdVideo)).ExtractLong());
-                    VideoModel.Update(new Video()
+
+                    if(obj.IdCalendario == 0)
                     {
-                        IdVideo = Criptography.Decrypt(HttpUtility.UrlDecode(obj.IdVideo)).ExtractLong(),
-                        IdUsuario = IdUsuario,
-                        IdCampanha = obj.IdCampanha,
-                        IdentificadorVideo  = obj.IdentificadorVideo,
-                        CaminhoArquivo = Entity.CaminhoArquivo,
-                        NomeVideo = Entity.NomeVideo,
-                        DataCadastro = DateTime.Now,
-                        Ativo = obj.Ativo
-                    });
+                        VideoModel.Update(new Video()
+                        {
+                            IdVideo = Criptography.Decrypt(HttpUtility.UrlDecode(obj.IdVideo)).ExtractLong(),
+                            IdUsuario = IdUsuario,
+                            IdCampanha = obj.IdCampanha,
+                            IdCalendario = null,
+                            IdentificadorVideo = obj.IdentificadorVideo,
+                            CaminhoArquivo = Entity.CaminhoArquivo,
+                            NomeVideo = Entity.NomeVideo,
+                            DataCadastro = DateTime.Now,
+                            Ativo = obj.Ativo
+                        });
+                    }
+                    else
+                    {
+                        VideoModel.Update(new Video()
+                        {
+                            IdVideo = Criptography.Decrypt(HttpUtility.UrlDecode(obj.IdVideo)).ExtractLong(),
+                            IdUsuario = IdUsuario,
+                            IdCampanha = obj.IdCampanha,
+                            IdCalendario = obj.IdCalendario,
+                            IdentificadorVideo = obj.IdentificadorVideo,
+                            CaminhoArquivo = Entity.CaminhoArquivo,
+                            NomeVideo = Entity.NomeVideo,
+                            DataCadastro = DateTime.Now,
+                            Ativo = obj.Ativo
+                        });
+                    }
+                   
                     EntityLista = VideoModel.GetList();
                     status = true;
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Vídeo Atualizado com Sucesso!");

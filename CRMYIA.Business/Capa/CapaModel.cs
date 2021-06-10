@@ -68,7 +68,7 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static List<CapaViewModel> GetListaCapa(long IdCampanha, byte IdGrupoCorretor)
+        public static List<CapaViewModel> GetListaCapa(/*long IdCampanha,*/ byte IdGrupoCorretor)
         {
             List<CapaViewModel> ListEntity = new List<CapaViewModel>();
             List<Capa> ListCapa = null;
@@ -87,7 +87,7 @@ namespace CRMYIA.Business
                         .Include(x => x.CapaRedeSocial)
                             .ThenInclude(x => x.IdCampanhaNavigation)
                                 .ThenInclude(x => x.GrupoCorretorCampanha)
-                       .Where(x => x.CapaRedeSocial.Where(x => x.IdCampanha == IdCampanha).Count() > 0 && x.CapaRedeSocial.Where(x => x.IdCampanhaNavigation.GrupoCorretorCampanha.Any(x => x.IdGrupoCorretor == IdGrupoCorretor)).Count() > 0 )
+                       .Where(x => x.CapaRedeSocial.Where(x => x.IdCampanhaNavigation.GrupoCorretorCampanha.Any(x => x.IdGrupoCorretor == IdGrupoCorretor)).Count() > 0 )
                        .AsNoTracking()
                        .ToList();
                     foreach (Capa Item in ListCapa)
@@ -113,7 +113,7 @@ namespace CRMYIA.Business
                         foreach (var ItemVisita in ListVisita)
                         {
                             
-                            if (Item.IdCalendario != null && ItemVisita.IdCalendarioSazonalNavigation != null)
+                            if (Item.IdCalendario != null && ItemVisita.IdCalendarioSazonalNavigation != null && ItemVisita.IdCalendarioSazonalNavigation != null)
                             {
                                 if (ItemVisita.IdCalendarioSazonalNavigation.IdCalendario == Item.IdCalendario &&
                                   new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day) >= new DateTime(Convert.ToInt32(ItemVisita.DataInicio?.Year), Convert.ToInt32(ItemVisita.DataInicio?.Month), Convert.ToInt32(ItemVisita.DataInicio?.Day)) &&

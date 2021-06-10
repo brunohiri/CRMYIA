@@ -183,6 +183,13 @@ $(document).ready(function () {
         //}
     });
 
+    ExisteDataSazonal();
+});
+
+
+$(document).on('change', '#ExisteDataSazonal', function () {
+    ExisteDataSazonal();
+
 });
 
 
@@ -251,6 +258,11 @@ $(document).on('click', '#btn-salvar-texto', function () {
     formData.append('QuantidadeDownload', $("#QuantidadeDownload").val());
     formData.append('IdInformacao', $("#IdInformacao").val());
     formData.append('Titulo', $("#Titulo").val());
+    if (Number.isInteger(parseInt($('#IdCalendario').val()))) {
+        formData.append("IdCalendario", $('#IdCalendario').val());
+    } else {
+        formData.append("IdCalendario", 0);
+    }
     $('#Ativo').is(":checked") == true ? formData.append("Ativo", 'true') : formData.append("Ativo", 'false');
     if ($('#IdCampanhaArquivo').val() != undefined && $('#Descricao').val() != undefined && $("#IdInformacao").val() != undefined && $("#IdCampanha").val() != undefined && $("#Titulo").val() != undefined)
         displayBusyIndicator()
@@ -419,6 +431,16 @@ $(document).on('change', '.remover', function (e) {
     }
    
 });
+
+function ExisteDataSazonal() {
+    if ($('#ExisteDataSazonal').is(":checked") == true) {
+        $('#EstadoExisteDataSazonal').html('Sim');
+        $('#BlocoDataSazonal').css('display', 'block');
+    } else {
+        $('#EstadoExisteDataSazonal').html('Não');
+        $('#BlocoDataSazonal').css('display', 'none');
+    }
+}
 
 function TiraEspaco(data) {
     var vet = data.split(" ");
