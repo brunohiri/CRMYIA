@@ -44,6 +44,12 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public List<KPIMetaVida> ListKPIMetaVida { get; set; }
         [BindProperty]
+        public List<KPIMetaIndividual> ListKPIMetaIndividual { get; set; }
+        [BindProperty]
+        public List<KPIMetaValorIndividual> ListKPIMetaValorIndividual { get; set; }
+        [BindProperty]
+        public List<KPIMetaVidaIndividual> ListKPIMetaVidaIndividual { get; set; }
+        [BindProperty]
         public List<ListKPIRealizadoPropostaViewModel> ListKPIRealizadoProposta { get; set; }
         public List<List<ListKPIRealizadoPropostaViewModel>> listAllRealizado { get; set; }
 
