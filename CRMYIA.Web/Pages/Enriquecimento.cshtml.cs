@@ -45,7 +45,7 @@ namespace CRMYIA.Web.Pages
         {
             ListFornecedor = FornecedorModel.GetListIdDescricao();
 
-            ListEntity = ClienteModel.GetList();
+            ListEntity = ClienteModel.GetList(null, null, null, null, null, null);
             return Page();
         }
 
