@@ -25,5 +25,15 @@ namespace CRMYIA.Data.ViewModel
         public string Situacao { get; set; }
 
         public string DataNascAbertura { get; set; }
+
+        public long? IdOrigem { get; set; }
+
+        public string? NomeCidade { get; set; }
+
+        public bool? StatusPlanoLead { get; set; }
+
+        public DateTime? DataInicio { get; set; }
+
+        public DateTime? DataFim { get; set; }
     }
 }

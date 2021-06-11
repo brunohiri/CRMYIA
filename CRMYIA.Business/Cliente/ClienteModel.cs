@@ -159,7 +159,7 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<ListaClienteViewModel> GetList()
+        public static List<ListaClienteViewModel> GetList(bool? StatusPlanoLead, long? IdOrigem, string? Nome, string? NomeCidade, DateTime? DataInicio, DateTime? DataFim)
         {
             List<ListaClienteViewModel> ListEntity = null;
             try
@@ -176,8 +176,10 @@ namespace CRMYIA.Business
                         .Include(y => y.UsuarioCliente)
                             .ThenInclude(z => z.IdUsuarioNavigation)
                         .AsNoTracking()
+                        .Where(x => x.StatusPlanoLead == StatusPlanoLead || x.IdOrigem == IdOrigem || x.Nome.Contains(Nome) || x.IdCidadeNavigation.Descricao.Contains(NomeCidade) || (x.DataAdesaoLead >= DataInicio && x.DataAdesaoLead <= DataFim))
                         .Select(x => new ListaClienteViewModel() { 
                            IdCliente = x.IdCliente,
+                           IdClienteString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdCliente.ToString())),
                            Nome = x.Nome,
                            OrigemDescricao = x.IdOrigemNavigation.Descricao,
                            TipoLeadDescricao = x.IdTipoLeadNavigation.Descricao,
@@ -229,6 +231,30 @@ namespace CRMYIA.Business
                         .Include(z => z.Telefone)
                         .Include(z => z.Email)
                         .Where(x => x.Ativo)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<Cliente> GetList()
+        {
+            List<Cliente> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Cliente
+                        .OrderBy(x => x.Nome)
+                        .Select(x => new Cliente() { 
+                            IdCliente = x.IdCliente,
+                            Nome = x.Nome
+                        })
                         .AsNoTracking()
                         .ToList();
                 }

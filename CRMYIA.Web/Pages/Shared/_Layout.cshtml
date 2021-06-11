@@ -873,6 +873,11 @@
     {
         <script src="../js/sistema/exportSisWeb.js"></script>
     }
+    @if (ViewData["Pagina"].ToString().Equals("Clientes (Leads)"))
+    {
+        <script src="../js/sistema/listarCliente.js"></script>
+        <script src="~/plugins/lodash/lodash.min.js"></script>
+    }
     @if (ViewData["Pagina"].ToString().Equals("Marketing"))
     {
         <!-- jQuery UI -->
