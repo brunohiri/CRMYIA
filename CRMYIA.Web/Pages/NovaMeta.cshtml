@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="row">
-                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMeta" id="MetaId">
+                <input type="hidden" class="form-control" asp-for="@Model.Entity.IdMetaIndividual" id="MetaId">
                 <input type="hidden" class="form-control" name="IdKPIGrupoUsuario" asp-for="@Model.EntityKPIGrupoUsuario.IdKPIGrupoUsuario" id="IdKPIGrupoUsuario">
 
                 <div class="col-sm-3">
@@ -35,38 +35,6 @@
                         <label>Usuário</label>
                         <input type="text" class="form-control is-valid" value="@Model.EntityKPIGrupoUsuario.Nome" disabled="">
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    @if (Model.Entity.DataMinima == DateTime.MinValue)
-                    {
-                        <div class="form-group">
-                            <label>Data mínima</label>
-                            <input type="date" class="form-control" id="DataMinima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMinima">
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="form-group">
-                            <label>Data mínima</label>
-                            <input type="date" class="form-control" id="DataMinima" asp-for="@Model.Entity.DataMinima">
-                        </div>
-                    }
-                </div>
-                <div class="col-sm-3">
-                    @if (Model.Entity.DataMaxima == DateTime.MinValue)
-                    {
-                        <div class="form-group">
-                            <label>Data mínima</label>
-                            <input type="date" class="form-control" id="DataMaxima" value="@(DateTime.Now)" asp-for="@Model.Entity.DataMaxima">
-                        </div> 
-                    }
-                    else
-                    {
-                        <div class="form-group">
-                            <label>Data mínima</label>
-                            <input type="date" class="form-control" id="DataMaxima" asp-for="@Model.Entity.DataMaxima">
-                        </div>
-                    }
                 </div>
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -81,7 +49,7 @@
 
             <h4>Meta de Valores Monetários</h4>
             <div class="row">
-                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaValorEntity.IdKPIMetaValor" id="KPIMetaValorId">
+                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaValorEntity.IdKPIMetaValorIndividual" id="KPIMetaValorId">
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label>Valor Mínimo</label>
@@ -94,30 +62,16 @@
                         <input type="text" class="form-control money2" id="maxValor" placeholder="Valores em R$" asp-for="@Model.KPIMetaValorEntity.ValorMaximo">
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Mês</label>
-                        <input type="number" class="form-control" placeholder="Mês" id="MesValor" asp-for="@Model.KPIMetaValorEntity.Mes">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Ano</label>
-                        <input type="number" class="form-control" placeholder="Ano" id="AnoValor" asp-for="@Model.KPIMetaValorEntity.Ano">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Descrição de metas monetárias</label>
-                        <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaValorEntity.Descricao"></textarea>
+                        <textarea rows="1" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaValorEntity.Descricao"></textarea>
                     </div>
                 </div>
             </div>
             <h4>Meta de Valores de Vidas</h4>
             <div class="row">
-                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaVidaEntity.IdKPIMetaVida" id="KPIMetaVidaId">
+                <input type="hidden" class="form-control" asp-for="@Model.KPIMetaVidaEntity.IdKPIMetaVidaIndividual" id="KPIMetaVidaId">
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label>Valor Mínimo de Vidas</label>
@@ -130,27 +84,12 @@
                         <input type="text" class="form-control" id="maxVidas" min="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="N° de vidas" asp-for="@Model.KPIMetaVidaEntity.ValorMaximo">
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Mês</label>
-                        <input type="number" class="form-control" placeholder="Mês" id="MesVida" asp-for="@Model.KPIMetaVidaEntity.Mes">
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label>Ano</label>
-                        <input type="number" class="form-control" placeholder="Ano" id="AnoVida" asp-for="@Model.KPIMetaVidaEntity.Ano">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>Descrição de Metas de Vidas</label>
-                        <textarea rows="2" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaVidaEntity.Descricao"></textarea>
+                        <textarea rows="1" class="form-control" placeholder="Descrição " asp-for="@Model.KPIMetaVidaEntity.Descricao"></textarea>
                     </div>
                 </div>
-                
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-success">Salvar</button>
