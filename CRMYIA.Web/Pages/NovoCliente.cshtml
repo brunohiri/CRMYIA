@@ -359,7 +359,7 @@
                                 <div class="form-group">
                                     <label>Operadora</label>
                                     <select class="form-control select2" style="width: 100%;" id="TelefoneOperadora" asp-for="@Model.EntityTelefone.IdOperadoraTelefone">
-                                        <option selected="selected">Selecione...</option>
+                                        <option selected="selected" data-id="0">Selecione...</option>
                                         @foreach (var Item in Model.ListOperadoraTelefone)
                                         {
                                             <option value="@Item.IdOperadoraTelefone" data-id="@Item.IdOperadoraTelefone">@Item.Descricao</option>
