@@ -104,7 +104,6 @@ $(document).ready(function () {
         $('#bloco-button-id-usuario-slave').removeClass('d-block');
         $('#bloco-button-id-usuario-slave').addClass('d-none');
     }
-
 });
 
 function FormatarData(data) {
@@ -446,7 +445,7 @@ function CarregarModalTelefone() {
 
                 $('#TelefoneIdTelefone').val(data.entityEditarTelefone.idTelefone);
                 $('#TelefoneNumero').val(data.entityEditarTelefone.ddd.toString() + data.entityEditarTelefone.telefone1.toString());
-                $('#TelefoneOperadora').val(data.entityEditarTelefone.idOperadoraTelefone);
+                $('#TelefoneOperadora').val(data.entityEditarTelefone.idOperadoraTelefone).trigger('change');
                 if (data.entityEditarTelefone.whatsApp)
                     $('#TelefoneWhatsApp').attr('checked', true);
                 else
@@ -718,8 +717,8 @@ function CarregarPropostaModalidadeOperadora(IdModalidade) {
                 if (IdModalidade == "0") {
                     $('#PropostaIdOperadora').val(IdOperadora);
                     $('#PropostaIdModalidade').val(data.idModalidade);
-                    $('#ClienteIdOperadora').val(IdOperadora);
-                    $('#ClienteIdModalidade').val(data.idModalidade);
+                    $('#ClienteIdOperadora').val(IdOperadora).trigger('change');
+                    $('#ClienteIdModalidade').val(data.idModalidade).trigger('change');
                     $('.select2').select2();
                 }
             }

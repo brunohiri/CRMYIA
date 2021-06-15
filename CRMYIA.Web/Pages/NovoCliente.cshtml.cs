@@ -82,6 +82,9 @@ namespace CRMYIA.Web.Pages
         public long? IdOperadora { get; set; }
         [BindProperty]
         public List<Operadora> ListOperadora { get; set; }
+
+        [BindProperty]
+        public List<Modalidade> ListModalidade { get; set; }
         #endregion
         #endregion
 
@@ -197,6 +200,13 @@ namespace CRMYIA.Web.Pages
                 EntityTelefone.DataCadastro = DateTime.Now;
                 EntityTelefone.DDD = EntityTelefone.Telefone1.KeepOnlyNumbers().Substring(0, 2);
                 EntityTelefone.Telefone1 = EntityTelefone.Telefone1.KeepOnlyNumbers().Substring(2, EntityTelefone.Telefone1.KeepOnlyNumbers().Length - 2);
+                
+                if (string.IsNullOrEmpty(EntityTelefone.Telefone1))
+                    throw new Exception("Formato de Telefone Inválido!");
+
+                if (EntityTelefone.IdOperadoraTelefone == null)
+                    throw new Exception("Selecione uma das Operadora da Lista.");
+
                 if (EntityTelefone.IdTelefone == 0)
                 {
                     TelefoneModel.Add(EntityTelefone);
@@ -242,6 +252,9 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
+                if (string.IsNullOrEmpty(EntityEmail.EmailConta))
+                    throw new Exception("O Email não pode ser vazio.");
+
                 if (EntityEmail.IdEmail == 0)
                 {
                     EmailModel.Add(EntityEmail);
@@ -289,6 +302,7 @@ namespace CRMYIA.Web.Pages
             ListEstado = EstadoModel.GetListIdSigla();
             ListOperadoraTelefone = OperadoraTelefoneModel.GetListIdDescricao();
             ListOperadora = OperadoraModel.GetListIdDescricao();
+            ListModalidade = ModalidadeModel.GetList();
         }
         #endregion
     }
