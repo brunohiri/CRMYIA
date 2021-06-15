@@ -200,7 +200,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Operadora</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.OperadoraLead" id="ClienteIdOperadora">
@@ -212,12 +212,24 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Produto</label>
                         <input type="hidden" id="ClienteIdProdutoHidden" value="" />
                         <select class="form-control select2" style="width: 100%;" id="ClienteIdProduto" asp-for="@Model.Entity.ProdutoLead">
                             <option selected="selected" value="0">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Modalidade</label>
+                        <select class="form-control select2" style="width: 100%;" id="ClienteIdModalidade" asp-for="@Model.Entity.ModalidadeLead">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListModalidade)
+                            {
+                                <option value="@Item.IdModalidade">@(Item.Descricao)</option>
+                            }
                         </select>
                     </div>
                 </div>

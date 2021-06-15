@@ -717,8 +717,8 @@ function CarregarPropostaModalidadeOperadora(IdModalidade) {
                 if (IdModalidade == "0") {
                     $('#PropostaIdOperadora').val(IdOperadora);
                     $('#PropostaIdModalidade').val(data.idModalidade);
-                    $('#ClienteIdOperadora').val(IdOperadora);
-                    $('#ClienteIdModalidade').val(data.idModalidade);
+                    $('#ClienteIdOperadora').val(IdOperadora).trigger('change');
+                    $('#ClienteIdModalidade').val(data.idModalidade).trigger('change');
                     $('.select2').select2();
                 }
             }

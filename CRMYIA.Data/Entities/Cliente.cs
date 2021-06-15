@@ -37,6 +37,7 @@ namespace CRMYIA.Data.Entities
         public string Observacao { get; set; }
         public string OperadoraLead { get; set; }
         public string ProdutoLead { get; set; }
+        public string ModalidadeLead { get; set; }
         public bool StatusPlanoLead { get; set; }
         public bool StatusNaoIncomodar { get; set; }
         public DateTime? DataAdesaoLead { get; set; }

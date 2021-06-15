@@ -81,6 +81,9 @@ namespace CRMYIA.Web.Pages
         public long? IdOperadora { get; set; }
         [BindProperty]
         public List<Operadora> ListOperadora { get; set; }
+
+        [BindProperty]
+        public List<Modalidade> ListModalidade { get; set; }
         #endregion
         #endregion
 
@@ -268,6 +271,7 @@ namespace CRMYIA.Web.Pages
             ListEstado = EstadoModel.GetListIdSigla();
             ListOperadoraTelefone = OperadoraTelefoneModel.GetListIdDescricao();
             ListOperadora = OperadoraModel.GetListIdDescricao();
+            ListModalidade = ModalidadeModel.GetList();
         }
         #endregion
     }
