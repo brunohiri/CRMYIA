@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CRMYIA.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,5 +16,6 @@ namespace CRMYIA.Data.ViewModel
         public string CidadeNome { get; set; }
         public DateTime? DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public virtual Usuario IdUsuarioNavigation { get; set; }
     }
 }

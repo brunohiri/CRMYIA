@@ -36,6 +36,9 @@ namespace CRMYIA.Web.Pages
         public List<Cliente> ListClienteEntity { get; set; }
         [BindProperty]
         public List<Cidade> ListCidadeEntity { get; set; }
+
+        [BindProperty]
+        public List<ListaCorretorViewModel> ListCorretor { get; set; }
         #endregion
 
         #region Construtores
@@ -48,8 +51,8 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet()
         {
-            DateTime DataInicio = new DateTime(2020, 01, 01);
-            DateTime DataFim = DateTime.Now;
+            DateTime DataInicio = new DateTime(DateTime.Now.AddDays(-120).Year, DateTime.Now.AddDays(-120).Month, DateTime.Now.AddDays(-120).Day);
+            DateTime DataFim = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             ListEntity = ClienteModel.GetList(null, null, null, null, DataInicio, DataFim);
             CarregarLists();
             return Page();
@@ -64,7 +67,10 @@ namespace CRMYIA.Web.Pages
         {
             List<ListaClienteViewModel> ListaClienteEntity = null;
 
-            ListaClienteEntity = ClienteModel.GetList(null, null, null, null, new DateTime(2020,01,01), DateTime.Now);
+            DateTime DataInicio = new DateTime(DateTime.Now.AddDays(-120).Year, DateTime.Now.AddDays(-120).Month, DateTime.Now.AddDays(-120).Day);
+            DateTime DataFim = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+
+            ListaClienteEntity = ClienteModel.GetList(null, null, null, null, DataInicio, DataFim);
 
             return new JsonResult(new
             {
@@ -76,13 +82,42 @@ namespace CRMYIA.Web.Pages
             });
         }
 
+        public IActionResult OnPostVincularCorretor(EnviarCorretorViewModel dados)
+        {
+            List<ListaClienteViewModel> ListaClienteEntity = null;
+            DateTime DataInicio = new DateTime(DateTime.Now.AddDays(-120).Year, DateTime.Now.AddDays(-120).Month, DateTime.Now.AddDays(-120).Day);
+            DateTime DataFim = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+
+            var Itens = dados.Itens.Split(',');
+
+            foreach(var Item in Itens)
+            {
+                UsuarioClienteModel.Add(new UsuarioCliente
+                {
+                    IdUsuario = dados.IdUsuarioCorretor,
+                    IdCliente = Item.ExtractLong(),
+                    DataCadastro = DateTime.Now,
+                    Ativo = true
+                });
+                UsuarioClienteModel.DesativarUltimoCorretor(Item.ExtractLong(), dados.IdUsuarioCorretor);
+            }
+            
+            ListaClienteEntity = ClienteModel.GetList(null, null, null, null, DataInicio, DataFim);
+
+            return new JsonResult(new
+            {
+                lista = ListaClienteEntity,
+                status = ListaClienteEntity.Count > 0
+            });
+        }
+
         public IActionResult OnPostObterCliente()
         {
 
             return new JsonResult(new
             {
                 data = ClienteModel.GetList()
-            });
+        });
         }
 
         public IActionResult OnPostPesquisa(ClienteViewModel dados)
@@ -91,8 +126,8 @@ namespace CRMYIA.Web.Pages
 
             if (dados.DataInicio == DateTime.MinValue && dados.DataFim == DateTime.MinValue)
             {
-                dados.DataInicio = null;
-                dados.DataFim = null;
+                dados.DataInicio = new DateTime(DateTime.Now.AddDays(-120).Year, DateTime.Now.AddDays(-120).Month, DateTime.Now.AddDays(-120).Day);
+                dados.DataFim = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             }
 
             ListaClienteEntity = ClienteModel.GetList(dados.StatusPlanoLead, dados.IdOrigem, dados.Nome, dados.NomeCidade, dados.DataInicio, dados.DataFim);
@@ -129,6 +164,8 @@ namespace CRMYIA.Web.Pages
             ListClienteEntity = ClienteModel.GetList();
 
             ListCidadeEntity = CidadeModel.GetList();
+
+            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
         }
 
         #endregion
