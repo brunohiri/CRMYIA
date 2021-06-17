@@ -273,6 +273,15 @@ namespace CRMYIA.Web.Pages
                 return new JsonResult(new { status = false, message = message });
             }
         }
+        public IActionResult OnPostFotoMemu(Usuario dados)
+        {
+            Usuario Entity = null;
+            Entity = UsuarioModel.Get(dados.IdUsuario);
+            return new JsonResult(new { 
+                status = Entity != null,
+                data = Entity
+            });
+        }
 
         public void ListarCampanha()
         {

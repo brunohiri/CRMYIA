@@ -10,6 +10,8 @@ $(document).ready(function () {
     //Cadastro de Usuários
     CadastroUsuario();
 
+    //Carrega a Foto no menu lateral
+    FotoMemu() 
 
     // Cadastro de Leads
     CarregarListaTelefone();
@@ -398,6 +400,33 @@ function CarregarUsuarioHierarquia(IdPerfil) {
     }
     else
         $('#IdUsuarioHierarquia').attr('disabled', 'disabled');
+}
+
+function FotoMemu() {
+    var formData = new FormData();
+    formData.append('IdUsuario', $('#IdUsuario').val())
+    $.ajax({
+        type: 'POST',
+        url: "/Index?handler=FotoMemu",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (data) {
+            if (data.status) {
+                $("#foto-usuario").attr('src', data.data.caminhoFoto + data.data.nomeFoto);
+                $('#nome-usuario').html(data.data.nome.length > 16 ? data.data.nome.substring(0, 16) : data.data.nome);
+            }
+           
+        },
+        error: function () {
+            swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+        }
+    });
 }
 //#endregion
 
