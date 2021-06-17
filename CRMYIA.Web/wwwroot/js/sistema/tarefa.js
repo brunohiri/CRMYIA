@@ -137,13 +137,13 @@ function BuscarFasesProposta(fase, salto) {
     GetDiaMesAno(DInicio);
     GetDiaMesAno(DFim);
 
-    let vetData = $("#Data").val().split(' - ');
+    let vetData = Data.split(' - ');
     if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
         Inicio = GetDiaMesAno(DInicio);
         Fim = GetDiaMesAno(DFim);
     } else {
         Inicio = vetData[0];
-        Fim = vetData[1];
+        Fim = vetData[1] ? vetData[1] : "";
     }
 
     if ($('#operadoraMenuItems').val() != undefined && $('#operadoraMenuItems').val() != "Selecione...")

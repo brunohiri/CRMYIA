@@ -85,8 +85,8 @@ namespace CRMYIA.Web.Pages
             byte.TryParse(dados["Fase"], out byte Fase);
             List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
 
-            DataInicial = Inicio == "" ? Util.GetFirstDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Inicio);
-            DataFinal = Fim == "" ? Util.GetLastDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Fim);
+            DataInicial = string.IsNullOrEmpty(Inicio) ? Util.GetFirstDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Inicio);
+            DataFinal = string.IsNullOrEmpty(Fim) ? Util.GetLastDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Fim);
 
             ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Nome, Descricao, Fase, Salto);
             if (ListListEntityProposta[0].Count > 0)
