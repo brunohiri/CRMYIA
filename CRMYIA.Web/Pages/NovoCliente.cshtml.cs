@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
@@ -139,11 +140,26 @@ namespace CRMYIA.Web.Pages
                         else
                         {
                             ClienteModel.Add(Entity);
+                            UsuarioClienteModel.Add(new UsuarioCliente { 
+                                IdUsuario = GetIdUsuario(), 
+                                IdCliente = Entity.IdCliente, 
+                                DataCadastro = DateTime.Now, 
+                                Ativo = true
+                            });
+                            UsuarioClienteModel.DesativarUltimoCorretor(Entity.IdCliente, GetIdUsuario());
                         }
                     }
                     else
                     {
                         ClienteModel.Update(Entity);
+                        UsuarioClienteModel.Add(new UsuarioCliente
+                        {
+                            IdUsuario = GetIdUsuario(),
+                            IdCliente = Entity.IdCliente,
+                            DataCadastro = DateTime.Now,
+                            Ativo = true
+                        });
+                        UsuarioClienteModel.DesativarUltimoCorretor(Entity.IdCliente, GetIdUsuario());
                     }
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                 }
@@ -256,6 +272,21 @@ namespace CRMYIA.Web.Pages
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
             }
             return new JsonResult(new { mensagem = Mensagem });
+        }
+
+        public long GetIdUsuario()
+        {
+            long IdUsuario = "0".ExtractLong();
+
+            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            {
+                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
+            }
+            else
+            {
+                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            }
+            return IdUsuario;
         }
         #endregion
         #endregion

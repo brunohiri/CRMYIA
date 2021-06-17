@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿var itemsSelecionados = [];
+
+$(function () {
     var items = [];
     var res = ObterCliente();
 
@@ -50,6 +52,73 @@
 
 $(document).ready(function () {
 
+    $('.btn-vincular').on('click', function () {
+        $('#modalVincular').modal('show');
+    });
+
+
+    $('.selecionar').on('click', function () {
+       //$(this).data('selecionar')
+        var $this = $(this);
+        if ($this[0].checked == true) {
+            $('.btn-vincular').prop('disabled', false);
+            //true => disabled, false => liberado
+            if ($this[0].disabled == false) {
+                $this[0].checked = true;
+                itemsSelecionados.push($this[0].dataset.selecionar.toString());
+            }
+        } else {
+            var $this = $(this);
+
+            //true => disabled, false => liberado]
+            if ($this[0].disabled == false) {
+                $this[0].checked = false;
+
+                for (var i = 0; i < itemsSelecionados.length; i++) {
+
+                    if (itemsSelecionados[i] === $this[0].dataset.selecionar) {
+                        itemsSelecionados.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+            var todos = $('.selecionar');
+            var j = 0;
+            var achou = true;
+            while (j < todos.length && achou == true) {
+                if (todos[j].checked == true)
+                    achou = false;
+                j++;
+            }
+            if (achou) {
+                $('.btn-vincular').prop('disabled', true);
+                $('#selecionar-todos').prop('checked', false);
+            }
+              
+        }
+
+    });
+
+    $('#selecionar-todos').on('click', function () {
+        if ($('#selecionar-todos').is(":checked") == true) {
+            ApagarTodos();
+            var todos = $('.selecionar');
+            if (todos.length > 0) {
+                $('.btn-vincular').prop('disabled', false);
+            }
+            //true => disabled, false => liberado
+            for (var i = 0; i < todos.length; i++){
+                if (todos[i].disabled != true) {
+                    todos[i].checked = true;
+                    itemsSelecionados.push(todos[i].dataset.selecionar.toString());
+                }
+            }
+       
+        } else {
+            ApagarTodos();
+        }
+
+    });
 
     $('input[name="Inicio"]').daterangepicker({
         "locale": {
@@ -94,6 +163,34 @@ $(document).ready(function () {
         Pesquisar();
     });
 
+    $('.btn-salvar').on('click', function () {
+        formData = new FormData();
+        formData.append('IdUsuarioCorretor', $('#IdUsuarioCorretor').val());
+        formData.append('Itens', itemsSelecionados);
+        $.ajax({
+            type: 'POST',
+            url: "/ListarCliente?handler=VincularCorretor",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (data) {
+                if (data.status) {
+                    CarregarTabela(data.lista);
+                    $('#modalVincular').modal('hide');
+                }
+            },
+            error: function () {
+                swal("Erro!", "Erro ao alterar o registro, contate o Administrador do Sistema.", "error");
+            }
+        });
+
+    });
+
 });
 
 $(document).on('click', '.limpar-pesquisa', function () {
@@ -130,6 +227,18 @@ $(document).on('click', '.redirect', function () {
 
 });
 
+function ApagarTodos() {
+    $('.btn-vincular').prop('disabled', true);
+    var todos = $('.selecionar');
+    //true => disabled, false => liberado
+    for (var i = 0; i < todos.length; i++) {
+        if (todos[i].disabled != true) {
+            todos[i].checked = false;
+            itemsSelecionados.splice(0, itemsSelecionados.length);
+        }
+    }
+}
+
 function ObterCliente() {
     var result;
     result = $.ajax({
@@ -164,7 +273,7 @@ function Pesquisar() {
         formData.append("IdOrigem", null);
     }
 
-    if ($('#IdCliente').select2('data') != undefined && $('#IdCliente').select2('data') != '' && $('#IdCliente').select2('data') != 'Selecione...') {
+    if ($('#IdCliente').select2('data') != undefined && $('#IdCliente').select2('data') != '' && $('#IdCliente').select2('data').text != 'Selecione...') {
         formData.append("Nome", $('#IdCliente').select2('data')[0].text);
     } else {
         formData.append("Nome", null);
@@ -176,13 +285,13 @@ function Pesquisar() {
         formData.append("NomeCidade", null);
     }
 
-    if ($('.daterange').data('daterangepicker').startDate._d != undefined && $('.daterange').data('daterangepicker').endDate._d != undefined) {
-        formData.append("DataInicio", $('.daterange').data('daterangepicker').startDate._d);
-        formData.append("DataFim", $('.daterange').data('daterangepicker').endDate._d);
-    } else {
-        formData.append("DataInicio", null);
-        formData.append("DataFim", null);
-    }
+    //if ($('.daterange').data('daterangepicker').startDate._d != undefined && $('.daterange').data('daterangepicker').endDate._d != undefined) {
+    //    formData.append("DataInicio", $('.daterange').data('daterangepicker').startDate._d);
+    //    formData.append("DataFim", $('.daterange').data('daterangepicker').endDate._d);
+    //} else {
+    //    formData.append("DataInicio", null);
+    //    formData.append("DataFim", null);
+    //}
 
     if ($('#Inicio').val() != undefined && $('#Inicio').val() != '') {
         var date_range = $('#Inicio').val(); var dates = date_range.split(" - ");
@@ -239,8 +348,15 @@ function SetData() {
     else
         var DataHojeFormatada = ((DataHoje.getDate())) + "/" + ((DataHoje.getMonth() + 1)) + "/" + DataHoje.getFullYear();
 
-    if (DataHojeFormatada != undefined) {
-        $('input[name="Inicio"]').val('01/01/2020 - ' + DataHojeFormatada);
+    var DataInicio = new Date();
+    DataInicio.setDate(DataInicio.getDate() - 120);
+    if (DataInicio.getMonth() < 9)
+        var DataInicioFormatada = ((DataInicio.getDate())) + "/" + ("0" + (DataInicio.getMonth() + 1)) + "/" + DataInicio.getFullYear();
+    else
+        var DataInicioFormatada = ((DataInicio.getDate())) + "/" + ((DataInicio.getMonth() + 1)) + "/" + DataInicio.getFullYear();
+
+    if (DataHojeFormatada != undefined && DataInicioFormatada != undefined) {
+        $('input[name="Inicio"]').val(DataInicioFormatada + ' - ' + DataHojeFormatada);
     }
 }
 
@@ -253,24 +369,27 @@ function CarregarTabela(data) {
                             <thead>\
                                 <tr>\
                                     <th></th>\
-                                    <th width="15%"> Nome</th>\
-                                    <th width="10%">Origem</th>\
-                                    <th width="10%">Corretor</th>\
-                                    <th width="15%">Cidade/UF</th>\
-                                    <th width="15%">Cadastro</th>\
-                                    <th width="10%">Status</th>\
-                                    <th width="5%"></th>\
+                                    <th></th>\
+                                    <th>Nome</th>\
+                                    <th>Origem</th>\
+                                    <th>Corretor</th>\
+                                    <th>Cidade/UF</th>\
+                                    <th>Cadastro</th>\
+                                    <th>Status</th>\
+                                    <th></th>\
                                 </tr>\
                             </thead>\
                             <tbody>';
         $.each(data, function (index, value) {
             var ativo = this.ativo = 'true' ? '<span class="badge badge-pill badge-success">ATIVO</span>' : '<span class="badge badge-pill badge-warning">DESATIVADO</span>';
+            var checkbox = this.corretorNome == "" ? '<input type="checkbox" name="selecionar" id="selecionar" style="background-color: red" class="form-check-input selecionar" data-selecionar="' + this.idCliente + '">' : '<input type="checkbox" name="selecionar-todos" id="selecionar-todos" class="form-check-input selecionar-todos" data-selecionar="' + this.idCliente + '" disabled>' ;
             html += '<tr>\
-                        <td class="text-center"></td>\
-                        <td class="text-center">' + this.nome + '</td>\
-                        <td class="text-center">' + this.origemDescricao + '</td>\
-                        <td class="text-center">' + this.corretorNome + '</td>\
-                        <td class="text-center">' + this.cidadeNome + '</td>\
+                        <td></td>\
+                        <td class="text-center">' + checkbox + '</td>\
+                        <td class="text-center">' + this.nome.toUpperCase() + '</td>\
+                        <td class="text-center">' + this.origemDescricao.toUpperCase() + '</td>\
+                        <td class="text-center">' + this.corretorNome.toUpperCase() + '</td>\
+                        <td class="text-center">' + this.cidadeNome.toUpperCase() + '</td>\
                         <td class="text-center">' + FormataDatatime(this.dataCadastro) + '</td>\
                         <td class="text-center">'+ ativo + '</td>\
                         <td class="text-center">\
