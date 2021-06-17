@@ -11,6 +11,7 @@ using CRMYIA.Data.Model;
 using CRMYIA.Data.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using CRMYIA.Business.Util;
+using System.Web;
 
 namespace CRMYIA.Business
 {
@@ -147,6 +148,114 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static List<UsuarioViewModel> GetList(bool? Ativo, string? Descricao, DateTime? DataInicio, DateTime? DataFim, bool DataValida)
+        {
+            List<UsuarioViewModel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    if (Ativo == null && Descricao == null)
+                    {
+                        ListEntity = context.Usuario
+                        .Include(y => y.UsuarioPerfil)
+                        .ThenInclude(p => p.IdPerfilNavigation)
+                        .Include(c => c.IdCorretoraNavigation)
+                        .AsNoTracking()
+                        .Where(x => (x.DataCadastro >= DataInicio && x.DataCadastro <= DataFim))
+                        .Select(x => new UsuarioViewModel()
+                        {
+                            IdUsuario = x.IdUsuario,
+                            IdUsuarioString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdUsuario.ToString())),
+                            Nome = x.Nome,
+                            Email = x.Email,
+                            Telefone = x.Telefone,
+                            DataCadastro = x.DataCadastro,
+                            Ativo = x.Ativo,
+                            UsuarioPerfil = x.UsuarioPerfil
+                        })
+                        .ToList();
+                    }
+                    else if (Ativo != null && Descricao != null)
+                    {
+                        ListEntity = context.Usuario
+                       .Include(y => y.UsuarioPerfil)
+                       .ThenInclude(p => p.IdPerfilNavigation)
+                       .Include(c => c.IdCorretoraNavigation)
+                       .AsNoTracking()
+                       .Where(x => x.Ativo == Ativo && (x.UsuarioPerfil != null && x.UsuarioPerfil.Count > 0 && x.UsuarioPerfil.First().IdPerfilNavigation != null && x.UsuarioPerfil.First().IdPerfilNavigation.Descricao.Contains(Descricao) == true))
+                       .Select(x => new UsuarioViewModel()
+                       {
+                           IdUsuario = x.IdUsuario,
+                           IdUsuarioString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdUsuario.ToString())),
+                           Nome = x.Nome,
+                           Email = x.Email,
+                           Telefone = x.Telefone,
+                           DataCadastro = x.DataCadastro,
+                           Ativo = x.Ativo,
+                           UsuarioPerfil = x.UsuarioPerfil
+                       })
+                       .ToList();
+                    }
+                    else if (Ativo != null && Descricao == null)
+                    {
+                        ListEntity = context.Usuario
+                       .Include(y => y.UsuarioPerfil)
+                       .ThenInclude(p => p.IdPerfilNavigation)
+                       .Include(c => c.IdCorretoraNavigation)
+                       .AsNoTracking()
+                       .Where(x => x.Ativo == Ativo)
+                       .Select(x => new UsuarioViewModel()
+                       {
+                           IdUsuario = x.IdUsuario,
+                           IdUsuarioString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdUsuario.ToString())),
+                           Nome = x.Nome,
+                           Email = x.Email,
+                           Telefone = x.Telefone,
+                           DataCadastro = x.DataCadastro,
+                           Ativo = x.Ativo,
+                           UsuarioPerfil = x.UsuarioPerfil
+                       })
+                       .ToList();
+                    }
+                    else if (Ativo == null && Descricao != null)
+                    {
+                        ListEntity = context.Usuario
+                       .Include(y => y.UsuarioPerfil)
+                       .ThenInclude(p => p.IdPerfilNavigation)
+                       .Include(c => c.IdCorretoraNavigation)
+                       .AsNoTracking()
+                       .Where(x => (x.UsuarioPerfil != null && x.UsuarioPerfil.Count > 0 && x.UsuarioPerfil.First().IdPerfilNavigation != null && x.UsuarioPerfil.First().IdPerfilNavigation.Descricao.Contains(Descricao) == true))
+                       .Select(x => new UsuarioViewModel()
+                       {
+                           IdUsuario = x.IdUsuario,
+                           IdUsuarioString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdUsuario.ToString())),
+                           Nome = x.Nome,
+                           Email = x.Email,
+                           Telefone = x.Telefone,
+                           DataCadastro = x.DataCadastro,
+                           Ativo = x.Ativo,
+                           UsuarioPerfil = x.UsuarioPerfil
+                       })
+                       .ToList();
+                    }
+
+                    if (DataValida)
+                    {
+                        ListEntity = ListEntity
+                            .Where(x => (x.DataCadastro >= DataInicio && x.DataCadastro <= DataFim))
+                            .ToList();
+                        
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static List<Usuario> GetList()
         {
             List<Usuario> ListEntity = null;
@@ -155,11 +264,11 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     ListEntity = context.Usuario
-                        .Include(y => y.UsuarioPerfil)
-                        .ThenInclude(p => p.IdPerfilNavigation)
-                        .Include(c => c.IdCorretoraNavigation)
-                        .AsNoTracking()
-                        .ToList();
+                    .Include(y => y.UsuarioPerfil)
+                    .ThenInclude(p => p.IdPerfilNavigation)
+                    .Include(c => c.IdCorretoraNavigation)
+                    .AsNoTracking()
+                    .ToList();
                 }
             }
             catch (Exception)
@@ -512,6 +621,15 @@ namespace CRMYIA.Business
             }
             return ListEntity;
 
+        }
+        private static string GetNavigationPerfil(ICollection<UsuarioPerfil> CollUsuarioPerfil)
+        {
+            string Descricao = null;
+            foreach (var Item in CollUsuarioPerfil)
+            {
+                Descricao = Item.IdPerfilNavigation.Descricao;
+            }
+            return Descricao;
         }
         #endregion
 

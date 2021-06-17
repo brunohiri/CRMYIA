@@ -878,6 +878,10 @@
         <script src="../js/sistema/listarCliente.js"></script>
         <script src="~/plugins/lodash/lodash.min.js"></script>
     }
+    @if (ViewData["Pagina"].ToString().Equals("Usuários"))
+    {
+        <script src="../js/sistema/listarUsuario.js"></script>
+    }
     @if (ViewData["Pagina"].ToString().Equals("Marketing"))
     {
         <!-- jQuery UI -->
