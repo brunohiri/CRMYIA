@@ -221,7 +221,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Modalidade</label>
                         <select class="form-control select2" style="width: 100%;" id="ClienteIdModalidade" asp-for="@Model.Entity.ModalidadeLead">
@@ -260,6 +260,18 @@
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Status do Lead</label>
+                        <select class="form-control select2" style="width: 100%;" id="StatusLeadId" asp-for="@Model.ListStatusLead.Count">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListStatusLead)
+                            {
+                                <option value="@Item.IdStatusLead">@(Item.Descricao)</option>
+                            }
+                        </select>
                     </div>
                 </div>
             </div>

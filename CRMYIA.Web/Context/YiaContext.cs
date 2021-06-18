@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using CRMYIA.Data.Entities;
-using Microsoft.Extensions.Configuration;
+using CRMYIA.Web.Entities;
 
-namespace CRMYIA.Data.Context
+namespace CRMYIA.Web.Context
 {
     public partial class YiaContext : DbContext
     {
@@ -101,14 +100,8 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
-                var connectionString = configuration.GetConnectionString("YiaConnection");
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Name=YiaConnection");
             }
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -536,36 +529,6 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.SituacaoCadastral)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.IdArquivoLeadNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdArquivoLead)
-                    .HasConstraintName("ArquivoLead_Cliente");
-
-                entity.HasOne(d => d.IdCidadeNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdCidade)
-                    .HasConstraintName("Cidade_Cliente");
-
-                entity.HasOne(d => d.IdEstadoCivilNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdEstadoCivil)
-                    .HasConstraintName("EstadoCivil_Cliente");
-
-                entity.HasOne(d => d.IdGeneroNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdGenero)
-                    .HasConstraintName("Genero_Cliente");
-
-                entity.HasOne(d => d.IdOrigemNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdOrigem)
-                    .HasConstraintName("Origem_Cliente");
-
-                entity.HasOne(d => d.IdTipoLeadNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdTipoLead)
-                    .HasConstraintName("TipoLead_Cliente");
             });
 
             modelBuilder.Entity<Corretora>(entity =>

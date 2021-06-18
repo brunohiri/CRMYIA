@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CRMYIA.Data.Entities
+namespace CRMYIA.Web.Entities
 {
     public partial class Cliente
     {
@@ -46,12 +46,6 @@ namespace CRMYIA.Data.Entities
         public bool? StatusNaoIncomodar { get; set; }
         public string ModalidadeLead { get; set; }
 
-        public virtual ArquivoLead IdArquivoLeadNavigation { get; set; }
-        public virtual Cidade IdCidadeNavigation { get; set; }
-        public virtual EstadoCivil IdEstadoCivilNavigation { get; set; }
-        public virtual Genero IdGeneroNavigation { get; set; }
-        public virtual Origem IdOrigemNavigation { get; set; }
-        public virtual TipoLead IdTipoLeadNavigation { get; set; }
         public virtual ICollection<Email> Email { get; set; }
         public virtual ICollection<Proposta> Proposta { get; set; }
         public virtual ICollection<PropostaCliente> PropostaCliente { get; set; }
