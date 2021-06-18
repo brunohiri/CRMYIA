@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using CRMYIA.Data.Entities;
-using Microsoft.Extensions.Configuration;
+using CRMYIA.Web.Entities;
 
-namespace CRMYIA.Data.Context
+namespace CRMYIA.Web.Context
 {
     public partial class YiaContext : DbContext
     {
@@ -83,6 +82,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<PropostaCliente> PropostaCliente { get; set; }
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual DbSet<RedeSocial> RedeSocial { get; set; }
+        public virtual DbSet<StatusLead> StatusLead { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
         public virtual DbSet<StatusVisita> StatusVisita { get; set; }
         public virtual DbSet<Telefone> Telefone { get; set; }
@@ -95,18 +95,12 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Video> Video { get; set; }
         public virtual DbSet<Visita> Visita { get; set; }
         public virtual DbSet<VisitaCampanha> VisitaCampanha { get; set; }
-        public virtual DbSet<StatusLead> StatusLead { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
-                var connectionString = configuration.GetConnectionString("YiaConnection");
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Name=YiaConnection");
             }
         }
 
@@ -504,6 +498,10 @@ namespace CRMYIA.Data.Context
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ModalidadeLead)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Nome)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -531,36 +529,6 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.SituacaoCadastral)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.IdArquivoLeadNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdArquivoLead)
-                    .HasConstraintName("ArquivoLead_Cliente");
-
-                entity.HasOne(d => d.IdCidadeNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdCidade)
-                    .HasConstraintName("Cidade_Cliente");
-
-                entity.HasOne(d => d.IdEstadoCivilNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdEstadoCivil)
-                    .HasConstraintName("EstadoCivil_Cliente");
-
-                entity.HasOne(d => d.IdGeneroNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdGenero)
-                    .HasConstraintName("Genero_Cliente");
-
-                entity.HasOne(d => d.IdOrigemNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdOrigem)
-                    .HasConstraintName("Origem_Cliente");
-
-                entity.HasOne(d => d.IdTipoLeadNavigation)
-                    .WithMany(p => p.Cliente)
-                    .HasForeignKey(d => d.IdTipoLead)
-                    .HasConstraintName("TipoLead_Cliente");
             });
 
             modelBuilder.Entity<Corretora>(entity =>
@@ -1140,6 +1108,8 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdGrupoCorretor).ValueGeneratedOnAdd();
 
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -1270,6 +1240,10 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.CaminhoFoto)
                     .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Classificacao)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Inicio).HasColumnType("datetime");
@@ -1877,22 +1851,20 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<StatusProposta>(entity =>
+            modelBuilder.Entity<StatusLead>(entity =>
             {
-                entity.HasKey(e => e.IdStatusProposta);
-
-                entity.Property(e => e.IdStatusProposta).ValueGeneratedOnAdd();
+                entity.HasNoKey();
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<StatusLead>(entity =>
+            modelBuilder.Entity<StatusProposta>(entity =>
             {
-                entity.HasKey(e => e.IdStatusLead);
+                entity.HasKey(e => e.IdStatusProposta);
 
-                entity.Property(e => e.IdStatusLead).ValueGeneratedOnAdd();
+                entity.Property(e => e.IdStatusProposta).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)

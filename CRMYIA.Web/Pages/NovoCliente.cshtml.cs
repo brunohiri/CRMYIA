@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
+using CRMYIA.Business.Lead;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
@@ -25,12 +26,15 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public Cliente Entity { get; set; }
 
-        #region TipoLead
+        #region Lead
         [BindProperty]
         public byte? IdTipoLead { get; set; }
 
         [BindProperty]
         public List<TipoLead> ListTipoLead { get; set; }
+
+        [BindProperty]
+        public List<StatusLead> ListStatusLead { get; set; }
         #endregion
 
         #region Origem
@@ -303,6 +307,7 @@ namespace CRMYIA.Web.Pages
             ListOperadoraTelefone = OperadoraTelefoneModel.GetListIdDescricao();
             ListOperadora = OperadoraModel.GetListIdDescricao();
             ListModalidade = ModalidadeModel.GetList();
+            ListStatusLead = StatusLeadModel.GetList();
         }
         #endregion
     }
