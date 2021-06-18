@@ -91,7 +91,8 @@ namespace CRMYIA.Web.Pages
                 DataCadastro = x.DataCadastro,
                 Corretora = x.Corretora,
                 DescricaoPerfil = x.DescricaoPerfil,
-                Ativo = x.Ativo
+                Ativo = x.Ativo,
+                IdClassificacaoNavigation = x.IdClassificacaoNavigation
             }).Skip(start).Take(take).ToList();
 
             return new JsonResult(new { ListCorretor = ListCorretor, start = start == 0 ? 100 : start });
@@ -109,7 +110,8 @@ namespace CRMYIA.Web.Pages
                 DataCadastro = x.DataCadastro,
                 Corretora = x.Corretora,
                 DescricaoPerfil = x.DescricaoPerfil,
-                Ativo = x.Ativo
+                Ativo = x.Ativo,
+                IdClassificacaoNavigation = x.IdClassificacaoNavigation
             }).Skip(start).Take(20).ToList();
 
             return new JsonResult(new { ListCorretor = ListCorretor });
@@ -263,7 +265,8 @@ namespace CRMYIA.Web.Pages
                 DataCadastro = x.DataCadastro,
                 Corretora = x.Corretora,
                 DescricaoPerfil = x.DescricaoPerfil,
-                Ativo = x.Ativo
+                Ativo = x.Ativo,
+                IdClassificacaoNavigation = x.IdClassificacaoNavigation
             }).Take(20).ToList();
         }
 

@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using CRMYIA.Data.Entities;
-using Microsoft.Extensions.Configuration;
+using CRMYIA.Web.Entities;
 
-namespace CRMYIA.Data.Context
+namespace CRMYIA.Web.Context
 {
     public partial class YiaContext : DbContext
     {
@@ -100,12 +99,7 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
-                var connectionString = configuration.GetConnectionString("YiaConnection");
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Name=YiaConnection");
             }
         }
 

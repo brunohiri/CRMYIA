@@ -92,7 +92,25 @@
                                                         <div class="card card-widget widget-user mb-0">
                                                             <!-- Add the bg color to the header using any of the bg-* classes -->
                                                             <div class="widget-user-header card-color">
-                                                                <h3 class="widget-user-username">@Item.DescricaoPerfil <i class="fas fa-medal" style="font-size:30px;"></i></h3>
+                                                                <h3 class="widget-user-username">
+                                                                    @Item.DescricaoPerfil
+                                                                    @if (Item.IdClassificacaoNavigation.Descricao == "Ouro")
+                                                                    {
+                                                                        <i class="fas fa-medal" style="font-size: 30px; color: #ffd700; "></i>
+                                                                    }
+                                                                    @if (Item.IdClassificacaoNavigation.Descricao == "Prata")
+                                                                    {
+                                                                        <i class="fas fa-medal" style="font-size: 30px; color: #c0c0c0; "></i>
+                                                                    }
+                                                                    @if (Item.IdClassificacaoNavigation.Descricao == "Bronze")
+                                                                    {
+                                                                        <i class="fas fa-medal" style="font-size: 30px; color: #cd7f32; "></i>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <i class="fas fa-medal" style="font-size:30px;"></i>
+                                                                    }
+                                                                </h3>
                                                             </div>
                                                             <div class="widget-user-image">
                                                                 <img class="img-circle elevation-2" src="@Item.CaminhoFoto@Item.NomeFoto" alt="@Item.NomeFoto.ToString()">
@@ -344,7 +362,25 @@
                                                                 <div class="card card-widget widget-user mb-0">
                                                                     <!-- Add the bg color to the header using any of the bg-* classes -->
                                                                     <div class="widget-user-header card-color">
-                                                                        <h3 class="widget-user-username">@ItemListKPIGrupoUsuario.Perfil <i class="fas fa-medal" style="font-size:30px;"></i></h3>
+                                                                        <h3 class="widget-user-username">
+                                                                            @ItemListKPIGrupoUsuario.Perfil
+                                                                            @if (ItemListKPIGrupoUsuario.Classificacao == "Ouro")
+                                                                            {
+                                                                                <i class="fas fa-medal" style="font-size: 30px; color: #ffd700; "></i>
+                                                                            }
+                                                                            @if (ItemListKPIGrupoUsuario.Classificacao == "Prata")
+                                                                            {
+                                                                                <i class="fas fa-medal" style="font-size: 30px; color: #c0c0c0; "></i>
+                                                                            }
+                                                                            @if (ItemListKPIGrupoUsuario.Classificacao == "Bronze")
+                                                                            {
+                                                                                <i class="fas fa-medal" style="font-size: 30px; color: #cd7f32; "></i>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <i class="fas fa-medal" style="font-size:30px;"></i>
+                                                                            }
+                                                                        </h3>
                                                                     </div>
                                                                     <div class="widget-user-image">
                                                                         <img class="img-circle elevation-2" src="@ItemListKPIGrupoUsuario.CaminhoFoto@ItemListKPIGrupoUsuario.NomeFoto" alt="@ItemListKPIGrupoUsuario.NomeFoto.ToString()">

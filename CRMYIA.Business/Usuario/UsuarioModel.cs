@@ -278,7 +278,7 @@ namespace CRMYIA.Business
 
                     ListKPIGrupoUsuario = context.KPIGrupoUsuario.Where(x => x.Grupo == true && x.Perfil == perfil).AsNoTracking().ToList();
 
-                    ListEntity = context.Usuario
+                    ListEntity = context.Usuario.Include(i => i.IdClassificacaoNavigation)
                         .Include(y => y.UsuarioPerfil)
                             .ThenInclude(p => p.IdPerfilNavigation)
                         .Include(c => c.IdCorretoraNavigation)
@@ -295,7 +295,8 @@ namespace CRMYIA.Business
                             Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
                             DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
                             DataCadastro = x.DataCadastro,
-                            Ativo = x.Ativo
+                            Ativo = x.Ativo,
+                            IdClassificacaoNavigation = x.IdClassificacaoNavigation
                         })
                         .OrderBy(o => o.Nome)
                         .ToList();
@@ -321,7 +322,7 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.Usuario
+                    ListEntity = context.Usuario.Include(i => i.IdClassificacaoNavigation)
                         .Include(y => y.UsuarioPerfil)
                             .ThenInclude(p => p.IdPerfilNavigation)
                         .Include(c => c.IdCorretoraNavigation)
@@ -338,7 +339,8 @@ namespace CRMYIA.Business
                             Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
                             DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
                             DataCadastro = x.DataCadastro,
-                            Ativo = x.Ativo
+                            Ativo = x.Ativo,
+                            IdClassificacaoNavigation = x.IdClassificacaoNavigation
                         })
                         .OrderBy(o => o.Nome)
                         .ToList();

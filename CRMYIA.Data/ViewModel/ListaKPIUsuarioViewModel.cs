@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CRMYIA.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,5 +15,6 @@ namespace CRMYIA.Data.ViewModel
         public string CaminhoFoto { get; set; }
         public string NomeFoto { get; set; }
         public bool Ativo { get; set; }
+        public virtual Classificacao IdClassificacaoNavigation { get; set; }
     }
 }

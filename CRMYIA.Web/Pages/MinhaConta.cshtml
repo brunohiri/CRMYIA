@@ -1,0 +1,213 @@
+﻿@page
+@model CRMYIA.Web.Pages.MinhaContaModel
+@{ ViewData["Title"] = "Minha Conta";
+    ViewData["Pagina"] = "Minha Conta"; }
+@section CSS {
+   
+}
+@section Scripts {
+    <script src="~/js/sistema/minhaConta.js"></script>
+}
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+
+                <!-- Profile Image -->
+                <div class="card card-primary card-outline">
+                    <div class="card-body box-profile">
+                        <div class="text-center">
+                            <img class="profile-user-img img-fluid img-circle"
+                                 src="@Model.Entity.CaminhoFoto@Model.Entity.NomeFoto" alt="@Model.Entity.NomeFoto.ToString()">
+                        </div>
+                        @if (Model.Entity.NomeApelido == null)
+                        {
+                            <h3 class="profile-username text-center">@Model.Entity.Nome</h3>
+                        }
+                        else
+                        {
+                            <h3 class="profile-username text-center">@Model.Entity.NomeApelido</h3>
+                        }
+
+                        <p class="text-muted text-center">@Model.EntityCargo.Descricao</p>
+
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b>Telefone</b> <a class="float-right">@Model.Entity.Telefone</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Email</b> <a class="float-right">@Model.Entity.Email</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+                <!-- About Me Box -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Sobre mim</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <strong><i class="fab fa-whatsapp"></i> WhatsApp</strong>
+
+                        <p class="text-muted">
+                            <i class="fas fa mr-1"> </i> @Model.Entity.Telefone
+                        </p>
+
+                        <hr>
+                        <strong><i class="fab fa-facebook-f"></i> Facebook</strong>
+                        <p class="text-muted">
+                            <i class="fas fa mr-1"> </i> @Model.Entity.Facebook
+                        </p>
+
+                        <hr>
+                        <strong><i class="fab fa-twitter"></i> Twitter</strong>
+                        <p class="text-muted">
+                            <i class="fas fa mr-1"> </i> @Model.Entity.Twitter
+                        </p>
+
+                        <hr>
+                        <strong><i class="fab fa-instagram"></i> Instagram</strong>
+                        <p class="text-muted">
+                            <i class="fas fa mr-1"> </i> @Model.Entity.Instagram
+                        </p>
+
+                        <hr>
+                        <strong><i class="fab fa-linkedin-in"></i> Linkedin</strong>
+                        <p class="text-muted">
+                            <i class="fas fa mr-1"> </i> @Model.Entity.Linkedin
+                        </p>
+
+                        <hr>
+
+                        <strong><i class="fas fa-map-marker-alt mr-1"></i> Endereço</strong>
+
+                        <p class="text-muted">Rua Quinta das flores 125, São Paulo-SP</p>
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item"><a class="nav-link active" href="#RedesSociais" data-toggle="tab">Redes Sociais</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#AlterarSenha" data-toggle="tab">Alterar Senha</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#DadosPessoais" data-toggle="tab">Dados Pessoais</a></li>
+                        </ul>
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="RedesSociais">
+                                <form class="form-horizontal">
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group row">
+                                        <label for="txtFacebook" class="col-sm-2 col-form-label">Facebook</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtFacebook" placeholder="Facebook" asp-for="@Model.Entity.Facebook">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtTwitter" class="col-sm-2 col-form-label">Twitter</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtTwitter" placeholder="Twitter" asp-for="@Model.Entity.Twitter">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtInstagram" class="col-sm-2 col-form-label">Instagram</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtInstagram" placeholder="Instagram" asp-for="@Model.Entity.Instagram">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtLinkedin" class="col-sm-2 col-form-label">Linkedin</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtLinkedin" placeholder="Linkedin" asp-for="@Model.Entity.Linkedin">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="offset-sm-2 col-sm-10">
+                                            <button type="button" id="btnRedesSociais" class="btn btn-danger">Salvar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="AlterarSenha">
+                                <form class="form-horizontal">
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group row">
+                                        <label for="txtSenhaAtual" class="col-sm-2 col-form-label">Senha atual</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="txtSenhaAtual" placeholder="Senha atual">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtNovaSenha" class="col-sm-2 col-form-label">Nova senha</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="txtNovaSenha" placeholder="Nova senha">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtConfSenha" class="col-sm-2 col-form-label">Confirmar nova senha</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="txtConfSenha" placeholder="Confirmar nova senha">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="offset-sm-2 col-sm-10">
+                                            <button type="submit" id="btnAlterarSenha" class="btn btn-danger">Salvar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.tab-pane -->
+
+                            <div class="tab-pane" id="DadosPessoais">
+                                <form class="form-horizontal">
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group row">
+                                        <label for="txtNome" class="col-sm-2 col-form-label">Nome</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtNome" placeholder="Nome">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtApelido" class="col-sm-2 col-form-label">Apelido</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtApelido" placeholder="Apelido">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="txtTelefone" class="col-sm-2 col-form-label">Telefone</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtTelefone" placeholder="Telefone">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="offset-sm-2 col-sm-10">
+                                            <button type="button" id="btnDadosPessoais" class="btn btn-danger">Salvar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.tab-pane -->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
