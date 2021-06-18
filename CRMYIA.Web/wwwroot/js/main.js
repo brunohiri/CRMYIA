@@ -10,6 +10,8 @@ $(document).ready(function () {
     //Cadastro de Usuários
     CadastroUsuario();
 
+    //Carrega a Foto no menu lateral
+    FotoMemu() 
 
     // Cadastro de Leads
     CarregarListaTelefone();
@@ -104,7 +106,6 @@ $(document).ready(function () {
         $('#bloco-button-id-usuario-slave').removeClass('d-block');
         $('#bloco-button-id-usuario-slave').addClass('d-none');
     }
-
 });
 
 function FormatarData(data) {
@@ -400,6 +401,33 @@ function CarregarUsuarioHierarquia(IdPerfil) {
     else
         $('#IdUsuarioHierarquia').attr('disabled', 'disabled');
 }
+
+function FotoMemu() {
+    var formData = new FormData();
+    formData.append('IdUsuario', $('#IdUsuario').val())
+    $.ajax({
+        type: 'POST',
+        url: "/Index?handler=FotoMemu",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (data) {
+            if (data.status) {
+                $("#foto-usuario").attr('src', data.data.caminhoFoto + data.data.nomeFoto);
+                $('#nome-usuario').html(data.data.nome.length > 16 ? data.data.nome.substring(0, 16) : data.data.nome);
+            }
+           
+        },
+        error: function () {
+            swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+        }
+    });
+}
 //#endregion
 
 //#region Telefone
@@ -446,7 +474,7 @@ function CarregarModalTelefone() {
 
                 $('#TelefoneIdTelefone').val(data.entityEditarTelefone.idTelefone);
                 $('#TelefoneNumero').val(data.entityEditarTelefone.ddd.toString() + data.entityEditarTelefone.telefone1.toString());
-                $('#TelefoneOperadora').val(data.entityEditarTelefone.idOperadoraTelefone);
+                $('#TelefoneOperadora').val(data.entityEditarTelefone.idOperadoraTelefone).trigger('change');
                 if (data.entityEditarTelefone.whatsApp)
                     $('#TelefoneWhatsApp').attr('checked', true);
                 else
@@ -718,8 +746,8 @@ function CarregarPropostaModalidadeOperadora(IdModalidade) {
                 if (IdModalidade == "0") {
                     $('#PropostaIdOperadora').val(IdOperadora);
                     $('#PropostaIdModalidade').val(data.idModalidade);
-                    $('#ClienteIdOperadora').val(IdOperadora);
-                    $('#ClienteIdModalidade').val(data.idModalidade);
+                    $('#ClienteIdOperadora').val(IdOperadora).trigger('change');
+                    $('#ClienteIdModalidade').val(data.idModalidade).trigger('change');
                     $('.select2').select2();
                 }
             }

@@ -478,80 +478,91 @@
             {
                 ListEntity = Context.Session.GetObjectFromJson<List<CRMYIA.Data.Entities.Modulo>>("MODULO");
             }
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
-                <!-- Brand Logo -->
-                @if ((ListEntity != null) && (ListEntity.Count() > 0))
-                {
-                    <a href="@ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y=>y.Ordem).FirstOrDefault().Url" class="brand-link">
-                        <img src="../img/logoIn.png"
-                             alt="CRM YIA"
-                             class="brand-image elevation-3"
-                             style="max-height: 23px !important; margin-top:3px !important;">
-                        <span class="brand-text font-weight-light">CRM YIA</span>
-                    </a>
-                }
-                <!-- Sidebar -->
-                <div class="sidebar">
-                    <!-- Sidebar Menu -->
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <aside class="main-sidebar sidebar-dark-primary elevation-4">
+                    <!-- Brand Logo -->
+                    @if ((ListEntity != null) && (ListEntity.Count() > 0))
+                    {
+                        <a href="@ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y=>y.Ordem).FirstOrDefault().Url" class="brand-link">
+                            <img src="../img/logoIn.png"
+                                 alt="CRM YIA"
+                                 class="brand-image elevation-3"
+                                 style="max-height: 23px !important; margin-top:3px !important;">
+                            <span class="brand-text font-weight-light">CRM YIA</span>
+                        </a>
 
-                            @if ((ListEntity != null) && (ListEntity.Count() > 0))
-                            {
-                                foreach (var ItemMenu in ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y => y.Ordem))
+                       
+                        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                            <div class="image m-1">
+                                <img id="foto-usuario" src="/img/fotoCadastro/foto-cadastro.jpeg" class="img-circle elevation-2" alt="User Image">
+                            </div>
+                            <div class="dark m-1">
+                                <a href="#" class="d-block" id="nome-usuario" style="color: #C2C7D0 !important;"></a>
+                            </div>
+                        </div>
+
+                    }
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <!-- Sidebar Menu -->
+                        <nav class="mt-2">
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                                @if ((ListEntity != null) && (ListEntity.Count() > 0))
                                 {
-                                    <li class="nav-item has-treeview">
-                                        <a href="@ItemMenu.Url" class="nav-link" title="@ItemMenu.ToolTip">
-                                            <i class="@ItemMenu.CssClass"></i>
-                                            <p>
-                                                @(string.IsNullOrEmpty(ItemMenu.Url) ? ItemMenu.Descricao.ToUpper() : ItemMenu.Descricao)
-                                                @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
-                                                {
-                                                    <i class="right fas fa-angle-left"></i>
-                                                }
-                                            </p>
-                                        </a>
-                                        @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
-                                        {
-                                            <ul class="nav nav-treeview">
-                                                @foreach (var ItemSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).OrderBy(y => y.Ordem))
-                                                {
-                                                    <li class="nav-item">
-                                                        <a href="@ItemSubMenu.Url" class="nav-link" title="@ItemSubMenu.ToolTip">
-                                                            <i class="@ItemSubMenu.CssClass"></i>
-                                                            <p>@ItemSubMenu.Descricao</p>
+                                    foreach (var ItemMenu in ListEntity.Where(x => x.IdModuloReferencia == null).OrderBy(y => y.Ordem))
+                                    {
+                                        <li class="nav-item has-treeview">
+                                            <a href="@ItemMenu.Url" class="nav-link" title="@ItemMenu.ToolTip">
+                                                <i class="@ItemMenu.CssClass"></i>
+                                                <p>
+                                                    @(string.IsNullOrEmpty(ItemMenu.Url) ? ItemMenu.Descricao.ToUpper() : ItemMenu.Descricao)
+                                                    @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
+                                                    {
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    }
+                                                </p>
+                                            </a>
+                                            @if (ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).Count() > 0)
+                                            {
+                                                <ul class="nav nav-treeview">
+                                                    @foreach (var ItemSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemMenu.IdModulo).OrderBy(y => y.Ordem))
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a href="@ItemSubMenu.Url" class="nav-link" title="@ItemSubMenu.ToolTip">
+                                                                <i class="@ItemSubMenu.CssClass"></i>
+                                                                <p>@ItemSubMenu.Descricao</p>
+                                                                @if (ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).Count() > 0)
+                                                                {
+                                                                    <i class="right fas fa-angle-left"></i>
+                                                                }
+                                                            </a>
                                                             @if (ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).Count() > 0)
                                                             {
-                                                                <i class="right fas fa-angle-left"></i>
+                                                                <ul class="nav nav-treeview">
+                                                                    @foreach (var ItemSubSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).OrderBy(y => y.Ordem))
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@ItemSubSubMenu.Url" title="@ItemSubSubMenu.ToolTip"><i class="@ItemSubSubMenu.CssClass"></i>&nbsp;&nbsp;@ItemSubSubMenu.Descricao</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
                                                             }
-                                                        </a>
-                                                        @if (ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).Count() > 0)
-                                                        {
-                                                            <ul class="nav nav-treeview">
-                                                                @foreach (var ItemSubSubMenu in ListEntity.Where(x => x.IdModuloReferencia == ItemSubMenu.IdModulo).OrderBy(y => y.Ordem))
-                                                                {
-                                                                    <li>
-                                                                        <a href="@ItemSubSubMenu.Url" title="@ItemSubSubMenu.ToolTip"><i class="@ItemSubSubMenu.CssClass"></i>&nbsp;&nbsp;@ItemSubSubMenu.Descricao</a>
-                                                                    </li>
-                                                                }
-                                                            </ul>
-                                                        }
 
-                                                    </li>
-                                                }
-                                            </ul>
-                                        }
-                                    </li>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </li>
 
+                                    }
                                 }
-                            }
 
-                        </ul>
-                    </nav>
-                    <!-- /.sidebar-menu -->
-                </div>
-                <!-- /.sidebar -->
-            </aside>
+                            </ul>
+                        </nav>
+                        <!-- /.sidebar-menu -->
+                    </div>
+                    <!-- /.sidebar -->
+                </aside>
         }
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" id="pdf-dow">
@@ -872,6 +883,15 @@
     @if (ViewData["Pagina"].ToString().Equals("Exportar para SisWeb"))
     {
         <script src="../js/sistema/exportSisWeb.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("Clientes (Leads)"))
+    {
+        <script src="../js/sistema/listarCliente.js"></script>
+        <script src="~/plugins/lodash/lodash.min.js"></script>
+    }
+    @if (ViewData["Pagina"].ToString().Equals("Usuários"))
+    {
+        <script src="../js/sistema/listarUsuario.js"></script>
     }
     @if (ViewData["Pagina"].ToString().Equals("Marketing"))
     {

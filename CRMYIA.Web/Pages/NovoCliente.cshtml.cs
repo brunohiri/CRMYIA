@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using CRMYIA.Business;
+using CRMYIA.Business.Lead;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
@@ -24,12 +26,15 @@ namespace CRMYIA.Web.Pages
         [BindProperty]
         public Cliente Entity { get; set; }
 
-        #region TipoLead
+        #region Lead
         [BindProperty]
         public byte? IdTipoLead { get; set; }
 
         [BindProperty]
         public List<TipoLead> ListTipoLead { get; set; }
+
+        [BindProperty]
+        public List<StatusLead> ListStatusLead { get; set; }
         #endregion
 
         #region Origem
@@ -81,6 +86,9 @@ namespace CRMYIA.Web.Pages
         public long? IdOperadora { get; set; }
         [BindProperty]
         public List<Operadora> ListOperadora { get; set; }
+
+        [BindProperty]
+        public List<Modalidade> ListModalidade { get; set; }
         #endregion
         #endregion
 
@@ -136,11 +144,26 @@ namespace CRMYIA.Web.Pages
                         else
                         {
                             ClienteModel.Add(Entity);
+                            UsuarioClienteModel.Add(new UsuarioCliente { 
+                                IdUsuario = GetIdUsuario(), 
+                                IdCliente = Entity.IdCliente, 
+                                DataCadastro = DateTime.Now, 
+                                Ativo = true
+                            });
+                            UsuarioClienteModel.DesativarUltimoCorretor(Entity.IdCliente, GetIdUsuario());
                         }
                     }
                     else
                     {
                         ClienteModel.Update(Entity);
+                        UsuarioClienteModel.Add(new UsuarioCliente
+                        {
+                            IdUsuario = GetIdUsuario(),
+                            IdCliente = Entity.IdCliente,
+                            DataCadastro = DateTime.Now,
+                            Ativo = true
+                        });
+                        UsuarioClienteModel.DesativarUltimoCorretor(Entity.IdCliente, GetIdUsuario());
                     }
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                 }
@@ -181,6 +204,13 @@ namespace CRMYIA.Web.Pages
                 EntityTelefone.DataCadastro = DateTime.Now;
                 EntityTelefone.DDD = EntityTelefone.Telefone1.KeepOnlyNumbers().Substring(0, 2);
                 EntityTelefone.Telefone1 = EntityTelefone.Telefone1.KeepOnlyNumbers().Substring(2, EntityTelefone.Telefone1.KeepOnlyNumbers().Length - 2);
+                
+                if (string.IsNullOrEmpty(EntityTelefone.Telefone1))
+                    throw new Exception("Formato de Telefone Inválido!");
+
+                if (EntityTelefone.IdOperadoraTelefone == null)
+                    throw new Exception("Selecione uma das Operadora da Lista.");
+
                 if (EntityTelefone.IdTelefone == 0)
                 {
                     TelefoneModel.Add(EntityTelefone);
@@ -226,6 +256,9 @@ namespace CRMYIA.Web.Pages
         {
             try
             {
+                if (string.IsNullOrEmpty(EntityEmail.EmailConta))
+                    throw new Exception("O Email não pode ser vazio.");
+
                 if (EntityEmail.IdEmail == 0)
                 {
                     EmailModel.Add(EntityEmail);
@@ -244,6 +277,21 @@ namespace CRMYIA.Web.Pages
             }
             return new JsonResult(new { mensagem = Mensagem });
         }
+
+        public long GetIdUsuario()
+        {
+            long IdUsuario = "0".ExtractLong();
+
+            if (HttpContext.User.Equals("IdUsuarioSlave"))
+            {
+                IdUsuario = HttpContext.User.FindFirst("IdUsuarioSlave").Value.ExtractLong();
+            }
+            else
+            {
+                IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            }
+            return IdUsuario;
+        }
         #endregion
         #endregion
 
@@ -258,6 +306,8 @@ namespace CRMYIA.Web.Pages
             ListEstado = EstadoModel.GetListIdSigla();
             ListOperadoraTelefone = OperadoraTelefoneModel.GetListIdDescricao();
             ListOperadora = OperadoraModel.GetListIdDescricao();
+            ListModalidade = ModalidadeModel.GetList();
+            ListStatusLead = StatusLeadModel.GetList();
         }
         #endregion
     }

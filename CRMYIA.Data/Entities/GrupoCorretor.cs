@@ -14,6 +14,7 @@ namespace CRMYIA.Data.Entities
 
         public byte IdGrupoCorretor { get; set; }
         public string Descricao { get; set; }
+        public DateTime? DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
         public virtual ICollection<GrupoCorretorCampanha> GrupoCorretorCampanha { get; set; }

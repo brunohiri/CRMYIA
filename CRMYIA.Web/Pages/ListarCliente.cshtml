@@ -6,6 +6,143 @@
 }
 @using CRMYIA.Business.Util;
 
+
+<!-- Horizontal Form Pesquisa-->
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card card-default">
+
+            <div class="card-header">
+                <h3 class="card-title">Pesquisar</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <input type="hidden" name="IdPerfil" id="IdPerfil" asp-for="@Model.IdOrigem" />
+            <input type="hidden" name="ClienteIdUsuario" id="ClienteIdUsuario" asp-for="@Model.IdUsuario" />
+            <form id="FormPesquisa">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <input type="hidden" name="IdPerfilUsuario" id="IdPerfilUsuario" value="0" />
+                    <div class="row">
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="estado">Origem</label>
+                                <select class="custom-select select2 visitas-pesquisa" id="IdOrigem" name="IdOrigem">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListOrigemEntity)
+                                    {
+                                        <option value="@Item.IdOrigem">@(Item.Descricao.ToUpper())</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a valid state.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Nome do Cliente</label>
+                                <select class="form-control select2 visitas-pesquisa" style="width: 100%;" id="IdCliente" name="IdCliente">
+                                    <option selected="selected">Selecione...</option>
+                                    @*@foreach (var Item in Model.ListClienteEntity)
+                                        {
+                                            <option value="@Item.IdCliente">@(Item.Nome.ToUpper())</option>
+                                        }*@
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Cidade</label>
+                                <select class="form-control select2 visitas-pesquisa" style="width: 100%;" id="IdCidade" name="IdCidade">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListCidadeEntity)
+                                    {
+                                        <option value="@Item.IdCidade">@(Item.Descricao.ToUpper())</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-3">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="estado">Status do Lead</label>
+                                <select class="custom-select visitas-pesquisa" id="StatusPlanoLead" name="StatusPlanoLead">
+                                    <option selected="selected">Selecione...</option>
+
+                                    <option value="1">Ativado</option>
+                                    <option value="0">Desativado</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a valid state.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Data Adesão do Lead</label>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control float-right daterange visitas-pesquisa" id="Inicio" name="Inicio">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card card-default">
+
+            <div class="card-header">
+                <h3 class="card-title">Vincular registros ao corretor</h3>
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-check">
+                            <label>Selecione todos os registros dessa página  </label>
+
+                            <input type="checkbox" name="selecionar-todos" id="selecionar-todos" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary btn-vincular" type="button" disabled>Vincular</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -13,44 +150,99 @@
                 <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive">
-                <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th width="15%">Nome</th>
-                            <th width="10%">Origem</th>
-                            @*<th width="10%">Tipo</th>*@
-                            <th width="10%">Corretor</th>
-                            <th width="15%">Cidade/UF</th>
-                            <th width="15%">Cadastro</th>
-                            <th width="10%">Status</th>
-                            <th width="5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
-                        {
-                            foreach (var Item in Model.ListEntity)
+            <div id="tabelaListarCliente">
+                <div class="card-body table-responsive">
+                    <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Nome</th>
+                                <th>Origem</th>
+                                <th>Corretor</th>
+                                <th>Cidade/UF</th>
+                                <th>Cadastro</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
                             {
-                                <tr>
-                                    <td></td>
-                                    <td>@(Item.Nome.Length > 30 ? Item.Nome.Substring(0,30) + "..." : Item.Nome)</td>
-                                    <td>@Item.OrigemDescricao</td>
-                                    @*<td>@Item.IdTipoLeadNavigation?.Descricao</td>*@
-                                    <td>@Item.CorretorNome</td>
-                                    <td>@Item.CidadeNome</td>
-                                    <td>@Item.DataCadastro?.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                    <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
-                                    <td>
-                                        <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCliente.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                    </td>
-                                </tr>
+                                foreach (var Item in Model.ListEntity)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-center">@Html.Raw(Item.CorretorNome == "" ? "<input type=\"checkbox\" name=\"selecionar\" id=\"selecionar\" style=\"background-color: red\" class=\"form-check-input selecionar\" data-selecionar=" + Item.IdCliente + ">" : "<input type=\"checkbox\" name=\"selecionar-todos\" id=\"selecionar-todos\" class=\"form-check-input selecionar-todos\" data-selecionar=" + Item.IdCliente + " disabled>")</td>
+                                        <td class="text-center">@(Item.Nome.Length > 30 ? Item.Nome.ToUpper().Substring(0,30) + "..." : Item.Nome.ToUpper())</td>
+                                        <td class="text-center">@Item.OrigemDescricao.ToUpper()</td>
+                                        <td class="text-center">@Html.Raw(Item.CorretorNome == "" ? "<span class=\"badge badge-pill badge-warning\">SEM CORRETOR</span>" : Item.CorretorNome.ToUpper())</td>
+                                        <td class="text-center">@Item.CidadeNome.ToUpper()</td>
+                                        <td class="text-center">@Item.DataCadastro?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                        <td class="text-center">@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                        <td class="text-center">
+                                            <a asp-page="/NovoCliente" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdCliente.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Vincular -->
+<div class="modal fade" id="modalVincular" tabindex="-1" aria-labelledby="modalVincular" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabelModalVincular">Vincular Corretor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" id="ModalAlterarImagemMensagemDiv" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="alert alert-success alert-dismissible" id="ModalAlterarImagemMensagemDivAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i id="ModalAlterarImagemMensagemIcon" class="icon fas fa-check"></i>
+                                <span id="ModalAlterarImagemMensagemSpan">Dados salvos com sucesso!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="vincular" method="post">
+
+                    <div class="d-flex justify-content-center">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Corretor</label>
+                                <select class="form-control select2" style="width: 100%;" id="IdUsuarioCorretor">
+                                    <option selected="selected">Selecione...</option>
+                                    @foreach (var Item in Model.ListCorretor)
+                                    {
+                                        <option value="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-salvar">Salvar</button>
+            </div>
+
         </div>
     </div>
 </div>

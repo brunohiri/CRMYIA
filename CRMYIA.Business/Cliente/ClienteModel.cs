@@ -159,13 +159,42 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<ListaClienteViewModel> GetList()
+        public static List<ListaClienteViewModel> GetList(bool? StatusPlanoLead, long? IdOrigem, string? Nome, string? NomeCidade, DateTime? DataInicio, DateTime? DataFim)
         {
             List<ListaClienteViewModel> ListEntity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
+                    if(StatusPlanoLead == null && IdOrigem == null && Nome == null && NomeCidade == null)
+                    {
+                        ListEntity = context.Cliente
+                       .Include(y => y.IdCidadeNavigation)
+                           .ThenInclude(z => z.IdEstadoNavigation)
+                       .Include(y => y.IdOrigemNavigation)
+                       .Include(y => y.IdTipoLeadNavigation)
+                       .Include(y => y.IdEstadoCivilNavigation)
+                       .Include(y => y.IdGeneroNavigation)
+                       .Include(y => y.UsuarioCliente)
+                           .ThenInclude(y => y.IdUsuarioNavigation)
+                       .AsNoTracking()
+                       .Where(x => (x.DataAdesaoLead >= DataInicio && x.DataAdesaoLead <= DataFim))
+                       .Select(x => new ListaClienteViewModel()
+                       {
+                           IdCliente = x.IdCliente,
+                           IdClienteString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdCliente.ToString())),
+                           Nome = x.Nome,
+                           OrigemDescricao = x.IdOrigemNavigation.Descricao,
+                           TipoLeadDescricao = x.IdTipoLeadNavigation.Descricao,
+                            //CorretorNome = x.UsuarioCliente == null || x.UsuarioCliente.Count == 0 ? "" : x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation.Nome,
+                            CorretorNome = GetNavigation(x.UsuarioCliente) != null ? GetNavigation(x.UsuarioCliente) : "",
+                           CidadeNome = x.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", x.IdCidadeNavigation.Descricao, x.IdCidadeNavigation.IdEstadoNavigation.Sigla),
+                           DataCadastro = x.DataCadastro,
+                           Ativo = x.Ativo
+                       })
+                       .ToList();
+                    }
+                    else { 
                     ListEntity = context.Cliente
                         .Include(y => y.IdCidadeNavigation)
                             .ThenInclude(z => z.IdEstadoNavigation)
@@ -174,19 +203,24 @@ namespace CRMYIA.Business
                         .Include(y => y.IdEstadoCivilNavigation)
                         .Include(y => y.IdGeneroNavigation)
                         .Include(y => y.UsuarioCliente)
-                            .ThenInclude(z => z.IdUsuarioNavigation)
+                            .ThenInclude(y => y.IdUsuarioNavigation)
                         .AsNoTracking()
-                        .Select(x => new ListaClienteViewModel() { 
-                           IdCliente = x.IdCliente,
-                           Nome = x.Nome,
-                           OrigemDescricao = x.IdOrigemNavigation.Descricao,
-                           TipoLeadDescricao = x.IdTipoLeadNavigation.Descricao,
-                           CorretorNome = x.UsuarioCliente == null || x.UsuarioCliente.Count == 0 ? "Sem Corretor" : x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation.Nome,
-                           CidadeNome = x.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", x.IdCidadeNavigation.Descricao, x.IdCidadeNavigation.IdEstadoNavigation.Sigla),
-                           DataCadastro = x.DataCadastro,
-                           Ativo = x.Ativo
+                        .Where(x => x.StatusPlanoLead == StatusPlanoLead || x.IdOrigem == IdOrigem || x.Nome.Contains(Nome) || x.IdCidadeNavigation.Descricao.Contains(NomeCidade) || (x.DataAdesaoLead >= DataInicio && x.DataAdesaoLead <= DataFim))
+                        .Select(x => new ListaClienteViewModel()
+                        {
+                            IdCliente = x.IdCliente,
+                            IdClienteString = HttpUtility.UrlEncode(Criptography.Encrypt(x.IdCliente.ToString())),
+                            Nome = x.Nome,
+                            OrigemDescricao = x.IdOrigemNavigation.Descricao,
+                            TipoLeadDescricao = x.IdTipoLeadNavigation.Descricao,
+                            //CorretorNome = x.UsuarioCliente == null || x.UsuarioCliente.Count == 0 ? "" : x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation.Nome,
+                            CorretorNome = GetNavigation(x.UsuarioCliente) != null ? GetNavigation(x.UsuarioCliente) : "",
+                            CidadeNome = x.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", x.IdCidadeNavigation.Descricao, x.IdCidadeNavigation.IdEstadoNavigation.Sigla),
+                            DataCadastro = x.DataCadastro,
+                            Ativo = x.Ativo
                         })
-                        .ToList();
+                        .ToList();}
+
                 }
             }
             catch (Exception)
@@ -240,6 +274,30 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<Cliente> GetList()
+        {
+            List<Cliente> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Cliente
+                        .OrderBy(x => x.Nome)
+                        .Select(x => new Cliente() { 
+                            IdCliente = x.IdCliente,
+                            Nome = x.Nome
+                        })
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static void Add(Cliente Entity)
         {
             try
@@ -270,6 +328,16 @@ namespace CRMYIA.Business
             {
                 throw;
             }
+        }
+
+        private static string GetNavigation(ICollection<UsuarioCliente> UsuarioCliente)
+        {
+            string Nome = null;
+            foreach (var Item in UsuarioCliente)
+            {
+                Nome = Item.IdUsuarioNavigation.Nome;
+            }
+            return Nome;
         }
         #endregion
     }

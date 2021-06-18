@@ -1,0 +1,118 @@
+﻿@page
+@model CRMYIA.Web.Pages.EnriquecimentoModel
+@{
+    ViewData["Title"] = "";
+    ViewData["Pagina"] = "Enriquecimento";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <!-- Horizontal Form Pesquisa-->
+        <section class="content">
+            <div class="container-fluid">
+
+                <div class="card card-default">
+
+                    <div class="card-header">
+                        <h3 class="card-title">Pesquisar</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form role="form" method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        @if ((Model != null) && (Model.Mensagem != null))
+                                        {
+                                            <div class="@Model.Mensagem.CssClass alert-dismissible">
+                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                <i class="@Model.Mensagem.IconClass"></i>
+                                                @Model.Mensagem.Mensagem
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="EnriquecimentoIdFornecedor">Fornecedor</label>
+                                        <select class="form-control select2" style="width: 100%;" id="EnriquecimentoIdFornecedor">
+                                            <option selected="selected" value="0">Selecione...</option>
+                                            @foreach (var Item in Model.ListFornecedor)
+                                            {
+                                                <option value="@Item.IdFornecedor">@Item.Descricao</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="EnriquecimentoIdLayout">Layout de Processamento</label>
+                                        <select class="form-control select2" style="width: 100%;" id="EnriquecimentoIdLayout">
+                                            <option selected="selected" value="0">Selecione...</option>
+                                            <option value="1">Localização</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="EnriquecimentoNomeArquivo">Selecione um arquivo:</label>
+                                        <div class="input-group">
+                                            <input type="file" id="EnriquecimentoNomeArquivo" name="EnriquecimentoNomeArquivo" accept=".csv|.txt">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Enriquecer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive">
+                <table id="tableEnriquecimento" class="table table-striped table-hover dt-responsive display datatable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th width="5%"></th>
+                            <th width="20%">Cliente</th>
+                            <th width="20%">Origem</th>
+                            <th width="10%">Tipo</th>
+                            <th width="15%">Cidade</th>
+                            <th width="15%">Telefones</th>
+                            <th width="15%">Emails</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+
+                            foreach (var Item in Model.ListEntity)
+                            {
+                            <tr>
+                                <td><input type="checkbox" /></td>
+                                <td>@(Item.Nome.Length > 30 ? Item.Nome.Substring(0,30) + "..." : Item.Nome)</td>
+                                <td>@(Item.OrigemDescricao.Length > 30 ? Item.OrigemDescricao.Substring(0,30) + "..." : Item.OrigemDescricao)</td>
+                                <td>@(Item.TipoLeadDescricao != null ? (Item.TipoLeadDescricao?.Length > 30 ? Item.TipoLeadDescricao?.Substring(0,30) + "..." : Item?.TipoLeadDescricao) : "")</td>
+                                <td>@(Item.CidadeNome.Length > 30 ? Item.CidadeNome.Substring(0,30) + "..." : Item.CidadeNome)</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

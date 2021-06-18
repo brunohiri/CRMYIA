@@ -157,7 +157,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>UF *</label>
-                        <select class="form-control select2 uf" style="width: 100%;">
+                        <select class="form-control select2 uf" style="width: 100%;" asp-for="@Model.Entity.IdCidadeNavigation.IdEstado">
                             <option selected="selected">Selecione...</option>
                             @foreach (var Item in Model.ListEstado)
                             {
@@ -200,7 +200,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Operadora</label>
                         <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.OperadoraLead" id="ClienteIdOperadora">
@@ -212,12 +212,24 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label>Produto</label>
                         <input type="hidden" id="ClienteIdProdutoHidden" value="" />
                         <select class="form-control select2" style="width: 100%;" id="ClienteIdProduto" asp-for="@Model.Entity.ProdutoLead">
                             <option selected="selected" value="0">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Modalidade</label>
+                        <select class="form-control select2" style="width: 100%;" id="ClienteIdModalidade" asp-for="@Model.Entity.ModalidadeLead">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListModalidade)
+                            {
+                                <option value="@Item.IdModalidade">@(Item.Descricao)</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -248,6 +260,18 @@
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Status do Lead</label>
+                        <select class="form-control select2" style="width: 100%;" id="StatusLeadId" asp-for="@Model.ListStatusLead.Count">
+                            <option selected="selected" value="0">Selecione...</option>
+                            @foreach (var Item in Model.ListStatusLead)
+                            {
+                                <option value="@Item.IdStatusLead">@(Item.Descricao)</option>
+                            }
+                        </select>
                     </div>
                 </div>
             </div>
@@ -359,7 +383,7 @@
                                 <div class="form-group">
                                     <label>Operadora</label>
                                     <select class="form-control select2" style="width: 100%;" id="TelefoneOperadora" asp-for="@Model.EntityTelefone.IdOperadoraTelefone">
-                                        <option selected="selected">Selecione...</option>
+                                        <option selected="selected" data-id="0">Selecione...</option>
                                         @foreach (var Item in Model.ListOperadoraTelefone)
                                         {
                                             <option value="@Item.IdOperadoraTelefone" data-id="@Item.IdOperadoraTelefone">@Item.Descricao</option>
