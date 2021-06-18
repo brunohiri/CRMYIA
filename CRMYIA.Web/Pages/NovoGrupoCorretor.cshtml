@@ -1,0 +1,56 @@
+﻿@page
+@model CRMYIA.Web.Pages.NovoGrupoCorretorModel
+@{
+    ViewData["Title"] = "Novo";
+    ViewData["Pagina"] = "Perfil";
+}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+    </div>
+    <!-- /.card-header -->
+    <form method="post" id="form-salvar">
+        <div class="card-body">
+            <div class="row">
+                <div class="row" id="MensagemDiv" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="alert alert-success alert-dismissible" id="MensagemDivAlert">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i id="MensagemIcon" class="icon fas fa-check"></i>
+                                <span id="MensagemSpan">Dados salvos com sucesso!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <input type="hidden" class="form-control" id="IdGrupoCorretor" name="IdGrupoCorretor" asp-for="@Model.Entity.IdGrupoCorretor">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" class="form-control" placeholder="Descrição" id="Descricao" name="Descricao" required asp-for="@Model.Entity.Descricao">
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                            <input type="checkbox" class="custom-control-input" id="Ativo" name="Ativo" checked asp-for="@Model.Entity.Ativo">
+                            <label class="custom-control-label" for="switchAtivo">Ativo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-success btn-salvar">Salvar</button>
+            <button type="reset" class="btn btn-default" onclick="javascript:history.go(-1)">Voltar</button>
+        </div>
+    </form>
+</div>

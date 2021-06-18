@@ -96,7 +96,6 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Video> Video { get; set; }
         public virtual DbSet<Visita> Visita { get; set; }
         public virtual DbSet<VisitaCampanha> VisitaCampanha { get; set; }
-        public virtual DbSet<StatusLead> StatusLead { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -109,7 +108,6 @@ namespace CRMYIA.Data.Context
                 var connectionString = configuration.GetConnectionString("YiaConnection");
                 optionsBuilder.UseSqlServer(connectionString);
             }
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -1903,17 +1901,6 @@ namespace CRMYIA.Data.Context
                 entity.HasKey(e => e.IdStatusProposta);
 
                 entity.Property(e => e.IdStatusProposta).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<StatusLead>(entity =>
-            {
-                entity.HasKey(e => e.IdStatusLead);
-
-                entity.Property(e => e.IdStatusLead).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)

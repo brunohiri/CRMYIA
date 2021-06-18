@@ -10,6 +10,7 @@ namespace CRMYIA.Business
 {
     public class GrupoCorretorModel
     {
+        #region Métodos
         public static List<GrupoCorretor> GetList()
         {
             List<GrupoCorretor> ListEntity = null;
@@ -31,5 +32,56 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+        public static GrupoCorretor Get(long IdGrupoCorretor)
+        {
+            GrupoCorretor Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.GrupoCorretor
+                        .Where(x => x.Ativo && x.IdGrupoCorretor == IdGrupoCorretor)
+                        .AsNoTracking()
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+        public static void Add(GrupoCorretor Entity)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    context.GrupoCorretor.Add(Entity);
+                    context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void Update(GrupoCorretor Entity)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    context.GrupoCorretor.Update(Entity);
+                    context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }
