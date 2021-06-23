@@ -43,8 +43,9 @@ namespace CRMYIA.Data.Entities
         public bool Titular { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
-        public bool? StatusNaoIncomodar { get; set; }
         public string ModalidadeLead { get; set; }
+        public byte? IdStatusLead { get; set; }
+        public bool StatusNaoIncomodar { get; set; }
 
         public virtual ArquivoLead IdArquivoLeadNavigation { get; set; }
         public virtual Cidade IdCidadeNavigation { get; set; }

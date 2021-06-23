@@ -265,7 +265,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>Status do Lead</label>
-                        <select class="form-control select2" style="width: 100%;" id="StatusLeadId" asp-for="@Model.ListStatusLead.Count">
+                        <select class="form-control select2" style="width: 100%;" id="StatusLeadId" asp-for="@Model.Entity.IdStatusLead">
                             <option selected="selected" value="0">Selecione...</option>
                             @foreach (var Item in Model.ListStatusLead)
                             {
