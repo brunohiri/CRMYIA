@@ -74,48 +74,27 @@ namespace CRMYIA.Web.Pages
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");
                 else
                 {
-                    if (!Entity.Senha.IsNullOrEmpty())
+                    Entity.IP = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                    if (Entity.IdUsuario == 0)
                     {
-                        EnumeradorModel.PasswordStrength classicacaoSenha = Util.GetPasswordStrength(Entity.Senha);
-                        if ((classicacaoSenha == EnumeradorModel.PasswordStrength.Aceitavel)
-                            || (classicacaoSenha == EnumeradorModel.PasswordStrength.Forte)
-                            || (classicacaoSenha == EnumeradorModel.PasswordStrength.Segura))
-                        {
-                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, string.Format("Senha {0}! Utilize números, caracteres especiais e letras maiúsculas e minúsculas!", classicacaoSenha.ToString()));
-                        }
+                        if (UsuarioModel.GetByDocumento(Entity.Documento) != null)
+                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF ou CNPJ!");
                         else
-                        if (Entity.Senha != ConfirmarSenha)
-                        {
-                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Senha não é compatível com a confirmação de senha!");
-                        }
-                    }
-
-                    if (Mensagem == null)
-                    {
-                        Entity.IP = HttpContext.Connection.RemoteIpAddress.ToString();
-
-                        if (Entity.IdUsuario == 0)
-                        {
-                            if (UsuarioModel.GetByDocumento(Entity.Documento) != null)
-                                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF ou CNPJ!");
-                            else
-                            if (UsuarioModel.GetByLogin(Entity.Login) != null)
-                                Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");
-                            else
-                            {
-                                UsuarioModel.Add(Entity);
-                                UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
-                            }
-                        }
+                        if (UsuarioModel.GetByLogin(Entity.Login) != null)
+                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");
                         else
                         {
-                            if (!Entity.Senha.IsNullOrEmpty())
-                                Entity.Senha = Criptography.Encrypt(Entity.Senha);
-                            UsuarioModel.Update(Entity);
+                            UsuarioModel.Add(Entity);
+                            UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
                         }
-
-                        Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                     }
+                    else
+                    {
+                        UsuarioModel.Update(Entity);
+                    }
+
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
                 }
             }
             catch (Exception ex)

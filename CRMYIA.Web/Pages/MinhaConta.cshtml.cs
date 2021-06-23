@@ -29,6 +29,7 @@ namespace CRMYIA.Web.Pages
         public Perfil EntityCargo { get; set; }
         public long IdUsuario { get; set; }
         public UsuarioPerfil UsuarioPerfil { get; set; }
+        public string ConfirmarSenha { get; set; }
         #endregion
         #endregion
 
@@ -83,7 +84,7 @@ namespace CRMYIA.Web.Pages
 
             if (id > 0)
             {
-                KPIGrupoModel.Excluir(user);
+                //  KPIGrupoModel.Excluir(user);
                 status = true;
             }
             if (status == false)
@@ -93,17 +94,29 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnPostAlterarSenha(IFormCollection dados)
         {
-            int id;
+            long id = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
-            KPIGrupo user = new KPIGrupo();
+            ConfirmarSenha = dados["SenhaAtual"];
+            Usuario usuario = new Usuario();
+            usuario = UsuarioModel.Get(id);
 
-            id = int.Parse(dados["id"]);
-            user.IdKPIGrupo = id;
-
-            if (id > 0)
+            if (id > 0 && usuario != null)
             {
-                KPIGrupoModel.Excluir(user);
+                EnumeradorModel.PasswordStrength classicacaoSenha = Util.GetPasswordStrength(dados["Senha"]);
+                if ((classicacaoSenha == EnumeradorModel.PasswordStrength.Aceitavel)
+                    || (classicacaoSenha == EnumeradorModel.PasswordStrength.Forte)
+                    || (classicacaoSenha == EnumeradorModel.PasswordStrength.Segura))
+                {
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, string.Format("Senha {0}! Utilize números, caracteres especiais e letras maiúsculas e minúsculas!", classicacaoSenha.ToString()));
+                }
+                else
+                if (usuario.Senha != ConfirmarSenha)
+                {
+                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Senha não é compatível com a confirmação de senha!");
+                }
                 status = true;
+                if (!Entity.Senha.IsNullOrEmpty())
+                    Entity.Senha = Criptography.Encrypt(Entity.Senha);
             }
             if (status == false)
                 return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
@@ -121,7 +134,7 @@ namespace CRMYIA.Web.Pages
 
             if (id > 0)
             {
-                KPIGrupoModel.Excluir(user);
+                // KPIGrupoModel.Excluir(user);
                 status = true;
             }
             if (status == false)
@@ -180,7 +193,7 @@ namespace CRMYIA.Web.Pages
             //        }
             //        KPIMetaValorEntity.IdMeta = Entity.IdMeta;
             //        KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
-                    
+
             //        KPIMetaModel.Update(Entity);
             //        KPIMetaValorModel.Update(KPIMetaValorEntity);
             //        KPIMetaVidaModel.Update(KPIMetaVidaEntity);

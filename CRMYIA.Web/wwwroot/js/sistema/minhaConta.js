@@ -2,13 +2,14 @@
 
 });
 $("#btnRedesSociais").click(function () {
-
+    alert("oi");
 });
 $("#btnAlterarSenha").click(function () {
-    formData = new FormData();
     if ($("#txtNovaSenha").val() != $("#txtConfSenha").val()) {
-
+        toastr.error("As senhas não coincidem!");
     } else {
+        formData = new FormData();
+        formData.append('SenhaAtual', $("#txtSenhaAtual").val());
         formData.append('Senha', $("#txtNovaSenha").val());
         swal({
             title: "Você tem certeza?",
@@ -57,6 +58,12 @@ $("#btnAlterarSenha").click(function () {
     }
 
 });
+$("#btnLimparSenha").click(function () {
+    $("#txtSenhaAtual").val("")
+    $("#txtNovaSenha").val("")
+    $("#txtConfSenha").val("")
+    toastr.info("Campos limpos!");
+});
 $("#btnDadosPessoais").click(function () {
-
+    alert("oi");
 });
