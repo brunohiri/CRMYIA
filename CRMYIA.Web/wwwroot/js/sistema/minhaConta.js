@@ -1,12 +1,43 @@
 ﻿$(document).ready(function () {
-
+    $("#txtTelefone").inputmask({
+        mask: ["(99) 9999-9999", "(99) 99999-9999"],
+        keepStatic: true
+    });
 });
 $("#btnRedesSociais").click(function () {
-    alert("oi");
+    formData = new FormData();
+    formData.append('Facebook', $("#txtFacebook").val());
+    formData.append('Twitter', $("#txtTwitter").val());
+    formData.append('Instagram', $("#txtInstagram").val());
+    formData.append('Linkedin', $("#txtLinkedin").val());
+    $.ajax({
+        type: 'POST',
+        url: "/MinhaConta?handler=RedesSociais",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function (data) {
+            if (data.status) {
+                swal("Sucesso!", data.mensagem, "success");
+                location.reload();
+            }
+            else {
+                swal("Erro!", data.mensagem, "error");
+            }
+        },
+        error: function () {
+            alert("Error occurs");
+        }
+    });
 });
 $("#btnAlterarSenha").click(function () {
     if ($("#txtNovaSenha").val() != $("#txtConfSenha").val()) {
-        toastr.error("As senhas não coincidem!");
+        swal("Erro!", "As senhas não coincidem!", "error");
     } else {
         formData = new FormData();
         formData.append('SenhaAtual', $("#txtSenhaAtual").val());
@@ -23,7 +54,7 @@ $("#btnAlterarSenha").click(function () {
             cancelButtonColor: "#DC3545"
         }).then(function (e) {
             if (e.value === true) {
-                
+
                 $.ajax({
                     type: 'POST',
                     url: "/MinhaConta?handler=AlterarSenha",
@@ -41,7 +72,7 @@ $("#btnAlterarSenha").click(function () {
                             location.reload();
                         }
                         else {
-                            swal("Erro!", data.mensagem, "Error");
+                            swal("Erro!", data.mensagem, "error");
                         }
                     },
                     error: function () {
@@ -65,5 +96,37 @@ $("#btnLimparSenha").click(function () {
     toastr.info("Campos limpos!");
 });
 $("#btnDadosPessoais").click(function () {
-    alert("oi");
+    formData = new FormData();
+    formData.append('Nome', $("#txtNome").val());
+    formData.append('NomeApelido', $("#txtApelido").val());
+    formData.append('Telefone', $("#txtTelefone").val());
+    if ($("#txtNome").val().length <= 3) {
+        swal("Erro!", "Seu nome é muito pequeno!", "error");
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "/MinhaConta?handler=AlterarDados",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (data) {
+                if (data.status) {
+                    swal("Sucesso!", data.mensagem, "success");
+                    location.reload();
+                }
+                else {
+                    swal("Erro!", data.mensagem, "error");
+                }
+            },
+            error: function () {
+                alert("Error occurs");
+            }
+        });
+    }
+
 });

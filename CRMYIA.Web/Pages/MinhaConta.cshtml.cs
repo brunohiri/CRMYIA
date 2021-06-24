@@ -75,20 +75,21 @@ namespace CRMYIA.Web.Pages
         }
         public IActionResult OnPostRedesSociais(IFormCollection dados)
         {
-            int id;
+            long id = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
-            KPIGrupo user = new KPIGrupo();
-
-            id = int.Parse(dados["id"]);
-            user.IdKPIGrupo = id;
-
-            if (id > 0)
+            Usuario usuario = new Usuario();
+            usuario = UsuarioModel.Get(id);
+            if (!usuario.Nome.IsNullOrEmpty() && !usuario.Nome.IsNullOrEmpty())
             {
-                //  KPIGrupoModel.Excluir(user);
+                usuario.Facebook = dados["Facebook"];
+                usuario.Instagram = dados["Instagram"];
+                usuario.Linkedin = dados["Linkedin"];
+                usuario.Twitter = dados["Twitter"];
+                UsuarioModel.Update(usuario);
                 status = true;
             }
             if (status == false)
-                return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
+                return new JsonResult(new { mensagem = "Ocorreu um erro, contate o administrador do sistema!", status });
             else
                 return new JsonResult(new { mensagem = "Sucesso", status });
         }
@@ -97,6 +98,8 @@ namespace CRMYIA.Web.Pages
             long id = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
             ConfirmarSenha = dados["SenhaAtual"];
+            if (!ConfirmarSenha.IsNullOrEmpty())
+                ConfirmarSenha = Criptography.Encrypt(ConfirmarSenha);
             Usuario usuario = new Usuario();
             usuario = UsuarioModel.Get(id);
 
@@ -107,104 +110,51 @@ namespace CRMYIA.Web.Pages
                     || (classicacaoSenha == EnumeradorModel.PasswordStrength.Forte)
                     || (classicacaoSenha == EnumeradorModel.PasswordStrength.Segura))
                 {
-                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, string.Format("Senha {0}! Utilize números, caracteres especiais e letras maiúsculas e minúsculas!", classicacaoSenha.ToString()));
+                    return new JsonResult(new
+                    {
+                        mensagem = new MensagemModel(
+                        Business.Util.EnumeradorModel.TipoMensagem.Aviso,
+                        string.Format("Senha {0}! Utilize números, caracteres especiais e letras maiúsculas e minúsculas!", classicacaoSenha.ToString())
+                        )
+                    });
+                }
+                else if (usuario.Senha != ConfirmarSenha)
+                {
+                    return new JsonResult(new { mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Senha não é compatível com a confirmação de senha!") });
                 }
                 else
-                if (usuario.Senha != ConfirmarSenha)
                 {
-                    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Senha não é compatível com a confirmação de senha!");
+                    usuario.Senha = ConfirmarSenha;
+                    UsuarioModel.Update(usuario);
+                    status = true;
                 }
-                status = true;
-                if (!Entity.Senha.IsNullOrEmpty())
-                    Entity.Senha = Criptography.Encrypt(Entity.Senha);
             }
             if (status == false)
-                return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
+                return new JsonResult(new { mensagem = "Erro ao alterar sua senha, contate o administrador do sistema!", status });
             else
                 return new JsonResult(new { mensagem = "Sucesso", status });
         }
         public IActionResult OnPostAlterarDados(IFormCollection dados)
         {
-            int id;
+            long id = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             bool status = false;
-            KPIGrupo user = new KPIGrupo();
-
-            id = int.Parse(dados["id"]);
-            user.IdKPIGrupo = id;
-
-            if (id > 0)
+            Usuario usuario = new Usuario();
+            usuario = UsuarioModel.Get(id);
+            if (!usuario.Nome.IsNullOrEmpty() && !usuario.Nome.IsNullOrEmpty())
             {
-                // KPIGrupoModel.Excluir(user);
+                usuario.Nome = dados["Nome"];
+                usuario.NomeApelido = dados["NomeApelido"];
+                usuario.Telefone = dados["Telefone"];
+                UsuarioModel.Update(usuario);
                 status = true;
             }
             if (status == false)
-                return new JsonResult(new { mensagem = "Erro ao excluir o cartão!", status });
+                return new JsonResult(new { mensagem = "Erro ao alterar seus dados, contate o administrador do sistema!", status });
             else
                 return new JsonResult(new { mensagem = "Sucesso", status });
         }
         public IActionResult OnPost()
         {
-            //try
-            //{
-            //    if (Entity.Ativo == false)
-            //    {
-            //        KPIMetaValorEntity.Ativo = false;
-            //        KPIMetaVidaEntity.Ativo = false;
-            //    }
-            //    else
-            //    {
-            //        KPIMetaValorEntity.Ativo = true;
-            //        KPIMetaVidaEntity.Ativo = true;
-            //    }
-            //    if (Entity.IdMeta == 0 && KPIMetaValorEntity.IdKPIMetaValor == 0 && KPIMetaVidaEntity.IdKPIMetaVida == 0)
-            //    {
-
-            //        Entity.IdKPIGrupo = EntityKPIGrupo.IdKPIGrupo;
-            //        if (DateTime.TryParse(Request.Form["DataMinima"], out DateTime data))
-            //        {
-            //            Entity.DataMinima = DateTime.Parse(Request.Form["DataMinima"]);
-            //            Entity.DataMaxima = DateTime.Parse(Request.Form["DataMaxima"]);
-            //        }
-            //        else
-            //        {
-            //            Entity.DataMinima = DateTime.Parse(Request.Form["DtInicio"]);
-            //            Entity.DataMaxima = DateTime.Parse(Request.Form["DtFinal"]);
-            //        }
-            //        KPIMetaModel.Add(Entity);
-            //        KPIMetaValorEntity.IdMeta = Entity.IdMeta;
-            //        KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
-
-            //        KPIMetaValorModel.Add(KPIMetaValorEntity);
-            //        KPIMetaVidaModel.Add(KPIMetaVidaEntity);
-            //    }
-            //    else
-            //    {
-            //        Entity.IdKPIGrupo = EntityKPIGrupo.IdKPIGrupo;
-
-            //        if(DateTime.TryParse(Request.Form["DataMinima"], out DateTime data))
-            //        {
-            //            Entity.DataMinima = DateTime.Parse(Request.Form["DataMinima"]);
-            //            Entity.DataMaxima = DateTime.Parse(Request.Form["DataMaxima"]);
-            //        }
-            //        else
-            //        {
-            //            Entity.DataMinima = DateTime.Parse(Request.Form["DtInicio"]);
-            //            Entity.DataMaxima = DateTime.Parse(Request.Form["DtFinal"]);
-            //        }
-            //        KPIMetaValorEntity.IdMeta = Entity.IdMeta;
-            //        KPIMetaVidaEntity.IdMeta = Entity.IdMeta;
-
-            //        KPIMetaModel.Update(Entity);
-            //        KPIMetaValorModel.Update(KPIMetaValorEntity);
-            //        KPIMetaVidaModel.Update(KPIMetaVidaEntity);
-            //    }
-            //    EntityKPIGrupo = KPIGrupoModel.GetByKPIGrupo((long)Entity.IdKPIGrupo);
-            //    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Erro, "Erro ao salvar! Erro: " + ex.Message.ToString());
-            //}
             return Page();
         }
 
