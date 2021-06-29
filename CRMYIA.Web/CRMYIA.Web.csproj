@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="wwwroot\js\xlsx\**" />
+    <Compile Remove="wwwroot\YINDICA\**" />
     <Content Remove="wwwroot\js\xlsx\**" />
+    <Content Remove="wwwroot\YINDICA\**" />
     <EmbeddedResource Remove="wwwroot\js\xlsx\**" />
+    <EmbeddedResource Remove="wwwroot\YINDICA\**" />
     <None Remove="wwwroot\js\xlsx\**" />
+    <None Remove="wwwroot\YINDICA\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,8 +63,6 @@
     <Folder Include="wwwroot\ArquivoOperadora\" />
     <Folder Include="wwwroot\ArquivoBannerOperadora\" />
     <Folder Include="wwwroot\ArquivoCarrosselLanding\" />
-    <Folder Include="wwwroot\YINDICA\Processado\" />
-    <Folder Include="wwwroot\YINDICA\Processar\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
