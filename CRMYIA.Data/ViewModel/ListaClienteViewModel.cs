@@ -17,5 +17,7 @@ namespace CRMYIA.Data.ViewModel
         public DateTime? DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
+        public int QtdTelefone { get; set; }
+        public int QtdEmail { get; set; }
     }
 }

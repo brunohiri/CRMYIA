@@ -14,6 +14,7 @@ namespace CRMYIA.Data.Entities
             CapaRedeSocial = new HashSet<CapaRedeSocial>();
             ChatIdUsuarioDeNavigation = new HashSet<Chat>();
             ChatIdUsuarioParaNavigation = new HashSet<Chat>();
+            Fila = new HashSet<Fila>();
             FornecedorConsulta = new HashSet<FornecedorConsulta>();
             HistoricoAcesso = new HashSet<HistoricoAcesso>();
             HistoricoLigacao = new HashSet<HistoricoLigacao>();
@@ -72,6 +73,7 @@ namespace CRMYIA.Data.Entities
         public virtual ICollection<CapaRedeSocial> CapaRedeSocial { get; set; }
         public virtual ICollection<Chat> ChatIdUsuarioDeNavigation { get; set; }
         public virtual ICollection<Chat> ChatIdUsuarioParaNavigation { get; set; }
+        public virtual ICollection<Fila> Fila { get; set; }
         public virtual ICollection<FornecedorConsulta> FornecedorConsulta { get; set; }
         public virtual ICollection<HistoricoAcesso> HistoricoAcesso { get; set; }
         public virtual ICollection<HistoricoLigacao> HistoricoLigacao { get; set; }

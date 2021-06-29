@@ -178,7 +178,7 @@ namespace CRMYIA.Business
                        .Include(y => y.UsuarioCliente)
                            .ThenInclude(y => y.IdUsuarioNavigation)
                        .AsNoTracking()
-                       .Where(x => (x.DataAdesaoLead >= DataInicio && x.DataAdesaoLead <= DataFim))
+                       .Where(x => (x.DataAdesaoLead >= (DataInicio.HasValue ? DataInicio.Value : DateTime.MinValue) && x.DataAdesaoLead <= (DataFim.HasValue ? DataFim.Value : DateTime.MaxValue)))
                        .Select(x => new ListaClienteViewModel()
                        {
                            IdCliente = x.IdCliente,
@@ -186,12 +186,15 @@ namespace CRMYIA.Business
                            Nome = x.Nome,
                            OrigemDescricao = x.IdOrigemNavigation.Descricao,
                            TipoLeadDescricao = x.IdTipoLeadNavigation.Descricao,
-                            //CorretorNome = x.UsuarioCliente == null || x.UsuarioCliente.Count == 0 ? "" : x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation.Nome,
-                            CorretorNome = GetNavigation(x.UsuarioCliente) != null ? GetNavigation(x.UsuarioCliente) : "",
+                            CorretorNome = (x.UsuarioCliente == null || x.UsuarioCliente.Count == 0 && x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation == null) ? "" : x.UsuarioCliente.FirstOrDefault().IdUsuarioNavigation.Nome,
+                           //CorretorNome = GetNavigation(x.UsuarioCliente) != null ? GetNavigation(x.UsuarioCliente) : "",
                            CidadeNome = x.IdCidadeNavigation == null ? string.Empty : string.Format("{0}-{1}", x.IdCidadeNavigation.Descricao, x.IdCidadeNavigation.IdEstadoNavigation.Sigla),
                            DataCadastro = x.DataCadastro,
-                           Ativo = x.Ativo
+                           Ativo = x.Ativo,
+                           QtdTelefone = x.Telefone != null ? x.Telefone.Count() : 0,
+                           QtdEmail = x.Email != null ? x.Email.Count() : 0
                        })
+                       .Take(1000)
                        .ToList();
                     }
                     else { 

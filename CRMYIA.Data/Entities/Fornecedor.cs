@@ -7,6 +7,7 @@ namespace CRMYIA.Data.Entities
     {
         public Fornecedor()
         {
+            Fila = new HashSet<Fila>();
             FornecedorConsulta = new HashSet<FornecedorConsulta>();
         }
 
@@ -18,6 +19,7 @@ namespace CRMYIA.Data.Entities
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
+        public virtual ICollection<Fila> Fila { get; set; }
         public virtual ICollection<FornecedorConsulta> FornecedorConsulta { get; set; }
     }
 }

@@ -44,6 +44,8 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<FaixaEtaria> FaixaEtaria { get; set; }
         public virtual DbSet<FaseProposta> FaseProposta { get; set; }
         public virtual DbSet<Fechamento> Fechamento { get; set; }
+        public virtual DbSet<Fila> Fila { get; set; }
+        public virtual DbSet<FilaItem> FilaItem { get; set; }
         public virtual DbSet<Fornecedor> Fornecedor { get; set; }
         public virtual DbSet<FornecedorConsulta> FornecedorConsulta { get; set; }
         public virtual DbSet<Genero> Genero { get; set; }
@@ -64,6 +66,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<KPIMetaVidaIndividual> KPIMetaVidaIndividual { get; set; }
         public virtual DbSet<LandingPage> LandingPage { get; set; }
         public virtual DbSet<LandingPageCarrossel> LandingPageCarrossel { get; set; }
+        public virtual DbSet<Layout> Layout { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
@@ -83,6 +86,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<PropostaCliente> PropostaCliente { get; set; }
         public virtual DbSet<PropostaFaixaEtaria> PropostaFaixaEtaria { get; set; }
         public virtual DbSet<RedeSocial> RedeSocial { get; set; }
+        public virtual DbSet<StatusFila> StatusFila { get; set; }
         public virtual DbSet<StatusLead> StatusLead { get; set; }
         public virtual DbSet<StatusProposta> StatusProposta { get; set; }
         public virtual DbSet<StatusVisita> StatusVisita { get; set; }
@@ -102,9 +106,9 @@ namespace CRMYIA.Data.Context
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
+                     .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                     .AddJsonFile("appsettings.json")
+                     .Build();
                 var connectionString = configuration.GetConnectionString("YiaConnection");
                 optionsBuilder.UseSqlServer(connectionString);
             }
@@ -1069,6 +1073,82 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Fila>(entity =>
+            {
+                entity.HasKey(e => e.IdFila);
+
+                entity.Property(e => e.CaminhoArquivoEntrada)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CaminhoArquivoSaida)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DataEntrada).HasColumnType("datetime");
+
+                entity.Property(e => e.DataProcessamento).HasColumnType("datetime");
+
+                entity.Property(e => e.DataSaida).HasColumnType("datetime");
+
+                entity.Property(e => e.IP)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivoEntrada)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeArquivoSaida)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NomeJob)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdFornecedorNavigation)
+                    .WithMany(p => p.Fila)
+                    .HasForeignKey(d => d.IdFornecedor)
+                    .HasConstraintName("Fornecedor_Fila");
+
+                entity.HasOne(d => d.IdLayoutNavigation)
+                    .WithMany(p => p.Fila)
+                    .HasForeignKey(d => d.IdLayout)
+                    .HasConstraintName("Layout_Fila");
+
+                entity.HasOne(d => d.IdStatusFilaNavigation)
+                    .WithMany(p => p.Fila)
+                    .HasForeignKey(d => d.IdStatusFila)
+                    .HasConstraintName("StatusFila_Fila");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Fila)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("Usuario_Fila");
+            });
+
+            modelBuilder.Entity<FilaItem>(entity =>
+            {
+                entity.HasKey(e => e.IdFilaItem);
+
+                entity.Property(e => e.DataCadastro).HasColumnType("datetime");
+
+                entity.Property(e => e.Documento)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdFilaNavigation)
+                    .WithMany(p => p.FilaItem)
+                    .HasForeignKey(d => d.IdFila)
+                    .HasConstraintName("Fila_FilaItem");
+
+                entity.HasOne(d => d.IdFornecedorConsultaNavigation)
+                    .WithMany(p => p.FilaItem)
+                    .HasForeignKey(d => d.IdFornecedorConsulta)
+                    .HasConstraintName("FornecedorConsulta_FilaItem");
+            });
+
             modelBuilder.Entity<Fornecedor>(entity =>
             {
                 entity.HasKey(e => e.IdFornecedor);
@@ -1468,6 +1548,17 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.LandingPageCarrossel)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Usuario_LandingPageCarrossel");
+            });
+
+            modelBuilder.Entity<Layout>(entity =>
+            {
+                entity.HasKey(e => e.IdLayout);
+
+                entity.Property(e => e.IdLayout).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Linha>(entity =>
@@ -1883,6 +1974,29 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
 
                 entity.Property(e => e.Nome)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<StatusFila>(entity =>
+            {
+                entity.HasKey(e => e.IdStatusFila);
+
+                entity.Property(e => e.IdStatusFila).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CssClass)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CssIcon)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ToolTip)
                     .HasMaxLength(200)
                     .IsUnicode(false);
             });

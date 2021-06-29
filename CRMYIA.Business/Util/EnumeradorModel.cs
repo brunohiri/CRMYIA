@@ -52,6 +52,29 @@ namespace CRMYIA.Business.Util
         }
         #endregion
 
+        #region StatusFila
+        public enum StatusFila
+        {
+            Aguardando = 1,
+            Processando = 2,
+            Processado = 3,
+            Compactando = 4,
+            Descompactando = 5,
+            Exportado = 6,
+            Cancelado = 7,
+            Bloqueado = 8,
+            Erro = 9
+        }
+        #endregion
+
+        #region Layout
+        public enum Layout
+        {
+            Localizacao = 1,
+            ANS = 2
+        }
+        #endregion
+
         #region StatusVisita
         public enum StatusVisita
         {
@@ -75,7 +98,7 @@ namespace CRMYIA.Business.Util
         public enum Frequencia
         {
             Diariamente = 1,
-            Semanalmente  =2,
+            Semanalmente = 2,
             Mensalmente = 3,
             Anualmente = 4
         }

@@ -1,8 +1,8 @@
 ﻿@page
-@model CRMYIA.Web.Pages.EnriquecimentoModel
+@model CRMYIA.Web.Pages.FilaListarModel
 @{
     ViewData["Title"] = "";
-    ViewData["Pagina"] = "YINDICA";
+    ViewData["Pagina"] = "Fila do YINDICA";
 }
 @using CRMYIA.Business.Util;
 
@@ -19,7 +19,7 @@
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form role="form" method="post" enctype="multipart/form-data">
+                    <form role="form" method="post">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
@@ -60,19 +60,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="EnriquecimentoNomeArquivo">Selecione um arquivo:</label>
-                                        <div class="input-group">
-                                            <input type="file" id="NomeArquivoProcessar" name="NomeArquivoProcessar" asp-for="@Model.NomeArquivoProcessar" accept=".csv,.txt">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-success">Enriquecer</button>
-                            <a asp-page="/FilaListar" class="btn btn-warning" >Ver Fila</a>
+                            <button type="submit" class="btn btn-success">Atualizar Fila</button>
                         </div>
                     </form>
                 </div>
@@ -85,16 +76,18 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
-                <table id="tableEnriquecimento" class="table table-striped table-hover dt-responsive display datatable" style="width:100%">
+                <table id="tableFila" class="table table-striped table-hover dt-responsive display datatable" style="width:100%">
                     <thead>
                         <tr>
-                            <th width="5%"></th>
-                            <th width="20%">Cliente</th>
-                            <th width="20%">Origem</th>
-                            <th width="10%">Tipo</th>
-                            <th width="15%">Cidade</th>
-                            <th width="15%">Telefones</th>
-                            <th width="15%">Emails</th>
+                            <th width="5%">ID</th>
+                            <th width="15%">Job</th>
+                            <th width="15%">Fornecedor</th>
+                            <th width="10%">Layout</th>
+                            <th width="10%">Arquivo</th>
+                            <th width="10%">Entrada</th>
+                            <th width="12%">Processamento</th>
+                            <th width="10%">Saída</th>
+                            <th width="13%">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,13 +97,19 @@
                             foreach (var Item in Model.ListEntity)
                             {
                                 <tr>
-                                    <td><input type="checkbox" /></td>
-                                    <td>@(Item.Nome.Length > 30 ? Item.Nome.Substring(0,30) + "..." : Item.Nome)</td>
-                                    <td>@(Item.OrigemDescricao.Length > 30 ? Item.OrigemDescricao.Substring(0,30) + "..." : Item.OrigemDescricao)</td>
-                                    <td>@(Item.TipoLeadDescricao != null ? (Item.TipoLeadDescricao?.Length > 30 ? Item.TipoLeadDescricao?.Substring(0,30) + "..." : Item?.TipoLeadDescricao) : "")</td>
-                                    <td>@(Item.CidadeNome.Length > 30 ? Item.CidadeNome.Substring(0,30) + "..." : Item.CidadeNome)</td>
-                                    <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdTelefone)))</td>
-                                    <td>@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdEmail)))</td>
+                                    <td>@(Item.IdFila.ToString("0000"))</td>
+                                    <td title="@Item.NomeJob">@(Item.NomeJob.Length > 30 ? Item.NomeJob.Substring(0,30) + "..." : Item.NomeJob)</td>
+                                    <td title="@Item.IdFornecedorNavigation.Descricao">@(Item.IdFornecedorNavigation.Descricao.Length > 30 ? Item.IdFornecedorNavigation.Descricao.Substring(0,30) + "..." : Item.IdFornecedorNavigation.Descricao)</td>
+                                    <td title="@Item.IdLayoutNavigation.Descricao">@(Item.IdLayoutNavigation.Descricao.Length > 30 ? Item.IdLayoutNavigation.Descricao.Substring(0,30) + "..." : Item.IdLayoutNavigation.Descricao)</td>
+                                    <td title="@Item.NomeArquivoEntrada">@(Item.NomeArquivoEntrada.Length > 30 ? Item.NomeArquivoEntrada.Substring(0,30) + "..." : Item.NomeArquivoEntrada)</td>
+                                    <td class="text-right">@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdEntrada)))<br /><small>@Item.DataEntrada.ToString("dd/MM/yyyy HH:mm:ss.fff")</small></td>
+                                    <td class="text-right">@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdProcessado)))<br /><small>@Item.DataProcessamento?.ToString("dd/MM/yyyy HH:mm:ss.fff")</small></td>
+                                    <td class="text-right">@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdSaida)))<br /><small>@Item.DataSaida?.ToString("dd/MM/yyyy HH:mm:ss.fff")</small></td>
+                                    <td title="@Item.IdStatusFilaNavigation.ToolTip">
+                                        <a asp-page-handler="Download" asp-route-filename="@(Criptography.Encrypt(Item.IdFila.ToString()))" class="@Item.IdStatusFilaNavigation.CssClass">
+                                            <i class="@Item.IdStatusFilaNavigation.CssIcon"></i>&nbsp;<strong>@Item.IdStatusFilaNavigation.Descricao</strong>
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         }

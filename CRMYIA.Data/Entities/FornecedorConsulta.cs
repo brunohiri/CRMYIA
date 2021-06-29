@@ -5,6 +5,11 @@ namespace CRMYIA.Data.Entities
 {
     public partial class FornecedorConsulta
     {
+        public FornecedorConsulta()
+        {
+            FilaItem = new HashSet<FilaItem>();
+        }
+
         public long IdFornecedorConsulta { get; set; }
         public byte? IdFornecedor { get; set; }
         public long? IdUsuario { get; set; }
@@ -16,5 +21,6 @@ namespace CRMYIA.Data.Entities
 
         public virtual Fornecedor IdFornecedorNavigation { get; set; }
         public virtual Usuario IdUsuarioNavigation { get; set; }
+        public virtual ICollection<FilaItem> FilaItem { get; set; }
     }
 }

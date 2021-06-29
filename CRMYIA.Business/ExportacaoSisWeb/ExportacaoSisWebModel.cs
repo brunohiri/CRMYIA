@@ -2,7 +2,9 @@
 using CRMYIA.Data.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using CRMYIA.Business.Util;
 
 namespace CRMYIA.Business.ExportacaoSisWeb
 {
@@ -31,7 +33,7 @@ namespace CRMYIA.Business.ExportacaoSisWeb
             {
                 #region Header Propostas
                 sbTextoProposta.AppendLine("#LayoutImportacaoProposta");
-                sbTextoProposta.AppendLine("PropostaNumero;PropostaDigito;CodigoEmpresa;Retroativa;IdModalidade;TxtModalidade;IdOperadora;TxtOperadora;IdSubProduto;TxtSubProduto;DtProducao;DtAssinatura;DtProtocolo;VigenciaManual;DtVigencia;ImplantacaoManual;DtImplantacao;IdLoja;TxtLoja;IdCorretor;TxtCorretor;MultiNota;Segurado;Documento;TelComercial;TelResidencial;TelCelular;Email;CondicaoEspecial;VlProducao;QtdeBeneficiarios;ResponsavelEmpresaNome;ResponsavelFinanceiroNome;ResponsavelFinanceiroCPF;ResponsavelFinanceiroEmail;ResponsavelFinanceiroDtNascimento;IdAssistenteOriginal;TxtAssistenteOriginal;IdVendedor;TxtVendedor;SupervisorNome;SupervisorCPF;SupervisorEmail;IdOrigem;TxtOrigem;IdConferente;TxtConferente;IdGrade;TxtGrade;VlRepique;VlAdministrativo;VlBoleto;VlNet;PcDesconto;VlDescontoPrimeira;TaxaPaga;VlTaxa;TaxaParcela;IOFPago;VlIOF;IdProduto;TxtProduto;IdAdministradora;TxtAdministradora;IdEntidade;TxtEntidade;IdTabela;TxtTabela;IdPlano;TxtPlano;IdPlataforma;TxtPlataforma;PropostaColigadaPrincipalNumero;PropostaColigadaPrincipalQtdeBeneficiarios;IdFonte;TxtFonte;IdClassificacao;TxtClassificacao;GeraComissaoPrimeira;Administrativa;Movimentacao;NaoParticipaCampanha;DentalIncluso;CoParticipacao;Acordo;AcompanharImplantacao;Portabilidade;Vip;Adaptacao;Regulamentacao;Obs");
+                sbTextoProposta.AppendLine("PropostaNumero;PropostaDigito;CodigoEmpresa;Retroativa;IdModalidade;TxtModalidade;IdOperadora;TxtOperadora;IdSubProduto;TxtSubProduto;DtProducao;DtProtocolo;DtAssinatura;VigenciaManual;DtVigencia;DtVencimentoFixo;ImplantacaoManual;DtImplantacao;IdLoja;TxtLoja;IdCorretor;TxtCorretor;MultiNota;Segurado;Documento;TelComercial;TelResidencial;TelCelular;Email;CondicaoEspecial;VlProducao;QtdeBeneficiarios;PropostaColigadaPrincipalNumero;PropostaColigadaPrincipalQtdeBeneficiarios;ResponsavelEmpresaNome;ResponsavelFinanceiroNome;ResponsavelFinanceiroCPF;ResponsavelFinanceiroEmail;ResponsavelFinanceiroDtNascimento;IdProduto;TxtProduto;IdAdministradora;TxtAdministradora;IdEntidade;TxtEntidade;IdTabela;TxtTabela;IdPlano;TxtPlano;IdPlataforma;TxtPlataforma;IdVendedor;TxtVendedor;IdGrade;TxtGrade;IdAssistenteOriginal;TxtAssistenteOriginal;SupervisorNome;SupervisorCPF;SupervisorEmail;IdOrigem;TxtOrigem;IdConferente;TxtConferente;VlRepique;VlAdministrativo;VlBoleto;VlNet;PcDesconto;VlDescontoPrimeira;TaxaPaga;VlTaxa;TaxaParcela;IOFPago;VlIOF;IdFonte;TxtFonte;IdClassificacao;TxtClassificacao;GeraComissaoPrimeira;Integracao;Administrativa;Movimentacao;NaoParticipaCampanha;DentalIncluso;CoParticipacao;Acordo;AcompanharImplantacao;Portabilidade;Vip;Adaptacao;Regulamentacao;Obs");
                 #endregion
 
                 #region Header Beneficiários
@@ -51,94 +53,97 @@ namespace CRMYIA.Business.ExportacaoSisWeb
                     sbTextoProposta.AppendFormat("{0};", Item.NumeroProposta);//PropostaNumero
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//PropostaDigito
                     sbTextoProposta.AppendFormat("{0};", string.Empty); //CodigoEmpresa
-                    sbTextoProposta.AppendFormat("{0};", "false");//Retroativa
+                    sbTextoProposta.AppendFormat("{0};", "Não");//Retroativa
                     sbTextoProposta.AppendFormat("{0};", Item.IdModalidade.ToString());//IdModalidade
-                    sbTextoProposta.AppendFormat("{0};", Item.IdModalidadeNavigation?.Descricao);//TxtModalidade
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtModalidade
                     sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadora);//IdOperadora
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.Descricao);//TxtOperadora
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtOperadora
                     sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdProduto);//IdSubProduto
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao);//TxtSubProduto
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtSubProduto
                     sbTextoProposta.AppendFormat("{0};", Item.DataSolicitacao?.ToString("dd/MM/yyyy HH:mm"));//DtProducao
-                    sbTextoProposta.AppendFormat("{0};", Item.DataSolicitacao?.ToString("dd/MM/yyyy"));//DtAssinatura
-                    sbTextoProposta.AppendFormat("{0};", Item.DataSolicitacao?.ToString("dd/MM/yyyy HH:mm"));//DtProtocolo
-                    sbTextoProposta.AppendFormat("{0};", "True");//VigenciaManual
+                    sbTextoProposta.AppendFormat("{0};", Item.DataSolicitacao?.ToString("dd/MM/yyyy"));//DtProtocolo
+                    sbTextoProposta.AppendFormat("{0};", Item.DataSolicitacao?.ToString("dd/MM/yyyy HH:mm"));//DtAssinatura
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VigenciaManual
                     sbTextoProposta.AppendFormat("{0};", Item.DataSolicitacao?.ToString("dd/MM/yyyy"));//DtVigencia
-                    sbTextoProposta.AppendFormat("{0};", "False");//ImplantacaoManual
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//DtVencimentoFixo
+                    sbTextoProposta.AppendFormat("{0};", "Não");//ImplantacaoManual
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//DtImplantacao
                     sbTextoProposta.AppendFormat("{0};", "1");//IdLoja
-                    sbTextoProposta.AppendFormat("{0};", "Matriz - Campinas");//TxtLoja
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtLoja
                     sbTextoProposta.AppendFormat("{0};", Item.IdUsuarioCorretorNavigation?.IdUsuario);//IdCorretor
-                    sbTextoProposta.AppendFormat("{0};", Item.IdUsuarioCorretorNavigation?.Nome);//TxtCorretor
-                    sbTextoProposta.AppendFormat("{0};", "False");//Multinota
-                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Segurado
-                    sbTextoProposta.AppendFormat("{0};", Item.IdUsuarioCorretorNavigation?.Documento);//Documento
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtCorretor
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Multinota
+                    sbTextoProposta.AppendFormat("{0};", Item.IdClienteNavigation?.Nome);//Segurado
+                    sbTextoProposta.AppendFormat("{0};", Item.IdClienteNavigation?.CPF);//Documento
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//TelComercial
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//TelResidencial
-                    sbTextoProposta.AppendFormat("{0};", Item.IdUsuarioCorretorNavigation?.Telefone);//TelCelular
-                    sbTextoProposta.AppendFormat("{0};", Item.IdUsuarioCorretorNavigation?.Email);//Email
-                    sbTextoProposta.AppendFormat("{0};", "False");//CondicaoEspecial
-                    sbTextoProposta.AppendFormat("{0};", Item.ValorPrevisto?.ToString("c2"));//VlProducao
+                    sbTextoProposta.AppendFormat("{0};", Item.IdClienteNavigation?.Telefone.FirstOrDefault()?.Telefone1.KeepOnlyNumbersOrNull());//TelCelular
+                    sbTextoProposta.AppendFormat("{0};", Item.IdClienteNavigation?.Email);//Email
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//CondicaoEspecial
+                    sbTextoProposta.AppendFormat("{0};", (Item.ValorPrevisto.HasValue ? Item.ValorPrevisto.Value.ToString() : string.Empty));//VlProducao
                     sbTextoProposta.AppendFormat("{0};", Item.QuantidadeVidas);//QtdeBeneficiarios
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//PropostaColigadaPrincipalNumero
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//PropostaColigadaPrincipalQtdeBeneficiarios
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//ResponsavelEmpresaNome
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//ResponsavelFinanceiroNome
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//ResponsavelFinanceiroCPF
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//ResponsavelFinanceiroEmail
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//ResponsavelFinanceiroDtNascimento
-                    sbTextoProposta.AppendFormat("{0};", Item.IdUsuario);//IdAssistenteOriginal
-                    sbTextoProposta.AppendFormat("{0};", Item.IdUsuarioNavigation?.Nome);//TxtAssistenteOriginal
-                    sbTextoProposta.AppendFormat("{0};", "-1");//IdVendedor
-                    sbTextoProposta.AppendFormat("{0};", "Nenhum");//TxtVendedor
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdProduto
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtProduto
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdAdministradora
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtAdministradora
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdEntidade
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtEntidade
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdTabela
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtTabela
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdPlano
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtPlano
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdPlataforma
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtPlataforma
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdVendedor
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtVendedor
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdGrade
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtGrade
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdAssistenteOriginal
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtAssistenteOriginal
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//SupervisorNome
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//SupervisorCPF
                     sbTextoProposta.AppendFormat("{0};", string.Empty);//SupervisorEmail
-                    sbTextoProposta.AppendFormat("{0};", "-1");//IdOrigem
-                    sbTextoProposta.AppendFormat("{0};", "Nenhum");//TxtOrigem
-                    sbTextoProposta.AppendFormat("{0};", "-1");//IdConferente
-                    sbTextoProposta.AppendFormat("{0};", "Nenhum");//TxtConferente
-                    sbTextoProposta.AppendFormat("{0};", "4");//IdGrade
-                    sbTextoProposta.AppendFormat("{0};", "EQUIPE DEDICADA");//TxtGrade
-                    sbTextoProposta.AppendFormat("{0};", "0");//VlRepique
-                    sbTextoProposta.AppendFormat("{0};", "0");//VlAdministrativo
-                    sbTextoProposta.AppendFormat("{0};", Item.ValorPrevisto?.ToString("c2"));//VlBoleto
-                    sbTextoProposta.AppendFormat("{0};", "0");//VlNet
-                    sbTextoProposta.AppendFormat("{0};", "0");//PcDesconto
-                    sbTextoProposta.AppendFormat("{0};", "0");//VlDescontoPrimeira
-                    sbTextoProposta.AppendFormat("{0};", "False");//TaxaPaga
-                    sbTextoProposta.AppendFormat("{0};", "0");//VlTaxa
-                    sbTextoProposta.AppendFormat("{0};", "0");//TaxaParcela
-                    sbTextoProposta.AppendFormat("{0};", "False");//IOFPago
-                    sbTextoProposta.AppendFormat("{0};", "0");//VlIOF
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdProduto);//IdProduto
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao);//TxtProduto
-                    sbTextoProposta.AppendFormat("{0};", "0");//IdAdministradora
-                    sbTextoProposta.AppendFormat("{0};", "NENHUMA");//TxtAdministradora
-                    sbTextoProposta.AppendFormat("{0};", "0");//IdEntidade
-                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtEntidade
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdLinha);//IdTabela
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.Descricao);//TxtTabela
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdCategoria);//IdPlano
-                    sbTextoProposta.AppendFormat("{0};", Item.IdCategoriaNavigation?.Descricao);//TxtPlano
-                    sbTextoProposta.AppendFormat("{0};", "1000");//IdPlataforma
-                    sbTextoProposta.AppendFormat("{0};", "CRM YIA");//TxtPlataforma
-                    sbTextoProposta.AppendFormat("{0};", string.Empty);//PropostaColigadaPrincipalNumero
-                    sbTextoProposta.AppendFormat("{0};", Item.QuantidadeVidas);//PropostaColigadaPrincipalQtdeBeneficiarios
-                    sbTextoProposta.AppendFormat("{0};", "-1");//IdFonte
-                    sbTextoProposta.AppendFormat("{0};", "Nenhum");//TxtFonte
-                    sbTextoProposta.AppendFormat("{0};", "-1");//IdClassificacao
-                    sbTextoProposta.AppendFormat("{0};", "Nenhuma");//TxtClassificacao
-                    sbTextoProposta.AppendFormat("{0};", "True");//GeraComissaoPrimeira
-                    sbTextoProposta.AppendFormat("{0};", "False");//Administrativa
-                    sbTextoProposta.AppendFormat("{0};", "False");//Movimentacao
-                    sbTextoProposta.AppendFormat("{0};", "False");//NaoParticipaCampanha
-                    sbTextoProposta.AppendFormat("{0};", "False");//DentalIncluso
-                    sbTextoProposta.AppendFormat("{0};", "False");//CoParticipacao
-                    sbTextoProposta.AppendFormat("{0};", "False");//Acordo
-                    sbTextoProposta.AppendFormat("{0};", "False");//AcompanharImplantacao
-                    sbTextoProposta.AppendFormat("{0};", "False");//Portabilidade
-                    sbTextoProposta.AppendFormat("{0};", "False");//Vip
-                    sbTextoProposta.AppendFormat("{0};", "False");//Adaptacao
-                    sbTextoProposta.AppendFormat("{0};", "False");//Regulamentacao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdOrigem
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtOrigem
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdConferente
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtConferente
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VlRepique
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VlAdministrativo
+                    sbTextoProposta.AppendFormat("{0};", (Item.ValorPrevisto.HasValue ? Item.ValorPrevisto.Value.ToString() : string.Empty));//VlBoleto
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VlNet
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//PcDesconto
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VlDescontoPrimeira
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TaxaPaga
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VlTaxa
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TaxaParcela
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IOFPago
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//VlIOF
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdFonte
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtFonte
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//IdClassificacao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//TxtClassificacao
+                    sbTextoProposta.AppendFormat("{0};", "Sim");//GeraComissaoPrimeira
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Integracao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Administrativa
+                    sbTextoProposta.AppendFormat("{0};", "Sim");//Movimentacao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//NaoParticipaCampanha
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//DentalIncluso
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//CoParticipacao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Acordo
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//AcompanharImplantacao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Portabilidade
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Vip
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Adaptacao
+                    sbTextoProposta.AppendFormat("{0};", string.Empty);//Regulamentacao
                     sbTextoProposta.AppendFormat("{0}\n", Item.Observacoes);//Obs
+
                     #endregion
 
                     #region Beneficiário
@@ -173,8 +178,8 @@ namespace CRMYIA.Business.ExportacaoSisWeb
                     sbTextoBeneficiario.AppendFormat("{0};", Item.IdClienteNavigation.CPF);//TitularCPF
                     sbTextoBeneficiario.AppendFormat("{0};", "0");//Peso
                     sbTextoBeneficiario.AppendFormat("{0};", "0");//Altura
-                    sbTextoBeneficiario.AppendFormat("{0};", "False");//PreExistente
-                    sbTextoBeneficiario.AppendFormat("{0};", "False");//CarenciaOperadora
+                    sbTextoBeneficiario.AppendFormat("{0};", "Não");//PreExistente
+                    sbTextoBeneficiario.AppendFormat("{0};", "Não");//CarenciaOperadora
                     sbTextoBeneficiario.AppendFormat("{0};", Item.IdClienteNavigation.CartaoSus);//SUS
                     sbTextoBeneficiario.AppendFormat("{0};", string.Empty);//CNV
                     sbTextoBeneficiario.AppendFormat("{0};", Item.IdClienteNavigation.CEP);//CEP
@@ -190,15 +195,15 @@ namespace CRMYIA.Business.ExportacaoSisWeb
                     #region Parcelas
 
                     sbTextoParcela.AppendFormat("{0};", Item.NumeroProposta);//PropostaNumero
-                    sbTextoParcela.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadora);//IdOperadora);//IdOperadora
-                    sbTextoParcela.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.Descricao);//TxtOperadora);//TxtOperadora
+                    sbTextoParcela.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadora);//IdOperadora);
+                    sbTextoParcela.AppendFormat("{0};", Item.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.IdOperadoraNavigation?.Descricao);//TxtOperadora);
                     sbTextoParcela.AppendFormat("{0};", Item.IdModalidade.ToString());//IdModalidade
                     sbTextoParcela.AppendFormat("{0};", Item.IdModalidadeNavigation?.Descricao);//TxtModalidade
                     sbTextoParcela.AppendFormat("{0};", "1");//Parcela
                     sbTextoParcela.AppendFormat("{0};", "0");//Ordem
                     sbTextoParcela.AppendFormat("{0};", Item.ValorPrevisto?.ToString("c2"));//VlParcela
                     sbTextoParcela.AppendFormat("{0};", "0,2");//PcComissao
-                    sbTextoParcela.AppendFormat("{0};", "False");//Vitalicio
+                    sbTextoParcela.AppendFormat("{0};", "Não");//Vitalicio
                     sbTextoParcela.AppendFormat("{0};", Item.DataSolicitacao.Value.AddMonths(1).ToString("dd/MM/yyyy"));//DtVencimento
                     sbTextoParcela.AppendFormat("{0};", string.Empty);//IdComissionavel
                     sbTextoParcela.AppendFormat("{0};", string.Empty);//TxtComissionavel

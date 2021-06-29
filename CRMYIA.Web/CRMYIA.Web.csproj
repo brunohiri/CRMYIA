@@ -59,6 +59,8 @@
     <Folder Include="wwwroot\ArquivoOperadora\" />
     <Folder Include="wwwroot\ArquivoBannerOperadora\" />
     <Folder Include="wwwroot\ArquivoCarrosselLanding\" />
+    <Folder Include="wwwroot\YINDICA\Processado\" />
+    <Folder Include="wwwroot\YINDICA\Processar\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
