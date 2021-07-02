@@ -80,14 +80,18 @@ namespace CRMYIA.Web.Pages
 
                 var path = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessado"], Entity.NomeArquivoSaida);
 
+                string CaminhoArquivoZip = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessado"], Entity.NomeArquivoSaida.Replace(".txt", ".zip"));
+                string[] CaminhoArquivos = { path };
+                Util.CompactarArquivo(CaminhoArquivoZip, CaminhoArquivos);
+
                 var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
+                using (var stream = new FileStream(CaminhoArquivoZip, FileMode.Open))
                 {
                     await stream.CopyToAsync(memory);
                 }
                 memory.Position = 0;
 
-                return File(memory, Util.GetContentType(path), Path.GetFileName(path));
+                return File(memory, Util.GetContentType(CaminhoArquivoZip), Path.GetFileName(CaminhoArquivoZip));
 
             }
             catch (Exception ex)

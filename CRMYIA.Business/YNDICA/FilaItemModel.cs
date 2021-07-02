@@ -39,6 +39,26 @@ namespace CRMYIA.Business.YNDICA
             return Entity;
         }
 
+        public static long GetQuantidadeProcessado(long IdFila)
+        {
+            long QtdProcessado = 0;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    QtdProcessado = context.FilaItem
+                        .Where(x => x.IdFila == IdFila && x.Processado)
+                        .AsNoTracking()
+                        .Count();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return QtdProcessado;
+        }
+
         public static List<FilaItem> GetList()
         {
             List<FilaItem> ListEntity = null;

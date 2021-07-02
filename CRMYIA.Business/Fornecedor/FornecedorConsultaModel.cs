@@ -65,14 +65,17 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static void Add(FornecedorConsulta Entity)
+        public static long Add(FornecedorConsulta Entity)
         {
+            long IdFornecedorConsulta = 0;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
                     context.FornecedorConsulta.Add(Entity);
                     context.SaveChanges();
+
+                    return IdFornecedorConsulta;
                 }
             }
             catch (Exception)
