@@ -106,9 +106,16 @@
                                     <td class="text-right">@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdProcessado)))<br /><small>@Item.DataProcessamento?.ToString("dd/MM/yyyy HH:mm:ss.fff")</small></td>
                                     <td class="text-right">@(string.Format("{0:#,0}", Convert.ToInt64(Item.QtdSaida)))<br /><small>@Item.DataSaida?.ToString("dd/MM/yyyy HH:mm:ss.fff")</small></td>
                                     <td title="@Item.IdStatusFilaNavigation.ToolTip">
-                                        <a asp-page-handler="Download" asp-route-filename="@(Criptography.Encrypt(Item.IdFila.ToString()))" class="@Item.IdStatusFilaNavigation.CssClass">
-                                            <i class="@Item.IdStatusFilaNavigation.CssIcon"></i>&nbsp;<strong>@Item.IdStatusFilaNavigation.Descricao</strong>
-                                        </a>
+                                        @if (Item.IdStatusFila == (byte)(CRMYIA.Business.Util.EnumeradorModel.StatusFila.Exportado))
+                                        {
+                                            <a asp-page-handler="Download" asp-route-filename="@(Criptography.Encrypt(Item.IdFila.ToString()))" class="@Item.IdStatusFilaNavigation.CssClass">
+                                                <i class="@Item.IdStatusFilaNavigation.CssIcon"></i>&nbsp;<strong>@Item.IdStatusFilaNavigation.Descricao</strong>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="@Item.IdStatusFilaNavigation.CssClass"><i class="@Item.IdStatusFilaNavigation.CssIcon"></i>&nbsp;<strong>@Item.IdStatusFilaNavigation.Descricao</strong></span>
+                                        }
                                     </td>
                                 </tr>
                             }

@@ -1,21 +1,13 @@
-﻿using System;
+﻿using CRMYIA.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
-using CRMYIA.Business.Dashboard;
-using CRMYIA.Business.Util;
-using CRMYIA.Data.Context;
-using CRMYIA.Data.Entities;
-using CRMYIA.Data.Model;
-using CRMYIA.Data.ViewModel;
-using Microsoft.EntityFrameworkCore;
 
-namespace CRMYIA.Business
+namespace CRMYIA.Business.YNDICA
 {
-    public class FornecedorConsultaModel
+    public class LayoutPJModel
     {
         #region Propriedades
         #endregion
@@ -24,16 +16,16 @@ namespace CRMYIA.Business
         #endregion
 
         #region Métodos
-        public static FornecedorConsulta Get(long IdFornecedorConsulta)
+        public static Data.Entities.LayoutPJ Get(long IdLayoutPJ)
         {
-            FornecedorConsulta Entity = null;
+            Data.Entities.LayoutPJ Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity = context.FornecedorConsulta
+                    Entity = context.LayoutPJ
                         .AsNoTracking()
-                        .Where(x => x.IdFornecedorConsulta == IdFornecedorConsulta)
+                        .Where(x => x.IdLayoutPJ == IdLayoutPJ)
                         .AsNoTracking()
                         .FirstOrDefault();
                 }
@@ -45,17 +37,37 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static List<FornecedorConsulta> GetList()
+        public static List<Data.Entities.LayoutPJ> GetByIdFila(long IdFila)
         {
-            List<FornecedorConsulta> ListEntity = null;
+            List<Data.Entities.LayoutPJ> Entity = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    ListEntity = context.FornecedorConsulta
-                        .Include(y=>y.IdFornecedorNavigation)
+                    Entity = context.LayoutPJ
+                        .Include(y => y.IdFilaItemNavigation)
                         .AsNoTracking()
-                        .OrderByDescending(o => o.DataConsulta).ToList();
+                        .Where(x => x.IdFilaItemNavigation.IdFila == IdFila)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
+
+        public static List<Data.Entities.LayoutPJ> GetList()
+        {
+            List<Data.Entities.LayoutPJ> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.LayoutPJ
+                        .ToList();
                 }
             }
             catch (Exception)
@@ -65,17 +77,15 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
-        public static long Add(FornecedorConsulta Entity)
+
+        public static void Add(Data.Entities.LayoutPJ Entity)
         {
-            long IdFornecedorConsulta = 0;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.FornecedorConsulta.Add(Entity);
+                    context.LayoutPJ.Add(Entity);
                     context.SaveChanges();
-
-                    return Entity.IdFornecedorConsulta;
                 }
             }
             catch (Exception)
@@ -84,13 +94,13 @@ namespace CRMYIA.Business
             }
         }
 
-        public static void Update(FornecedorConsulta Entity)
+        public static void Update(Data.Entities.LayoutPJ Entity)
         {
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    context.FornecedorConsulta.Update(Entity);
+                    context.LayoutPJ.Update(Entity);
                     context.SaveChanges();
                 }
             }

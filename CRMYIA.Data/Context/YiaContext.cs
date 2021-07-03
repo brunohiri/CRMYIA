@@ -67,6 +67,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<LandingPage> LandingPage { get; set; }
         public virtual DbSet<LandingPageCarrossel> LandingPageCarrossel { get; set; }
         public virtual DbSet<Layout> Layout { get; set; }
+        public virtual DbSet<LayoutPJ> LayoutPJ { get; set; }
         public virtual DbSet<Linha> Linha { get; set; }
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
@@ -106,9 +107,9 @@ namespace CRMYIA.Data.Context
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                     .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                     .AddJsonFile("appsettings.json")
-                     .Build();
+                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
                 var connectionString = configuration.GetConnectionString("YiaConnection");
                 optionsBuilder.UseSqlServer(connectionString);
             }
@@ -1559,6 +1560,125 @@ namespace CRMYIA.Data.Context
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<LayoutPJ>(entity =>
+            {
+                entity.HasKey(e => e.IdLayoutPJ)
+                    .HasName("PK_LayouPJ");
+
+                entity.Property(e => e.CEP)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CNAE)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CNPJ)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Cidade)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email1)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email2)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Endereco)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RazaoSocial)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioCEP)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioCidade)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioDataNascimento)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioEmail1)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioEmail2)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioEndereco)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioNome)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioNomeMae)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioPerfilConsumo)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioTelefone1)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioTelefone2)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioTelefone3)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioTelefone4)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SocioUF)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone1)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone2)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone3)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefone4)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UF)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdFilaItemNavigation)
+                    .WithMany(p => p.LayoutPJ)
+                    .HasForeignKey(d => d.IdFilaItem)
+                    .HasConstraintName("FilaItem_LayoutPJ");
             });
 
             modelBuilder.Entity<Linha>(entity =>

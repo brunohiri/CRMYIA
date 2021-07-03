@@ -88,7 +88,7 @@ namespace CRMYIA.Web.Pages
                     string NomeArquivo = string.Empty;
 
                     NomeArquivo = Util.TratarNomeArquivo(NomeArquivoOriginal, 0);
-                    var file = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessar"], NomeArquivo);
+                    var file = Path.Combine( _configuration["YndicaProcessar"], NomeArquivo);
                     using (var fileStream = new FileStream(file, FileMode.Create))
                     {
                         await NomeArquivoProcessar.CopyToAsync(fileStream);
@@ -101,10 +101,10 @@ namespace CRMYIA.Web.Pages
                         IdFornecedor = IdFornecedor,
                         IdLayout = IdLayout,
                         NomeJob = NomeArquivo,
-                        CaminhoArquivoEntrada = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessar"]),
+                        CaminhoArquivoEntrada = Path.Combine(_configuration["YndicaProcessar"]),
                         NomeArquivoEntrada = NomeArquivo,
-                        CaminhoArquivoSaida = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessado"]),
-                        NomeArquivoSaida = NomeArquivo.Replace("_0", "_0_Processado"),
+                        CaminhoArquivoSaida = Path.Combine(_configuration["YndicaProcessado"]),
+                        NomeArquivoSaida = NomeArquivo.Replace("_0.txt", "_0_Processado.csv"),
                         QtdEntrada = 0,
                         QtdProcessado = 0,
                         QtdSaida = 0,
@@ -115,7 +115,7 @@ namespace CRMYIA.Web.Pages
 
                     int QtdRegistros = ImportarArquivo(file, EntityFila.IdFila);
 
-                    EntityFila.QtdEntrada = QtdRegistros;
+                    EntityFila.QtdEntrada = QtdRegistros - 1;
                     FilaModel.Update(EntityFila);
 
                     Mensagem = new MensagemModel(EnumeradorModel.TipoMensagem.Sucesso, string.Format("O arquivo com {0:#,0} registros foi importado com sucesso!", Convert.ToInt64(QtdRegistros)));

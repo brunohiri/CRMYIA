@@ -99,6 +99,8 @@ namespace CRMYIA.Business.ShiftData
         public List<ShiftDataResultTelefone> Telefones { get; set; }
 
         public List<ShiftDataResultEmail> Emails { get; set; }
+
+        public List<ShiftDataResultSocio> Socios { get; set; }
     }
 
     public class ShiftDataResultEndereco
@@ -134,5 +136,16 @@ namespace CRMYIA.Business.ShiftData
         public string Email { get; set; }
         public bool? Particular { get; set; }
         public byte? Ranking { get; set; }
+    }
+
+    public class ShiftDataResultSocio
+    { 
+        public string CPF { get; set; }
+        public string NomeRazao { get; set; }
+        public string PercentualParticipacao { get; set; }
+        public DateTime? DataEntrada { get; set; }
+        public string Cargo { get; set; }
+        public string CodigoCbo { get; set; }
+        public string DescricaoCbo { get; set; }
     }
 }

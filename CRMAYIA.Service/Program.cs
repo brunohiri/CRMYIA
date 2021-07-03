@@ -31,8 +31,8 @@ namespace CRMYIA
 
             using (var service = new CRMYIAService(Configuration))
             {
-                service.ExecutarServico();
-                //ServiceBase.Run(service);
+                //service.ExecutarServico();
+                ServiceBase.Run(service);
             }
 
         }

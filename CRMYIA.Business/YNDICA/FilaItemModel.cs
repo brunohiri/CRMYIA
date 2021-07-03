@@ -39,9 +39,9 @@ namespace CRMYIA.Business.YNDICA
             return Entity;
         }
 
-        public static long GetQuantidadeProcessado(long IdFila)
+        public static int GetQuantidadeProcessado(long IdFila)
         {
-            long QtdProcessado = 0;
+            int QtdProcessado = 0;
             try
             {
                 using (YiaContext context = new YiaContext())
@@ -70,6 +70,25 @@ namespace CRMYIA.Business.YNDICA
                         .Include(z => z.IdFornecedorConsultaNavigation)
                         .AsNoTracking()
                         .OrderBy(o => o.DataCadastro).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
+        public static List<FilaItem> GetList(long IdFila)
+        {
+            List<FilaItem> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.FilaItem
+                        .Where(x=>x.IdFila == IdFila)
+                        .ToList();
                 }
             }
             catch (Exception)

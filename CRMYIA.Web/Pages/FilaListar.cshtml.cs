@@ -78,9 +78,9 @@ namespace CRMYIA.Web.Pages
 
                 Entity = FilaModel.Get(IdFila);
 
-                var path = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessado"], Entity.NomeArquivoSaida);
+                var path = Path.Combine(_configuration["YndicaProcessado"], Entity.NomeArquivoSaida);
 
-                string CaminhoArquivoZip = Path.Combine(_environment.WebRootPath, _configuration["YndicaProcessado"], Entity.NomeArquivoSaida.Replace(".txt", ".zip"));
+                string CaminhoArquivoZip = Path.Combine(_configuration["YndicaProcessado"], Entity.NomeArquivoSaida.Replace(".csv", ".zip"));
                 string[] CaminhoArquivos = { path };
                 Util.CompactarArquivo(CaminhoArquivoZip, CaminhoArquivos);
 
