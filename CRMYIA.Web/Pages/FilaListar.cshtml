@@ -2,7 +2,7 @@
 @model CRMYIA.Web.Pages.FilaListarModel
 @{
     ViewData["Title"] = "";
-    ViewData["Pagina"] = "Fila do YINDICA";
+    ViewData["Pagina"] = "Fila do YNDICA";
 }
 @using CRMYIA.Business.Util;
 
@@ -60,6 +60,19 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="EnriquecimentoIdStatusFila">Status</label>
+                                        <select class="form-control select2" style="width: 100%;" id="EnriquecimentoIdStatusFila" asp-for="@Model.IdStatusFila">
+                                            <option selected="selected" value="0">Selecione...</option>
+                                            @foreach (var Item in Model.ListStatusFila)
+                                            {
+                                                <option value="@Item.IdStatusFila">@Item.Descricao</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -76,7 +89,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
-                <table id="tableFila" class="table table-striped table-hover dt-responsive display datatable" style="width:100%">
+                <table id="tableFila" class="table table-striped table-hover dt-responsive display datatable_order" style="width:100%">
                     <thead>
                         <tr>
                             <th width="5%">ID</th>

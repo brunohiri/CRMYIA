@@ -105,6 +105,38 @@ namespace CRMYIA.Business.YNDICA
             return ListEntity;
         }
 
+        public static List<Fila> GetList(byte? IdFornecedor = null, byte? IdLayout = null, byte? IdStatusFila = null)
+        {
+            List<Fila> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    ListEntity = context.Fila
+                        .Include(y => y.IdStatusFilaNavigation)
+                        .Include(y => y.IdLayoutNavigation)
+                        .Include(y => y.IdFornecedorNavigation)
+                        .AsNoTracking()
+                        .OrderByDescending(o => o.DataEntrada).ToList();
+
+                    if (ListEntity != null && ListEntity.Count() > 0)
+                    {
+                        if (IdFornecedor.HasValue && IdFornecedor.Value > 0)
+                            ListEntity = ListEntity.Where(x => x.IdFornecedor.Value == IdFornecedor).ToList();
+                        if (IdLayout.HasValue && IdLayout.Value > 0)
+                            ListEntity = ListEntity.Where(x => x.IdLayout.Value == IdLayout).ToList();
+                        if (IdStatusFila.HasValue && IdStatusFila.Value > 0)
+                            ListEntity = ListEntity.Where(x => x.IdStatusFila.Value == IdStatusFila).ToList();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+
         public static List<Fila> GetListByStatusFila(short IdStatusFila)
         {
             List<Fila> ListEntity = null;
