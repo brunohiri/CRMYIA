@@ -45,6 +45,12 @@ namespace CRMYIA.Web.Pages
         public List<Layout> ListLayout { get; set; }
 
         [BindProperty]
+        public byte IdStatusFila { get; set; }
+
+        [BindProperty]
+        public List<StatusFila> ListStatusFila { get; set; }
+
+        [BindProperty]
         public List<Fila> ListEntity { get; set; }
 
         #endregion
@@ -61,6 +67,12 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet()
         {
             CarregarLists();
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            CarregarLists(IdFornecedor, IdLayout, IdStatusFila);
             return Page();
         }
 
@@ -105,11 +117,12 @@ namespace CRMYIA.Web.Pages
 
         #region Outros Métodos
 
-        public void CarregarLists()
+        public void CarregarLists(byte? IdFornecedor = null, byte? IdLayout = null, byte? IdStatusFila = null)
         {
             ListFornecedor = FornecedorModel.GetListIdDescricao();
             ListLayout = LayoutModel.GetListIdDescricao();
-            ListEntity = FilaModel.GetList();
+            ListStatusFila = StatusFilaModel.GetListIdDescricao();
+            ListEntity = FilaModel.GetList(IdFornecedor, IdLayout, IdStatusFila);
         }
 
         public long GetIdUsuario()
