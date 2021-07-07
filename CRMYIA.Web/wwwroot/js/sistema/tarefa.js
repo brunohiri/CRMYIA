@@ -75,6 +75,10 @@ $(document).ready(function () {
         Pesquisa();
     });
 
+    $('#btnRedirecionarCadastroLead').click(function () {
+        location.href = "NovoCliente";
+    });
+
     CarregarOperadoras();
     CarregarCorretores();
 });
