@@ -7,6 +7,7 @@
 @using CRMYIA.Business.Util;
 @using CRMYIA.Business;
 @using System.Security.Claims;
+@using CRMYIA.Data.Entities;
 
 @{ 
     byte? perfilUsuarioAtual = UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
@@ -105,50 +106,43 @@
                     {
                         @for (int i = 0; i < Model.ListFaseProposta.Count; i++)
                         {
-                            <div class="status-card" style="background-color: @Model.ListFaseProposta[i].CorSecundaria; border-radius:2px;">
+                            FaseProposta fasePropostaAtual = Model.ListFaseProposta[i];
+                            List<Proposta> listPropostas = Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == fasePropostaAtual.IdFaseProposta).ToList();
+
+                            <div class="status-card" style="background-color: @fasePropostaAtual.CorSecundaria; border-radius:2px;">
                                 <div class="card" style="background-color: #F15927; color:azure; border-radius:2px;">
                                     <div class="card-header">
                                         <div class="card-header-text text-center">
-                                            @Model.ListFaseProposta[i].Descricao
-                                            <br />
+                                            <span>@fasePropostaAtual.Descricao</span>
                                             @if ((Model.ListListEntityProposta != null) && (Model.ListListEntityProposta.Count > 0))
                                             {
-                                                if (Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).ToList().Count > 0)
-                                                {
-                                                    <div class="text-center" id="total-@Model.ListFaseProposta[i].IdFaseProposta">@Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString("c2")</div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="text-center" id="total-@Model.ListFaseProposta[i].IdFaseProposta">@Html.Raw("R$ 0,00")</div>
-                                                }
-                                                <div class="text-center" id="percentual-@Model.ListFaseProposta[i].IdFaseProposta">
-                                                    @if (Model.ListFaseProposta[i].IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Oportunidade))
+                                                string valorPrevisto = listPropostas.Count > 0 ? listPropostas.Sum(y => y.ValorPrevisto).Value.ToString("c2") : "R$ 0,00";
+
+                                                <div class="text-center" id="total-@fasePropostaAtual.IdFaseProposta">
+                                                    <span>@Html.Raw(valorPrevisto)</span>
+                                                </div>
+
+                                                <div class="text-center" id="percentual-@fasePropostaAtual.IdFaseProposta">
+                                                    @switch (fasePropostaAtual.IdFaseProposta)
                                                     {
-                                                        @Html.Raw("5%")
-                                                    }
-                                                    else
-                                                        if (Model.ListFaseProposta[i].IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros))
-                                                    {
-                                                        @Html.Raw("10%")
-                                                    }
-                                                    else
-                                                        if (Model.ListFaseProposta[i].IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao))
-                                                    {
-                                                        @Html.Raw("11-90%")
-                                                    }
-                                                    else
-                                                        if (Model.ListFaseProposta[i].IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao))
-                                                    {
-                                                        @Html.Raw("95%")
-                                                    }
-                                                    else
-                                                        if (Model.ListFaseProposta[i].IdFaseProposta == (byte)(EnumeradorModel.FaseProposta.Fechamento))
-                                                    {
-                                                        @Html.Raw("100%")
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.Raw("0%")
+                                                        case (byte)(EnumeradorModel.FaseProposta.Oportunidade):
+                                                            @Html.Raw("5%");
+                                                            break;
+                                                        case (byte)(EnumeradorModel.FaseProposta.CotacaoFiltros):
+                                                            @Html.Raw("10%");
+                                                            break;
+                                                        case (byte)(EnumeradorModel.FaseProposta.VisitaApresentacaoReuniao):
+                                                            @Html.Raw("11-90%");
+                                                            break;
+                                                        case (byte)(EnumeradorModel.FaseProposta.ImplantacaoDocumentacao):
+                                                            @Html.Raw("95%");
+                                                            break;
+                                                        case (byte)(EnumeradorModel.FaseProposta.Fechamento):
+                                                            @Html.Raw("100%");
+                                                            break;
+                                                        default:
+                                                            @Html.Raw("0%");
+                                                            break;
                                                     }
                                                 </div>
                                             }
@@ -157,34 +151,24 @@
                                 </div>
                                 <div class="status-card" style="background-color: #3E3E3E">
                                     <div class="containerLoad">
-                                        <ul class="sortable ui-sortable grupo" id="@("sort" + Model.ListFaseProposta[i].IdFaseProposta)" data-status-id="@Model.ListFaseProposta[i].IdFaseProposta" data-total="@Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).Sum(y => y.ValorPrevisto).Value.ToString()">
-                                            @if ((Model.ListListEntityProposta[i] != null) && (Model.ListListEntityProposta[i].Count > 0))
+                                        <ul class="sortable ui-sortable grupo" id="@("sort" + fasePropostaAtual.IdFaseProposta)" data-status-id="@fasePropostaAtual.IdFaseProposta" data-total="@listPropostas.Sum(y => y.ValorPrevisto).Value.ToString()">
+                                            @if (listPropostas.Count > 0)
                                             {
-                                                foreach (var ItemProposta in Model.ListListEntityProposta[i])
+                                                foreach (var ItemProposta in listPropostas)
                                                 {
-                                                    if (Model.ListListEntityProposta[i].Where(x => x.IdFaseProposta == Model.ListFaseProposta[i].IdFaseProposta).ToList().Count > 0)
-                                                    {
-                                                        <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
-                                                            <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
-                                                                <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0, 16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
-                                                                <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
-                                                                <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome))</p>
-                                                                <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_" + Model.ListFaseProposta[i].IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
-                                                                <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
-                                                                <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
-                                                            </a>
-                                                        </li>
-                                                    }
-                                                    else
-                                                    {
-                                                        <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
-                                                    }
+                                                    <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
+                                                        <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
+                                                            <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0, 16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
+                                                            <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
+                                                            <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome))</p>
+                                                            <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_" + Model.ListFaseProposta[i].IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
+                                                            <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                                                            <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
+                                                        </a>
+                                                    </li>
                                                 }
                                             }
-                                            else
-                                            {
-                                                <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>
-                                            }
+                                            else { <li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li> }
                                         </ul>
                                     </div>
                                     <div class="naviLoad">
