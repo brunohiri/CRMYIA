@@ -32,7 +32,7 @@
                         <div class="col-sm-@colSmNum">
                             <div class="form-group">
                                 <label>Operadora</label>
-                                <select class="form-control select2 " style="width: 100%;" id="operadoraMenuItems">
+                                <select class="form-control select2" style="width: 100%;" id="operadoraMenuItems">
                                     <option selected="selected">Selecione...</option>
                                 </select>
                             </div>
@@ -42,12 +42,74 @@
                         @switch (perfilUsuarioAtual)
                         {
                             case (byte?)EnumeradorModel.Perfil.Administrador:
+                                <div class="col-sm-@colSmNum">
+                                    <div class="form-group">
+                                        <label>Gerente</label>
+                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioGerente" id="gerenteMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.ListGerente)
+                                            {
+                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-@colSmNum">
+                                    <div class="form-group">
+                                        <label>Supervisor</label>
+                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioSupervisor" id="supervisorMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.ListSupervisor)
+                                            {
+                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-@colSmNum">
+                                    <div class="form-group">
+                                        <label>Corretor</label>
+                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.ListCorretor)
+                                            {
+                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                break;
                             case (byte?)EnumeradorModel.Perfil.Gerente:
+                                <div class="col-sm-@colSmNum">
+                                    <div class="form-group">
+                                        <label>Supervisor</label>
+                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioSupervisor" id="supervisorMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.ListSupervisor)
+                                            {
+                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-@colSmNum">
+                                    <div class="form-group">
+                                        <label>Corretor</label>
+                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.ListCorretor)
+                                            {
+                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                break;
                             case (byte?)EnumeradorModel.Perfil.Supervisor:
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Corretor</label>
-                                        <select class="form-control select2  " style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
                                             <option selected="selected">Selecione...</option>
                                             @foreach (var Item in Model.ListCorretor)
                                             {
@@ -58,6 +120,8 @@
                                 </div>
                                 break;
                             case (byte?)EnumeradorModel.Perfil.Corretor:
+                            case (byte?)EnumeradorModel.Perfil.Vendedor:
+                            case (byte?)EnumeradorModel.Perfil.Marketing:
                                 break;
                         }
 
