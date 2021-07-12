@@ -79,6 +79,10 @@ $(document).ready(function () {
         location.href = "NovoCliente";
     });
 
+    $('#supervisorMenuItems').change(function () {
+        CarregarCorretoresHierarquia($(this).find(':selected'));
+    });
+
     CarregarOperadoras();
     CarregarCorretores();
 });
@@ -494,5 +498,31 @@ function CarregarCorretores() {
 
         //Esconder a linha que mostra que nenhum item foi encontrado
         $('#empty').hide();
+    });
+}
+
+function CarregarCorretoresHierarquia(idMaster) {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: '/Tarefa?handler=UsuariosSlave',
+        data: { IdMaster: idMaster[0].dataset.id },
+        beforeSend: function () {
+            $('#corretorMenuItems').attr('disabled', true);
+            $('#corretorMenuItems').empty().trigger("change");
+            $('#corretorMenuItems').append(new Option("Carregando...", null, null, true)).trigger('change');
+        },
+        success: function (data) {
+            $('#corretorMenuItems').empty().trigger("change");
+            $('#corretorMenuItems').append(new Option("Selecione...", null, null, true));
+
+            for (let corretorHierarquia of data.result) {
+                let newOption = new Option(corretorHierarquia.nome, corretorHierarquia.nome, false, false);
+                $('#corretorMenuItems').append(newOption).trigger('change');
+            }
+
+            if (data.result.length > 0)
+                $('#corretorMenuItems').attr('disabled', false);
+        },
     });
 }

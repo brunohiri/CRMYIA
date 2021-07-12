@@ -127,7 +127,7 @@ namespace CRMYIA.Business
             return Entity;
         }
 
-        public static Usuario GetUsuariosSlave(long IdUsuario)
+        public static Usuario GetUsuarioSlave(long? IdUsuario)
         {
             Usuario Entity = null;
             try
@@ -146,6 +146,16 @@ namespace CRMYIA.Business
                 throw;
             }
             return Entity;
+        }
+
+        public static List<Usuario> GetAllUsuarioSlave(ICollection<UsuarioHierarquia> usuariosHierarquia)
+        {
+            List<Usuario> usuarios = new List<Usuario>();
+            foreach(var usuarioHierarquia in usuariosHierarquia)
+            {
+                usuarios.Add(Get((long)usuarioHierarquia.IdUsuarioSlave));
+            }
+            return usuarios;
         }
 
         public static List<UsuarioViewModel> GetList(bool? Ativo, string? Descricao, DateTime? DataInicio, DateTime? DataFim, bool DataValida)

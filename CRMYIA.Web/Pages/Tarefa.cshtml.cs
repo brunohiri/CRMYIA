@@ -29,12 +29,21 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<List<Proposta>> ListListEntityProposta { get; set; }
+
         [BindProperty]
         public List<Proposta> ListEntityProposta { get; set; }
+
         [BindProperty]
         public Proposta Entity { get; set; }
+
         [BindProperty]
-        public List<ListaCorretorViewModel> ListCorretor { get; set; }
+        public List<Usuario> ListCorretor { get; set; }
+
+        [BindProperty]
+        public List<ListaCorretorViewModel> ListGerente { get; set; }
+
+        [BindProperty]
+        public List<Usuario> ListSupervisor { get; set; }
         #endregion
 
         #region Construtores
@@ -128,9 +137,36 @@ namespace CRMYIA.Web.Pages
         #endregion
         #endregion
 
+        #region Filtros
+        public IActionResult OnGetUsuariosSlave(string IdMaster)
+        {
+            List<UsuarioHierarquia> usuariosHierarquia = UsuarioHierarquiaModel.GetAllUsuarioSlave(IdMaster.ExtractLong());
+            List<Usuario> usuariosSlave = UsuarioModel.GetAllUsuarioSlave(usuariosHierarquia);
+
+            return new JsonResult(new { result = usuariosSlave });
+        }
+        #endregion
+
         public void CarregarLists()
         {
-            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+            byte? perfilUsuario = UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
+            long idUsuario = GetIdUsuario();
+            List<UsuarioHierarquia> usuariosHierarquia = UsuarioHierarquiaModel.GetAllUsuarioSlave(idUsuario);
+
+            switch (perfilUsuario)
+            {
+                case (byte)(EnumeradorModel.Perfil.Administrador):
+                    ListGerente = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Gerente);
+                    break;
+                case (byte)(EnumeradorModel.Perfil.Gerente):
+                    ListSupervisor = UsuarioModel.GetAllUsuarioSlave(usuariosHierarquia);
+                    break;
+                case (byte)(EnumeradorModel.Perfil.Supervisor):
+                    ListCorretor = UsuarioModel.GetAllUsuarioSlave(usuariosHierarquia);
+                    break;
+                default:
+                    break;
+            }
         }
         public long GetIdUsuario()
         {

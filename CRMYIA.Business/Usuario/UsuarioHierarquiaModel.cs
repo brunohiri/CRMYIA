@@ -99,6 +99,22 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<UsuarioHierarquia> GetAllUsuarioSlave(long IdMaster)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    return context.UsuarioHierarquia
+                        .Where(x => x.IdUsuarioMaster == IdMaster)
+                        .ToList();
+                }
+            } catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static void Add(UsuarioHierarquia Entity)
         {
             try
