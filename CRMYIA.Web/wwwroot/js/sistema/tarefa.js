@@ -58,14 +58,9 @@ $(document).ready(function () {
         }
     });
 
+    // Define o mês atual como valor default
     let d = new Date();
-    let anoC = d.getFullYear();
-    let mesC = d.getMonth();
-
-    let DInicio = new Date(anoC, mesC, 1);
-    let DFim = new Date(anoC, mesC + 1, 0);
-
-    $('#Data').val('');
+    $('#Data').val(`${new Date(d.getFullYear(), d.getMonth(), 1)} - ${new Date(d.getFullYear(), d.getMonth() + 1, 0)}`);
 
     $('.limpar-pesquisa').click(function () {
         location.reload();
@@ -79,8 +74,20 @@ $(document).ready(function () {
         location.href = "NovoCliente";
     });
 
+    $('#gerenteMenuItems').change(function () {
+        for (let id of ['supervisorMenuItems', 'corretorMenuItems']) {
+            $(`#${id}`).attr('disabled', true);
+            $(`#${id}`).empty();
+            $(`#${id}`).append(new Option("Selecione...", null, null, true));
+        }
+        CarregarSlaves($(this).find(':selected'), 'supervisorMenuItems');
+    });
+
     $('#supervisorMenuItems').change(function () {
-        CarregarCorretoresHierarquia($(this).find(':selected'));
+        $('#corretorMenuItems').attr('disabled', true);
+        $('#corretorMenuItems').empty();
+        $('#corretorMenuItems').append(new Option("Selecione...", null, null, true));
+        CarregarSlaves($(this).find(':selected'), 'corretorMenuItems');
     });
 
     CarregarOperadoras();
@@ -501,28 +508,28 @@ function CarregarCorretores() {
     });
 }
 
-function CarregarCorretoresHierarquia(idMaster) {
+function CarregarSlaves(idMaster, idElement) {
+    console.log(idMaster);
     $.ajax({
         type: "GET",
         dataType: "json",
         url: '/Tarefa?handler=UsuariosSlave',
         data: { IdMaster: idMaster[0].dataset.id },
         beforeSend: function () {
-            $('#corretorMenuItems').attr('disabled', true);
-            $('#corretorMenuItems').empty().trigger("change");
-            $('#corretorMenuItems').append(new Option("Carregando...", null, null, true)).trigger('change');
+            $(`#${idElement}`).attr('disabled', true);
+            $(`#${idElement}`).empty();
+            $(`#${idElement}`).append(new Option("Carregando...", null, null, true));
         },
         success: function (data) {
-            $('#corretorMenuItems').empty().trigger("change");
-            $('#corretorMenuItems').append(new Option("Selecione...", null, null, true));
-
-            for (let corretorHierarquia of data.result) {
-                let newOption = new Option(corretorHierarquia.nome, corretorHierarquia.nome, false, false);
-                $('#corretorMenuItems').append(newOption).trigger('change');
+            $(`#${idElement}`).empty();
+            $(`#${idElement}`).append(new Option("Selecione...", null, null, true));
+            
+            for (let slave of data.result) {
+                $(`#${idElement}`).append(`<option value="${slave.nome}" data-id="${slave.idUsuario}">${slave.nome.toUpperCase()}</option>`);
             }
 
             if (data.result.length > 0)
-                $('#corretorMenuItems').attr('disabled', false);
+                $(`#${idElement}`).attr('disabled', false);
         },
     });
 }

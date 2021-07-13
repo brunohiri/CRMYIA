@@ -351,6 +351,72 @@ namespace CRMYIA.Business
             return Entity;
         }
 
+        public static UsuarioSupervisorViewModel GetUsuarioSupervisor(long IdUsuario)
+        {
+            try
+            {
+                List<UsuarioHierarquia> hierarquiaList = UsuarioHierarquiaModel.GetAllUsuarioSlave(IdUsuario);
+
+                using (YiaContext context = new YiaContext())
+                {
+                    return context.Usuario
+                        .Where(u => u.IdUsuario == IdUsuario)
+                        .Select(s => new UsuarioSupervisorViewModel()
+                        {
+                            IdUsuario = s.IdUsuario,
+                            Nome = s.Nome,
+                            NomeApelido = s.NomeApelido,
+                            UsuariosCorretores = GetAllUsuarioSlave(hierarquiaList)
+                                .Select(slave => new UsuarioCorretorViewModel()
+                                { 
+                                    Nome = slave.Nome,
+                                    NomeApelido = slave.NomeApelido,
+                                    Email = slave.Email,
+                                    Telefone = slave.Telefone
+                                })
+                                .ToList()
+                        })
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static UsuarioGerenteViewModel GetUsuarioGerente(long IdUsuario)
+        {
+            try
+            {
+                List<UsuarioHierarquia> hierarquiaList = UsuarioHierarquiaModel.GetAllUsuarioSlave(IdUsuario);
+
+                using (YiaContext context = new YiaContext())
+                {
+                    return context.Usuario
+                        .Where(u => u.IdUsuario == IdUsuario)
+                        .Select(s => new UsuarioGerenteViewModel()
+                        {
+                            IdUsuario = s.IdUsuario,
+                            Nome = s.Nome,
+                            NomeApelido = s.NomeApelido,
+                            UsuariosSupervisores = GetAllUsuarioSlave(hierarquiaList)
+                                .Select(slave => new UsuarioSupervisorViewModel()
+                                {
+                                    IdUsuario = slave.IdUsuario,
+                                    Nome = slave.Nome,
+                                    NomeApelido = slave.NomeApelido
+                                })
+                                .ToList()
+                        })
+                        .FirstOrDefault();
+                }
+            } catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static KPIUsuarioViewModel GetKPIUsuario(long IdUsuario)
         {
             KPIUsuarioViewModel ListEntity = null;

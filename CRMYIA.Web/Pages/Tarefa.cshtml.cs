@@ -40,10 +40,13 @@ namespace CRMYIA.Web.Pages
         public List<Usuario> ListCorretor { get; set; }
 
         [BindProperty]
+        public UsuarioGerenteViewModel UsuarioGerente { get; set; }
+
+        [BindProperty]
         public List<ListaCorretorViewModel> ListGerente { get; set; }
 
         [BindProperty]
-        public List<Usuario> ListSupervisor { get; set; }
+        public UsuarioSupervisorViewModel UsuarioSupervisor { get; set; }
         #endregion
 
         #region Construtores
@@ -159,10 +162,10 @@ namespace CRMYIA.Web.Pages
                     ListGerente = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Gerente);
                     break;
                 case (byte)(EnumeradorModel.Perfil.Gerente):
-                    ListSupervisor = UsuarioModel.GetAllUsuarioSlave(usuariosHierarquia);
+                    UsuarioGerente = UsuarioModel.GetUsuarioGerente(idUsuario);
                     break;
                 case (byte)(EnumeradorModel.Perfil.Supervisor):
-                    ListCorretor = UsuarioModel.GetAllUsuarioSlave(usuariosHierarquia);
+                    UsuarioSupervisor = UsuarioModel.GetUsuarioSupervisor(idUsuario);
                     break;
                 default:
                     break;

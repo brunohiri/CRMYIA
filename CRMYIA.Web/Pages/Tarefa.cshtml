@@ -45,11 +45,11 @@
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Gerente</label>
-                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuario" id="gerenteMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" id="gerenteMenuItems">
                                             <option selected="selected">Selecione...</option>
                                             @foreach (var Item in Model.ListGerente)
                                             {
-                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                                <option value="@Item.Nome" data-id="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
                                             }
                                         </select>
                                     </div>
@@ -57,24 +57,16 @@
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Supervisor</label>
-                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuario" id="supervisorMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" id="supervisorMenuItems" disabled>
                                             <option selected="selected">Selecione...</option>
-                                            @foreach (var Item in Model.ListSupervisor)
-                                            {
-                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
-                                            }
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Corretor</label>
-                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" id="corretorMenuItems" disabled>
                                             <option selected="selected">Selecione...</option>
-                                            @foreach (var Item in Model.ListCorretor)
-                                            {
-                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
-                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -83,9 +75,9 @@
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Supervisor</label>
-                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuario" id="supervisorMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" id="supervisorMenuItems">
                                             <option selected="selected" id="0">Selecione...</option>
-                                            @foreach (var Item in Model.ListSupervisor)
+                                            @foreach (var Item in Model.UsuarioGerente.UsuariosSupervisores)
                                             {
                                                 <option value="@Item.Nome" data-id="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
                                             }
@@ -95,7 +87,7 @@
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Corretor</label>
-                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems" disabled>
+                                        <select class="form-control select2" style="width: 100%;" id="corretorMenuItems" disabled>
                                             <option selected="selected">Selecione...</option>
                                         </select>
                                     </div>
@@ -105,9 +97,9 @@
                                 <div class="col-sm-@colSmNum">
                                     <div class="form-group">
                                         <label>Corretor</label>
-                                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.IdUsuario" id="corretorMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" id="corretorMenuItems">
                                             <option selected="selected">Selecione...</option>
-                                            @foreach (var Item in Model.ListCorretor)
+                                            @foreach (var Item in Model.UsuarioSupervisor.UsuariosCorretores)
                                             {
                                                 <option value="@Item.Nome" data-id="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
                                             }
