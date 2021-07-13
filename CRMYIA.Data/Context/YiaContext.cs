@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using CRMYIA.Data.Entities;
-using Microsoft.Extensions.Configuration;
 
 namespace CRMYIA.Data.Context
 {
@@ -106,12 +105,7 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-                var connectionString = configuration.GetConnectionString("YiaConnection");
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Name=YiaConnection");
             }
         }
 
@@ -2227,12 +2221,24 @@ namespace CRMYIA.Data.Context
                 entity.HasIndex(e => new { e.Ativo, e.Login, e.Senha })
                     .HasName("IX_LOGIN_SENHA");
 
+                entity.Property(e => e.Agencia)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Banco)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CaminhoFoto)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Codigo)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Conta)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");

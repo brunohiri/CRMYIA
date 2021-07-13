@@ -36,6 +36,32 @@ namespace CRMYIA.Web.Pages
         public IActionResult OnGet()
         {
             ListEntity = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Corretor);
+            foreach (var item in ListEntity)
+            {
+                var Supervisor = UsuarioHierarquiaModel.GetMaster(item.IdUsuario);
+                if(Supervisor != null)
+                {
+                    item.Supervisor = Supervisor.IdUsuarioMasterNavigation.Nome;
+                    var Gerente = UsuarioHierarquiaModel.GetMaster(Supervisor.IdUsuarioMasterNavigation.IdUsuario);
+                    if(Gerente != null)
+                    {
+                        item.Gerente = Gerente.IdUsuarioMasterNavigation.Nome;
+                    }
+                    else
+                    {
+                        item.Gerente = "Nenhum";
+                    }
+                }
+                else
+                {
+                    item.Supervisor = "Nenhum";
+                }
+                var UltimaProducao = PropostaModel.GetUltimaProducao(item.IdUsuario);
+                if(UltimaProducao != null)
+                {
+                    item.UltimaProducao = UltimaProducao.DataCadastro;
+                }
+            }
             return Page();
         }
 

@@ -87,6 +87,9 @@ namespace CRMYIA.Web.Pages
                         {
                             UsuarioModel.Add(Entity);
                             UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
+
+                            //fazer html do email
+                           /// MailModel.SendMail();
                         }
                     }
                     else

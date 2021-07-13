@@ -42,7 +42,25 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
+        public static Proposta GetUltimaProducao(long IdUsuarioCorretor)
+        {
+            Proposta Entity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.Proposta
+                        .AsNoTracking()
+                        .Where(x => x.IdUsuarioCorretor == IdUsuarioCorretor)
+                        .OrderByDescending(x => x.DataCadastro).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Entity;
+        }
         public static List<ListaPropostaViewModel> GetList(long IdUsuario)
         {
             List<ListaPropostaViewModel> ListEntity = null;

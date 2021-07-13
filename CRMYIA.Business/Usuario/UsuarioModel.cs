@@ -147,7 +147,7 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
+        
         public static List<UsuarioViewModel> GetList(bool? Ativo, string? Descricao, DateTime? DataInicio, DateTime? DataFim, bool DataValida)
         {
             List<UsuarioViewModel> ListEntity = null;
@@ -302,7 +302,6 @@ namespace CRMYIA.Business
                             CaminhoFoto = x.CaminhoFoto,
                             NomeFoto = x.NomeFoto,
                             Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
-                            DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
                             DataCadastro = x.DataCadastro,
                             Ativo = x.Ativo
                         })

@@ -59,6 +59,9 @@ namespace CRMYIA.Data.Entities
         public string Twitter { get; set; }
         public string Instagram { get; set; }
         public string Linkedin { get; set; }
+        public string Conta { get; set; }
+        public string Agencia { get; set; }
+        public string Banco { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
 
