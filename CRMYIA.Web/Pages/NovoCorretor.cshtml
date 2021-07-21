@@ -17,12 +17,11 @@
                     <div class="form-group">
                         @if ((Model != null) && (Model.Mensagem != null))
                         {
-                            <div class="@Model.Mensagem.CssClass alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i class="@Model.Mensagem.IconClass"></i>
-                                @Model.Mensagem.Mensagem
-                            </div>
-                        }
+            <div class="@Model.Mensagem.CssClass alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <i class="@Model.Mensagem.IconClass"></i>
+                @Model.Mensagem.Mensagem
+            </div>}
                     </div>
                 </div>
             </div>
@@ -48,6 +47,36 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Conta</label>
+                        <input type="text" class="form-control" placeholder="Nº da conta" required asp-for="@Model.Entity.Conta">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Tipo da conta</label>
+                        <select class="form-control select2" style="width: 100%;" asp-for="@Model.Entity.TipoConta">
+                            <option selected="selected">Selecione...</option>
+                            <option value="Corrente">Corrente</option>
+                            <option value="Poupança">Poupança</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Agência</label>
+                        <input type="text" class="form-control" placeholder="Agência" required asp-for="@Model.Entity.Agencia">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Banco</label>
+                        <input type="text" class="form-control" placeholder="Banco" required asp-for="@Model.Entity.Banco">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label>Corretora</label>
@@ -55,8 +84,7 @@
                             <option selected="selected">Selecione...</option>
                             @foreach (var Item in Model.ListCorretora)
                             {
-                                <option value="@Item.IdCorretora">@(Item.RazaoSocial.Length > 40 ? Item.RazaoSocial.Substring(0,40) + "..." : Item.RazaoSocial)</option>
-                            }
+                <option value="@Item.IdCorretora">@(Item.RazaoSocial.Length > 40 ? Item.RazaoSocial.Substring(0,40) + "..." : Item.RazaoSocial)</option>}
                         </select>
                     </div>
                 </div>
@@ -67,8 +95,7 @@
                             <option selected="selected">Selecione...</option>
                             @foreach (var Item in Model.ListClassificacao)
                             {
-                                <option value="@Item.IdClassificacao">@(Item.Descricao)</option>
-                            }
+                <option value="@Item.IdClassificacao">@(Item.Descricao)</option>}
                         </select>
                     </div>
                 </div>
@@ -79,8 +106,7 @@
                             <option selected="selected">Selecione...</option>
                             @foreach (var Item in Model.ListProducao)
                             {
-                                <option value="@Item.IdProducao">@(Item.Descricao)</option>
-                            }
+                <option value="@Item.IdProducao">@(Item.Descricao)</option>}
                         </select>
                     </div>
                 </div>

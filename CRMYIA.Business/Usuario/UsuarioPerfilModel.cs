@@ -41,7 +41,40 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
+        public static void DesativarUsuarioSemProdução()
+        {
+            List<UsuarioPerfil> Entity = null;
+            DateTime hoje = DateTime.Now;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    Entity = context.UsuarioPerfil.Where(x => x.IdPerfil == (decimal)EnumeradorModel.Perfil.Corretor && x.Ativo == true).AsNoTracking().ToList();
 
+                    foreach (var user in Entity)
+                    {
+                        var proposta = context.Proposta.Where(y => y.IdUsuario == user.IdUsuario && y.DataSolicitacao >= hoje.AddMonths(-3) && y.DataSolicitacao <= hoje && y.Ativo == true).ToList();
+
+                        if(proposta.Count > 0)
+                        {
+                            foreach(var item in proposta)
+                            {
+                                var userDesativar = context.Usuario.Where(i => i.IdUsuario == item.IdUsuarioCorretor).FirstOrDefault();
+                                userDesativar.Ativo = false;
+
+                                context.Usuario.Update(userDesativar);
+                                context.SaveChanges();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public static List<UsuarioPerfil> GetList()
         {
             List<UsuarioPerfil> ListEntity = null;

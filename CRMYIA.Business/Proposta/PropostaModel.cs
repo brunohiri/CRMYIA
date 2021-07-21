@@ -61,6 +61,7 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
+        
         public static List<ListaPropostaViewModel> GetList(long IdUsuario)
         {
             List<ListaPropostaViewModel> ListEntity = null;

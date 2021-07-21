@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using CRMYIA.Data.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace CRMYIA.Data.Context
 {
@@ -105,7 +106,12 @@ namespace CRMYIA.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=YiaConnection");
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json")
+                 .Build();
+                var connectionString = configuration.GetConnectionString("YiaConnection");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
@@ -2295,6 +2301,10 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefone)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoConta)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 

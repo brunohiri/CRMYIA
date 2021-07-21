@@ -45,7 +45,6 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
         public static Usuario GetByDocumento(string Documento = null)
         {
             Usuario Entity = null;
@@ -147,7 +146,7 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-        
+
         public static List<UsuarioViewModel> GetList(bool? Ativo, string? Descricao, DateTime? DataInicio, DateTime? DataFim, bool DataValida)
         {
             List<UsuarioViewModel> ListEntity = null;
@@ -245,7 +244,7 @@ namespace CRMYIA.Business
                         ListEntity = ListEntity
                             .Where(x => (x.DataCadastro >= DataInicio && x.DataCadastro <= DataFim))
                             .ToList();
-                        
+
                     }
                 }
             }

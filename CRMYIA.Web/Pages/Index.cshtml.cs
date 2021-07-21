@@ -36,6 +36,9 @@ namespace CRMYIA.Web.Pages
 
         public async Task<IActionResult> OnGet()
         {
+            //Busca e bloqueia usuarios que não tiveram vendas nos ultimos 3 meses
+            UsuarioPerfilModel.DesativarUsuarioSemProdução();
+
             if (HttpContext.Session.GetObjectFromJson<List<Modulo>>("MODULO") == null)
             {
                 await HttpContext.SignOutAsync();
@@ -277,7 +280,8 @@ namespace CRMYIA.Web.Pages
         {
             Usuario Entity = null;
             Entity = UsuarioModel.Get(dados.IdUsuario);
-            return new JsonResult(new { 
+            return new JsonResult(new
+            {
                 status = Entity != null,
                 data = Entity
             });
