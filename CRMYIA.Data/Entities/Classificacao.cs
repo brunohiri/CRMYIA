@@ -12,6 +12,8 @@ namespace CRMYIA.Data.Entities
 
         public byte IdClassificacao { get; set; }
         public string Descricao { get; set; }
+        public string Icone { get; set; }
+        public string Cor { get; set; }
         public bool Ativo { get; set; }
 
         public virtual ICollection<Usuario> Usuario { get; set; }

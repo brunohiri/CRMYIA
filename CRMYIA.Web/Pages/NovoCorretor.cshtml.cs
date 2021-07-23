@@ -7,6 +7,7 @@ using CRMYIA.Business;
 using CRMYIA.Business.Util;
 using CRMYIA.Data.Entities;
 using CRMYIA.Data.Model;
+using CRMYIA.Data.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +23,7 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public Usuario Entity { get; set; }
-
+        
         [BindProperty]
         public string ConfirmarSenha { get; set; }
 
@@ -34,7 +35,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public List<Producao> ListProducao { get; set; }
-
+        [BindProperty]
+        public List<UsuarioViewModel> ListSupervisor { get; set; }
         #endregion
 
         #region Construtores
@@ -59,6 +61,7 @@ namespace CRMYIA.Web.Pages
             ListCorretora = CorretoraModel.GetListIdDescricao();
             ListClassificacao = ClassificacaoModel.GetListIdDescricao();
             ListProducao = ProducaoModel.GetListIdDescricao();
+            ListSupervisor = UsuarioPerfilModel.GetList((byte)(EnumeradorModel.Perfil.Supervisor));
             return Page();
         }
 
@@ -87,6 +90,7 @@ namespace CRMYIA.Web.Pages
                         {
                             UsuarioModel.Add(Entity);
                             UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
+                            UsuarioHierarquiaModel.Add(new UsuarioHierarquia() { Ativo = true, DataCadastro = DateTime.Now, IdUsuarioMaster = Entity.Superior, IdUsuarioSlave = Entity.IdUsuario });
 
                             //fazer html do email
                            /// MailModel.SendMail();

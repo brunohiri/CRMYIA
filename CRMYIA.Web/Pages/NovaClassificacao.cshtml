@@ -4,7 +4,9 @@
     ViewData["Title"] = "Nova";
     ViewData["Pagina"] = "Classificação";
 }
-
+@section Scripts {
+    <script src="~/js/sistema/novaClassificacao.js"></script>
+}
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
@@ -28,12 +30,27 @@
             </div>
             <div class="row">
                 <input type="hidden" class="form-control" asp-for="@Model.Entity.IdClassificacao">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label>Descrição</label>
                         <input type="text" class="form-control" placeholder="Descrição" required asp-for="@Model.Entity.Descricao">
                     </div>
                 </div>
+                <div class="col-sm-2">
+                    <label>Icone</label>
+                    <div class="d-flex align-items-center small">
+
+                        <input type="text" class="form-control checkbox-inline" placeholder="Descrição" required value="fas fa-medal" disabled asp-for="@Model.Entity.Icone">
+                        &nbsp;&nbsp;&nbsp;<i class="fas fa-medal position-relative" style="font-size: 36px;" id="amostra"></i>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Selecione uma cor</label>
+                        <input type="color" id="html5colorpicker" onchange="clickColor(0, -1, -1, 5)" value="#ff0000" style="width:100%; height:38px;" asp-for="@Model.Entity.Cor">
+                    </div>
+                </div>
+
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label>Status</label>

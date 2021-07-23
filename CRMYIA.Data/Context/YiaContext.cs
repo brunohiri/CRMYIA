@@ -104,6 +104,7 @@ namespace CRMYIA.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -464,8 +465,16 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdClassificacao).ValueGeneratedOnAdd();
 
+                entity.Property(e => e.Cor)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Icone)
+                    .HasMaxLength(40)
                     .IsUnicode(false);
             });
 

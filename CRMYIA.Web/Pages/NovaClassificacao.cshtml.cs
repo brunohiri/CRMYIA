@@ -48,9 +48,17 @@ namespace CRMYIA.Web.Pages
             try
             {
                 if (Entity.IdClassificacao == 0)
+                {
+                    Entity.Icone = "fas fa-medal";
                     ClassificacaoModel.Add(Entity);
+                }
+
                 else
+                {
+                    Entity.Icone = "fas fa-medal";
                     ClassificacaoModel.Update(Entity);
+                }
+
 
                 Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Sucesso, "Dados salvos com sucesso!");
             }
