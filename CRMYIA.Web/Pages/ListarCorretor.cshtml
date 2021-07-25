@@ -21,9 +21,10 @@
                             <th width="20%">Nome</th>
                             <th width="10%">Email</th>
                             <th width="10%">Telefone</th>
-                            <th width="25%">Corretora</th>
-                            <th width="10%">Perfil</th>
                             <th width="15%">Cadastro</th>
+                            <th width="10%">Gerente</th>
+                            <th width="10%">Supervisor</th>
+                            <th width="10%">Última Produção</th>
                             <th width="5%">Status</th>
                             <th width="5%"></th>
                         </tr>
@@ -33,19 +34,20 @@
                         {
                             foreach (var Item in Model.ListEntity)
                             {
-                                <tr>
-                                    <td></td>
-                                    <td>@Item.Nome</td>
-                                    <td>@Item.Email</td>
-                                    <td>@Item.Telefone</td>
-                                    <td>@Item.Corretora</td>
-                                    <td>@Item.DescricaoPerfil</td>
-                                    <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                    <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
-                                    <td>
-                                        <a asp-page="/NovoCorretor" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                                    </td>
-                                </tr>
+                        <tr>
+                            <td></td>
+                            <td>@Item.Nome</td>
+                            <td>@Item.Email</td>
+                            <td>@Item.Telefone</td>
+                            <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@Item.Gerente</td>
+                            <td>@Item.Supervisor</td>
+                            <td>@Item.UltimaProducao == null ? @Item.UltimaProducao.ToString("dd/MM/yyyy HH:mm:ss") : "<span class="badge badge-pill badge-warning">Inativo</span>"</td>
+                            <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                            <td>
+                                <a asp-page="/NovoCorretor" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                            </td>
+                        </tr>
                             }
                         }
                     </tbody>

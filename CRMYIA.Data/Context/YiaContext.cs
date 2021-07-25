@@ -103,10 +103,15 @@ namespace CRMYIA.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json")
+                 .Build();
+                var connectionString = configuration.GetConnectionString("YiaConnection");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
@@ -459,8 +464,16 @@ namespace CRMYIA.Data.Context
 
                 entity.Property(e => e.IdClassificacao).ValueGeneratedOnAdd();
 
+                entity.Property(e => e.Cor)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Descricao)
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Icone)
+                    .HasMaxLength(40)
                     .IsUnicode(false);
             });
 
@@ -2222,12 +2235,24 @@ namespace CRMYIA.Data.Context
                 entity.HasIndex(e => new { e.Ativo, e.Login, e.Senha })
                     .HasName("IX_LOGIN_SENHA");
 
+                entity.Property(e => e.Agencia)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Banco)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CaminhoFoto)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Codigo)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Conta)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DataCadastro).HasColumnType("datetime");
@@ -2284,6 +2309,10 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefone)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoConta)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 

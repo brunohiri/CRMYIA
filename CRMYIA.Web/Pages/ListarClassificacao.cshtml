@@ -1,0 +1,46 @@
+﻿@page
+@model CRMYIA.Web.Pages.ListarClassificacaoModel
+@{
+    ViewData["Title"] = "Listar";
+    ViewData["Pagina"] = "Classificação";
+}
+@using CRMYIA.Business.Util;
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">@ViewData["Title"] @ViewData["Pagina"]</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive">
+                <table id="tableListagem" class="table table-striped table-hover dt-responsive display nowrap datatable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Descrição</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListEntity != null && Model.ListEntity.Count() > 0)
+                        {
+                            foreach (var Item in Model.ListEntity)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@Item.Descricao</td>
+                                    <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
+                                    <td>
+                                        <a asp-page="/NovaClassificacao" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdClassificacao.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

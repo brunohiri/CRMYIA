@@ -45,7 +45,6 @@ namespace CRMYIA.Business
             }
             return Entity;
         }
-
         public static Usuario GetByDocumento(string Documento = null)
         {
             Usuario Entity = null;
@@ -245,7 +244,7 @@ namespace CRMYIA.Business
                         ListEntity = ListEntity
                             .Where(x => (x.DataCadastro >= DataInicio && x.DataCadastro <= DataFim))
                             .ToList();
-                        
+
                     }
                 }
             }
@@ -302,7 +301,6 @@ namespace CRMYIA.Business
                             CaminhoFoto = x.CaminhoFoto,
                             NomeFoto = x.NomeFoto,
                             Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
-                            DescricaoPerfil = x.UsuarioPerfil.First().IdPerfilNavigation.Descricao,
                             DataCadastro = x.DataCadastro,
                             Ativo = x.Ativo
                         })
