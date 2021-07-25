@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <div class="row">
                         <!-- Input comum a todos os usuários-->
-                        <div class="col-sm-@colSmNum">
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                             <div class="form-group">
                                 <label>Operadora</label>
                                 <select class="form-control select2" style="width: 100%;" id="operadoraMenuItems">
@@ -42,7 +42,7 @@
                         @switch (perfilUsuarioAtual)
                         {
                             case (byte?)EnumeradorModel.Perfil.Administrador:
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Gerente</label>
                                         <select class="form-control select2" style="width: 100%;" id="gerenteMenuItems">
@@ -54,7 +54,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Supervisor</label>
                                         <select class="form-control select2" style="width: 100%;" id="supervisorMenuItems" disabled>
@@ -62,7 +62,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Corretor</label>
                                         <select class="form-control select2" style="width: 100%;" id="corretorMenuItems" disabled>
@@ -72,7 +72,7 @@
                                 </div>
                                 break;
                             case (byte?)EnumeradorModel.Perfil.Gerente:
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Supervisor</label>
                                         <select class="form-control select2" style="width: 100%;" id="supervisorMenuItems">
@@ -84,7 +84,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Corretor</label>
                                         <select class="form-control select2" style="width: 100%;" id="corretorMenuItems" disabled>
@@ -94,7 +94,7 @@
                                 </div>
                                 break;
                             case (byte?)EnumeradorModel.Perfil.Supervisor:
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Corretor</label>
                                         <select class="form-control select2" style="width: 100%;" id="corretorMenuItems">
@@ -113,8 +113,7 @@
                                 break;
                         }
 
-                        <!-- Inputs comuns a todos os usuários-->
-                        <div class="col-sm-@colSmNum">
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                             <div class="form-group">
                                 <label>Data</label>
                                 <div class="input-group">
@@ -123,20 +122,21 @@
                                             <i class="far fa-calendar-alt"></i>
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control float-right daterange " id="Data" name="Data">
+                                    <input type="text" class="form-control float-right daterange" id="Data" name="Data" value="@Model.DataInicialDefault - @Model.DataFinalDefault">
                                 </div>
                             </div>
                         </div>
-
-                        <div class="ml-auto p-2 bd-highlight">
-                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
-                                Sugestão de Abordagem
-                            </button>
-                            <button class="btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
-                            <button class="btn btn-primary" id="btnPesquisar" type="button">Pesquisar</button>
-                        </div>
-                        <!-- Fim dos inputs comuns a todos os usuários -->
                     </div>
+                    <hr />
+                    <!-- Inputs comuns a todos os usuários-->
+                    <div class="row g-2 justify-content-end">
+                        <button type="button" class="col-12 col-sm-12 col-md-auto btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
+                            Sugestão de Abordagem
+                        </button>
+                        <button class="col-12 col-sm-12 col-md-auto mx-0 mx-sm-0 mx-md-2 my-2 my-sm-2 my-md-0 btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                        <button class="col-12 col-sm-12 col-md-auto btn btn-primary" id="btnPesquisar" type="button">Pesquisar</button>
+                    </div>
+                    <!-- Fim dos inputs comuns a todos os usuários -->
                 </div>
             </form>
         </div>

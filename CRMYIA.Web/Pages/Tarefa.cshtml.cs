@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -22,6 +22,10 @@ namespace CRMYIA.Web.Pages
     {
         #region Propriedades
         readonly IConfiguration _configuration;
+
+        public string DataInicialDefault;
+
+        public string DataFinalDefault;
 
         public MensagemModel Mensagem { get; set; }
 
@@ -57,17 +61,43 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region M�todos
+        public async Task<IActionResult> OnGetAsync()
+        {
+            List<Task> initialTasks = new List<Task>();
+            long idUsuarioLogado = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            DateTime dataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 7);
+            DateTime dataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+            DataInicialDefault = dataInicial.ToString("dd/MM/yyyy");
+            DataFinalDefault = dataFinal.ToString("dd/MM/yyyy");
+            ListFaseProposta = FasePropostaModel.GetListIdDescricao();
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+            ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuarioLogado, new DateTime(2020, 07, 01), dataFinal, ListFaseProposta);
+            stopwatch.Stop();
+            Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
+            CarregarLists(idUsuarioLogado);
+            
+            return Page();
+        }
+        
+        /*
         public IActionResult OnGet()
         {
+            var stopwatch = new Stopwatch();
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 7);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+
+            stopwatch.Start();
             ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, "", "", 0, 0);
+            stopwatch.Stop();
+            Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
 
             CarregarLists();
             return Page();
         }
-
+        */
         public IActionResult OnGetEdit(string statusId = null, string taskId = null)
         {
             if ((!statusId.IsNullOrEmpty()) && (!taskId.IsNullOrEmpty()))
@@ -79,6 +109,35 @@ namespace CRMYIA.Web.Pages
             }
 
             return new JsonResult(new { status = true });
+        }
+
+        public IActionResult OnPostPesquisaPropostas(IFormCollection dados)
+        {
+            bool status = false;
+            DateTime dataInicio = !string.IsNullOrEmpty(dados["dataInicio"]) ? Convert.ToDateTime(dados["dataInicio"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            DateTime dataFim = !string.IsNullOrEmpty(dados["dataFim"]) ? Convert.ToDateTime(dados["dataFim"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            byte.TryParse(dados["fase"], out byte fase);
+            long idUsuario;
+            List<FaseProposta> faseProposta = FasePropostaModel.GetListIdDescricao();
+
+            if (!string.IsNullOrEmpty(dados["idCorretor"]) && !dados["idCorretor"].Equals("undefined"))
+                idUsuario = long.Parse(dados["idCorretor"]);
+            else if (!string.IsNullOrEmpty(dados["idSupervisor"]) && !dados["idSupervisor"].Equals("undefined"))
+                idUsuario = long.Parse(dados["idSupervisor"]);
+            else if (!string.IsNullOrEmpty(dados["idGerente"]) && !dados["idGerente"].Equals("undefined"))
+                idUsuario = long.Parse(dados["idGerente"]);
+            else
+                idUsuario = GetIdUsuario();
+
+            foreach (var proposta in faseProposta)
+            {
+                //ListListEntityProposta.Add(PropostaModel.GetList(idUsuario, dataInicio, dataFim, proposta.IdFaseProposta));
+            }
+
+            if (ListListEntityProposta[0].Count > 0)
+                status = true;
+
+            return new JsonResult(new { status, fase, faseProposta, Propostas = ListListEntityProposta, periodoA = dataInicio.ToString(), periodoB = dataFim.ToString() });
         }
 
         public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
@@ -150,11 +209,9 @@ namespace CRMYIA.Web.Pages
         }
         #endregion
 
-        public void CarregarLists()
+        public void CarregarLists(long idsuarioLogado)
         {
-            byte? perfilUsuario = UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
-            long idUsuario = GetIdUsuario();
-            List<UsuarioHierarquia> usuariosHierarquia = UsuarioHierarquiaModel.GetAllUsuarioSlave(idUsuario);
+            byte? perfilUsuario = UsuarioModel.GetPerfil(idsuarioLogado);
 
             switch (perfilUsuario)
             {
@@ -162,10 +219,10 @@ namespace CRMYIA.Web.Pages
                     ListGerente = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Gerente);
                     break;
                 case (byte)(EnumeradorModel.Perfil.Gerente):
-                    UsuarioGerente = UsuarioModel.GetUsuarioGerente(idUsuario);
+                    UsuarioGerente = UsuarioModel.GetUsuarioGerente(idsuarioLogado);
                     break;
                 case (byte)(EnumeradorModel.Perfil.Supervisor):
-                    UsuarioSupervisor = UsuarioModel.GetUsuarioSupervisor(idUsuario);
+                    UsuarioSupervisor = UsuarioModel.GetUsuarioSupervisor(idsuarioLogado);
                     break;
                 default:
                     break;

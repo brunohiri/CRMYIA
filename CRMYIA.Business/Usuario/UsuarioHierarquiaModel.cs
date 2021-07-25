@@ -106,7 +106,10 @@ namespace CRMYIA.Business
                 using (YiaContext context = new YiaContext())
                 {
                     return context.UsuarioHierarquia
-                        .Where(x => x.IdUsuarioMaster == IdMaster)
+                        .Include(x => x.IdUsuarioSlaveNavigation)
+                            .ThenInclude(y => y.UsuarioHierarquiaIdUsuarioMasterNavigation)
+                        .Where(y => y.Ativo && y.IdUsuarioMaster == IdMaster)
+                        .AsNoTracking()
                         .ToList();
                 }
             } catch (Exception e)
