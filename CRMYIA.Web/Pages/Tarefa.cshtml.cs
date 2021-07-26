@@ -111,11 +111,12 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true });
         }
 
-        public IActionResult OnPostPesquisaPropostas(IFormCollection dados)
+        public async Task<IActionResult> OnPostPesquisaPropostasAsync(IFormCollection dados)
         {
             bool status = false;
             DateTime dataInicio = !string.IsNullOrEmpty(dados["dataInicio"]) ? Convert.ToDateTime(dados["dataInicio"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime dataFim = !string.IsNullOrEmpty(dados["dataFim"]) ? Convert.ToDateTime(dados["dataFim"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            ListFaseProposta = FasePropostaModel.GetListIdDescricao();
             byte.TryParse(dados["fase"], out byte fase);
             long idUsuario;
             List<FaseProposta> faseProposta = FasePropostaModel.GetListIdDescricao();
@@ -127,12 +128,9 @@ namespace CRMYIA.Web.Pages
             else if (!string.IsNullOrEmpty(dados["idGerente"]) && !dados["idGerente"].Equals("undefined"))
                 idUsuario = long.Parse(dados["idGerente"]);
             else
-                idUsuario = GetIdUsuario();
+                idUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            foreach (var proposta in faseProposta)
-            {
-                //ListListEntityProposta.Add(PropostaModel.GetList(idUsuario, dataInicio, dataFim, proposta.IdFaseProposta));
-            }
+            ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuario, dataInicio, dataFim, ListFaseProposta, dados["operadora"]);
 
             if (ListListEntityProposta[0].Count > 0)
                 status = true;
@@ -140,37 +138,12 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status, fase, faseProposta, Propostas = ListListEntityProposta, periodoA = dataInicio.ToString(), periodoB = dataFim.ToString() });
         }
 
-        public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
-        {
-            string Nome, Descricao, Inicio, Fim;
-            DateTime DataInicial, DataFinal;
-            bool status = false;
-            long IdUsuario = GetIdUsuario();
-
-
-            Nome = dados["Nome"];
-            Descricao = dados["Descricao"];
-            Inicio = dados["Inicio"];
-            Fim = dados["Fim"];
-            int.TryParse(dados["Salto"], out int Salto);
-            byte.TryParse(dados["Fase"], out byte Fase);
-            List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
-
-            DataInicial = string.IsNullOrEmpty(Inicio) ? Util.GetFirstDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Inicio);
-            DataFinal = string.IsNullOrEmpty(Fim) ? Util.GetLastDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Fim);
-
-            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Nome, Descricao, Fase, Salto);
-            if (ListListEntityProposta[0].Count > 0)
-                status = true;
-            return new JsonResult(new { status, Fase, FaseProposta, Propostas = ListListEntityProposta, periodoA = DataInicial.ToString(), periodoB = DataFinal.ToString() });
-
-
-        }
         public IActionResult OnGetObterHashId(string Id)
         {
             var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
             return new JsonResult(new { hashId = HashId });
         }
+
         public IActionResult OnGetTodasOperadoras()
         {
             List<Operadora> EntityOperadora = OperadoraModel.GetList();

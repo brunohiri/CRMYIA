@@ -163,7 +163,7 @@ namespace CRMYIA.Business
 
             foreach (FaseProposta faseProposta in listFaseProposta)
             {
-                taskPropostas.Add(GetPropostaListAsync(idUsuario, dataInicio, dataFim, faseProposta.IdFaseProposta, salto));
+                taskPropostas.Add(GetPropostaListAsync(idUsuario, dataInicio, dataFim, faseProposta.IdFaseProposta, salto, operadora));
             }
 
             Task t = Task.WhenAll(taskPropostas.ToArray());
@@ -195,7 +195,7 @@ namespace CRMYIA.Business
         /// <param name="salto">[Opcional] Inclui um salto na requisição para a paginação</param>
         /// <exception cref="Exception"></exception>
         /// <returns>Retorna uma Task para a fase atual da proposta</returns>
-        private static async Task<List<Proposta>> GetPropostaListAsync(long idUsuario, DateTime dataInicio, DateTime dataFim, byte fase, int salto = 0)
+        private static async Task<List<Proposta>> GetPropostaListAsync(long idUsuario, DateTime dataInicio, DateTime dataFim, byte fase, int salto = 0, string operadora = "")
         {
             List<Proposta> taskPropostas = new List<Proposta>();
 
@@ -219,6 +219,7 @@ namespace CRMYIA.Business
                             && x.DataSolicitacao.Value >= dataInicio
                             && x.DataSolicitacao.Value <= dataFim
                             && x.IdFaseProposta == fase
+                            && x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(operadora)
                             && ((x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == idUsuario).Count() > 0) || x.IdUsuario == idUsuario || x.IdUsuarioCorretor == idUsuario))
                         .OrderBy(o => o.DataCadastro)
                         .AsNoTracking().Skip(salto).Take(20).ToListAsync();

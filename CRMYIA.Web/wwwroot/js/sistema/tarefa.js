@@ -223,10 +223,7 @@ function Pesquisa() {
     toastr.info("Pesquisando...");
     search = true;
     var formData = new FormData();
-    let operadora, gerente, supervisor, idCorretor, dataInicio, dataFim;
-
-    console.log($('#gerenteMenuItems').find(':selected')[0].dataset.id);
-    console.log($('#supervisorMenuItems').find(':selected')[0].dataset.id);
+    let operadora, idGerente, idSupervisor, idCorretor, dataInicio, dataFim;
 
     operadora = $('#operadoraMenuItems').length && $('#operadoraMenuItems').val() != 'Selecione...' ? $('#operadoraMenuItems').val() : '';
     idGerente = $('#gerenteMenuItems').length && $('#gerenteMenuItems').val() != 'Selecione...' ? $('#gerenteMenuItems').find(':selected')[0].dataset.id : '';
@@ -306,6 +303,7 @@ function AtualizarSortable(resultado) {
             saltoSort6 = 20;
             search = false;
         }
+
         if (data.faseProposta != undefined) {
             if (data.fase > 0) {
                 f = parseInt(data.fase) - 1;
@@ -359,25 +357,25 @@ function AtualizarSortable(resultado) {
     }, function () {
         console.log("Deu problema na requisição");
     });
+}
 
-    function AtualizarCardsPropostas() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
-            }
+function AtualizarCardsPropostas() {
+    for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
+        if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
+            $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
         }
     }
+}
 
-    function AtualizarCardSomaPropostas() {
-        var soma = 0;
-        for (var i = 0; i < 6; i++) {
-            soma = 0;
-            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
-                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
-                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
-            }
-            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+function AtualizarCardSomaPropostas() {
+    var soma = 0;
+    for (var i = 1; i <= 6; i++) {
+        soma = 0;
+        for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
+            var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
+            soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
         }
+        $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
     }
 }
 
@@ -405,7 +403,6 @@ function BuscarTodosValorPrevisto(data, condicao) {
                 retorno[index] = (accumulator + item.valorPrevisto);
                 return accumulator;
             }
-
         }
 
     }, 0.00);
@@ -437,28 +434,7 @@ function CadastroTarefas() {
                     }
                 });
             }
-
         }).disableSelection();
-
-    function AtualizarCardsPropostas() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
-            }
-        }
-    }
-
-    function AtualizarCardSomaPropostas() {
-        var soma = 0;
-        for (var i = 0; i < 6; i++) {
-            soma = 0;
-            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
-                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
-                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
-            }
-            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        }
-    }
 }
 function CarregarOperadoras() {
     $.getJSON("/Tarefa?handler=TodasOperadoras", function (data) {
