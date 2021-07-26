@@ -164,6 +164,94 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+
+        /// <summary> Recupera as informações necessárias das propostas para cada fase do funil de venda de forma assíncrona, respeitando a hierarquia dos usuários que fazem as requisições. </summary>
+        /// <param name="idUsuario">ID do usuário logado ou do usuário definido no formulário de pesquisa</param>
+        /// <param name="dataInicio">Datetime inicial</param>
+        /// <param name="dataFim">Datetime final</param>
+        /// <param name="listFaseProposta">Uma lista com as fases do funil de venda</param>
+        /// <param name="operadora">[Opcional] Inclui a operadora na requisição</param>
+        /// <param name="corretor">[Opcional] Inclui o corretor na requisição</param>
+        /// <param name="salto">[Opcional] Inclui um salto na requisição para a paginação</param>
+        /// <exception cref="AggregateException"></exception>
+        /// <returns>Retorna uma Task que será resolvida quando todas as requests forem concluídas</returns>
+        public static async Task<List<List<Proposta>>> GetListCardPropostaAsync(long idUsuario, DateTime dataInicio, DateTime dataFim, List<FaseProposta> listFaseProposta, string operadora = "", string corretor = "", int salto = 0)
+        {
+            List<List<Proposta>> listPropostas = new List<List<Proposta>>();
+            List<Task<List<Proposta>>> taskPropostas = new List<Task<List<Proposta>>>();
+
+            foreach (FaseProposta faseProposta in listFaseProposta)
+            {
+                taskPropostas.Add(GetPropostaListAsync(idUsuario, dataInicio, dataFim, faseProposta.IdFaseProposta, salto, operadora));
+            }
+
+            Task t = Task.WhenAll(taskPropostas.ToArray());
+
+            try
+            {
+                await t;
+            } catch (AggregateException) { }
+
+            if (t.Status == TaskStatus.RanToCompletion)
+            {
+                foreach (var propostas in taskPropostas)
+                {
+                    if (propostas.Status == TaskStatus.RanToCompletion)
+                    {
+                        listPropostas.Add(propostas.Result);
+                    }
+                }
+            }
+
+            return listPropostas;
+        }
+
+        /// <summary> Recupera as informações necessárias das propostas para uma fase do funil de venda de forma assíncrona, respeitando a hierarquia dos usuários que fazem as requisições. </summary>
+        /// <param name="idUsuario">ID do usuário logado ou do usuário definido no formulário de pesquisa</param>
+        /// <param name="dataInicio">Datetime inicial</param>
+        /// <param name="dataFim">Datetime final</param>
+        /// <param name="fase">ID da fase atual da proposta</param>
+        /// <param name="salto">[Opcional] Inclui um salto na requisição para a paginação</param>
+        /// <exception cref="Exception"></exception>
+        /// <returns>Retorna uma Task para a fase atual da proposta</returns>
+        private static async Task<List<Proposta>> GetPropostaListAsync(long idUsuario, DateTime dataInicio, DateTime dataFim, byte fase, int salto = 0, string operadora = "")
+        {
+            List<Proposta> taskPropostas = new List<Proposta>();
+
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    taskPropostas = await context.Proposta
+                        .Include(y => y.IdModalidadeNavigation)
+                        .Include(y => y.IdFasePropostaNavigation)
+                        .Include(y => y.IdStatusPropostaNavigation)
+                        .Include(y => y.IdUsuarioCorretorNavigation)
+                            .ThenInclude(t => t.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                        .Include(y => y.IdUsuarioNavigation)
+                        .Include(y => y.IdCategoriaNavigation)
+                            .ThenInclude(k => k.IdLinhaNavigation)
+                                .ThenInclude(l => l.IdProdutoNavigation)
+                                    .ThenInclude(m => m.IdOperadoraNavigation)
+                        .Include(y => y.IdClienteNavigation)
+                        .Where(x => x.Ativo
+                            && x.DataSolicitacao.Value >= dataInicio
+                            && x.DataSolicitacao.Value <= dataFim
+                            && x.IdFaseProposta == fase
+                            && x.IdCategoriaNavigation.IdLinhaNavigation.IdProdutoNavigation.IdOperadoraNavigation.Descricao.Contains(operadora)
+                            && ((x.IdUsuarioCorretorNavigation.UsuarioHierarquiaIdUsuarioSlaveNavigation.Where(t => t.IdUsuarioMaster == idUsuario).Count() > 0) || x.IdUsuario == idUsuario || x.IdUsuarioCorretor == idUsuario))
+                        .OrderBy(o => o.DataCadastro)
+                        .AsNoTracking().Skip(salto).Take(20).ToListAsync();
+                }
+
+                return taskPropostas;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static List<List<Proposta>> GetListListCardProposta(long IdUsuario, DateTime DataInicio, DateTime DataFim, string Descricao, string Nome, byte Fase, int Salto)
         {
             List<List<Proposta>> ListEntity = new List<List<Proposta>>();

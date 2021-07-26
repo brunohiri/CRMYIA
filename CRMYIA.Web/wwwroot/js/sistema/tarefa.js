@@ -58,14 +58,9 @@ $(document).ready(function () {
         }
     });
 
-    let d = new Date();
-    let anoC = d.getFullYear();
-    let mesC = d.getMonth();
-
-    let DInicio = new Date(anoC, mesC, 1);
-    let DFim = new Date(anoC, mesC + 1, 0);
-
-    $('#Data').val('');
+    // Define o mês atual como valor default
+    // let d = new Date();
+    // $('#Data').val(`${new Date(d.getFullYear(), d.getMonth() - 3, 1).toLocaleDateString()} - ${new Date(d.getFullYear(), d.getMonth() + 1, 0).toLocaleDateString()}`);
 
     $('.limpar-pesquisa').click(function () {
         location.reload();
@@ -79,8 +74,24 @@ $(document).ready(function () {
         location.href = "NovoCliente";
     });
 
+    $('#gerenteMenuItems').change(function () {
+        for (let id of ['supervisorMenuItems', 'corretorMenuItems']) {
+            $(`#${id}`).attr('disabled', true);
+            $(`#${id}`).empty();
+            $(`#${id}`).append(new Option("Selecione...", null, null, true));
+        }
+        CarregarSlaves($(this).find(':selected'), 'supervisorMenuItems');
+    });
+
+    $('#supervisorMenuItems').change(function () {
+        $('#corretorMenuItems').attr('disabled', true);
+        $('#corretorMenuItems').empty();
+        $('#corretorMenuItems').append(new Option("Selecione...", null, null, true));
+        CarregarSlaves($(this).find(':selected'), 'corretorMenuItems');
+    });
+
     CarregarOperadoras();
-    CarregarCorretores();
+    //CarregarCorretores();
 });
 $("#sort1").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
@@ -210,72 +221,53 @@ function BuscarFasesProposta(fase, salto) {
 }
 function Pesquisa() {
     toastr.info("Pesquisando...");
-    var formData = new FormData();
-    var d = new Date();
     search = true;
-    var anoC = d.getFullYear();
-    var mesC = d.getMonth();
+    var formData = new FormData();
+    let operadora, idGerente, idSupervisor, idCorretor, dataInicio, dataFim;
 
-    var DInicio = new Date(anoC, mesC, 1);
-    var DFim = new Date(anoC, mesC + 1, 0);
-    let Inicio = "";
-    let Fim = "";
-    let Descricao = "";
-    let Nome = "";
-    GetDiaMesAno(DInicio);
-    GetDiaMesAno(DFim);
+    operadora = $('#operadoraMenuItems').length && $('#operadoraMenuItems').val() != 'Selecione...' ? $('#operadoraMenuItems').val() : '';
+    idGerente = $('#gerenteMenuItems').length && $('#gerenteMenuItems').val() != 'Selecione...' ? $('#gerenteMenuItems').find(':selected')[0].dataset.id : '';
+    idSupervisor = $('#supervisorMenuItems').length && $('#supervisorMenuItems').val() != 'Selecione...' ? $('#supervisorMenuItems').find(':selected')[0].dataset.id : '';
+    idCorretor = $('#corretorMenuItems').length && $('#corretorMenuItems').val() != 'Selecione...' ? $('#corretorMenuItems').find(':selected')[0].dataset.id : '';
+    [dataInicio, dataFim] = $("#Data").val().includes(' - ') ? $("#Data").val().split(' - ') : [null, null];
 
-    let vetData = $("#Data").val().split(' - ');
-    if (vetData[0] == GetDiaAtual() && vetData[1] == GetDiaAtual()) {
-        Inicio = GetDiaMesAno(DInicio);
-        Fim = GetDiaMesAno(DFim);
-    } else {
-        Inicio = vetData[0];
-        Fim = vetData[1];
-    }
+    formData.append('operadora', operadora);
+    formData.append('idGerente', idGerente);
+    formData.append('idSupervisor', idSupervisor);
+    formData.append('idCorretor', idCorretor);
+    formData.append('dataInicio', dataInicio);
+    formData.append('dataFim', dataFim);
+    formData.append('fase', "");
 
-    if ($('#operadoraMenuItems').val() != undefined && $('#operadoraMenuItems').val() != "Selecione...")
-        Descricao = $('#operadoraMenuItems').val();
+    console.log(idCorretor);
 
-    if ($('#corretorMenuItems').val() != undefined && $('#corretorMenuItems').val() != "Selecione...")
-        Nome = $('#corretorMenuItems').val();
+    var res = $.ajax({
+        type: "POST",
+        url: "/Tarefa?handler=PesquisaPropostas",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        data: formData,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            console.log(result);
+            $("#periodoPesquisa").remove().html();
+            $("#periodoPesquisa").append("Periodo: " + FormatarData(result.periodoA) + " até " + FormatarData(result.periodoB));
+            $(".loader").hide("fast", function () {
+                $(this).prev().hide("fast", arguments.callee);
+            });
+            result.propostas[0].length == 0 ? toastr.warning("Nada encontrado!") : toastr.success("Sucesso!");
+            return result;
+        },
+        failure: function (reason) {
+            console.error(reason);
+        }
+    });
 
-    formData.append('Nome', Nome);
-    formData.append('Descricao', Descricao);
-    formData.append('Fase', "");
-    formData.append('Salto', "");
-    formData.append('Inicio', Inicio);
-    formData.append('Fim', Fim);
-
-    var res =
-        $.ajax({
-            type: "POST",
-            url: "/Tarefa?handler=PesquisaTarefa",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("XSRF-TOKEN",
-                    $('input:hidden[name="__RequestVerificationToken"]').val());
-            },
-            data: formData,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            processData: false,
-            contentType: false,
-            success: function (result) {
-                $("#periodoPesquisa").remove().html();
-                $("#periodoPesquisa").append("Periodo: " + FormatarData(result.periodoA) + " até " + FormatarData(result.periodoB));
-                $(".loader").hide("fast", function () {
-                    $(this).prev().hide("fast", arguments.callee);
-                });
-                if (result.propostas[0].length == 0)
-                    toastr.warning("Nada encontrado!");
-                else
-                    toastr.success("Sucesso!");
-                return result
-            },
-            failure: function (data) {
-                console.log(response);
-            }
-        });
     AtualizarSortable(res);
 }
 
@@ -311,6 +303,7 @@ function AtualizarSortable(resultado) {
             saltoSort6 = 20;
             search = false;
         }
+
         if (data.faseProposta != undefined) {
             if (data.fase > 0) {
                 f = parseInt(data.fase) - 1;
@@ -364,25 +357,25 @@ function AtualizarSortable(resultado) {
     }, function () {
         console.log("Deu problema na requisição");
     });
+}
 
-    function AtualizarCardsPropostas() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
-            }
+function AtualizarCardsPropostas() {
+    for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
+        if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
+            $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
         }
     }
+}
 
-    function AtualizarCardSomaPropostas() {
-        var soma = 0;
-        for (var i = 0; i < 6; i++) {
-            soma = 0;
-            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
-                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
-                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
-            }
-            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+function AtualizarCardSomaPropostas() {
+    var soma = 0;
+    for (var i = 1; i <= 6; i++) {
+        soma = 0;
+        for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
+            var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
+            soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
         }
+        $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
     }
 }
 
@@ -410,7 +403,6 @@ function BuscarTodosValorPrevisto(data, condicao) {
                 retorno[index] = (accumulator + item.valorPrevisto);
                 return accumulator;
             }
-
         }
 
     }, 0.00);
@@ -442,28 +434,7 @@ function CadastroTarefas() {
                     }
                 });
             }
-
         }).disableSelection();
-
-    function AtualizarCardsPropostas() {
-        for (var ul = 0; ul < $('ul[id*="sort"]').length; ul++) {
-            if ($('ul[id*="sort"]').eq(ul).find('li').length == 0) {
-                $('ul[id*="sort"]').eq(ul).html('<li class="text-row-empty div-blocked" data-task-id="0">Nenhuma Proposta</li>');
-            }
-        }
-    }
-
-    function AtualizarCardSomaPropostas() {
-        var soma = 0;
-        for (var i = 0; i < 6; i++) {
-            soma = 0;
-            for (var j = 0; j < $('#sort' + i + ' li a p span[id*="ValorPrevisto"]').length; j++) {
-                var ValorPrevisto = $('#sort' + i + ' li a p span[id*="ValorPrevisto"]')[j];
-                soma += parseFloat(ValorPrevisto.innerText.replace('R$', '').replaceAll('.', '').replaceAll(',', '.').trim());
-            }
-            $('#total-' + i).html(soma.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
-        }
-    }
 }
 function CarregarOperadoras() {
     $.getJSON("/Tarefa?handler=TodasOperadoras", function (data) {
@@ -494,5 +465,31 @@ function CarregarCorretores() {
 
         //Esconder a linha que mostra que nenhum item foi encontrado
         $('#empty').hide();
+    });
+}
+
+function CarregarSlaves(idMaster, idElement) {
+    console.log(idMaster);
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: '/Tarefa?handler=UsuariosSlave',
+        data: { IdMaster: idMaster[0].dataset.id },
+        beforeSend: function () {
+            $(`#${idElement}`).attr('disabled', true);
+            $(`#${idElement}`).empty();
+            $(`#${idElement}`).append(new Option("Carregando...", null, null, true));
+        },
+        success: function (data) {
+            $(`#${idElement}`).empty();
+            $(`#${idElement}`).append(new Option("Selecione...", null, null, true));
+            
+            for (let slave of data.result) {
+                $(`#${idElement}`).append(`<option value="${slave.nome}" data-id="${slave.idUsuario}">${slave.nome.toUpperCase()}</option>`);
+            }
+
+            if (data.result.length > 0)
+                $(`#${idElement}`).attr('disabled', false);
+        },
     });
 }

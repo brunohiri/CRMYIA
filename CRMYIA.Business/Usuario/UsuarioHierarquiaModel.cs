@@ -117,6 +117,25 @@ namespace CRMYIA.Business
             return ListEntity;
         }
 
+        public static List<UsuarioHierarquia> GetAllUsuarioSlave(long IdMaster)
+        {
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    return context.UsuarioHierarquia
+                        .Include(x => x.IdUsuarioSlaveNavigation)
+                            .ThenInclude(y => y.UsuarioHierarquiaIdUsuarioMasterNavigation)
+                        .Where(y => y.Ativo && y.IdUsuarioMaster == IdMaster)
+                        .AsNoTracking()
+                        .ToList();
+                }
+            } catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public static void Add(UsuarioHierarquia Entity)
         {
             try

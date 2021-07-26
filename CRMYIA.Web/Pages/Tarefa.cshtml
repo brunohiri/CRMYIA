@@ -11,7 +11,7 @@
 
 @{ 
     byte? perfilUsuarioAtual = UsuarioModel.GetPerfil(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong());
-    byte colSmNum = perfilUsuarioAtual < 4 ? (byte) 4 : (byte) 6;
+    byte colSmNum = perfilUsuarioAtual < 4 ? (byte) 3 : (byte) 6;
 }
 
 <!-- Horizontal Form Pesquisa-->
@@ -29,10 +29,10 @@
                 <div class="card-body">
                     <div class="row">
                         <!-- Input comum a todos os usuários-->
-                        <div class="col-sm-@colSmNum">
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                             <div class="form-group">
                                 <label>Operadora</label>
-                                <select class="form-control select2 " style="width: 100%;" id="operadoraMenuItems">
+                                <select class="form-control select2" style="width: 100%;" id="operadoraMenuItems">
                                     <option selected="selected">Selecione...</option>
                                 </select>
                             </div>
@@ -42,27 +42,78 @@
                         @switch (perfilUsuarioAtual)
                         {
                             case (byte?)EnumeradorModel.Perfil.Administrador:
-                            case (byte?)EnumeradorModel.Perfil.Gerente:
-                            case (byte?)EnumeradorModel.Perfil.Supervisor:
-                                <div class="col-sm-@colSmNum">
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <label>Gerente</label>
+                                        <select class="form-control select2" style="width: 100%;" id="gerenteMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.ListGerente)
+                                            {
+                                                <option value="@Item.Nome" data-id="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <label>Supervisor</label>
+                                        <select class="form-control select2" style="width: 100%;" id="supervisorMenuItems" disabled>
+                                            <option selected="selected">Selecione...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="form-group">
                                         <label>Corretor</label>
-                                        <select class="form-control select2  " style="width: 100%;" asp-for="@Model.Entity.IdUsuarioCorretor" id="corretorMenuItems">
+                                        <select class="form-control select2" style="width: 100%;" id="corretorMenuItems" disabled>
                                             <option selected="selected">Selecione...</option>
-                                            @foreach (var Item in Model.ListCorretor)
+                                        </select>
+                                    </div>
+                                </div>
+                                break;
+                            case (byte?)EnumeradorModel.Perfil.Gerente:
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <label>Supervisor</label>
+                                        <select class="form-control select2" style="width: 100%;" id="supervisorMenuItems">
+                                            <option selected="selected" id="0">Selecione...</option>
+                                            @foreach (var Item in Model.UsuarioGerente.UsuariosSupervisores)
                                             {
-                                                <option value="@Item.Nome">@(Item.Nome.ToUpper())</option>
+                                                <option value="@Item.Nome" data-id="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <label>Corretor</label>
+                                        <select class="form-control select2" style="width: 100%;" id="corretorMenuItems" disabled>
+                                            <option selected="selected">Selecione...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                break;
+                            case (byte?)EnumeradorModel.Perfil.Supervisor:
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <label>Corretor</label>
+                                        <select class="form-control select2" style="width: 100%;" id="corretorMenuItems">
+                                            <option selected="selected">Selecione...</option>
+                                            @foreach (var Item in Model.UsuarioSupervisor.UsuariosCorretores)
+                                            {
+                                                <option value="@Item.Nome" data-id="@Item.IdUsuario">@(Item.Nome.ToUpper())</option>
                                             }
                                         </select>
                                     </div>
                                 </div>
                                 break;
                             case (byte?)EnumeradorModel.Perfil.Corretor:
+                            case (byte?)EnumeradorModel.Perfil.Vendedor:
+                            case (byte?)EnumeradorModel.Perfil.Marketing:
                                 break;
                         }
 
-                        <!-- Inputs comuns a todos os usuários-->
-                        <div class="col-sm-@colSmNum">
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-2">
                             <div class="form-group">
                                 <label>Data</label>
                                 <div class="input-group">
@@ -71,20 +122,21 @@
                                             <i class="far fa-calendar-alt"></i>
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control float-right daterange " id="Data" name="Data">
+                                    <input type="text" class="form-control float-right daterange" id="Data" name="Data" value="@Model.DataInicialDefault - @Model.DataFinalDefault">
                                 </div>
                             </div>
                         </div>
-
-                        <div class="ml-auto p-2 bd-highlight">
-                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
-                                Sugestão de Abordagem
-                            </button>
-                            <button class="btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
-                            <button class="btn btn-primary" id="btnPesquisar" type="button">Pesquisar</button>
-                        </div>
-                        <!-- Fim dos inputs comuns a todos os usuários -->
                     </div>
+                    <hr />
+                    <!-- Inputs comuns a todos os usuários-->
+                    <div class="row g-2 justify-content-end">
+                        <button type="button" class="col-12 col-sm-12 col-md-auto btn btn-warning" data-toggle="modal" data-target="#modalAbordagem" id="ButtonOpenModalAbordagem">
+                            Sugestão de Abordagem
+                        </button>
+                        <button class="col-12 col-sm-12 col-md-auto mx-0 mx-sm-0 mx-md-2 my-2 my-sm-2 my-md-0 btn btn-info limpar-pesquisa" type="button">Limpar Pesquisa</button>
+                        <button class="col-12 col-sm-12 col-md-auto btn btn-primary" id="btnPesquisar" type="button">Pesquisar</button>
+                    </div>
+                    <!-- Fim dos inputs comuns a todos os usuários -->
                 </div>
             </form>
         </div>

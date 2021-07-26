@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,18 +23,34 @@ namespace CRMYIA.Web.Pages
         #region Propriedades
         readonly IConfiguration _configuration;
 
+        public string DataInicialDefault;
+
+        public string DataFinalDefault;
+
         public MensagemModel Mensagem { get; set; }
 
         public List<FaseProposta> ListFaseProposta { get; set; }
 
         [BindProperty]
         public List<List<Proposta>> ListListEntityProposta { get; set; }
+
         [BindProperty]
         public List<Proposta> ListEntityProposta { get; set; }
+
         [BindProperty]
         public Proposta Entity { get; set; }
+
         [BindProperty]
-        public List<ListaCorretorViewModel> ListCorretor { get; set; }
+        public List<Usuario> ListCorretor { get; set; }
+
+        [BindProperty]
+        public UsuarioGerenteViewModel UsuarioGerente { get; set; }
+
+        [BindProperty]
+        public List<ListaCorretorViewModel> ListGerente { get; set; }
+
+        [BindProperty]
+        public UsuarioSupervisorViewModel UsuarioSupervisor { get; set; }
         #endregion
 
         #region Construtores
@@ -45,17 +61,43 @@ namespace CRMYIA.Web.Pages
         #endregion
 
         #region M�todos
+        public async Task<IActionResult> OnGetAsync()
+        {
+            List<Task> initialTasks = new List<Task>();
+            long idUsuarioLogado = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            DateTime dataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 7);
+            DateTime dataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+            DataInicialDefault = dataInicial.ToString("dd/MM/yyyy");
+            DataFinalDefault = dataFinal.ToString("dd/MM/yyyy");
+            ListFaseProposta = FasePropostaModel.GetListIdDescricao();
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+            ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuarioLogado, new DateTime(2020, 07, 01), dataFinal, ListFaseProposta);
+            stopwatch.Stop();
+            Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
+            CarregarLists(idUsuarioLogado);
+            
+            return Page();
+        }
+        
+        /*
         public IActionResult OnGet()
         {
+            var stopwatch = new Stopwatch();
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 7);
             DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
+
+            stopwatch.Start();
             ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, "", "", 0, 0);
+            stopwatch.Stop();
+            Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
 
             CarregarLists();
             return Page();
         }
-
+        */
         public IActionResult OnGetEdit(string statusId = null, string taskId = null)
         {
             if ((!statusId.IsNullOrEmpty()) && (!taskId.IsNullOrEmpty()))
@@ -69,37 +111,39 @@ namespace CRMYIA.Web.Pages
             return new JsonResult(new { status = true });
         }
 
-        public IActionResult OnPostPesquisaTarefa(IFormCollection dados)
+        public async Task<IActionResult> OnPostPesquisaPropostasAsync(IFormCollection dados)
         {
-            string Nome, Descricao, Inicio, Fim;
-            DateTime DataInicial, DataFinal;
             bool status = false;
-            long IdUsuario = GetIdUsuario();
+            DateTime dataInicio = !string.IsNullOrEmpty(dados["dataInicio"]) ? Convert.ToDateTime(dados["dataInicio"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            DateTime dataFim = !string.IsNullOrEmpty(dados["dataFim"]) ? Convert.ToDateTime(dados["dataFim"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
+            ListFaseProposta = FasePropostaModel.GetListIdDescricao();
+            byte.TryParse(dados["fase"], out byte fase);
+            long idUsuario;
+            List<FaseProposta> faseProposta = FasePropostaModel.GetListIdDescricao();
 
+            if (!string.IsNullOrEmpty(dados["idCorretor"]) && !dados["idCorretor"].Equals("undefined"))
+                idUsuario = long.Parse(dados["idCorretor"]);
+            else if (!string.IsNullOrEmpty(dados["idSupervisor"]) && !dados["idSupervisor"].Equals("undefined"))
+                idUsuario = long.Parse(dados["idSupervisor"]);
+            else if (!string.IsNullOrEmpty(dados["idGerente"]) && !dados["idGerente"].Equals("undefined"))
+                idUsuario = long.Parse(dados["idGerente"]);
+            else
+                idUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            Nome = dados["Nome"];
-            Descricao = dados["Descricao"];
-            Inicio = dados["Inicio"];
-            Fim = dados["Fim"];
-            int.TryParse(dados["Salto"], out int Salto);
-            byte.TryParse(dados["Fase"], out byte Fase);
-            List<FaseProposta> FaseProposta = FasePropostaModel.GetListIdDescricao();
+            ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuario, dataInicio, dataFim, ListFaseProposta, dados["operadora"]);
 
-            DataInicial = string.IsNullOrEmpty(Inicio) ? Util.GetFirstDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Inicio);
-            DataFinal = string.IsNullOrEmpty(Fim) ? Util.GetLastDayOfMonth(DateTime.Now.Month) : Convert.ToDateTime(Fim);
-
-            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, Nome, Descricao, Fase, Salto);
             if (ListListEntityProposta[0].Count > 0)
                 status = true;
-            return new JsonResult(new { status, Fase, FaseProposta, Propostas = ListListEntityProposta, periodoA = DataInicial.ToString(), periodoB = DataFinal.ToString() });
 
-
+            return new JsonResult(new { status, fase, faseProposta, Propostas = ListListEntityProposta, periodoA = dataInicio.ToString(), periodoB = dataFim.ToString() });
         }
+
         public IActionResult OnGetObterHashId(string Id)
         {
             var HashId = HttpUtility.UrlDecode(Criptography.Encrypt(Id.ToString()));
             return new JsonResult(new { hashId = HashId });
         }
+
         public IActionResult OnGetTodasOperadoras()
         {
             List<Operadora> EntityOperadora = OperadoraModel.GetList();
@@ -128,9 +172,34 @@ namespace CRMYIA.Web.Pages
         #endregion
         #endregion
 
-        public void CarregarLists()
+        #region Filtros
+        public IActionResult OnGetUsuariosSlave(string IdMaster)
         {
-            ListCorretor = UsuarioModel.GetList((byte)(EnumeradorModel.Perfil.Corretor));
+            List<UsuarioHierarquia> usuariosHierarquia = UsuarioHierarquiaModel.GetAllUsuarioSlave(IdMaster.ExtractLong());
+            List<Usuario> usuariosSlave = UsuarioModel.GetAllUsuarioSlave(usuariosHierarquia);
+
+            return new JsonResult(new { result = usuariosSlave });
+        }
+        #endregion
+
+        public void CarregarLists(long idsuarioLogado)
+        {
+            byte? perfilUsuario = UsuarioModel.GetPerfil(idsuarioLogado);
+
+            switch (perfilUsuario)
+            {
+                case (byte)(EnumeradorModel.Perfil.Administrador):
+                    ListGerente = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Gerente);
+                    break;
+                case (byte)(EnumeradorModel.Perfil.Gerente):
+                    UsuarioGerente = UsuarioModel.GetUsuarioGerente(idsuarioLogado);
+                    break;
+                case (byte)(EnumeradorModel.Perfil.Supervisor):
+                    UsuarioSupervisor = UsuarioModel.GetUsuarioSupervisor(idsuarioLogado);
+                    break;
+                default:
+                    break;
+            }
         }
         public long GetIdUsuario()
         {
