@@ -51,12 +51,35 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public UsuarioSupervisorViewModel UsuarioSupervisor { get; set; }
+
+        public List<MotivoDeclinioLead> DeclinioLeadSelectMenu { get; set; }
+
+        public byte? IdDeclinioLeadTemp;
         #endregion
+
+        public class MotivoDeclinioLead
+        {
+            public MotivoDeclinioLead()
+            {
+                Proposta = new HashSet<Proposta>();
+            }
+
+            public byte IdMotivoDeclinioLead { get; set; }
+            public string Descricao { get; set; }
+            public bool Ativo { get; set; }
+
+            public virtual ICollection<Proposta> Proposta { get; set; }
+        }
 
         #region Construtores
         public TarefaModel(IConfiguration configuration)
         {
             _configuration = configuration;
+            DeclinioLeadSelectMenu = new List<MotivoDeclinioLead>();
+            DeclinioLeadSelectMenu.Add(new MotivoDeclinioLead { IdMotivoDeclinioLead = 1, Descricao = "Cliente não deseja mais contato", Ativo = true });
+            DeclinioLeadSelectMenu.Add(new MotivoDeclinioLead { IdMotivoDeclinioLead = 2, Descricao = "Cliente vendeu o veículo", Ativo = true });
+            DeclinioLeadSelectMenu.Add(new MotivoDeclinioLead { IdMotivoDeclinioLead = 3, Descricao = "Cliente não deseja mais plano de saúde", Ativo = true });
+            DeclinioLeadSelectMenu.Add(new MotivoDeclinioLead { IdMotivoDeclinioLead = 4, Descricao = "Cliente possui benefício pela empresa onde trabalha", Ativo = true });
         }
         #endregion
 
@@ -98,13 +121,16 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         */
-        public IActionResult OnGetEdit(string statusId = null, string taskId = null)
+        public IActionResult OnGetEdit(string statusId = null, string taskId = null, string declinioSelectId = null)
         {
+            //IdDeclinioLeadTemp = declinioSelectId.ExtractByteOrNull();
+
             if ((!statusId.IsNullOrEmpty()) && (!taskId.IsNullOrEmpty()))
             {
                 Proposta EntityProposta = PropostaModel.Get(taskId.ExtractLong());
                 EntityProposta.IdFaseProposta = statusId.ExtractByteOrNull();
-
+                // Instrução usada para atualizar o card, mas precisa atualizar o banco antes
+                //EntityProposta.IdMotivoDeclinioLead = declinioSelectId.ExtractByteOrNull();
                 PropostaModel.Update(EntityProposta);
             }
 

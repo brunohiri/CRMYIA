@@ -414,8 +414,7 @@ function CadastroTarefas() {
         {
             connectWith: ".sortable",
             receive: function (e, ui) {
-                var status_id = $(ui.item).parent(".sortable").data(
-                    "status-id");
+                var status_id = $(ui.item).parent(".sortable").data("status-id");
                 var task_id = $(ui.item).data("task-id");
                 $.ajax({
                     url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
