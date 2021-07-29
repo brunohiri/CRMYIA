@@ -71,6 +71,7 @@ namespace CRMYIA.Data.Context
         public virtual DbSet<Modalidade> Modalidade { get; set; }
         public virtual DbSet<Modulo> Modulo { get; set; }
         public virtual DbSet<MotivoDeclinio> MotivoDeclinio { get; set; }
+        public virtual DbSet<MotivoDeclinioLead> MotivoDeclinioLead { get; set; }
         public virtual DbSet<Notificacao> Notificacao { get; set; }
         public virtual DbSet<NotificacaoMensagem> NotificacaoMensagem { get; set; }
         public virtual DbSet<Operadora> Operadora { get; set; }
@@ -103,15 +104,10 @@ namespace CRMYIA.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
-                var connectionString = configuration.GetConnectionString("YiaConnection");
-                optionsBuilder.UseSqlServer(connectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:app.q2bn.com.br;Initial Catalog=CRMYIA_HOMOLOGACAO;Persist Security Info=False;User ID=user_crmyia;Password=BU7ilv8789twt;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=240;");
             }
         }
 
@@ -1755,6 +1751,17 @@ namespace CRMYIA.Data.Context
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<MotivoDeclinioLead>(entity =>
+            {
+                entity.HasKey(e => e.IdMotivoDeclinioLead);
+
+                entity.Property(e => e.IdMotivoDeclinioLead).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Descricao)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Notificacao>(entity =>
             {
                 entity.HasKey(e => e.IdNotificacao);
@@ -2032,6 +2039,11 @@ namespace CRMYIA.Data.Context
                     .WithMany(p => p.Proposta)
                     .HasForeignKey(d => d.IdMotivoDeclinio)
                     .HasConstraintName("MotivoDeclinio_Proposta");
+
+                entity.HasOne(d => d.IdMotivoDeclinioLeadNavigation)
+                    .WithMany(p => p.Proposta)
+                    .HasForeignKey(d => d.IdMotivoDeclinioLead)
+                    .HasConstraintName("MotivoDeclinioLead_Proposta");
 
                 entity.HasOne(d => d.IdPorteNavigation)
                     .WithMany(p => p.Proposta)

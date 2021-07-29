@@ -10,8 +10,8 @@ namespace CRMYIA.Data.Entities
             Proposta = new HashSet<Proposta>();
         }
 
-        public byte IdMotivoDeclinio { get; set; }
-        public string? Descricao { get; set; }
+        public byte IdMotivoDeclinioLead { get; set; }
+        public string Descricao { get; set; }
         public bool Ativo { get; set; }
 
         public virtual ICollection<Proposta> Proposta { get; set; }

@@ -284,9 +284,7 @@ function RedirecionarProposta(Id) {
 }
 function AtualizarSortable(resultado) {
     resultado.then(function (data) {
-        let html = '';
-        let proximoContatoComCliente
-        let naoAgendado = 'Não agendado';
+        let proximoContatoComCliente;
         let produto = '';
         let cliente = '';
         let corretor = '';
@@ -308,7 +306,7 @@ function AtualizarSortable(resultado) {
             if (data.fase > 0) {
                 f = parseInt(data.fase) - 1;
                 for (p in data.propostas[0]) {
-                    proximoContatoComCliente = data.propostas[0][p].proximoContatoComCliente == undefined ? new Date(data.propostas[0][p].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                    proximoContatoComCliente = data.propostas[0][p].proximoContatoComCliente == undefined ? new Date(data.propostas[0][p].proximoContatoComCliente).toLocaleDateString('pt-br') : 'Não agendado';
                     produto = data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
                     cliente = data.propostas[0][p].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[0][p].idClienteNavigation.nome, 16) : data.propostas[0][p].idClienteNavigation.nome;
                     corretor = data.propostas[0][p].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[0][p].idUsuarioCorretorNavigation.nome, 16) : data.propostas[0][p].idUsuarioCorretorNavigation.nome;
@@ -323,31 +321,35 @@ function AtualizarSortable(resultado) {
                                         </a>\
                                     </li>';
                     if (html != '')
-                        $(sortable[f]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
-                    html = '';
+                        $(sortable[f]).append(html).sortable({ connectWith: ".sortable" });
                 }
             } else {
                 for (i in data.faseProposta) {
                     for (j in data.propostas[i]) {
                         if (data.propostas[i][j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-                            proximoContatoComCliente = data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
-                            produto = data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
-                            cliente = data.propostas[i][j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[i][j].idClienteNavigation.nome, 16) : data.propostas[i][j].idClienteNavigation.nome;
-                            corretor = data.propostas[i][j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[i][j].idUsuarioCorretorNavigation.nome, 16) : data.propostas[i][j].idUsuarioCorretorNavigation.nome;
-                            html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[i][j].idProposta + '" data-valorprevisto="' + data.propostas[i][j].valorPrevisto + '">\
-                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.propostas[i][j].idProposta + ')>\
-                                            <p style="margin-top:10px;" title="' + data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
-                                            <p title="' + data.propostas[i][j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
-                                            <p title="' + data.propostas[i][j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
-                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.propostas[i][j].idProposta + '"' + formatter.format(data.propostas[i][j].valorPrevisto) + ' "> ' + formatter.format(data.propostas[i][j].valorPrevisto) + '</p>\
-                                            <p><strong>Data:</strong> ' + new Date(data.propostas[i][j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.propostas[i][j].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
-                                            <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
-                                        </a>\
-                                    </li>';
+                            html = `<li class="text-row ui-sortable-handle" data-task-id="${data.propostas[i][j].idProposta}" data-valorprevisto="${data.propostas[i][j].valorPrevisto}">
+                                        <a title="Ver Proposta" onclick=RedirecionarProposta(${data.propostas[i][j].idProposta})>
+                                            <p class="text-truncate" style="margin-top:10px;" title="${data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao}">
+                                                <strong>${data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao}</strong>
+                                            </p>
+                                            <hr />
+                                            <p class="text-truncate" title="${data.propostas[i][j].idClienteNavigation.nome}">
+                                                <strong>Cliente:</strong> ${data.propostas[i][j].idClienteNavigation.nome}
+                                            </p>
+                                            <p class="text-truncate" title="${data.propostas[i][j].idUsuarioCorretorNavigation == null ? "" : data.propostas[i][j].idUsuarioCorretorNavigation.nome}">
+                                                <strong>Corretor:</strong> ${data.propostas[i][j].idUsuarioCorretorNavigation == null ? "" : data.propostas[i][j].idUsuarioCorretorNavigation.nome}
+                                            </p>
+                                            <p>
+                                                <strong>Valor Previsto:</strong>  <span id="ValorPrevisto_${data.faseProposta.idFaseProposta}_${data.propostas[i][j].idProposta}">${formatter.format(data.propostas[i][j].valorPrevisto)}</pan>
+                                            </p>
+                                            <p><strong>Data:</strong> ${new Date(data.propostas[i][j].dataCadastro).toLocaleDateString('pt-br')} ${new Date(data.propostas[i][j].dataCadastro).toLocaleTimeString('pt-br')}</p>
+                                            <p><strong>Retorno:</strong> ${data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : 'Não agendado'}</p>
+                                            ${data.propostas[i][j].idMotivoDeclinioLead ? '<p><strong>Motivo:</strong> ' + data.propostas[i][j].idMotivoDeclinioLeadNavigation.descricao + '</p>' : ''}
+                                        </a>
+                                    </li>`;
                         }
                         if (html != '')
-                            $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
-                        html = '';
+                            $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });
                     }
                 }
             }

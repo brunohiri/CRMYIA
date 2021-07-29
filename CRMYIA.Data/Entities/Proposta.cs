@@ -43,12 +43,14 @@ namespace CRMYIA.Data.Entities
         public string ContaCorrente { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
+        public byte? IdMotivoDeclinioLead { get; set; }
 
         public virtual Banco IdBancoNavigation { get; set; }
         public virtual Categoria IdCategoriaNavigation { get; set; }
         public virtual Cliente IdClienteNavigation { get; set; }
         public virtual FaseProposta IdFasePropostaNavigation { get; set; }
         public virtual Modalidade IdModalidadeNavigation { get; set; }
+        public virtual MotivoDeclinioLead IdMotivoDeclinioLeadNavigation { get; set; }
         public virtual MotivoDeclinio IdMotivoDeclinioNavigation { get; set; }
         public virtual Porte IdPorteNavigation { get; set; }
         public virtual StatusProposta IdStatusPropostaNavigation { get; set; }

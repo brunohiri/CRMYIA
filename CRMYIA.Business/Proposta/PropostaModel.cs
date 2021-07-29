@@ -234,6 +234,7 @@ namespace CRMYIA.Business
                                 .ThenInclude(l => l.IdProdutoNavigation)
                                     .ThenInclude(m => m.IdOperadoraNavigation)
                         .Include(y => y.IdClienteNavigation)
+                        .Include(y => y.IdMotivoDeclinioLeadNavigation)
                         .Where(x => x.Ativo
                             && x.DataSolicitacao.Value >= dataInicio
                             && x.DataSolicitacao.Value <= dataFim

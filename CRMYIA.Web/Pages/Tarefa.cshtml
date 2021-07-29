@@ -208,14 +208,19 @@
                                             {
                                                 foreach (var ItemProposta in listPropostas)
                                                 {
-                                                    <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" id="@("idproposta-" + @ItemProposta.IdProposta)" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
-                                                        <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta" id="cardanchor-@ItemProposta.IdProposta">
-                                                            <p style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Length > 25 ? ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao.Substring(0, 16) + "..." : ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
-                                                            <p title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome.Length > 20 ? ItemProposta.IdClienteNavigation.Nome.Substring(0, 16) + " ... " : ItemProposta.IdClienteNavigation.Nome)</p>
-                                                            <p title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : (ItemProposta.IdUsuarioCorretorNavigation.Nome.Length > 20 ? ItemProposta.IdUsuarioCorretorNavigation?.Nome.Substring(0, 16) + "..." : ItemProposta.IdUsuarioCorretorNavigation?.Nome))</p>
+                                                    <li class="text-row ui-sortable-handle" data-task-id="@ItemProposta.IdProposta" data-valorprevisto="@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString() : (0).ToString())">
+                                                        <a asp-page="/NovaProposta" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(ItemProposta.IdProposta.ToString()))" title="Ver Proposta">
+                                                            <p class="text-truncate" style="margin-top:10px;" title="@ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao"><strong>@(ItemProposta.IdCategoriaNavigation?.IdLinhaNavigation?.IdProdutoNavigation?.Descricao)</strong></p>
+                                                            <hr />
+                                                            <p class="text-truncate" title="@ItemProposta.IdClienteNavigation.Nome"><strong>Cliente:</strong> @(ItemProposta.IdClienteNavigation.Nome)</p>
+                                                            <p class="text-truncate" title="@(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation?.Nome)"><strong>Corretor:</strong> @(ItemProposta.IdUsuarioCorretorNavigation == null ? "" : ItemProposta.IdUsuarioCorretorNavigation.Nome)</p>
                                                             <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_" + Model.ListFaseProposta[i].IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
                                                             <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
                                                             <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
+                                                            @if (ItemProposta.IdMotivoDeclinioLead != null)
+                                                            {
+                                                                <p class="" title="@ItemProposta.IdMotivoDeclinioLeadNavigation.Descricao"><strong>Motivo:</strong> @ItemProposta.IdMotivoDeclinioLeadNavigation.Descricao</p>
+                                                            }
                                                         </a>
                                                     </li>
                                                 }
@@ -290,7 +295,7 @@
                         <div class="row g-2">
                             <label for="motivoMenuItem" class="col-12">Qual foi o Motivo da Desistência?</label>
                             <select class="form-control select2 col-6" style="width: 50%" id="motivoMenuItem">
-                                <option selected="selected">Selecione...</option>
+                                <option value="0" selected="selected">Selecione...</option>
                                 @foreach (var Item in Model.DeclinioLeadSelectMenu)
                                 {
                                     <option value="@Item.IdMotivoDeclinioLead">@(Item.Descricao.ToUpper())</option>
