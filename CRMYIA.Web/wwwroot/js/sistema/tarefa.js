@@ -418,22 +418,50 @@ function CadastroTarefas() {
             receive: function (e, ui) {
                 var status_id = $(ui.item).parent(".sortable").data("status-id");
                 var task_id = $(ui.item).data("task-id");
-                $.ajax({
-                    url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
-                    success: function (data) {
-                        if (data.status) {
-                            toastr.success("Sucesso!");
-                            for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
-                                if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
-                                    $('#sort' + status_id + ' li').eq(i).remove();
+                var declinioLeadId = '';
+
+                if (status_id === 6) {
+                    $('#modalMotivos').modal('show');
+
+                    $('#motivoMenuItem').change(function () {
+                        declinioLeadId = $('#motivoMenuItem').length && $('#motivoMenuItem').val() != 'Selecione...' ? $('#motivoMenuItem').select2('data')[0].id : '';
+                    });
+
+                    $('#btnSelecionarMotivoDesistencia').click(function () {
+                        $('#modalMotivos').modal('hide');
+                        $.ajax({
+                            url: `/Tarefa?handler=Edit&statusId=${status_id}&taskId=${task_id}&declinioLeadId=${declinioLeadId}`,
+                            success: function (data) {
+                                if (data.status) {
+                                    toastr.success("Sucesso!");
+                                    for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                        if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                            $('#sort' + status_id + ' li').eq(i).remove();
+                                        }
+                                    }
+                                    AtualizarCardsPropostas();
+                                    AtualizarCardSomaPropostas();
                                 }
                             }
-                            AtualizarCardsPropostas();
-                            AtualizarCardSomaPropostas();
-
+                        });
+                    });
+                } else {
+                    $.ajax({
+                        url: `/Tarefa?handler=Edit&statusId=${status_id}&taskId=${task_id}`,
+                        success: function (data) {
+                            if (data.status) {
+                                toastr.success("Sucesso!");
+                                for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                    if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                        $('#sort' + status_id + ' li').eq(i).remove();
+                                    }
+                                }
+                                AtualizarCardsPropostas();
+                                AtualizarCardSomaPropostas();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }).disableSelection();
 }
