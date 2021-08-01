@@ -18,7 +18,7 @@ $(document).on('click', '.btn-redesocial', function () {
     var vetEleImg = eleImg.split('|');
 
     var obj = {}
-    obj.nome = vetUsuario[0];
+    obj.nome = vetUsuario[0];                                                                                          
     obj.telefone = vetUsuario[1];
     obj.email = vetUsuario[2];
 

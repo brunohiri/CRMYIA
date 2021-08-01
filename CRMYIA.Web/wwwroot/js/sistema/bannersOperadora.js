@@ -9,7 +9,7 @@ $(document).on('click', '.btn-redesocial', function () {
     corbutaoredesocial = $(this).css("background-color");
     var aria_expanded = $(this).attr('aria-expanded');
     var ativo = aria_expanded == 'true' ? true : false;
-    console.log(corbutaoredesocial)
+    console.log(corbutaoredesocial)                                                                          
 
     var eleCanvas = $(this).data('canvas');
     var eleImg = $(this).data('img');

@@ -27,7 +27,7 @@ $(document).ready(function () {
         });
 
         $("#btn-upload-campanha-generica").click(function (e) {
-            e.preventDefault();
+            e.preventDefault();                                                                                                  
             //myDropzone.autoProcessQueue();
         });
 
