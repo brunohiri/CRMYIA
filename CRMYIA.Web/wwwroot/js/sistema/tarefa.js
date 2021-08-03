@@ -14,7 +14,7 @@ var search = false;
 
 $(document).ready(function () {
     $('.sortable').sortable({
-        connectWith: ".sortable",
+        connectWith: ".sortable",                                                                              
         start: {},
         scroll: true,
         update: function (event, ui) {
@@ -97,42 +97,42 @@ $("#sort1").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort1);
+        Pesquisa(fase, saltoSort1, isSearch = false);
     }
 });
 $("#sort2").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort2)
+        Pesquisa(fase, saltoSort2, isSearch = false)
     }
 });
 $("#sort3").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort3)
+        Pesquisa(fase, saltoSort3, isSearch = false)
     }
 });
 $("#sort4").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort4)
+        Pesquisa(fase, saltoSort4, isSearch = false)
     }
 });
 $("#sort5").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort5)
+        Pesquisa(fase, saltoSort5, isSearch = false)
     }
 });
 $("#sort6").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort6)
+        Pesquisa(fase, saltoSort6, isSearch = false)
     }
 });
 function BuscarFasesProposta(fase, salto) {
@@ -219,9 +219,9 @@ function BuscarFasesProposta(fase, salto) {
     });
     AtualizarSortable(res);
 }
-function Pesquisa() {
+function Pesquisa(fase = 0, salto = 0, isSearch = true) {
     toastr.info("Pesquisando...");
-    search = true;
+    search = isSearch;
     var formData = new FormData();
     let operadora, idGerente, idSupervisor, idCorretor, dataInicio, dataFim;
 
@@ -237,9 +237,8 @@ function Pesquisa() {
     formData.append('idCorretor', idCorretor);
     formData.append('dataInicio', dataInicio);
     formData.append('dataFim', dataFim);
-    formData.append('fase', "");
-
-    console.log(idCorretor);
+    formData.append('fase', fase);
+    formData.append('salto', salto)
 
     var res = $.ajax({
         type: "POST",
@@ -257,11 +256,26 @@ function Pesquisa() {
             console.log(result);
             $("#periodoPesquisa").remove().html();
             $("#periodoPesquisa").append("Periodo: " + FormatarData(result.periodoA) + " até " + FormatarData(result.periodoB));
-            $(".loader").hide("fast", function () {
-                $(this).prev().hide("fast", arguments.callee);
-            });
-            result.propostas[0].length == 0 ? toastr.warning("Nada encontrado!") : toastr.success("Sucesso!");
-            return result;
+            if (result != null) {
+                if (fase == 1 && result.status == true)
+                    saltoSort1 = saltoSort1 + saltoSort1;
+                if (fase == 2 && result.status == true)
+                    saltoSort2 = saltoSort2 + saltoSort2;
+                if (fase == 3 && result.status == true)
+                    saltoSort3 = saltoSort3 + saltoSort3;
+                if (fase == 4 && result.status == true)
+                    saltoSort4 = saltoSort4 + saltoSort4;
+                if (fase == 5 && result.status == true)
+                    saltoSort5 = saltoSort5 + saltoSort5;
+                if (fase == 6 && result.status == true)
+                    saltoSort6 = saltoSort6 + saltoSort6;
+                $(".loader").hide("fast", function () {
+                    $(this).prev().hide("fast", arguments.callee);
+                });
+
+                result.propostas[0].length == 0 ? toastr.warning("Nada encontrado!") : toastr.success("Sucesso!");
+                return result;
+            }
         },
         failure: function (reason) {
             console.error(reason);
@@ -284,9 +298,7 @@ function RedirecionarProposta(Id) {
 }
 function AtualizarSortable(resultado) {
     resultado.then(function (data) {
-        let html = '';
-        let proximoContatoComCliente
-        let naoAgendado = 'Não agendado';
+        let proximoContatoComCliente;
         let produto = '';
         let cliente = '';
         let corretor = '';
@@ -308,7 +320,7 @@ function AtualizarSortable(resultado) {
             if (data.fase > 0) {
                 f = parseInt(data.fase) - 1;
                 for (p in data.propostas[0]) {
-                    proximoContatoComCliente = data.propostas[0][p].proximoContatoComCliente == undefined ? new Date(data.propostas[0][p].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
+                    proximoContatoComCliente = data.propostas[0][p].proximoContatoComCliente == undefined ? new Date(data.propostas[0][p].proximoContatoComCliente).toLocaleDateString('pt-br') : 'Não agendado';
                     produto = data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[0][p].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
                     cliente = data.propostas[0][p].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[0][p].idClienteNavigation.nome, 16) : data.propostas[0][p].idClienteNavigation.nome;
                     corretor = data.propostas[0][p].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[0][p].idUsuarioCorretorNavigation.nome, 16) : data.propostas[0][p].idUsuarioCorretorNavigation.nome;
@@ -323,31 +335,35 @@ function AtualizarSortable(resultado) {
                                         </a>\
                                     </li>';
                     if (html != '')
-                        $(sortable[f]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
-                    html = '';
+                        $(sortable[f]).append(html).sortable({ connectWith: ".sortable" });
                 }
             } else {
                 for (i in data.faseProposta) {
                     for (j in data.propostas[i]) {
                         if (data.propostas[i][j].idFaseProposta == data.faseProposta[i].idFaseProposta) {
-                            proximoContatoComCliente = data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : naoAgendado;
-                            produto = data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao.length > 26 ? LimitaTexto(data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao, 16) + '...' : data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao;
-                            cliente = data.propostas[i][j].idClienteNavigation.nome.length > 18 ? LimitaTexto(data.propostas[i][j].idClienteNavigation.nome, 16) : data.propostas[i][j].idClienteNavigation.nome;
-                            corretor = data.propostas[i][j].idUsuarioCorretorNavigation.nome.length > 19 ? LimitaTexto(data.propostas[i][j].idUsuarioCorretorNavigation.nome, 16) : data.propostas[i][j].idUsuarioCorretorNavigation.nome;
-                            html = '<li class="text-row ui-sortable-handle" data-task-id="' + data.propostas[i][j].idProposta + '" data-valorprevisto="' + data.propostas[i][j].valorPrevisto + '">\
-                                        <a title="Ver Proposta" onclick=RedirecionarProposta(' + data.propostas[i][j].idProposta + ')>\
-                                            <p style="margin-top:10px;" title="' + data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao + '"><strong> ' + produto + ' </strong></p>\
-                                            <p title="' + data.propostas[i][j].idClienteNavigation.nome + '"><strong>Cliente:</strong> ' + cliente + ' </p>\
-                                            <p title="' + data.propostas[i][j].idUsuarioCorretorNavigation.nome + '"><strong>Corretor:</strong> ' + corretor + ' </p>\
-                                            <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.propostas[i][j].idProposta + '"' + formatter.format(data.propostas[i][j].valorPrevisto) + ' "> ' + formatter.format(data.propostas[i][j].valorPrevisto) + '</p>\
-                                            <p><strong>Data:</strong> ' + new Date(data.propostas[i][j].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.propostas[i][j].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
-                                            <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
-                                        </a>\
-                                    </li>';
+                            html = `<li class="text-row ui-sortable-handle" data-task-id="${data.propostas[i][j].idProposta}" data-valorprevisto="${data.propostas[i][j].valorPrevisto}">
+                                        <a title="Ver Proposta" onclick=RedirecionarProposta(${data.propostas[i][j].idProposta})>
+                                            <p class="text-truncate" style="margin-top:10px;" title="${data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao}">
+                                                <strong>${data.propostas[i][j].idCategoriaNavigation.idLinhaNavigation.idProdutoNavigation.descricao}</strong>
+                                            </p>
+                                            <hr />
+                                            <p class="text-truncate" title="${data.propostas[i][j].idClienteNavigation.nome}">
+                                                <strong>Cliente:</strong> ${data.propostas[i][j].idClienteNavigation.nome}
+                                            </p>
+                                            <p class="text-truncate" title="${data.propostas[i][j].idUsuarioCorretorNavigation == null ? "" : data.propostas[i][j].idUsuarioCorretorNavigation.nome}">
+                                                <strong>Corretor:</strong> ${data.propostas[i][j].idUsuarioCorretorNavigation == null ? "" : data.propostas[i][j].idUsuarioCorretorNavigation.nome}
+                                            </p>
+                                            <p>
+                                                <strong>Valor Previsto:</strong>  <span id="ValorPrevisto_${data.faseProposta.idFaseProposta}_${data.propostas[i][j].idProposta}">${formatter.format(data.propostas[i][j].valorPrevisto)}</pan>
+                                            </p>
+                                            <p><strong>Data:</strong> ${new Date(data.propostas[i][j].dataCadastro).toLocaleDateString('pt-br')} ${new Date(data.propostas[i][j].dataCadastro).toLocaleTimeString('pt-br')}</p>
+                                            <p><strong>Retorno:</strong> ${data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : 'Não agendado'}</p>
+                                            ${data.propostas[i][j].idMotivoDeclinioLead ? '<p><strong>Motivo:</strong> ' + data.propostas[i][j].idMotivoDeclinioLeadNavigation.descricao + '</p>' : ''}
+                                        </a>
+                                    </li>`;
                         }
                         if (html != '')
-                            $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });//$("[href$='hashId']").data('url')
-                        html = '';
+                            $(sortable[i]).append(html).sortable({ connectWith: ".sortable" });
                     }
                 }
             }
@@ -414,25 +430,61 @@ function CadastroTarefas() {
         {
             connectWith: ".sortable",
             receive: function (e, ui) {
-                var status_id = $(ui.item).parent(".sortable").data(
-                    "status-id");
+                var status_id = $(ui.item).parent(".sortable").data("status-id");
                 var task_id = $(ui.item).data("task-id");
-                $.ajax({
-                    url: '/Tarefa?handler=Edit&statusId=' + status_id + '&taskId=' + task_id,
-                    success: function (data) {
-                        if (data.status) {
-                            toastr.success("Sucesso!");
-                            for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
-                                if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
-                                    $('#sort' + status_id + ' li').eq(i).remove();
+                var declinioLeadId = '';
+
+                if (status_id === 6) {
+                    $('#modalMotivos').modal('show');
+
+                    $('#motivoMenuItem').change(function () {
+                        declinioLeadId = $('#motivoMenuItem').length && $('#motivoMenuItem').val() != 'Selecione...' ? $('#motivoMenuItem').select2('data')[0].id : '';
+                    });
+
+                    $('#btnSelecionarMotivoDesistencia').click(function () {
+                        $('#modalMotivos').modal('hide');
+                        $.ajax({
+                            url: `/Tarefa?handler=Edit&statusId=${status_id}&taskId=${task_id}&declinioLeadId=${declinioLeadId}`,
+                            success: function (data) {
+                                if (data.status) {
+                                    toastr.success("Sucesso!");
+                                    for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                        if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                            $('#sort' + status_id + ' li').eq(i).remove();
+                                        }
+                                    }
+                                    console.log($(ui.item)[0]);
+                                    let novoParagrafo = $(document.createElement('p')).attr('title', $('#motivoMenuItem').val());
+                                    novoParagrafo[0].appendChild(document.createElement('strong'));
+                                    novoParagrafo[0].appendChild(document.createElement('span'));
+                                    novoParagrafo[0].children[0].innerText = 'Motivo: ';
+                                    novoParagrafo[0].children[1].innerText = $('#motivoMenuItem').select2('data')[0].text;
+                                    $(ui.item)[0].children[0].append(novoParagrafo[0]);
+                                    //$(ui.item)[0].children[0].children[0].parentNode.insertBefore(novoParagrafo[0], $(ui.item)[0].children[0].children[l].nextSibling);
+                                    
+                                    AtualizarCardsPropostas();
+                                    AtualizarCardSomaPropostas();
                                 }
                             }
-                            AtualizarCardsPropostas();
-                            AtualizarCardSomaPropostas();
-
+                        });
+                    });
+                } else {
+                    $.ajax({
+                        url: `/Tarefa?handler=Edit&statusId=${status_id}&taskId=${task_id}`,
+                        success: function (data) {
+                            if (data.status) {
+                                toastr.success("Sucesso!");
+                                for (var i = 0; i < $('#sort' + status_id + ' li').length; i++) {
+                                    if ($('#sort' + status_id + ' li').eq(i).data('task-id') == "0") {
+                                        $('#sort' + status_id + ' li').eq(i).remove();
+                                    }
+                                }
+                                AtualizarCardsPropostas();
+                                AtualizarCardSomaPropostas();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }).disableSelection();
 }

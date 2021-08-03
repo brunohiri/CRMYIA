@@ -8,7 +8,7 @@ $(document).ready(function () {
         minimumResultsForSearch: Infinity
     });
     //Dropzone.autoDiscover = false;
-
+                                                                                                                          
 
     $("#btnUploadLandingCarrossel").click(function (e) {
         e.preventDefault();

@@ -175,14 +175,19 @@ namespace CRMYIA.Business
         /// <param name="salto">[Opcional] Inclui um salto na requisição para a paginação</param>
         /// <exception cref="AggregateException"></exception>
         /// <returns>Retorna uma Task que será resolvida quando todas as requests forem concluídas</returns>
-        public static async Task<List<List<Proposta>>> GetListCardPropostaAsync(long idUsuario, DateTime dataInicio, DateTime dataFim, List<FaseProposta> listFaseProposta, string operadora = "", string corretor = "", int salto = 0)
+        public static async Task<List<List<Proposta>>> GetListCardPropostaAsync(long idUsuario, DateTime dataInicio, DateTime dataFim, List<FaseProposta> listFaseProposta, byte fase = 0, string operadora = "", int salto = 0, string corretor = "")
         {
             List<List<Proposta>> listPropostas = new List<List<Proposta>>();
             List<Task<List<Proposta>>> taskPropostas = new List<Task<List<Proposta>>>();
 
-            foreach (FaseProposta faseProposta in listFaseProposta)
+            if (fase != 0)
+                taskPropostas.Add(GetPropostaListAsync(idUsuario, dataInicio, dataFim, fase, salto, operadora));
+            else
             {
-                taskPropostas.Add(GetPropostaListAsync(idUsuario, dataInicio, dataFim, faseProposta.IdFaseProposta, salto, operadora));
+                foreach (FaseProposta faseProposta in listFaseProposta)
+                {
+                    taskPropostas.Add(GetPropostaListAsync(idUsuario, dataInicio, dataFim, faseProposta.IdFaseProposta, salto, operadora));
+                }
             }
 
             Task t = Task.WhenAll(taskPropostas.ToArray());
@@ -234,6 +239,7 @@ namespace CRMYIA.Business
                                 .ThenInclude(l => l.IdProdutoNavigation)
                                     .ThenInclude(m => m.IdOperadoraNavigation)
                         .Include(y => y.IdClienteNavigation)
+                        .Include(y => y.IdMotivoDeclinioLeadNavigation)
                         .Where(x => x.Ativo
                             && x.DataSolicitacao.Value >= dataInicio
                             && x.DataSolicitacao.Value <= dataFim

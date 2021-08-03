@@ -19,9 +19,9 @@
     font-size: 0.9em;
 }
 
-    .status-card:last-child {
-        margin-right: 0px;
-    }
+.status-card:last-child {
+    margin-right: 0px;
+}
 
 .card-header {
     width: 100%;
@@ -64,7 +64,20 @@ ul {
     cursor: pointer;
     font-size: 0.8em;
     white-space: normal;
-    line-height: 5px;
+    line-height: normal;
+}
+
+.text-row p {
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.text-row hr {
+    margin: 4px 0 8px 0;
+}
+
+.text-row p:first-child {
+    font-size: 12px;
 }
 
 .text-row-empty {

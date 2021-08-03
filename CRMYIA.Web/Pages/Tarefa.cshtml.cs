@@ -51,6 +51,8 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public UsuarioSupervisorViewModel UsuarioSupervisor { get; set; }
+
+        public List<MotivoDeclinioLead> DeclinioLeadSelectMenu { get; set; }
         #endregion
 
         #region Construtores
@@ -74,6 +76,7 @@ namespace CRMYIA.Web.Pages
 
             stopwatch.Start();
             ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuarioLogado, new DateTime(2020, 07, 01), dataFinal, ListFaseProposta);
+            DeclinioLeadSelectMenu = await MotivoDeclinioLeadModel.GetListAsync();
             stopwatch.Stop();
             Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
             CarregarLists(idUsuarioLogado);
@@ -98,13 +101,15 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         */
-        public IActionResult OnGetEdit(string statusId = null, string taskId = null)
+        public IActionResult OnGetEdit(string statusId = null, string taskId = null, string declinioLeadId = null)
         {
             if ((!statusId.IsNullOrEmpty()) && (!taskId.IsNullOrEmpty()))
             {
                 Proposta EntityProposta = PropostaModel.Get(taskId.ExtractLong());
                 EntityProposta.IdFaseProposta = statusId.ExtractByteOrNull();
-
+                EntityProposta.IdMotivoDeclinioLead = !string.IsNullOrEmpty(declinioLeadId) ? declinioLeadId.ExtractByteOrNull() : null;
+                // Instrução usada para atualizar o card, mas precisa atualizar o banco antes
+                //EntityProposta.IdMotivoDeclinioLead = declinioSelectId.ExtractByteOrNull();
                 PropostaModel.Update(EntityProposta);
             }
 
@@ -114,11 +119,12 @@ namespace CRMYIA.Web.Pages
         public async Task<IActionResult> OnPostPesquisaPropostasAsync(IFormCollection dados)
         {
             bool status = false;
+            long idUsuario;
+            byte.TryParse(dados["fase"], out byte fase);
+            int.TryParse(dados["salto"], out int salto);
             DateTime dataInicio = !string.IsNullOrEmpty(dados["dataInicio"]) ? Convert.ToDateTime(dados["dataInicio"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
             DateTime dataFim = !string.IsNullOrEmpty(dados["dataFim"]) ? Convert.ToDateTime(dados["dataFim"]) : Util.GetFirstDayOfMonth(DateTime.Now.Month);
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            byte.TryParse(dados["fase"], out byte fase);
-            long idUsuario;
             List<FaseProposta> faseProposta = FasePropostaModel.GetListIdDescricao();
 
             if (!string.IsNullOrEmpty(dados["idCorretor"]) && !dados["idCorretor"].Equals("undefined"))
@@ -130,7 +136,7 @@ namespace CRMYIA.Web.Pages
             else
                 idUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
 
-            ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuario, dataInicio, dataFim, ListFaseProposta, dados["operadora"]);
+            ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuario, dataInicio, dataFim, ListFaseProposta, fase, dados["operadora"], salto);
 
             if (ListListEntityProposta[0].Count > 0)
                 status = true;
