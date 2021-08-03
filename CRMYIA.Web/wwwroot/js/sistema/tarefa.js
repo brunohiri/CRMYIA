@@ -97,42 +97,42 @@ $("#sort1").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort1);
+        Pesquisa(fase, saltoSort1, isSearch = false);
     }
 });
 $("#sort2").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort2)
+        Pesquisa(fase, saltoSort2, isSearch = false)
     }
 });
 $("#sort3").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort3)
+        Pesquisa(fase, saltoSort3, isSearch = false)
     }
 });
 $("#sort4").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort4)
+        Pesquisa(fase, saltoSort4, isSearch = false)
     }
 });
 $("#sort5").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort5)
+        Pesquisa(fase, saltoSort5, isSearch = false)
     }
 });
 $("#sort6").on('scroll', function () {
     if (Math.round($(this).scrollTop() + $(this).innerHeight(), 10) >= Math.round($(this)[0].scrollHeight, 10)) {
         $(".loader").show(100);
         fase = $(this).data('statusId');
-        BuscarFasesProposta(fase, saltoSort6)
+        Pesquisa(fase, saltoSort6, isSearch = false)
     }
 });
 function BuscarFasesProposta(fase, salto) {
@@ -219,9 +219,9 @@ function BuscarFasesProposta(fase, salto) {
     });
     AtualizarSortable(res);
 }
-function Pesquisa() {
+function Pesquisa(fase = 0, salto = 0, isSearch = true) {
     toastr.info("Pesquisando...");
-    search = true;
+    search = isSearch;
     var formData = new FormData();
     let operadora, idGerente, idSupervisor, idCorretor, dataInicio, dataFim;
 
@@ -237,9 +237,8 @@ function Pesquisa() {
     formData.append('idCorretor', idCorretor);
     formData.append('dataInicio', dataInicio);
     formData.append('dataFim', dataFim);
-    formData.append('fase', "");
-
-    console.log(idCorretor);
+    formData.append('fase', fase);
+    formData.append('salto', salto)
 
     var res = $.ajax({
         type: "POST",
@@ -257,11 +256,26 @@ function Pesquisa() {
             console.log(result);
             $("#periodoPesquisa").remove().html();
             $("#periodoPesquisa").append("Periodo: " + FormatarData(result.periodoA) + " até " + FormatarData(result.periodoB));
-            $(".loader").hide("fast", function () {
-                $(this).prev().hide("fast", arguments.callee);
-            });
-            result.propostas[0].length == 0 ? toastr.warning("Nada encontrado!") : toastr.success("Sucesso!");
-            return result;
+            if (result != null) {
+                if (fase == 1 && result.status == true)
+                    saltoSort1 = saltoSort1 + saltoSort1;
+                if (fase == 2 && result.status == true)
+                    saltoSort2 = saltoSort2 + saltoSort2;
+                if (fase == 3 && result.status == true)
+                    saltoSort3 = saltoSort3 + saltoSort3;
+                if (fase == 4 && result.status == true)
+                    saltoSort4 = saltoSort4 + saltoSort4;
+                if (fase == 5 && result.status == true)
+                    saltoSort5 = saltoSort5 + saltoSort5;
+                if (fase == 6 && result.status == true)
+                    saltoSort6 = saltoSort6 + saltoSort6;
+                $(".loader").hide("fast", function () {
+                    $(this).prev().hide("fast", arguments.callee);
+                });
+
+                result.propostas[0].length == 0 ? toastr.warning("Nada encontrado!") : toastr.success("Sucesso!");
+                return result;
+            }
         },
         failure: function (reason) {
             console.error(reason);
