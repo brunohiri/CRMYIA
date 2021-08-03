@@ -168,7 +168,7 @@ function InitDatatables() {
                     "sInfoPostFix": "",
                     "sInfoThousands": ".",
                     "sLengthMenu": "_MENU_ resultados por página",
-                    "sLoadingRecords": "Carregando...",
+                    "sLoadingRecords": "Carregando...",                                                                   
                     "sProcessing": "Processando...",
                     "sZeroRecords": "Nenhum registro encontrado",
                     "sSearch": "Pesquisar",

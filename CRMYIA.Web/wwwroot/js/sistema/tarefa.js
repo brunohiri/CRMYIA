@@ -14,7 +14,7 @@ var search = false;
 
 $(document).ready(function () {
     $('.sortable').sortable({
-        connectWith: ".sortable",
+        connectWith: ".sortable",                                                                              
         start: {},
         scroll: true,
         update: function (event, ui) {
