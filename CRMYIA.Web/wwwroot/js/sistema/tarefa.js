@@ -453,6 +453,15 @@ function CadastroTarefas() {
                                             $('#sort' + status_id + ' li').eq(i).remove();
                                         }
                                     }
+                                    console.log($(ui.item)[0]);
+                                    let novoParagrafo = $(document.createElement('p')).attr('title', $('#motivoMenuItem').val());
+                                    novoParagrafo[0].appendChild(document.createElement('strong'));
+                                    novoParagrafo[0].appendChild(document.createElement('span'));
+                                    novoParagrafo[0].children[0].innerText = 'Motivo: ';
+                                    novoParagrafo[0].children[1].innerText = $('#motivoMenuItem').select2('data')[0].text;
+                                    $(ui.item)[0].children[0].append(novoParagrafo[0]);
+                                    //$(ui.item)[0].children[0].children[0].parentNode.insertBefore(novoParagrafo[0], $(ui.item)[0].children[0].children[l].nextSibling);
+                                    
                                     AtualizarCardsPropostas();
                                     AtualizarCardSomaPropostas();
                                 }
