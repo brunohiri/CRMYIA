@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using CRMYIA.Data.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace CRMYIA.Data.Context
 {

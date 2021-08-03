@@ -37,6 +37,8 @@ namespace CRMYIA.Web.Pages
         public List<Producao> ListProducao { get; set; }
         [BindProperty]
         public List<UsuarioViewModel> ListSupervisor { get; set; }
+        [BindProperty]
+        public List<Banco> ListBanco { get; set; }
         #endregion
 
         #region Construtores

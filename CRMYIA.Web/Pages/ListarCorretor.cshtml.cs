@@ -23,6 +23,26 @@ namespace CRMYIA.Web.Pages
         public MensagemModel Mensagem { get; set; }
         [BindProperty]
         public List<ListaCorretorViewModel> ListEntity { get; set; }
+        [BindProperty]
+        public UsuarioHierarquia Gerente { get; set; }
+        [BindProperty]
+        public UsuarioHierarquia Supervisor { get; set; }
+        [BindProperty]
+        public List<Corretora> ListCorretora { get; set; }
+        [BindProperty]
+        public List<ListaCorretorViewModel> ListGerente { get; set; }
+        [BindProperty]
+        public List<ListaCorretorViewModel> ListSupervisor { get; set; }
+        [BindProperty]
+        public bool Status { get; set; }
+        [BindProperty]
+        public string Corretor { get; set; }
+        [BindProperty]
+        public bool IdCorretora { get; set; }
+        [BindProperty]
+        public bool IdSupervisor { get; set; }
+        [BindProperty]
+        public bool IdGerente { get; set; }
         #endregion
 
         #region Construtores
@@ -35,33 +55,37 @@ namespace CRMYIA.Web.Pages
         #region Métodos
         public IActionResult OnGet()
         {
+            CarregarLists();
+            Supervisor = new UsuarioHierarquia();
+            Gerente = new UsuarioHierarquia();
             ListEntity = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Corretor);
-            foreach (var item in ListEntity)
-            {
-                var Supervisor = UsuarioHierarquiaModel.GetMaster(item.IdUsuario);
-                if(Supervisor != null)
-                {
-                    item.Supervisor = Supervisor.IdUsuarioMasterNavigation.Nome;
-                    var Gerente = UsuarioHierarquiaModel.GetMaster(Supervisor.IdUsuarioMasterNavigation.IdUsuario);
-                    if(Gerente != null)
-                    {
-                        item.Gerente = Gerente.IdUsuarioMasterNavigation.Nome;
-                    }
-                    else
-                    {
-                        item.Gerente = "Nenhum";
-                    }
-                }
-                else
-                {
-                    item.Supervisor = "Nenhum";
-                }
-                var UltimaProducao = PropostaModel.GetUltimaProducao(item.IdUsuario);
-                if(UltimaProducao != null)
-                {
-                    item.UltimaProducao = UltimaProducao.DataCadastro;
-                }
-            }
+            
+            //foreach (var item in ListEntity)
+            //{
+            //     Supervisor = UsuarioHierarquiaModel.GetMaster(item.IdUsuario);
+            //    if(Supervisor != null)
+            //    {
+            //        item.Supervisor = Supervisor.IdUsuarioMasterNavigation.Nome;
+            //         Gerente = UsuarioHierarquiaModel.GetMaster(Supervisor.IdUsuarioMasterNavigation.IdUsuario);
+            //        if(Gerente != null)
+            //        {
+            //            item.Gerente = Gerente.IdUsuarioMasterNavigation.Nome;
+            //        }
+            //        else
+            //        {
+            //            item.Gerente = "Nenhum";
+            //        }
+            //    }
+            //    else
+            //    {
+            //        item.Supervisor = "Nenhum";
+            //    }
+            //    var UltimaProducao = PropostaModel.GetUltimaProducao(item.IdUsuario);
+            //    if(UltimaProducao != null)
+            //    {
+            //        item.UltimaProducao = UltimaProducao.DataCadastro;
+            //    }
+            //}
             return Page();
         }
 
@@ -70,5 +94,10 @@ namespace CRMYIA.Web.Pages
             return Page();
         }
         #endregion
+        public void CarregarLists()
+        {
+            ListSupervisor = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Supervisor);
+            ListGerente = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Gerente);
+        }
     }
 }
