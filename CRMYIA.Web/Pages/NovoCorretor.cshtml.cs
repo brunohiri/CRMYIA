@@ -23,7 +23,7 @@ namespace CRMYIA.Web.Pages
 
         [BindProperty]
         public Usuario Entity { get; set; }
-        
+
         [BindProperty]
         public string ConfirmarSenha { get; set; }
 
@@ -64,6 +64,7 @@ namespace CRMYIA.Web.Pages
             ListClassificacao = ClassificacaoModel.GetListIdDescricao();
             ListProducao = ProducaoModel.GetListIdDescricao();
             ListSupervisor = UsuarioPerfilModel.GetList((byte)(EnumeradorModel.Perfil.Supervisor));
+            ListBanco = BancoModel.GetList();
             return Page();
         }
 
@@ -74,6 +75,7 @@ namespace CRMYIA.Web.Pages
                 ListCorretora = CorretoraModel.GetListIdDescricao();
                 ListClassificacao = ClassificacaoModel.GetListIdDescricao();
                 ListProducao = ProducaoModel.GetListIdDescricao();
+                ListBanco = BancoModel.GetList();
 
                 if ((!Util.IsCpf(Entity.Documento)) && (!Util.IsCnpj(Entity.Documento)))
                     Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "CPF ou CNPJ Inválido!");
@@ -86,16 +88,21 @@ namespace CRMYIA.Web.Pages
                         if (UsuarioModel.GetByDocumento(Entity.Documento) != null)
                             Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este CPF ou CNPJ!");
                         else
-                        if (UsuarioModel.GetByLogin(Entity.Login) != null)
-                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Login!");
+                        if (UsuarioModel.GetByEmail(Entity.Email) != null)
+                            Mensagem = new MensagemModel(Business.Util.EnumeradorModel.TipoMensagem.Aviso, "Já existe um usuário cadastrado com este Email!");
                         else
                         {
+                            Entity.Logado = "light";
                             UsuarioModel.Add(Entity);
-                            UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
-                            UsuarioHierarquiaModel.Add(new UsuarioHierarquia() { Ativo = true, DataCadastro = DateTime.Now, IdUsuarioMaster = Entity.Superior, IdUsuarioSlave = Entity.IdUsuario });
+                            if (Entity.Superior != null)
+                            {
+                                UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = (byte)EnumeradorModel.Perfil.Corretor, Ativo = true });
+                                UsuarioHierarquiaModel.Add(new UsuarioHierarquia() { Ativo = true, DataCadastro = DateTime.Now, IdUsuarioMaster = Entity.Superior, IdUsuarioSlave = Entity.IdUsuario });
+                            }
+
 
                             //fazer html do email
-                           /// MailModel.SendMail();
+                            /// MailModel.SendMail();
                         }
                     }
                     else

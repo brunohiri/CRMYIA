@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using CRMYIA.Data.Entities;
+using CRMYIA.Web.Entities;
 using Microsoft.Extensions.Configuration;
 
-namespace CRMYIA.Data.Context
+namespace CRMYIA.Web.Context
 {
     public partial class YiaContext : DbContext
     {

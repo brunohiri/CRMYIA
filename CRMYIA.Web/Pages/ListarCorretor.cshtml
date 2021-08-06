@@ -1,9 +1,11 @@
 ﻿@page
 @model CRMYIA.Web.Pages.ListarCorretorModel
 @{ ViewData["Title"] = "Listar";
-                ViewData["Pagina"] = "Corretores"; }
+    ViewData["Pagina"] = "Corretores"; }
 @using CRMYIA.Business.Util;
-
+@section Scripts {
+    <script src="~/js/sistema/novaMetaGrupo.js"></script>
+}
 <div class="row">
     <div class="col-12">
         <section class="content">
@@ -23,27 +25,22 @@
                                     <div class="form-group">
                                         @if ((Model != null) && (Model.Mensagem != null))
                                         {
-                                            <div class="@Model.Mensagem.CssClass alert-dismissible">
-                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                                <i class="@Model.Mensagem.IconClass"></i>
-                                                @Model.Mensagem.Mensagem
-                                            </div>
-                                        }
+                            <div class="@Model.Mensagem.CssClass alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i class="@Model.Mensagem.IconClass"></i>
+                                @Model.Mensagem.Mensagem
+                            </div>}
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="IdCorretora">Corretora</label>
-                                        <select class="form-control select2" style="width: 100%;" id="IdCorretora" asp-for="@Model.IdCorretora">
-                                            <option selected="selected" value="0">Selecione...</option>
-                                            @foreach (var Item in Model.ListCorretora)
-                                            {
-                                <option value="@Item.IdCorretora">@Item.RazaoSocial</option>}
-                                        </select>
+                                        <label for="FindCorretor">Corretor</label>
+                                        <input type="text" class="form-control" id="FindCorretor" placeholder="Nome" asp-for="@Model.FindCorretor">
                                     </div>
                                 </div>
+
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="IdCorretora">Corretora</label>
@@ -51,47 +48,76 @@
                                             <option selected="selected" value="0">Selecione...</option>
                                             @foreach (var Item in Model.ListCorretora)
                                             {
-                                <option value="@Item.IdCorretora">@Item.RazaoSocial</option>}
+                                <option value="@Item.IdCorretora">@Item.RazaoSocial</option>
+}
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="EnriquecimentoIdLayout">Supervisor</label>
-                                        <select class="form-control select2" style="width: 100%;" id="EnriquecimentoIdLayout" asp-for="@Model.IdSupervisor">
+                                        <label for="Supervisor">Supervisor</label>
+                                        <select class="form-control select2" style="width: 100%;" id="Supervisor" asp-for="@Model.IdSupervisor">
                                             <option selected="selected" value="0">Selecione...</option>
                                             @foreach (var Item in Model.ListSupervisor)
                                             {
-                                <option value="@Item.IdUsuario">@Item.Nome</option>}
+                                <option value="@Item.IdUsuario">@Item.Nome</option>
+}
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="EnriquecimentoIdLayout">Gerente</label>
-                                        <select class="form-control select2" style="width: 100%;" id="EnriquecimentoIdLayout" asp-for="@Model.IdGerente">
+                                        <label for="Gerente">Gerente</label>
+                                        <select class="form-control select2" style="width: 100%;" id="Gerente" asp-for="@Model.IdGerente">
                                             <option selected="selected" value="0">Selecione...</option>
-                                            @foreach (var Item in Model.ListSupervisor)
+                                            @foreach (var Item in Model.ListGerente)
                                             {
-                                <option value="@Item.IdUsuario">@Item.Nome</option>}
+                                <option value="@Item.IdUsuario">@Item.Nome</option>
+}
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="EnriquecimentoIdStatusFila">Status</label>
-                                        <select class="form-control select2" style="width: 100%;" id="EnriquecimentoIdStatusFila" asp-for="@Model.IdStatus">
-                                            <option selected="selected" value="0">Selecione...</option>
-                                            @foreach (var Item in Model.ListSupervisor)
-                                            {
-                                <option value="@Item.IdUsuario">@Item.Nome</option>}
+                                        <label>Data Inicial</label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" asp-for="@Model.DataInicial">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Data Final</label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" asp-for="@Model.DataFinal">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label for="Status">Status</label>
+                                        <select class="form-control select2" style="width: 100%;" id="Status" asp-for="@Model.Status">
+                                            <option selected="selected" value="1">Ativos</option>
+                                            <option value="0">Inativos</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-success">Atualizar Fila</button>
+                            <button type="submit" disabled class="btn btn-success">Realizar busca</button>
                         </div>
                     </form>
                 </div>
@@ -135,9 +161,8 @@
                 <td>
                     <a asp-page="/NovoCorretor" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
                 </td>
-            </tr>
-}
-    }
+            </tr>}
+                        }
                     </tbody>
                 </table>
             </div>

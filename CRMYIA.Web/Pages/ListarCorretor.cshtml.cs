@@ -43,6 +43,11 @@ namespace CRMYIA.Web.Pages
         public bool IdSupervisor { get; set; }
         [BindProperty]
         public bool IdGerente { get; set; }
+        
+        [BindProperty]
+        public string FindCorretor { get; set; }
+        public string DataInicial;
+        public string DataFinal;
         #endregion
 
         #region Construtores
@@ -96,8 +101,11 @@ namespace CRMYIA.Web.Pages
         #endregion
         public void CarregarLists()
         {
+            DataInicial = DateTime.Now.ToString();
+            DataFinal = DateTime.Now.AddMonths(1).ToString();
             ListSupervisor = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Supervisor);
             ListGerente = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Gerente);
+            ListCorretora = CorretoraModel.GetList();
         }
     }
 }

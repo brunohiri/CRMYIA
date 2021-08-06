@@ -590,7 +590,6 @@ namespace CRMYIA.Business
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    Entity.Senha = Criptography.Encrypt(Entity.Senha);
                     context.Usuario.Add(Entity);
                     context.SaveChanges();
                 }
