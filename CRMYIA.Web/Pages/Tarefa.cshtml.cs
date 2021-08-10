@@ -65,42 +65,19 @@ namespace CRMYIA.Web.Pages
         #region M�todos
         public async Task<IActionResult> OnGetAsync()
         {
-            List<Task> initialTasks = new List<Task>();
             long idUsuarioLogado = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
             DateTime dataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 7);
             DateTime dataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
             DataInicialDefault = dataInicial.ToString("dd/MM/yyyy");
             DataFinalDefault = dataFinal.ToString("dd/MM/yyyy");
             ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            var stopwatch = new Stopwatch();
-
-            stopwatch.Start();
             ListListEntityProposta = await PropostaModel.GetListCardPropostaAsync(idUsuarioLogado, new DateTime(2020, 07, 01), dataFinal, ListFaseProposta);
             DeclinioLeadSelectMenu = await MotivoDeclinioLeadModel.GetListAsync();
-            stopwatch.Stop();
-            Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
             CarregarLists(idUsuarioLogado);
             
             return Page();
         }
         
-        /*
-        public IActionResult OnGet()
-        {
-            var stopwatch = new Stopwatch();
-            ListFaseProposta = FasePropostaModel.GetListIdDescricao();
-            DateTime DataInicial = Util.GetFirstDayOfMonth(DateTime.Now.Month - 7);
-            DateTime DataFinal = Util.GetLastDayOfMonth(DateTime.Now.Month);
-
-            stopwatch.Start();
-            ListListEntityProposta = PropostaModel.GetListListCardProposta(HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong(), DataInicial, DataFinal, "", "", 0, 0);
-            stopwatch.Stop();
-            Console.Write(stopwatch.ElapsedMilliseconds / 1000.0);
-
-            CarregarLists();
-            return Page();
-        }
-        */
         public IActionResult OnGetEdit(string statusId = null, string taskId = null, string declinioLeadId = null)
         {
             if ((!statusId.IsNullOrEmpty()) && (!taskId.IsNullOrEmpty()))

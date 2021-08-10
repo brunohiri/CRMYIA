@@ -217,6 +217,7 @@
                                                             <p><strong>Valor Previsto:</strong> <span id="@("ValorPrevisto_" + Model.ListFaseProposta[i].IdFaseProposta + "_" + ItemProposta.IdProposta)">@(ItemProposta.ValorPrevisto.HasValue ? ItemProposta.ValorPrevisto.Value.ToString("c2") : (0).ToString("c2"))</span></p>
                                                             <p><strong>Data:</strong> @ItemProposta.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</p>
                                                             <p><strong>Retorno:</strong> @(ItemProposta.ProximoContatoComCliente.HasValue ? ItemProposta.ProximoContatoComCliente.Value.ToString("dd/MM/yyyy HH:mm:ss") : "Não agendado")</p>
+                                                            <p><strong>Tempo Decorrido:</strong> @((DateTime.Now - ItemProposta.DataCadastro).Days) dias</p>
                                                             @if (ItemProposta.IdMotivoDeclinioLead != null)
                                                             {
                                                                 <p class="" title="@ItemProposta.IdMotivoDeclinioLeadNavigation.Descricao"><strong>Motivo:</strong> @ItemProposta.IdMotivoDeclinioLeadNavigation.Descricao</p>
