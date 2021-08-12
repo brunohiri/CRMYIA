@@ -165,6 +165,7 @@ namespace CRMYIA.Web.Pages
                                
                                 Entity.CaminhoFoto = CaminhoFoto;
                                 Entity.NomeFoto = NomeArquivo;
+                                Entity.Senha = Criptography.Encrypt(Entity.Senha);
                                 Entity.Logado = Util.SetStatusChat(Business.Util.EnumeradorModel.StatusChat.Invisivel);
                                 UsuarioModel.Add(Entity);
                                 UsuarioPerfilModel.Add(new UsuarioPerfil() { IdUsuario = Entity.IdUsuario, IdPerfil = UsuarioIdPerfil, Ativo = true });

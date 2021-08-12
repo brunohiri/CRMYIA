@@ -39,16 +39,19 @@ namespace CRMYIA.Landing.Pages
         public IActionResult OnGet(string Id = null)
         {
             //?id=S%252bMVSor2q%252bNSABf%252f6fwRng%253d%253d
+            //?id=55F3nVePmbEn7vJ0rGwAtQ%253d%253d
             if (Id.IsNullOrEmpty())
             {
                 Corretor = new Usuario();
                 Carrossel = new List<LandingPageCarrossel>();
+                ViewData["Title"] = "YIA | Landing";
             }
             else
             {
                 var idUser = Criptography.Decrypt(HttpUtility.UrlDecode(Id)).ExtractLong();
                 Corretor = UsuarioModel.Get(idUser);
                 Carrossel = LandingPageCarrosselModel.GetList(idUser);
+                ViewData["Title"] = "YIA | " + Corretor.Nome;
             }
             return Page();
         }
