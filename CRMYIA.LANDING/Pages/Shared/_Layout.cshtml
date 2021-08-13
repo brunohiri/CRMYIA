@@ -2,8 +2,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CRMYIA.Landing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>@ViewData["Title"]</title>
     <!-- CSS
     ================================================== -->
     <link rel="stylesheet" href="~/lib/template/css/base.css" />
@@ -21,8 +21,6 @@
     <link rel="apple-touch-icon" href="~/lib/template/favicon/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="~/lib/template/favicon/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="~/lib/template/favicon/apple-touch-icon-114x114.png">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
 
     @RenderSection("CSS", required: false)
 </head>
@@ -40,14 +38,12 @@
     </div>
 
     <script type="text/javascript" src="~/lib/template/js/jquery.js"></script>
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" src="~/lib/template/js/modernizr.custom.js"></script>
+    <script type="text/javascript" src="~/lib/template/js/royal_preloader.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- JAVASCRIPT
     ================================================== -->
-
-    <script type="text/javascript" src="~/lib/template/js/modernizr.custom.js"></script>
-    <script type="text/javascript" src="~/lib/template/js/royal_preloader.min.js"></script>
     <script type="text/javascript">
         (function ($) {
             "use strict";

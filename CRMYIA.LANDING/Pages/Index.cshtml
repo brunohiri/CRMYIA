@@ -1,9 +1,7 @@
 ﻿@page
 @model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
 @section CSS {
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link href="~/css/landingPage.css" rel="stylesheet" />
 }
 @section Scripts {
@@ -20,7 +18,7 @@
                 </li>
                 <li>
                     <a class="scroll" href="#contact">Cotação</a>
-                </li>                                                                                     
+                </li>
                 <li>
                     <a class="scroll" href="#logos">Parceiros</a>
                 </li>
@@ -573,13 +571,13 @@
 
         <div class="corretor">
             <div class="left">
-                <img src="@Model.Corretor.CaminhoFoto@Model.Corretor.NomeFoto" alt="@Model.Corretor.NomeFoto" width="100">
+                <img src="@("http://crm.q2bn.com.br" + @Model.Corretor.CaminhoFoto + @Model.Corretor.NomeFoto)" alt="@Model.Corretor.NomeFoto" width="100">
                 <h4>@Model.Corretor.Nome</h4>
                 <p>Corretor YIA</p>
             </div>
             <div class="right">
                 <div class="info">
-                    <h3>Informaçôes do corretor</h3>
+                    <h3>Informações do corretor</h3>
                     <div class="info_data">
                         <div class="data">
                             <h4>Email</h4>

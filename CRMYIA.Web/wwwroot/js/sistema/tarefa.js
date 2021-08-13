@@ -3,6 +3,9 @@ const formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
 });
+
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
 var hashId = '';
 var saltoSort1 = 20;
 var saltoSort2 = 20;
@@ -61,6 +64,7 @@ $(document).ready(function () {
     // Define o mês atual como valor default
     // let d = new Date();
     // $('#Data').val(`${new Date(d.getFullYear(), d.getMonth() - 3, 1).toLocaleDateString()} - ${new Date(d.getFullYear(), d.getMonth() + 1, 0).toLocaleDateString()}`);
+
 
     $('.limpar-pesquisa').click(function () {
         location.reload();
@@ -135,6 +139,14 @@ $("#sort6").on('scroll', function () {
         Pesquisa(fase, saltoSort6, isSearch = false)
     }
 });
+
+function dateDiffInDays(a, b) {
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.floor((utc1 - utc2) / _MS_PER_DAY);
+}
+
 function BuscarFasesProposta(fase, salto) {
     toastr.info("Pesquisando...");
     let Data = $('#Data').val();
@@ -332,6 +344,7 @@ function AtualizarSortable(resultado) {
                                             <p><strong>Valor Previsto:</strong>  <span id="ValorPrevisto_'+ data.faseProposta.idFaseProposta + "_" + data.propostas[0][p].idProposta + '"' + formatter.format(data.propostas[0][p].valorPrevisto) + ' "> ' + formatter.format(data.propostas[0][p].valorPrevisto) + '</p>\
                                             <p><strong>Data:</strong> ' + new Date(data.propostas[0][p].dataCadastro).toLocaleDateString('pt-br') + ' ' + new Date(data.propostas[0][p].dataCadastro).toLocaleTimeString('pt-br') + ' </p>\
                                             <p><strong>Retorno:</strong> ' + proximoContatoComCliente + ' </p>\
+                                            <p><strong>Tempo Decorrido:</strong> ' + dateDiffInDays(new Date(), new Date(data.propostas[0][p].dataCadastro)) + ' dias</p>\
                                         </a>\
                                     </li>';
                     if (html != '')
@@ -358,6 +371,7 @@ function AtualizarSortable(resultado) {
                                             </p>
                                             <p><strong>Data:</strong> ${new Date(data.propostas[i][j].dataCadastro).toLocaleDateString('pt-br')} ${new Date(data.propostas[i][j].dataCadastro).toLocaleTimeString('pt-br')}</p>
                                             <p><strong>Retorno:</strong> ${data.propostas[i][j].proximoContatoComCliente == undefined ? new Date(data.propostas[i][j].proximoContatoComCliente).toLocaleDateString('pt-br') : 'Não agendado'}</p>
+                                            <p><strong>Tempo Decorrido:</strong> ${dateDiffInDays(new Date(), new Date(data.propostas[0][p].dataCadastro))} dias</p>
                                             ${data.propostas[i][j].idMotivoDeclinioLead ? '<p><strong>Motivo:</strong> ' + data.propostas[i][j].idMotivoDeclinioLeadNavigation.descricao + '</p>' : ''}
                                         </a>
                                     </li>`;
@@ -453,7 +467,7 @@ function CadastroTarefas() {
                                             $('#sort' + status_id + ' li').eq(i).remove();
                                         }
                                     }
-                                    console.log($(ui.item)[0]);
+                                    
                                     let novoParagrafo = $(document.createElement('p')).attr('title', $('#motivoMenuItem').val());
                                     novoParagrafo[0].appendChild(document.createElement('strong'));
                                     novoParagrafo[0].appendChild(document.createElement('span'));
