@@ -43,7 +43,7 @@ namespace CRMYIA.Web.Pages
         public bool IdSupervisor { get; set; }
         [BindProperty]
         public bool IdGerente { get; set; }
-        
+
         [BindProperty]
         public string FindCorretor { get; set; }
         public string DataInicial;
@@ -64,7 +64,7 @@ namespace CRMYIA.Web.Pages
             Supervisor = new UsuarioHierarquia();
             Gerente = new UsuarioHierarquia();
             ListEntity = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Corretor);
-            
+
             //foreach (var item in ListEntity)
             //{
             //     Supervisor = UsuarioHierarquiaModel.GetMaster(item.IdUsuario);
@@ -96,11 +96,24 @@ namespace CRMYIA.Web.Pages
 
         public IActionResult OnPost()
         {
+            string Corretor = Request.Form["FindCorretor"];
+            long Corretora = long.Parse(Request.Form["IdCorretora"]);
+            //long Supervisor = long.Parse(Request.Form["IdSupervisor"]);
+            //long Gerente = long.Parse(Request.Form["IdGerente"]);
+            long Supervisor = 0;
+            long Gerente = 0;
+            string DataInicial = Request.Form["DataInicial"];
+            string DataFinal = Request.Form["DataFinal"];
+            bool Status = bool.Parse(Request.Form["Status"]);
+
+            ListEntity = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Corretor, Corretor, Corretora, Supervisor, Gerente, DataInicial, DataFinal, Status);
+            CarregarLists();
             return Page();
         }
         #endregion
         public void CarregarLists()
         {
+            Status = true;
             DataInicial = DateTime.Now.ToString();
             DataFinal = DateTime.Now.AddMonths(1).ToString();
             ListSupervisor = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Supervisor);

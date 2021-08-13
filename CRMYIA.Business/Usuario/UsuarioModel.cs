@@ -150,7 +150,7 @@ namespace CRMYIA.Business
         public static List<Usuario> GetAllUsuarioSlave(ICollection<UsuarioHierarquia> usuariosHierarquia)
         {
             List<Usuario> usuarios = new List<Usuario>();
-            foreach(var usuarioHierarquia in usuariosHierarquia)
+            foreach (var usuarioHierarquia in usuariosHierarquia)
             {
                 usuarios.Add(Get((long)usuarioHierarquia.IdUsuarioSlave));
             }
@@ -324,7 +324,96 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
+        public static List<ListaCorretorViewModel> GetList(byte IdPerfil, string Corretor = "", long Corretora = 0, long Supervisor = 0,
+            long Gerente = 0, string DataInicial = "", string DataFinal = "", bool Status = true)
+        {
+            List<ListaCorretorViewModel> ListEntity = null;
+            Corretora corretora = null;
+            List<ListaCorretorViewModel> listContains = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    corretora = context.Corretora.Where(x => x.IdCorretora == Corretora).FirstOrDefault();
 
+                    if (Corretor != "")
+                    {
+                        ListEntity = context.Usuario
+                                    .Include(y => y.UsuarioPerfil)
+                                        .ThenInclude(p => p.IdPerfilNavigation)
+                                    .Include(c => c.IdCorretoraNavigation)
+                                    .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                                        .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
+                                    .AsNoTracking()
+                                    .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil) && x.Nome.Contains(Corretor))
+                                    .Select(x => new ListaCorretorViewModel()
+                                    {
+                                        IdUsuario = x.IdUsuario,
+                                        Nome = x.Nome,
+                                        Email = x.Email,
+                                        Telefone = x.Telefone,
+                                        CaminhoFoto = x.CaminhoFoto,
+                                        NomeFoto = x.NomeFoto,
+                                        Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                                        DataCadastro = x.DataCadastro,
+                                        Ativo = x.Ativo
+                                    })
+                                    .OrderBy(o => o.Nome)
+                                    .ToList();
+                    }
+                    else
+                    {
+                        ListEntity = context.Usuario
+                                    .Include(y => y.UsuarioPerfil)
+                                        .ThenInclude(p => p.IdPerfilNavigation)
+                                    .Include(c => c.IdCorretoraNavigation)
+                                    .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
+                                        .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
+                                    .AsNoTracking()
+                                    .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
+                                    .Select(x => new ListaCorretorViewModel()
+                                    {
+                                        IdUsuario = x.IdUsuario,
+                                        Nome = x.Nome,
+                                        Email = x.Email,
+                                        Telefone = x.Telefone,
+                                        CaminhoFoto = x.CaminhoFoto,
+                                        NomeFoto = x.NomeFoto,
+                                        Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
+                                        DataCadastro = x.DataCadastro,
+                                        Ativo = x.Ativo
+                                    })
+                                    .OrderBy(o => o.Nome)
+                                    .ToList();
+                    }
+                    if (Corretora != 0 && corretora != null)
+                    {
+                        ListEntity.RemoveAll(x => x.Corretora != corretora.RazaoSocial);
+                    }
+                    if (DataInicial != "" && DataFinal != "")
+                    {
+                        ListEntity.RemoveAll(x => x.DataCadastro <= DateTime.Parse(DataInicial) && x.DataCadastro >= DateTime.Parse(DataFinal));
+                    }
+                    else if (DataInicial != "" && DataFinal == "")
+                    {
+                        ListEntity.RemoveAll(x => x.DataCadastro <= DateTime.Parse(DataInicial));
+                    }
+                    else if (DataInicial == "" && DataFinal != "")
+                    {
+                        ListEntity.RemoveAll(x => x.DataCadastro >= DateTime.Parse(DataFinal));
+                    }
+                    if (!Status)
+                    {
+                        ListEntity.RemoveAll(x => x.Ativo);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
         public static UsuarioCorretorViewModel GetUsuarioCorretor(long IdUsuario)
         {
             List<Usuario> ListEntity = GetList();
@@ -366,7 +455,7 @@ namespace CRMYIA.Business
                             NomeApelido = s.NomeApelido,
                             UsuariosCorretores = GetAllUsuarioSlave(hierarquiaList)
                                 .Select(slave => new UsuarioCorretorViewModel()
-                                { 
+                                {
                                     Nome = slave.Nome,
                                     NomeApelido = slave.NomeApelido,
                                     Email = slave.Email,
@@ -409,7 +498,8 @@ namespace CRMYIA.Business
                         })
                         .FirstOrDefault();
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw e;
             }

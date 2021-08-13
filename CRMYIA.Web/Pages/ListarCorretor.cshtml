@@ -25,11 +25,11 @@
                                     <div class="form-group">
                                         @if ((Model != null) && (Model.Mensagem != null))
                                         {
-                            <div class="@Model.Mensagem.CssClass alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i class="@Model.Mensagem.IconClass"></i>
-                                @Model.Mensagem.Mensagem
-                            </div>}
+                                            <div class="@Model.Mensagem.CssClass alert-dismissible">
+                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                <i class="@Model.Mensagem.IconClass"></i>
+                                                @Model.Mensagem.Mensagem
+                                            </div>}
                                     </div>
                                 </div>
                             </div>
@@ -48,32 +48,32 @@
                                             <option selected="selected" value="0">Selecione...</option>
                                             @foreach (var Item in Model.ListCorretora)
                                             {
-                                <option value="@Item.IdCorretora">@Item.RazaoSocial</option>
-}
+                                                <option value="@Item.IdCorretora">@Item.RazaoSocial</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="Supervisor">Supervisor</label>
-                                        <select class="form-control select2" style="width: 100%;" id="Supervisor" asp-for="@Model.IdSupervisor">
+                                        <select disabled class="form-control select2" style="width: 100%;" id="Supervisor" asp-for="@Model.IdSupervisor">
                                             <option selected="selected" value="0">Selecione...</option>
                                             @foreach (var Item in Model.ListSupervisor)
                                             {
-                                <option value="@Item.IdUsuario">@Item.Nome</option>
-}
+                                                <option value="@Item.IdUsuario">@Item.Nome</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="Gerente">Gerente</label>
-                                        <select class="form-control select2" style="width: 100%;" id="Gerente" asp-for="@Model.IdGerente">
+                                        <select disabled class="form-control select2" style="width: 100%;" id="Gerente" asp-for="@Model.IdGerente">
                                             <option selected="selected" value="0">Selecione...</option>
                                             @foreach (var Item in Model.ListGerente)
                                             {
-                                <option value="@Item.IdUsuario">@Item.Nome</option>
-}
+                                                <option value="@Item.IdUsuario">@Item.Nome</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -109,15 +109,15 @@
                                     <div class="form-group">
                                         <label for="Status">Status</label>
                                         <select class="form-control select2" style="width: 100%;" id="Status" asp-for="@Model.Status">
-                                            <option selected="selected" value="1">Ativos</option>
-                                            <option value="0">Inativos</option>
+                                            <option selected="selected" value="true">Ativos</option>
+                                            <option value="false">Inativos</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" disabled class="btn btn-success">Realizar busca</button>
+                            <button type="submit" class="btn btn-success">Realizar busca</button>
                         </div>
                     </form>
                 </div>
@@ -148,20 +148,21 @@
                         {
                             foreach (var Item in Model.ListEntity)
                             {
-            <tr>
-                <td></td>
-                <td>@Item.Nome</td>
-                <td>@Item.Email</td>
-                <td>@Item.Telefone</td>
-                <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                <td>@Item.Gerente</td>
-                <td>@Item.Supervisor</td>
-                <td>@Item.UltimaProducao == null ? @Item.UltimaProducao.ToString("dd/MM/yyyy HH:mm:ss") : "<span class="badge badge-pill badge-warning">Inativo</span>"</td>
-                <td>@Html.Raw(Item.Ativo == true ? "<span class=\"badge badge-pill badge-success\">ATIVADO</span>" : "<span class=\"badge badge-pill badge-warning\">DESATIVADO</span>")</td>
-                <td>
-                    <a asp-page="/NovoCorretor" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
-                </td>
-            </tr>}
+                                <tr>
+                                    <td></td>
+                                    <td>@Item.Nome</td>
+                                    <td>@Item.Email</td>
+                                    <td>@Item.Telefone</td>
+                                    <td>@Item.DataCadastro.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@Item.Gerente</td>
+                                    <td>@Item.Supervisor</td>
+                                    <td>@Html.Raw(Item.UltimaProducao == null ? Item.UltimaProducao.ToString("dd/MM/yyyy HH:mm:ss") : "<span class='badge badge-pill badge-warning'>Inativo</span>")</td>
+                                    <td>@Html.Raw(Item.Ativo == true ? "<span class='badge badge-pill badge-success'>ATIVADO</span>" : "<span class='badge badge-pill badge-warning'>DESATIVADO</span>")</td>
+                                    <td>
+                                        <a asp-page="/NovoCorretor" asp-route-id="@System.Web.HttpUtility.UrlEncode(Criptography.Encrypt(Item.IdUsuario.ToString()))" title="Editar" class="text-info"><i class="icon fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
