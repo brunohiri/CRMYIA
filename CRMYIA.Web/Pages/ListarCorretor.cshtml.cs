@@ -63,34 +63,8 @@ namespace CRMYIA.Web.Pages
             CarregarLists();
             Supervisor = new UsuarioHierarquia();
             Gerente = new UsuarioHierarquia();
-            ListEntity = UsuarioModel.GetList((byte)EnumeradorModel.Perfil.Corretor);
+            ListEntity = UsuarioModel.GetListSuperior((byte)EnumeradorModel.Perfil.Corretor);
 
-            //foreach (var item in ListEntity)
-            //{
-            //     Supervisor = UsuarioHierarquiaModel.GetMaster(item.IdUsuario);
-            //    if(Supervisor != null)
-            //    {
-            //        item.Supervisor = Supervisor.IdUsuarioMasterNavigation.Nome;
-            //         Gerente = UsuarioHierarquiaModel.GetMaster(Supervisor.IdUsuarioMasterNavigation.IdUsuario);
-            //        if(Gerente != null)
-            //        {
-            //            item.Gerente = Gerente.IdUsuarioMasterNavigation.Nome;
-            //        }
-            //        else
-            //        {
-            //            item.Gerente = "Nenhum";
-            //        }
-            //    }
-            //    else
-            //    {
-            //        item.Supervisor = "Nenhum";
-            //    }
-            //    var UltimaProducao = PropostaModel.GetUltimaProducao(item.IdUsuario);
-            //    if(UltimaProducao != null)
-            //    {
-            //        item.UltimaProducao = UltimaProducao.DataCadastro;
-            //    }
-            //}
             return Page();
         }
 
@@ -98,10 +72,8 @@ namespace CRMYIA.Web.Pages
         {
             string Corretor = Request.Form["FindCorretor"];
             long Corretora = long.Parse(Request.Form["IdCorretora"]);
-            //long Supervisor = long.Parse(Request.Form["IdSupervisor"]);
-            //long Gerente = long.Parse(Request.Form["IdGerente"]);
-            long Supervisor = 0;
-            long Gerente = 0;
+            long Supervisor = Request.Form.Keys.Contains("IdSupervisor") ? long.Parse(Request.Form["IdSupervisor"]) : 0;
+            long Gerente = Request.Form.Keys.Contains("IdGerente") ? long.Parse(Request.Form["IdGerente"]) : 0;
             string DataInicial = Request.Form["DataInicial"];
             string DataFinal = Request.Form["DataFinal"];
             bool Status = bool.Parse(Request.Form["Status"]);

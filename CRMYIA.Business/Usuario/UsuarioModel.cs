@@ -324,71 +324,109 @@ namespace CRMYIA.Business
             }
             return ListEntity;
         }
-        public static List<ListaCorretorViewModel> GetList(byte IdPerfil, string Corretor = "", long Corretora = 0, long Supervisor = 0,
-            long Gerente = 0, string DataInicial = "", string DataFinal = "", bool Status = true)
+        public static List<ListaCorretorViewModel> GetListSuperior(byte IdPerfil)
         {
             List<ListaCorretorViewModel> ListEntity = null;
-            Corretora corretora = null;
-            List<ListaCorretorViewModel> listContains = null;
             try
             {
                 using (YiaContext context = new YiaContext())
                 {
-                    corretora = context.Corretora.Where(x => x.IdCorretora == Corretora).FirstOrDefault();
-
+                    ListEntity =
+                            (from usuario in context.Usuario
+                             from usuarioPerfil in context.UsuarioPerfil.Where(uP => uP.IdUsuario == usuario.IdUsuario).DefaultIfEmpty()
+                             from usuarioHierarquia in context.UsuarioHierarquia.Where(uH => uH.IdUsuarioSlave == usuario.IdUsuario).DefaultIfEmpty()
+                             from supervisor in context.Usuario.Where(x => x.IdUsuario == usuarioHierarquia.IdUsuarioMaster).DefaultIfEmpty()
+                             from supervisorHierarquia in context.UsuarioHierarquia.Where(uH => uH.IdUsuarioSlave == supervisor.IdUsuario).DefaultIfEmpty()
+                             from gerente in context.Usuario.Where(y => y.IdUsuario == supervisorHierarquia.IdUsuarioMaster).DefaultIfEmpty()
+                             select new ListaCorretorViewModel()
+                             {
+                                 IdUsuario = usuario.IdUsuario,
+                                 IdCorretora = (long)usuario.IdCorretora,
+                                 Nome = usuario.Nome,
+                                 Email = usuario.Email,
+                                 Telefone = usuario.Telefone,
+                                 CaminhoFoto = usuario.CaminhoFoto,
+                                 NomeFoto = usuario.NomeFoto,
+                                 Supervisor = supervisor.Nome,
+                                 Gerente = gerente.Nome,
+                                 DataCadastro = usuario.DataCadastro,
+                                 Ativo = usuario.Ativo
+                             }).OrderBy(o => o.Nome).Distinct().DefaultIfEmpty().ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ListEntity;
+        }
+        public static List<ListaCorretorViewModel> GetList(byte IdPerfil, string Corretor = "", long Corretora = 0, long Supervisor = 0,
+            long Gerente = 0, string DataInicial = "", string DataFinal = "", bool Status = true)
+        {
+            List<ListaCorretorViewModel> ListEntity = null;
+            try
+            {
+                using (YiaContext context = new YiaContext())
+                {
+                    //SELECT item.IdUsuario[ID Corretor], item.nome[Corretor] , supervisor.IdUsuario[ID Supervisor], supervisor.Nome[Supervisor], gerente.IdUsuario[ID Gerente], gerente.Nome[Gerente]
+                    //FROM[CRMYIA_HOMOLOGACAO].[dbo].[Usuario] AS item
+                    //LEFT JOIN[CRMYIA_HOMOLOGACAO].[dbo].[UsuarioPerfil] AS perfil ON item.IdUsuario = perfil.IdUsuario
+                    //LEFT JOIN[CRMYIA_HOMOLOGACAO].[dbo].[UsuarioHierarquia] AS supID ON item.IdUsuario = supID.IdUsuarioSlave
+                    //LEFT JOIN[CRMYIA_HOMOLOGACAO].[dbo].[Usuario] AS supervisor ON supervisor.IdUsuario = supID.IdUsuarioMaster
+                    //LEFT JOIN[CRMYIA_HOMOLOGACAO].[dbo].[UsuarioHierarquia] AS gerID ON gerID.IdUsuarioSlave = supID.IdUsuarioMaster
+                    //LEFT JOIN[CRMYIA_HOMOLOGACAO].[dbo].[Usuario] AS gerente ON gerente.IdUsuario = gerID.IdUsuarioMaster
+                    //WHERE item.IdUsuario = 4
                     if (Corretor != "")
                     {
-                        ListEntity = context.Usuario
-                                    .Include(y => y.UsuarioPerfil)
-                                        .ThenInclude(p => p.IdPerfilNavigation)
-                                    .Include(c => c.IdCorretoraNavigation)
-                                    .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
-                                        .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
-                                    .AsNoTracking()
-                                    .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil) && x.Nome.Contains(Corretor))
-                                    .Select(x => new ListaCorretorViewModel()
-                                    {
-                                        IdUsuario = x.IdUsuario,
-                                        Nome = x.Nome,
-                                        Email = x.Email,
-                                        Telefone = x.Telefone,
-                                        CaminhoFoto = x.CaminhoFoto,
-                                        NomeFoto = x.NomeFoto,
-                                        Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
-                                        DataCadastro = x.DataCadastro,
-                                        Ativo = x.Ativo
-                                    })
-                                    .OrderBy(o => o.Nome)
-                                    .ToList();
+                        ListEntity =
+                            (from usuario in context.Usuario.Where(x => x.Nome.Contains(Corretor))
+                             from usuarioPerfil in context.UsuarioPerfil.Where(uP => uP.IdUsuario == usuario.IdUsuario).DefaultIfEmpty()
+                             from usuarioHierarquia in context.UsuarioHierarquia.Where(uH => uH.IdUsuarioSlave == usuario.IdUsuario).DefaultIfEmpty()
+                             from supervisor in context.Usuario.Where(x => x.IdUsuario == usuarioHierarquia.IdUsuarioMaster).DefaultIfEmpty()
+                             from supervisorHierarquia in context.UsuarioHierarquia.Where(uH => uH.IdUsuarioSlave == supervisor.IdUsuario).DefaultIfEmpty()
+                             from gerente in context.Usuario.Where(y => y.IdUsuario == supervisorHierarquia.IdUsuarioMaster).DefaultIfEmpty()
+                             select new ListaCorretorViewModel()
+                             {
+                                 IdUsuario = usuario.IdUsuario,
+                                 IdCorretora = (long)usuario.IdCorretora,
+                                 Nome = usuario.Nome,
+                                 Email = usuario.Email,
+                                 Telefone = usuario.Telefone,
+                                 CaminhoFoto = usuario.CaminhoFoto,
+                                 NomeFoto = usuario.NomeFoto,
+                                 Supervisor = supervisor.Nome,
+                                 Gerente = gerente.Nome,
+                                 DataCadastro = usuario.DataCadastro,
+                                 Ativo = usuario.Ativo
+                             }).OrderBy(o => o.Nome).Distinct().DefaultIfEmpty().ToList();
                     }
                     else
                     {
-                        ListEntity = context.Usuario
-                                    .Include(y => y.UsuarioPerfil)
-                                        .ThenInclude(p => p.IdPerfilNavigation)
-                                    .Include(c => c.IdCorretoraNavigation)
-                                    .Include(h => h.UsuarioHierarquiaIdUsuarioSlaveNavigation)
-                                        .ThenInclude(uh => uh.IdUsuarioMasterNavigation)
-                                    .AsNoTracking()
-                                    .Where(x => x.UsuarioPerfil.Any(z => z.IdPerfil == IdPerfil))
-                                    .Select(x => new ListaCorretorViewModel()
-                                    {
-                                        IdUsuario = x.IdUsuario,
-                                        Nome = x.Nome,
-                                        Email = x.Email,
-                                        Telefone = x.Telefone,
-                                        CaminhoFoto = x.CaminhoFoto,
-                                        NomeFoto = x.NomeFoto,
-                                        Corretora = x.IdCorretoraNavigation == null ? "Sem Corretora" : x.IdCorretoraNavigation.RazaoSocial,
-                                        DataCadastro = x.DataCadastro,
-                                        Ativo = x.Ativo
-                                    })
-                                    .OrderBy(o => o.Nome)
-                                    .ToList();
+                        ListEntity =
+                            (from usuario in context.Usuario
+                             from usuarioPerfil in context.UsuarioPerfil.Where(uP => uP.IdUsuario == usuario.IdUsuario).DefaultIfEmpty()
+                             from usuarioHierarquia in context.UsuarioHierarquia.Where(uH => uH.IdUsuarioSlave == usuario.IdUsuario).DefaultIfEmpty()
+                             from supervisor in context.Usuario.Where(x => x.IdUsuario == usuarioHierarquia.IdUsuarioMaster).DefaultIfEmpty()
+                             from supervisorHierarquia in context.UsuarioHierarquia.Where(uH => uH.IdUsuarioSlave == supervisor.IdUsuario).DefaultIfEmpty()
+                             from gerente in context.Usuario.Where(y => y.IdUsuario == supervisorHierarquia.IdUsuarioMaster).DefaultIfEmpty()
+                             select new ListaCorretorViewModel()
+                             {
+                                 IdUsuario = usuario.IdUsuario,
+                                 IdCorretora = (long)usuario.IdCorretora,
+                                 Nome = usuario.Nome,
+                                 Email = usuario.Email,
+                                 Telefone = usuario.Telefone,
+                                 CaminhoFoto = usuario.CaminhoFoto,
+                                 NomeFoto = usuario.NomeFoto,
+                                 Supervisor = supervisor.Nome,
+                                 Gerente = gerente.Nome,
+                                 DataCadastro = usuario.DataCadastro,
+                                 Ativo = usuario.Ativo
+                             }).OrderBy(o => o.Nome).Distinct().DefaultIfEmpty().ToList();
                     }
-                    if (Corretora != 0 && corretora != null)
+                    if (Corretora != 0)
                     {
-                        ListEntity.RemoveAll(x => x.Corretora != corretora.RazaoSocial);
+                        ListEntity.RemoveAll(x => x.IdCorretora != Corretora);
                     }
                     if (DataInicial != "" && DataFinal != "")
                     {

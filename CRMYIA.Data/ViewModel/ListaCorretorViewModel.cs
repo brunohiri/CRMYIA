@@ -11,6 +11,7 @@ namespace CRMYIA.Data.ViewModel
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
+        public long IdCorretora { get; set; }
         public string Corretora { get; set; }
         public string DescricaoPerfil { get; set; }
         public DateTime DataCadastro { get; set; }
