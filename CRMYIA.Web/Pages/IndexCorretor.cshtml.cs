@@ -21,6 +21,7 @@ namespace CRMYIA.Web.Pages
     {
         private readonly ILogger<IndexCorretorModel> _logger;
         public List<Campanha> ListaCampanhaArquivo { get; set; }
+        public string LinkLanding { get; set; }
 
         public IndexCorretorModel(ILogger<IndexCorretorModel> logger)
         {
@@ -28,6 +29,8 @@ namespace CRMYIA.Web.Pages
         }
         public async Task<IActionResult> OnGet()
         {
+            long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            LinkLanding = "http://yiahomebroker.com.br/?id=" + Criptography.Encrypt(IdUsuario.ToString());
             ListarCampanha();
             return Page();
         }
@@ -35,6 +38,7 @@ namespace CRMYIA.Web.Pages
         public void ListarCampanha()
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            LinkLanding = "http://yiahomebroker.com.br/?id=" + Criptography.Encrypt(IdUsuario.ToString());
             bool status = false;
             int i;
 
