@@ -26,6 +26,7 @@ namespace CRMYIA.Web.Pages
         }
 
         public List<Campanha> ListaCampanhaArquivo { get; set; }
+        public string LinkLanding { get; set; }
         public async Task<IActionResult> OnGet()
         {
             if (HttpContext.Session.GetObjectFromJson<List<Modulo>>("MODULO") == null)
@@ -40,6 +41,7 @@ namespace CRMYIA.Web.Pages
         public void ListarCampanha()
         {
             long IdUsuario = HttpContext.User.FindFirst(ClaimTypes.PrimarySid).Value.ExtractLong();
+            LinkLanding = "http://yiahomebroker.com.br/?id=" + Criptography.Encrypt(IdUsuario.ToString());
             bool status = false;
             int i;
 

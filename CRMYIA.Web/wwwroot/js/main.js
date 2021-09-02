@@ -424,7 +424,7 @@ function FotoMemu() {
            
         },
         error: function () {
-            swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
+           // swal("Erro!", "Erro ao buscar o registro, contate o Administrador do Sistema.", "error");
         }
     });
 }
